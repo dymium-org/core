@@ -1,0 +1,9 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.travis\.yml$
+^docs$
+^pkgdown$
+^LICENSE\.md$
+^codecov\.yml$
+^tic\.R$
+^_pkgdown\.yml$

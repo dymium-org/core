@@ -1,0 +1,472 @@
+#' @title Population
+#'
+#' @description
+#'
+#' Population contains an instance of [Individual] and [Household] and methods
+#' that modify both if its contained objects simutaneously.
+#'
+#' @usage NULL
+#' @format [R6::R6Class] object inheriting from [dymiumCore::Container].
+#' @include Individual.R
+#' @include Household.R
+#'
+#' @section Construction:
+#'
+#' ```
+#' Pop <- Population$new()
+#' ```
+#'
+#' * ind_data::[data.table::data.table]\cr
+#'   Microdata of Individuals/Persons.
+#'
+#' * hh_data::[data.table::data.table]\cr
+#'   Microdata of Households.
+#'
+#' * pid_col::`character(1)`\cr
+#'   Individual/Person id column in `ind_data`.
+#'
+#' * hid_col::`character(1)`\cr
+#'   Hoysehold id column in `hh_data`
+#'
+#' @section Public Fields:
+#'
+#' * `ind`:: `NULL` | an [R6::R6Class] object\cr
+#'  Shorthand to the [Individual] object.
+#'
+#' * `hh`:: `NULL` | an [R6::R6Class] object\cr
+#'  Shorthand to the [Household] object.
+#'
+#' @section Public Methods:
+#'
+#' * `initialise_data(ind_data, hh_data, pid_col, hid_col)`\cr
+#'  Load the microdata of individuals and households to construct [Individual] and
+#'  [Household] objects.
+#'
+#' * `add_population(ind_data, hh_data)`\cr
+#'  ([data.table::data.table()], [data.table::data.table()])\cr
+#'  add a new population. This requires that all individuals `ind_data` belong
+#'  to valid households. In the case, that `hh_data` is not provided, household ids of
+#'  `ind_data` will be checked against household ids of the existing households inside
+#'  the Population object being added to. One may use `pop_register()` to replace
+#'  the id columns of the new population with ids that don't exist in the Population object.
+#'
+#' * `join_household(ind_ids, hh_ids)`\cr
+#'  (`integer()`, `integer()`)\cr
+#'  Individuals join their new households and the households' affected attributes,
+#'  from the joining of new members, will also be updated. Note! All individuals
+#'  must not be in any household prior to joining a new one. Individual's
+#'  existing household can be removed using `leave_household`.
+#'
+#' * `leave_household(ind_ids)`\cr
+#'  (`integer()`)\cr
+#'  Remove the individuals' household ids in ind_ids and update the households'
+#'  affected attributes, from members leaving the household.
+#'
+#' * `remove_emptied_households()`\cr
+#'  Remove emptied households.
+#'
+#' * `remove_population(pid = NULL, hid = NULL)`\cr
+#'  (`integer()`, `integer()`)\cr
+#'  Remove population from `$ind` and `$hh` of this `Pop` object. If only `hid`
+#'  is given all household members of households in `hid` arg will be removed.
+#'  To remove only individuals leave `hid` to NULL and specify individuals by their ids
+#'  in `pid`.
+#'
+#' * `inspect(ind_ids = NULL, see_hh = FALSE)`\cr
+#'  (`integer()`, `logical(1)`)\cr
+#'  Print to console data of individuals and their households.
+#'
+#' * `inspect_members(hhid = NULL)`\cr
+#'  (`integer()`) -> [data.table::data.table()]\cr
+#'  Returns Individual$data of all members in `hhid`.
+#'
+#' * `count_all(verbose = TRUE)`\cr
+#'  Print out the number of individuals and households to console.
+#'
+#' * `get_hhsize(hids)`\cr
+#'  (`integer()`)\cr
+#'  Get hhsize from individual's data and merge it to household data.
+#'
+#' * `update_hhsize()`\cr
+#'  Update household size.
+#'
+#' * `update()`\cr
+#'  mask all the household update functions that need to be adjust after changes
+#'  in household members or in their attributes; such as change in partnership status,
+#'  change of income, birth.
+#'
+#' * `keep_log(var, value, time = .get_sim_time()`\cr
+#'  (`character(1)`,`list`|`integer(1)`|`character(1)`|`logical(1)`, `integer(1)`)\cr
+#'  Keep log of events. `var` usually uses one of these prefixes "all", "occ", "count" or "id".
+#'
+#' * `get_log(type = "all")`\cr
+#'  (c("all", "occ", "count", "id")) -> [data.table::data.table()]\cr
+#'  Get the event log stored by `keep_log`.
+#'
+#' * `check_unique_id_cols(ind_data, hh_data = NULL)`\cr
+#'  ([data.table::data.table()], [data.table::data.table()]) -> `logical(1)`\cr
+#'  Check that all id cols of the input data are unique from the existing ids in
+#'  their respective objects.
+#' @export
+Population <- R6Class(
+  "Population",
+  inherit = Container,
+  public = list(
+    # public ------------------------------------------------------------------
+
+    ind = NULL,
+    hh = NULL,
+
+    initialize = function(ind_data, hh_data, pid_col = NULL, hid_col = NULL){
+      self$add(Individual$new(), name = "Individual")
+      self$add(Household$new(), name = "Household")
+
+      # make it compatible with old modules
+      self$ind <- self$get("Individual")
+      self$hh <- self$get("Household")
+
+      if (!missing(ind_data) & !missing(hh_data)) {
+        self$initialise_data(ind_data, hh_data, pid_col, hid_col)
+      }
+
+      invisible()
+    },
+
+    initialise_data = function(ind_data, hh_data, pid_col = NULL, hid_col = NULL) {
+      # automatically figure out pid col
+      if (is.null(pid_col)) {
+        if ("pid" %in% names(ind_data)) {
+          lg$info("`pid_col` is not given. Use 'pid' as id col of ind_data")
+          pid_col <- "pid"
+        } else {
+          stop("`pid_col` is not given.")
+        }
+      }
+
+      # automatically figure out hid col
+      if (is.null(hid_col)) {
+        if ("hid" %in% names(hh_data)) {
+          lg$info("`hid_col` is not given. Use 'hid' as id col of hh_data")
+          hid_col <- "hid"
+        } else {
+          stop("`hid_col` is not given.")
+        }
+      }
+
+      checkmate::assert_names(names(ind_data), must.include = hid_col)
+
+      if (!checkmate::test_set_equal(unique(ind_data[[hid_col]]), hh_data[[hid_col]])) {
+        stop(
+          glue::glue(
+            "Some ids in `hid_col` are not linkable between `ind_data` or `hh_data`. \\
+             Please check for missing ids."
+          )
+        )
+      }
+
+      if (!"hhsize" %in% names(hh_data)) {
+        lg$warn("Creating `hhsize` as it is not provided with `hh_data`.")
+        hhsize_dt <- ind_data[, .(hhsize = .N), by = c(hid_col)]
+        hh_data <- hh_data[hhsize_dt, , on = c(hid_col)]
+      }
+
+      stopifnot(are_equal(nrow(ind_data), hh_data[, sum(hhsize)]))
+
+      self$get("Individual")$initialise_data(ind_data, id_col = pid_col, hid_col = hid_col)
+      self$get("Household")$initialise_data(hh_data, id_col = hid_col)
+
+      invisible()
+    },
+
+    add_population = function(ind_data, hh_data) {
+      # only add if there the population object is not empty.
+      if (self$get("Individual")$n() == 0) {
+        stop("New population data cannot be added to an empty \\
+              population object. Please use `Pop$initialise_data()` \\
+              method to populate the data fields first.")
+      }
+      checkmate::assert_data_frame(ind_data, null.ok = FALSE)
+      if (!is.data.table(ind_data)) {
+        ind_data <- data.table::copy(ind_data)
+      }
+      hid_col <- self$get("Individual")$get_hid_col()
+      # check that all individuals belong to valid households
+      if (missing(hh_data)) {
+        # check that all individuals belong to existing households
+        stopifnot(hid_col %in% names(ind_data))
+        newdata_hids <- ind_data[[hid_col]]
+        assert_that(self$get("Household")$ids_exist(newdata_hids),
+                    msg = "Not all household ids of the new individual data exist")
+      } else {
+        # add both household and individual data
+        checkmate::assert_data_frame(hh_data, null.ok = FALSE)
+        if (!is.data.table(hh_data)) {
+          hh_data <- data.table::copy(hh_data)
+        }
+        # create household size column is missing
+        if (!'hhsize' %in% names(hh_data)) {
+          hh_data[, hhsize := NA_integer_]
+        }
+        # check that all individuals belong to households in hh_data
+        stopifnot(all(unique(ind_data[[hid_col]]) %in% hh_data[[hid_col]]))
+        # add new household agents
+        self$get("Household")$add_new_agents(.data = hh_data)
+      }
+      # add ind_data to the population object
+      self$get("Individual")$add_new_agents(.data = ind_data)
+      self$update()
+      invisible()
+    },
+
+    join_household = function(ind_ids, hh_ids) {
+      Ind <- self$get(Individual)
+      Hh <- self$get(Household)
+      stopifnot(Ind$ids_exist(ids = ind_ids))
+      stopifnot(Hh$ids_exist(ids = hh_ids))
+      # make sure all individuals in ind_ids don't have hid
+      all_hids_are_na <-
+        all(is.na(Ind$get_attr(x = Ind$get_hid_col(), ids = ind_ids)))
+      if (!all_hids_are_na) {
+        stop("Not all individuals in ind_ids have left their households.")
+      }
+      # update hid for individidual in ind_ids
+      Ind$add_household_id(ids = ind_ids, hh_ids = hh_ids)
+      Ind$history$add(id = ind_ids, event = EVENT$JOINED_HOUSEHOLD)
+      # update household attributes
+      self$update()
+      invisible()
+    },
+
+    leave_household = function(ind_ids) {
+      # check that ids in ind_ids and their household ids exist
+      stopifnot(self$get("Individual")$ids_exist(ids = ind_ids))
+      stopifnot(self$get("Household")$ids_exist(ids = self$get("Individual")$get_household_ids(ids = ind_ids)))
+      # leave household
+      self$get("Individual")$remove_household_id(ids = ind_ids)
+      self$get("Individual")$history$add(id = ind_ids, event = EVENT$LEFT_HOUSEHOLD)
+      # households update themselves
+      self$update_hhsize()
+      invisible()
+    },
+
+    remove_emptied_households = function() {
+      hhsize_dt <- self$get_hhsize()
+      hids_hhsize_0 <- hhsize_dt[is.na(hhsize), get(self$get("Household")$get_id_col())]
+      self$get("Household")$remove(ids = hids_hhsize_0)
+    },
+
+    remove_population = function(pid = NULL, hid = NULL) {
+      checkmate::assert(
+        checkmate::check_integerish(pid, lower = 1, any.missing = FALSE),
+        checkmate::check_integerish(hid, lower = 1, any.missing = FALSE),
+        combine = "or"
+      )
+      if (!is.null(hid)) {
+        member_ids <- self$get("Individual")$get_ids_in_hids(hids = hid)
+        self$get("Individual")$remove(ids = member_ids)
+        self$get("Household")$remove(ids = hid)
+      }
+      if (!is.null(pid)) {
+        self$get("Individual")$remove(ids = pid)
+      }
+    },
+
+    inspect = function(ind_ids = NULL, see_hh = FALSE) {
+      checkmate::assert_flag(see_hh, na.ok = FALSE, null.ok = FALSE)
+
+      valid_ind_ids <-
+        ind_ids[self$get("Individual")$ids_exist(ids = ind_ids, by_element = TRUE)]
+
+      ind_hh_ids <- self$get("Individual")$get_household_ids(ids = valid_ind_ids)
+      ind_dt <- self$get("Individual")$get_data()[
+        get(self$get("Individual")$get_id_col()) %in% valid_ind_ids, ]
+      hh_dt <- self$get("Household")$get_data()[
+        get(self$get("Household")$get_id_col()) %in% ind_hh_ids, ]
+
+      if (!is.null(ind_ids)) {
+        cat("--individuals--\n")
+        print(ind_dt)
+        print(self$get("Individual")$history$inspect(ind_ids))
+      }
+
+      if (see_hh == TRUE) {
+        cat("--households--\n")
+        print(hh_dt)
+      }
+
+      # just to show that some ids don't exist
+      invisible(self$get("Individual")$ids_exist(ids = ind_ids))
+
+    },
+
+    inspect_members = function(hhid) {
+      checkmate::assert_integerish(hhid, null.ok = FALSE, any.missing = FALSE)
+      self$get("Individual")$get_data()[get(self$get("Individual")$get_hid_col()) == hhid, ]
+    },
+
+    count_all = function(verbose = TRUE) {
+      n_individuals <- self$get("Individual")$n()
+      n_individuals_in_households <- self$get_sum_hhsize()
+      n_households <- self$get("Household")$n()
+      n_non_emptied_households <- sum(self$get_hhsize() != 0)
+
+      if (verbose) {
+        cat("Total no. individuals: ", n_individuals, "\n")
+        cat("Total no. members in a household: ", n_individuals_in_households, "\n")
+        cat("Total no. households: ", n_households, "\n")
+        cat("Total no. non-emptied households: ", n_non_emptied_households, "\n")
+      }
+
+      return(invisible(list(
+        n_individuals = n_individuals,
+        n_individuals_in_households = n_individuals_in_households,
+        n_households = n_households,
+        n_non_emptied_households = n_non_emptied_households
+        )))
+    },
+
+    check_hhsize = function() {
+      n_individuals <- self$get("Individual")$n()
+      n_members_in_households <- self$get_sum_hhsize()
+      n_households <- self$get("Household")$n()
+      n_non_emptied_households <- sum(self$get_hhsize() != 0)
+      n_emptied_households <- n_non_emptied_households - n_non_emptied_households
+      assert_that(n_households == n_non_emptied_households,
+                  msg = lg$error("Emptied households exist.\\
+                                 There are {n_emptied_households} empied households."))
+      lg$info("check_hhsize: returns consitence is true.")
+      return(invisible(list(
+        n_inds = n_individuals,
+        n_members_in_households = n_members_in_households,
+        n_households = n_households,
+        n_non_emptied_households = n_non_emptied_households
+      )))
+    },
+
+    check_unique_id_cols = function(ind_data, hh_data) {
+      checkmate::assert_data_table(ind_data, null.ok = FALSE)
+      # specify id cols to be checked
+      pid_cols <- c(self$get("Individual")$get_id_col(), IND$ID_COLS)
+      hid_col <- self$get("Household")$get_id_col()
+      # extract all ids
+      ind_data_pids <-
+        ind_data[, unlist(lapply(.SD, unlist)), .SDcol = pid_cols] %>%
+        unique() %>%
+        .[!is.na(.)]
+      # check uniqueness
+      assert_that(!self$get("Individual")$ids_exist(ind_data_pids, by_element = FALSE),
+        msg = "There are ids that exist in data already.")
+      # if no hh_data is given then all household id should be NA
+      if (missing(hh_data))  {
+        assert_that(all(is.na(ind_data[[hid_col]])),
+                    msg = glue::glue("Not all household ids are NAs. When \\
+                                   hh_data is not given it is expected that \\
+                                   individuals in ind_data will join existing
+                                   households hence all their household id \\
+                                   which in this case is `{hid_col}` should all \\
+                                   be NAs."))
+      }
+      # for household id (hid)
+      if (!missing(hh_data)) {
+        checkmate::assert_data_table(hh_data, null.ok = FALSE)
+        # extract all ids
+        hh_data_hids <-
+          hh_data[, unlist(.SD, use.names = FALSE), .SDcols = hid_col] %>%
+          .[!is.na(.)]
+        ind_data_hids <-
+          ind_data[, unlist(.SD, use.names = FALSE), .SDcols = hid_col] %>%
+          unique() %>%
+          .[!is.na(.)]
+        # check uniqueness
+        assert_that(!self$get("Household")$ids_exist(hh_data_hids),
+          msg = "Some hids in hh_data exist in the household data of the existing population")
+        assert_that(!self$get("Household")$ids_exist(ind_data_hids),
+          msg = "Some hids in ind_data exist in the household data of the existing population")
+      }
+      return(TRUE)
+    },
+
+    get_hhsize = function(hids) {
+      hid_col <- self$get("Individual")$get_hid_col()
+      if (missing(hids)) {
+        hhsize_dt <-
+          self$get("Individual")$get_data()[, .(hhsize = .N), by = c(hid_col)]
+        hids <- self$get("Household")$get_ids()
+      } else {
+        assert_that(self$get("Household")$ids_exist(hids))
+        hhsize_dt <-
+          self$get("Individual")$get_data()[get(hid_col) %in% hids,
+                              .(hhsize = .N),
+                              by = c(hid_col)]
+      }
+
+      # make sure all hids in the household object are get returned
+      # eventhough no individual agents belong to those household agents.
+      hhsize_dt <-
+        merge(
+          x = data.table::data.table(hid = hids),
+          y = hhsize_dt,
+          by.x = "hid",
+          by.y = hid_col,
+          all.x = T, # this make sure all hids get returned
+          sort = FALSE
+        ) %>%
+        # replace NAs with 0s
+        .[is.na(hhsize), hhsize := 0]
+
+      return(hhsize_dt[["hhsize"]])
+    },
+
+    get_sum_hhsize = function(hids) {
+      sum(self$get_hhsize(hids))
+    },
+
+    update_hhsize = function() {
+      hid_col <- self$get("Household")$get_id_col()
+      self$get("Household")$get_data(copy = FALSE)[, hhsize := self$get_hhsize(get(hid_col))]
+    },
+
+    update = function() {
+      self$update_hhsize()
+    },
+
+    get_log = function(type = "all"){
+
+      if (type == "all") {
+        return(data.table::copy(private$.log))
+      }
+
+      if (type == "id") {
+        return(data.table::copy(private$.log)[grepl("^id:", var),])
+      }
+
+      .extract_value_from_list <- function(dt) {
+        dt[, value := sapply(value, function(x) x)]
+      }
+
+      if (type %in% c("count", "occ")) {
+        dt <- data.table::copy(private$.log) %>%
+          .[grepl(pattern = paste0("^", type, ":"), x = var), ]
+        if (is.list(dt$value)) {
+          # manipulated the column by reference hence no need to
+          # assign back (dt <- ..) to dt
+          .extract_value_from_list(dt)
+        }
+        return(dt)
+      }
+
+      stop(type, " doesn't match any of {all, count, occ, id}.")
+
+    },
+
+    keep_log = function(var, value, time = .get_sim_time()){
+      new_log_entry <- data.table(var = var, value = value, time = time)
+      private$.log <- rbind(private$.log, new_log_entry)
+      invisible()
+    }
+  ),
+
+  private = list(
+    .log = data.table()
+  )
+)
