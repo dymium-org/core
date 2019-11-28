@@ -4,9 +4,9 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![Travis build
-status](https://travis-ci.com/asiripanich/dymiumCore.svg?token=xyqzWZMMFshSfKQDBnqs&branch=master)](https://travis-ci.com/asiripanich/dymiumCore)
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Build
+Status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://travis-ci.org/dymium-org/dymiumCore)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Codecov test
@@ -29,6 +29,10 @@ install from [GitHub](https://github.com/) with:
 # install.packages("remotes")
 remotes::install_github("dymium-org/dymium")
 ```
+
+## Tutorials
+
+For tutorials please see the articles at <https://main.dymium.org>.
 
 ## Available modules
 
@@ -61,8 +65,8 @@ argument of a Transition object.
     Recently, models of type data.table have gained a new support where
     multiple choices can be simulated using a data.table object as a
     model. The data.table object should contains matching variables and
-    two extra columns which are `prob`, a list column of numeric
-    vectors, and `choice`, also a list column but contains character
+    two extra columns which are `probs`, a list column of numeric
+    vectors, and `choices`, also a list column but contains character
     vectors.
 
   - A named `list` can be used to represent choices, where names of the

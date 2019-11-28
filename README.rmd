@@ -13,8 +13,8 @@ knitr::opts_chunk$set(
 )
 ```
 <!-- badges: start -->
-[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![Travis build status](https://travis-ci.com/asiripanich/dymiumCore.svg?token=xyqzWZMMFshSfKQDBnqs&branch=master)](https://travis-ci.com/asiripanich/dymiumCore)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Build Status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://travis-ci.org/dymium-org/dymiumCore)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Codecov test coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.svg)](https://codecov.io/gh/dymium-org/dymiumCore?branch=master)
 <!-- badges: end -->
@@ -32,6 +32,9 @@ The dymiumCore package has not been released on CRAN, but you can install from [
 remotes::install_github("dymium-org/dymium")
 ```
 
+## Tutorials
+
+For tutorials please see the articles at [https://main.dymium.org](https://main.dymium.org).
 
 ## Available modules
 
@@ -53,6 +56,6 @@ Currently, dymiumCore we only support model objects fitted using the `caret` pac
 
 __Note that__: data.frames and named lists can be used in the model argument of a Transition object. 
 
-- If a `data.frame` is provided, it must contain a key column or keys columns and must have a column named 'prob' that must be a numeric type with values within [0,1] which represent probability values. Recently, models of type data.table have gained a new support where multiple choices can be simulated using a data.table object as a model. The data.table object should contains matching variables and two extra columns which are `prob`, a list column of numeric vectors, and `choice`, also a list column but contains character vectors.
+- If a `data.frame` is provided, it must contain a key column or keys columns and must have a column named 'prob' that must be a numeric type with values within [0,1] which represent probability values. Recently, models of type data.table have gained a new support where multiple choices can be simulated using a data.table object as a model. The data.table object should contains matching variables and two extra columns which are `probs`, a list column of numeric vectors, and `choices`, also a list column but contains character vectors.
 
 - A named `list` can be used to represent choices, where names of the list are choices and values are their associated probabilities. 
