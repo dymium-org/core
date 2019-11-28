@@ -1,4 +1,5 @@
-language: R
+language: r
+os: linux
 dist: bionic
 cache:
   - packages
@@ -17,6 +18,8 @@ r_packages:
 env:
   global:
   - MAKEFLAGS="-j 2"
+
+deploy.skip_cleanup: true
 
 jobs:
   include:

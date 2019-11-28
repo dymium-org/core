@@ -1,0 +1,59 @@
+url: https://core.dymium.org
+destination: docs
+
+reference:
+- title: "Entities"
+  contents:
+    - Entity
+    - Agent
+    - Individual
+    - Household
+    - Firm
+    - Asset
+    - starts_with("Building")
+    - Environment
+    - Zone
+- title: "Container"
+  contents:
+    - Container
+    - World
+    - Population
+- title: "Market"
+  contents:
+    - starts_with("MatchingMarket")
+    - starts_with("Match")
+    - starts_with("Search")
+- title: "Transition"
+  contents:
+    - matches("Transition.")
+- title: "Data backends"
+  contents:
+    - matches("DataBackend.")
+- title: "Other important classes"
+  contents:
+    - Model
+    - History
+- title: "Event's helpers"
+  contents:
+    - Pipeline
+    - is_scheduled
+    - starts_with("dm_")
+- title: "Utility functions"
+  contents:
+    - assign_reference
+    - alignment
+    - starts_with("create_")
+- title: "Module and event templates"
+  desc: "Functions to create module and event files from a provided template."
+  contents:
+    - matches('event|module')
+- title: "Test data"
+  contents:
+    - starts_with("toy_")
+- title: Base classes
+  contents:
+    - Generic
+    - Entity
+    - Transition
+    - DataBackend
+    - ContainerGeneric

@@ -5,9 +5,12 @@
 
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![Build Status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://travis-ci.org/dymium-org/dymiumCore)
+[![Travis build
+status](https://travis-ci.com/asiripanich/dymiumCore.svg?token=xyqzWZMMFshSfKQDBnqs&branch=master)](https://travis-ci.com/asiripanich/dymiumCore)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Codecov test
+coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.svg)](https://codecov.io/gh/dymium-org/dymiumCore?branch=master)
 <!-- badges: end -->
 
 # dymiumCore: <img src="man/figures/logo.png" align="right" alt="" width="120" />
@@ -16,6 +19,16 @@ v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org
 microsimulation model that is modular and pipable. While the core focus
 of the package is for modelling urban systems, dymium can be easily
 extended to apply in other contexts as well.
+
+## Installation
+
+The dymiumCore package has not been released on CRAN, but you can
+install from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("dymium-org/dymium")
+```
 
 ## Available modules
 

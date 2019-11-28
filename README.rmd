@@ -23,6 +23,16 @@ knitr::opts_chunk$set(
 
 **dymiumCore** is an R package which provides a toolbox for developing a microsimulation model that is modular and pipable. While the core focus of the package is for modelling urban systems, dymium can be easily extended to apply in other contexts as well.
 
+## Installation
+
+The dymiumCore package has not been released on CRAN, but you can install from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("dymium-org/dymium")
+```
+
+
 ## Available modules
 
 Please visit [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules) to see available modules.
