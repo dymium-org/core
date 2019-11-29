@@ -88,10 +88,8 @@ World <- R6::R6Class(
     Entities = list(),
     Models = list(),
     info = list(
-      creator = NA,
       built.datetime = Sys.time(),
       dymiumCore.version = utils::packageVersion("dymiumCore"),
-      dymium.sha = system("git rev-parse HEAD", intern = TRUE),
       R.version = base::version
     ),
     config = NULL,
