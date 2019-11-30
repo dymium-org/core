@@ -9,7 +9,7 @@
 #' @section Construction:
 #'
 #' ```
-#' Ind <- Individual$new()
+#' Ind <- Individual$new(.data, id_col)
 #' ```
 #'
 #' * .data::[data.table::data.table]\cr
