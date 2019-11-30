@@ -22,3 +22,15 @@ test_that("get_result", {
   checkmate::expect_class(a_transition, "Transition")
   checkmate::expect_class(a_transition$get_result(), "data.table")
 })
+
+test_that("initialise by targeted_agents", {
+  create_toy_population()
+  Ind <- pop$get("Individual")
+  Hh <- pop$get("Household")
+  idx <- 1:10
+  ids <- Ind$get_data()[[Ind$get_id_col()]][idx]
+  a_transition <- Transition$new(Ind, model = NULL, targeted_agents = ids)
+  expect_equal(a_transition$get_result()[["id"]], ids)
+})
+
+

@@ -147,6 +147,17 @@ Transition <- R6Class(
       .data
     },
 
+    #' @details
+    #' Update the attribute data of the agents that undergo the transition event.
+    #'
+    #' @param colname the column in agents' attribute data to be updated using the
+    #'  response result from the transition event.
+    #'
+    #' @return NULL
+    update_agents = function(colname) {
+      private$update(colname)
+    },
+
     print = function() {
 
       if (is.numeric(private$.sim_result[['response']])) {
@@ -272,6 +283,33 @@ Transition <- R6Class(
 
       private$.sim_result <- sim_result
       invisible(TRUE)
+    },
+
+    update = function(colname) {
+
+      # prepare agents' data to update
+      Agt <- private$.AgtObj
+      .data <- Agt$get_data(copy = FALSE)
+      id_col <- Agt$get_id_col()
+
+      # responses
+      ids <- self$get_result()[["id"]]
+      responses <- self$get_result()[["response"]]
+
+      # get index of ids
+      idx_unordered <- .data[get(id_col) %in% ids, which = TRUE]
+      idx_dt <- .data[idx_unordered, ..id_col][, idx := idx_unordered]
+      idx <- merge(x = data.table(id = ids),
+                   y = idx_dt,
+                   by.x = "id", by.y = id_col, sort = FALSE) %>%
+        .[["idx"]]
+
+      # update by reference
+      for (i in seq_along(idx)) {
+        data.table::set(.data, i = idx[i], j = colname, value = responses[i])
+      }
+
+      invisible()
     }
  )
 )
@@ -295,7 +333,7 @@ monte_carlo_sim <- function(prediction, target) {
     min.cols = 2,
     any.missing = FALSE,
     null.ok = FALSE,
-    col.names = 'strict'
+    col.names = 'unique'
   )
   choices <- names(prediction)
 

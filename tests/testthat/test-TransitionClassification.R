@@ -176,3 +176,36 @@ test_that('target works', {
 
 })
 
+
+test_that("model by targeted_agents", {
+  create_toy_population()
+  Ind <- pop$get("Individual")
+  Hh <- pop$get("Household")
+  idx <- 1:3
+  ids <- Ind$get_data()[[Ind$get_id_col()]][idx]
+
+  my_model <- data.table(
+    pid = c(1:3),
+    probs = list(c(0.5,0.2,0.3), c(0.5,0.2,0.3), c(0.5,0.2,0.3)),
+    choices = list(sample(letters, 3, replace = T), sample(letters, 3, replace = T), sample(letters, 3, replace = T))
+  )
+
+  a_transition <- TransitionClassification$new(Ind, model = my_model, targeted_agents = ids, model_by_id = TRUE)
+
+  expect_equal(a_transition$get_result()[["id"]], ids)
+})
+
+test_that("update", {
+  create_toy_population()
+  Ind <- pop$get("Individual")
+  ids <- sample(Ind$get_ids(), 10, replace = TRUE)
+
+  # create model
+  vector_model <- c(choice_a = 0.2, choice_b = 0.8)
+
+  # create transition
+  TransVec <- TransitionClassification$new(Ind, vector_model, targeted_agents = ids)
+  TransVec$update_agents(colname = "test")
+  expect_true("test" %in% names(Ind$get_data()))
+  checkmate::assert_character(names(table(Ind$get_attr("test"))), min.len = 1, unique = TRUE, null.ok = FALSE)
+})
