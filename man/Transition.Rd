@@ -3,13 +3,6 @@
 \name{Transition}
 \alias{Transition}
 \title{Transition class}
-\arguments{
-\item{x}{a Agent class inheritance object}
-
-\item{model}{a model object}
-
-\item{target}{a integer}
-}
 \description{
 A class that warps aroun agent and model to perform a Monte Carlo simulation.
 Work flow: \code{initialise()} -> \code{filter()} -> \code{mutate()} -> \code{simulate()} -> \code{postprocess()}.
@@ -66,3 +59,177 @@ This can be overwritten to change the order and add extra steps.
 }
 }
 
+\section{Super class}{
+\code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{Transition}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{Transition$new()}}
+\item \href{#method-get_decision_maker_ids}{\code{Transition$get_decision_maker_ids()}}
+\item \href{#method-get_data}{\code{Transition$get_data()}}
+\item \href{#method-get_result}{\code{Transition$get_result()}}
+\item \href{#method-get_nrow_result}{\code{Transition$get_nrow_result()}}
+\item \href{#method-get_allowed_classes}{\code{Transition$get_allowed_classes()}}
+\item \href{#method-filter}{\code{Transition$filter()}}
+\item \href{#method-mutate}{\code{Transition$mutate()}}
+\item \href{#method-preprocess}{\code{Transition$preprocess()}}
+\item \href{#method-postprocess}{\code{Transition$postprocess()}}
+\item \href{#method-update_agents}{\code{Transition$update_agents()}}
+\item \href{#method-print}{\code{Transition$print()}}
+\item \href{#method-clone}{\code{Transition$clone()}}
+}
+}
+\if{html}{
+\out{<details ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="class">}\href{../../dymiumCore/html/Generic.html#method-class}{\code{dymiumCore::Generic$class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="debug">}\href{../../dymiumCore/html/Generic.html#method-debug}{\code{dymiumCore::Generic$debug()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="is_dymium_class">}\href{../../dymiumCore/html/Generic.html#method-is_dymium_class}{\code{dymiumCore::Generic$is_dymium_class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="message">}\href{../../dymiumCore/html/Generic.html#method-message}{\code{dymiumCore::Generic$message()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_debug">}\href{../../dymiumCore/html/Generic.html#method-msg_debug}{\code{dymiumCore::Generic$msg_debug()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_info">}\href{../../dymiumCore/html/Generic.html#method-msg_info}{\code{dymiumCore::Generic$msg_info()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$new(x, model, target = NULL, targeted_agents = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{a Agent class inheritance object}
+
+\item{\code{model}}{a model object}
+
+\item{\code{target}}{a integer}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_decision_maker_ids"></a>}}
+\subsection{Method \code{get_decision_maker_ids()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$get_decision_maker_ids(response_filter = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_data"></a>}}
+\subsection{Method \code{get_data()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$get_data()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_result"></a>}}
+\subsection{Method \code{get_result()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$get_result(ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_nrow_result"></a>}}
+\subsection{Method \code{get_nrow_result()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$get_nrow_result()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_allowed_classes"></a>}}
+\subsection{Method \code{get_allowed_classes()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$get_allowed_classes()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-filter"></a>}}
+\subsection{Method \code{filter()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$filter(.data)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-mutate"></a>}}
+\subsection{Method \code{mutate()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$mutate(.data)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-preprocess"></a>}}
+\subsection{Method \code{preprocess()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$preprocess(.data)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-postprocess"></a>}}
+\subsection{Method \code{postprocess()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$postprocess(.data)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-update_agents"></a>}}
+\subsection{Method \code{update_agents()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$update_agents(colname)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{colname}}{the column in agents' attribute data to be updated using the
+response result from the transition event.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+Update the attribute data of the agents that undergo the transition event.
+}
+
+\subsection{Returns}{
+NULL
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\subsection{Method \code{print()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$print()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

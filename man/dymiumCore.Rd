@@ -3,12 +3,35 @@
 \docType{package}
 \name{dymiumCore}
 \alias{dymiumCore}
-\title{\code{dymiumCore} package}
+\alias{dymiumCore-package}
+\title{dymiumCore package}
 \description{
-Dynamic microsimulation framework for integrated urban models.
+\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+
+A modular microsimulation modelling framework for integrated urban modelling.
 }
 \details{
+Dynamic microsimulation framework for integrated urban models.
+
 See the README on
 \href{https://github.com/dymium-org/dymiumCore#readme}{GitHub}
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://core.dymium.org}
+  \item \url{https://github.com/dymium-org/dymiumCore}
+  \item Report bugs at \url{https://github.com/dymium-org/dymiumCore/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Amarin Siripanich \email{amarin@dymium.org}
+
+Authors:
+\itemize{
+  \item Taha Rashidi
+}
+
 }
 \keyword{internal}

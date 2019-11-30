@@ -8,7 +8,7 @@
 Create Individual class, extended Agent class.
 }
 \section{Construction}{
-\preformatted{Ind <- Individual$new()
+\preformatted{Ind <- Individual$new(.data, id_col)
 }
 \itemize{
 \item .data::\link[data.table:data.table]{data.table::data.table}\cr
@@ -110,3 +110,253 @@ Returns all unique ids in id_cols in a vector, excluding household ids.
 }
 }
 
+\section{Super classes}{
+\code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{\link[dymiumCore:Entity]{dymiumCore::Entity}} -> \code{\link[dymiumCore:Agent]{dymiumCore::Agent}} -> \code{Individual}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-initialise_data}{\code{Individual$initialise_data()}}
+\item \href{#method-data_template}{\code{Individual$data_template()}}
+\item \href{#method-get_household_ids}{\code{Individual$get_household_ids()}}
+\item \href{#method-get_ids_in_hids}{\code{Individual$get_ids_in_hids()}}
+\item \href{#method-get_hid_col}{\code{Individual$get_hid_col()}}
+\item \href{#method-get_ids_from_id_cols}{\code{Individual$get_ids_from_id_cols()}}
+\item \href{#method-add_relationship}{\code{Individual$add_relationship()}}
+\item \href{#method-remove_relationship}{\code{Individual$remove_relationship()}}
+\item \href{#method-get_father}{\code{Individual$get_father()}}
+\item \href{#method-get_mother}{\code{Individual$get_mother()}}
+\item \href{#method-get_partner}{\code{Individual$get_partner()}}
+\item \href{#method-get_children}{\code{Individual$get_children()}}
+\item \href{#method-get_resident_children}{\code{Individual$get_resident_children()}}
+\item \href{#method-have_relationship}{\code{Individual$have_relationship()}}
+\item \href{#method-remove_household_id}{\code{Individual$remove_household_id()}}
+\item \href{#method-add_household_id}{\code{Individual$add_household_id()}}
+\item \href{#method-get_parent_hid}{\code{Individual$get_parent_hid()}}
+\item \href{#method-living_with_parents}{\code{Individual$living_with_parents()}}
+\item \href{#method-living_together}{\code{Individual$living_together()}}
+\item \href{#method-have_resident_child}{\code{Individual$have_resident_child()}}
+\item \href{#method-clone}{\code{Individual$clone()}}
+}
+}
+\if{html}{
+\out{<details ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="class">}\href{../../dymiumCore/html/Generic.html#method-class}{\code{dymiumCore::Generic$class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="debug">}\href{../../dymiumCore/html/Generic.html#method-debug}{\code{dymiumCore::Generic$debug()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="is_dymium_class">}\href{../../dymiumCore/html/Generic.html#method-is_dymium_class}{\code{dymiumCore::Generic$is_dymium_class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="message">}\href{../../dymiumCore/html/Generic.html#method-message}{\code{dymiumCore::Generic$message()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_debug">}\href{../../dymiumCore/html/Generic.html#method-msg_debug}{\code{dymiumCore::Generic$msg_debug()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_info">}\href{../../dymiumCore/html/Generic.html#method-msg_info}{\code{dymiumCore::Generic$msg_info()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="add_data">}\href{../../dymiumCore/html/Entity.html#method-add_data}{\code{dymiumCore::Entity$add_data()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="data">}\href{../../dymiumCore/html/Entity.html#method-data}{\code{dymiumCore::Entity$data()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="generate_new_ids">}\href{../../dymiumCore/html/Entity.html#method-generate_new_ids}{\code{dymiumCore::Entity$generate_new_ids()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_attr">}\href{../../dymiumCore/html/Entity.html#method-get_attr}{\code{dymiumCore::Entity$get_attr()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_data">}\href{../../dymiumCore/html/Entity.html#method-get_data}{\code{dymiumCore::Entity$get_data()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_data_names">}\href{../../dymiumCore/html/Entity.html#method-get_data_names}{\code{dymiumCore::Entity$get_data_names()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_id_col">}\href{../../dymiumCore/html/Entity.html#method-get_id_col}{\code{dymiumCore::Entity$get_id_col()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_ids">}\href{../../dymiumCore/html/Entity.html#method-get_ids}{\code{dymiumCore::Entity$get_ids()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_idx">}\href{../../dymiumCore/html/Entity.html#method-get_idx}{\code{dymiumCore::Entity$get_idx()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_last_id">}\href{../../dymiumCore/html/Entity.html#method-get_last_id}{\code{dymiumCore::Entity$get_last_id()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_new_ids">}\href{../../dymiumCore/html/Entity.html#method-get_new_ids}{\code{dymiumCore::Entity$get_new_ids()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_removed_data">}\href{../../dymiumCore/html/Entity.html#method-get_removed_data}{\code{dymiumCore::Entity$get_removed_data()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="has_attr">}\href{../../dymiumCore/html/Entity.html#method-has_attr}{\code{dymiumCore::Entity$has_attr()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="ids_exist">}\href{../../dymiumCore/html/Entity.html#method-ids_exist}{\code{dymiumCore::Entity$ids_exist()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="idx_exist">}\href{../../dymiumCore/html/Entity.html#method-idx_exist}{\code{dymiumCore::Entity$idx_exist()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="n">}\href{../../dymiumCore/html/Entity.html#method-n}{\code{dymiumCore::Entity$n()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="print">}\href{../../dymiumCore/html/Entity.html#method-print}{\code{dymiumCore::Entity$print()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="print_data">}\href{../../dymiumCore/html/Entity.html#method-print_data}{\code{dymiumCore::Entity$print_data()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="remove">}\href{../../dymiumCore/html/Entity.html#method-remove}{\code{dymiumCore::Entity$remove()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="summary">}\href{../../dymiumCore/html/Entity.html#method-summary}{\code{dymiumCore::Entity$summary()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Agent" data-id="add_new_agents">}\href{../../dymiumCore/html/Agent.html#method-add_new_agents}{\code{dymiumCore::Agent$add_new_agents()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Agent" data-id="get_latest_agent_id">}\href{../../dymiumCore/html/Agent.html#method-get_latest_agent_id}{\code{dymiumCore::Agent$get_latest_agent_id()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Agent" data-id="get_new_agent_ids">}\href{../../dymiumCore/html/Agent.html#method-get_new_agent_ids}{\code{dymiumCore::Agent$get_new_agent_ids()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Agent" data-id="initialize">}\href{../../dymiumCore/html/Agent.html#method-initialize}{\code{dymiumCore::Agent$initialize()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Agent" data-id="is_alive">}\href{../../dymiumCore/html/Agent.html#method-is_alive}{\code{dymiumCore::Agent$is_alive()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Agent" data-id="subset_ids">}\href{../../dymiumCore/html/Agent.html#method-subset_ids}{\code{dymiumCore::Agent$subset_ids()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-initialise_data"></a>}}
+\subsection{Method \code{initialise_data()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$initialise_data(.data, id_col = "pid", hid_col)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-data_template"></a>}}
+\subsection{Method \code{data_template()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$data_template()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_household_ids"></a>}}
+\subsection{Method \code{get_household_ids()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$get_household_ids(ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_ids_in_hids"></a>}}
+\subsection{Method \code{get_ids_in_hids()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$get_ids_in_hids(hids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_hid_col"></a>}}
+\subsection{Method \code{get_hid_col()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$get_hid_col()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_ids_from_id_cols"></a>}}
+\subsection{Method \code{get_ids_from_id_cols()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$get_ids_from_id_cols(id_cols = NULL, na.rm = TRUE)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_relationship"></a>}}
+\subsection{Method \code{add_relationship()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$add_relationship(
+  ids,
+  target_ids,
+  type = c("father", "mother", "partner")
+)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-remove_relationship"></a>}}
+\subsection{Method \code{remove_relationship()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$remove_relationship(ids, type = c("partner"))}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_father"></a>}}
+\subsection{Method \code{get_father()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$get_father(ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_mother"></a>}}
+\subsection{Method \code{get_mother()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$get_mother(ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_partner"></a>}}
+\subsection{Method \code{get_partner()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$get_partner(ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_children"></a>}}
+\subsection{Method \code{get_children()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$get_children(ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_resident_children"></a>}}
+\subsection{Method \code{get_resident_children()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$get_resident_children(ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-have_relationship"></a>}}
+\subsection{Method \code{have_relationship()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$have_relationship(ids, type = private$relationship_types)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-remove_household_id"></a>}}
+\subsection{Method \code{remove_household_id()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$remove_household_id(ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_household_id"></a>}}
+\subsection{Method \code{add_household_id()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$add_household_id(ids, hh_ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_parent_hid"></a>}}
+\subsection{Method \code{get_parent_hid()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$get_parent_hid(ids = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-living_with_parents"></a>}}
+\subsection{Method \code{living_with_parents()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$living_with_parents(ids = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-living_together"></a>}}
+\subsection{Method \code{living_together()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$living_together(self_ids, target_ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-have_resident_child"></a>}}
+\subsection{Method \code{have_resident_child()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$have_resident_child(ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Individual$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}
