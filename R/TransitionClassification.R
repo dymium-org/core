@@ -1,4 +1,8 @@
-#' @title TransitionClassification class
+#' R6 class for performing Monte Carlo simulation
+#'
+#' @description
+#' TransitionClassification
+#'
 #' @include Transition.R
 #' @export
 TransitionClassification <- R6Class(
@@ -9,7 +13,56 @@ TransitionClassification <- R6Class(
 
 
   public = list(
-    initialize = function(x, model, target = NULL, targeted_agents = NULL) {
+
+    #' @field model_by_id (`logical(1)`) is default as `FALSE`. This flag is to indicate
+    #'  whether the `model` object is meant to be matched by the id column of the entity object
+    #'  in `x` or not. It should be noted that this flag only matters if the `model` object is
+    #'  of type [data.table::data.table()] where it must contains a numeric column called `prob`
+    #'  or list columns of type numeric and character called `probs` and `choices`. The model
+    #'  object must have a column which its name matches with the id column of the entity object in `x`.
+    model_by_id = NULL,
+
+    #' @description
+    #' Create a [TransitionClassification] object.
+    #'
+    #' @param x an [Entity] object
+    #' @param model any objects of type in [SupportedTransitionModels].
+    #' @param target a named list where the names corresponds to the choices and the values
+    #'  are the number of agents to choose those choices. This imposes an alignment of
+    #'  the outcomes to an external constraint.
+    #' @param targeted_agents a integer vector that contains ids of the entities in `x`
+    #'  to undergo this
+    #' @param model_by_id see in the public field section.
+    #'
+    #' @return an [R6::R6Class] object
+    #'
+    #' @examples
+    #'
+    #' # create a Individual agent object
+    #' Ind <- Individual$new(.data = toy_individuals, id_col = "pid")
+    #'
+    #' # create a probabilistic model
+    #' driver_status_rate <- data.table::data.table(
+    #'   sex = c('male', 'female'),
+    #'   probs = list(c(0.3,0.7), c(0.4,0.6)),
+    #'   choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
+    #' )
+    #'
+    #' # create a Transition for driver status
+    #' TransitionCandrive <- R6::R6Class(
+    #'   classname = "TransitionCandrive",
+    #'   inherit = TransitionClassification
+    #' )
+    #'
+    #' TransCanDrive <- TransitionCandrive$new(x = Ind, model = driver_status_rate)
+    #'
+    #' barplot(
+    #'   table(TransCanDrive$get_result()[['response']]),
+    #'   main = "Transition result: driver status",
+    #'   col = c('steelblue', 'salmon')
+    #' )
+    initialize = function(x, model, target = NULL, targeted_agents = NULL, model_by_id = FALSE) {
+      self$model_by_id <- model_by_id
       super$initialize(x, model, target = target, targeted_agents = targeted_agents)
     }
   ),
