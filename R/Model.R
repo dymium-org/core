@@ -69,7 +69,8 @@ Model <-
         checkmate::assert_subset(class(x)[[1]], choices = c("train", "data.table", "list"), empty.ok = FALSE)
         if (inherits(x, "list")) {
           checkmate::assert_names(names(x), type = "unique")
-          checkmate::assert_numeric(unlist(x), lower = 0, finite = TRUE, any.missing = FALSE, null.ok = FALSE)
+          # NOTE: this is
+          # checkmate::assert_numeric(unlist(x), lower = 0, finite = TRUE, any.missing = FALSE, null.ok = FALSE)
         }
         if (inherits(x, "data.table")) {
           checkmate::assert_data_table(x, col.names = "strict", null.ok = FALSE, min.rows = 1)
