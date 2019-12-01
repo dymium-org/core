@@ -2,7 +2,7 @@
 #'
 #' @description
 #'
-#' A class that warps aroun agent and model to perform a Monte Carlo simulation.
+#' A class that perform Monte Carlo simulation on agents using a probabilistic model.
 #' Work flow: `initialise()` -> `filter()` -> `mutate()` -> `simulate()` -> `postprocess()`.
 #' Note that, the order of filter and mutate can be swap by overwriting the `preprocess()` method.
 #' The default order as speficied in the `preprocess` method is:
@@ -58,6 +58,11 @@
 #' ([data.table::data.table()]) -> `[data.table::data.table()]`\cr
 #' By default, preprocess runs `filter()` then `mutate()` as described in the description section.
 #' This can be overwritten to change the order and add extra steps.
+#'
+#' * `update_agents(attr)`\cr
+#' (`character(1)`)\cr
+#' Update the attribute data of the agents that undergo the transition event.
+#'
 #'
 #' @param x a Agent class inheritance object
 #' @param model a model object
@@ -150,12 +155,12 @@ Transition <- R6Class(
     #' @details
     #' Update the attribute data of the agents that undergo the transition event.
     #'
-    #' @param colname the column in agents' attribute data to be updated using the
+    #' @param attr the column name in agents' attribute data to be updated using the
     #'  response result from the transition event.
     #'
     #' @return NULL
-    update_agents = function(colname) {
-      private$update(colname)
+    update_agents = function(attr) {
+      private$update(attr)
     },
 
     print = function() {
@@ -285,12 +290,17 @@ Transition <- R6Class(
       invisible(TRUE)
     },
 
-    update = function(colname) {
+    update = function(attr) {
 
       # prepare agents' data to update
       Agt <- private$.AgtObj
       .data <- Agt$get_data(copy = FALSE)
       id_col <- Agt$get_id_col()
+
+      if (checkmate::test_names(names(.data), must.include = attr)) {
+        lg$warn("{attr} is being added to the attribute data of {class(Agt)[[1]]}
+                  as it is not yet an attribute of {class(Agt)[[1]]}.")
+      }
 
       # responses
       ids <- self$get_result()[["id"]]
@@ -306,7 +316,7 @@ Transition <- R6Class(
 
       # update by reference
       for (i in seq_along(idx)) {
-        data.table::set(.data, i = idx[i], j = colname, value = responses[i])
+        data.table::set(.data, i = idx[i], j = attr, value = responses[i])
       }
 
       invisible()

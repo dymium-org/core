@@ -6,7 +6,7 @@
 #'
 #' @description
 #'
-#' Provides an interface for model objects to be use in [Transition] and [World].
+#' A container for the supported model objects (see [SupportedTransitionModels]).
 #'
 #' @section Construction:
 #'
@@ -23,15 +23,29 @@
 #'  () -> ([caret::train] | [data.table::data.table] | named `list`)\cr
 #'  Get a model object.
 #'
-#'  * `set()`\cr
-#'  () -> ([caret::train] | [data.table::data.table] | named `list`)\cr
+#'  * `set(x)`\cr
+#'  ([caret::train] | [data.table::data.table] | named `list`)\cr
 #'  Get a model object.
 #'
 #'  * `modify()`\cr
+#'  An abstract method.
 #'
 #'  * `simulate()`\cr
+#'  An abstract method.
 #'
 #'  * `print()`\cr
+#'
+#' @examples
+#'
+#' world <- World$new()
+#'
+#' prob_model <- list(yes = 0.95, no = 0.05)
+#'
+#' world$add(x = prob_model, name = "prob_model")
+#'
+#' world$get(x = "prob_model")
+#'
+#' world$get_model(x = "prob_model")
 #'
 #' @export
 Model <-
