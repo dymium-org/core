@@ -22,6 +22,10 @@
 #' @section Methods:
 #' See [MatchingMarket].
 #'
+#' * `simulate(n_choices = 10, method = c("pweighted", "ranking"), by_group = FALSE, parallel = FALSE)`\cr
+#'  (`integer(1)`, `character(1)`, `logical(1)`, `logical(1)`) -> `[data.table::data.table()]`\cr
+#'  Simulate matching stochastically.
+#'
 #' @family MatchingMarket
 #' @export
 MatchingMarketStochastic <- R6::R6Class(
