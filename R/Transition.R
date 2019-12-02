@@ -304,9 +304,9 @@ Transition <- R6Class(
       .data <- Agt$get_data(copy = FALSE)
       id_col <- Agt$get_id_col()
 
-      if (checkmate::test_names(names(.data), must.include = attr)) {
+      if (!checkmate::test_names(names(.data), must.include = attr)) {
         lg$warn("{attr} is being added to the attribute data of {class(Agt)[[1]]}
-                  as it is not yet an attribute of {class(Agt)[[1]]}.")
+                  as it is not an original attribute of {class(Agt)[[1]]}.")
       }
 
       # responses
