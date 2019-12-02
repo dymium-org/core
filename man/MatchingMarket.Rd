@@ -47,12 +47,6 @@ When this is provided matching can be done just between agents of the same group
 \section{Methods}{
 
 \itemize{
-\item \code{stochastic_matching(n_choices = 10, method = "pweighted", by_group = FALSE)}\cr
-(\code{integer(1)}|\code{c("pweighted", "ranking")}|\code{logical(1)}) -> \verb{[data.table::data.table()]}\cr
-Simulate matching in a stochastic way.
-\item \code{optimal_matching()}\cr
-() -> \code{character()}\cr
-Print a summary of the matching problem.
 \item \code{split_market()}\cr
 (\code{logical(1)}) -> \verb{()}\cr
 Create a list of list of data.tables. \verb{list(\{group_name\} = list(\{sub_market_number\} = list(agentset_A = data.table(), agentset_B = data.table())))}.

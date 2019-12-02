@@ -2,7 +2,7 @@
 % Please edit documentation in R/World.R
 \name{World}
 \alias{World}
-\title{World2 class}
+\title{World class}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Entity]{dymiumCore::Entity}}
 \description{
 World is used to store other Entities. Think of it as a container that is to be
@@ -48,12 +48,13 @@ The stored instances can be access via \verb{self$<object-type>} or \code{self$g
 (\code{character(1)} | \code{integer(1)})\cr
 Remove an object in element or named \code{x}.
 \item \code{get_entity(x)}\cr
-(\code{character(1)})\cr
+(\code{character(1)}) -> An \link[R6:R6Class]{R6::R6Class}-\link{Entity} or its inheritance object\cr
 Get a reference to the \code{x} Entity object.
 \item \code{get_model(x)}\cr
-(\code{character(1)})\cr
+(\code{character(1)}) An \link[R6:R6Class]{R6::R6Class}-\link{Model} object\cr
 Get a model object by name \code{x}.
 \item \code{get_time()}\cr
+() -> (\code{integer(1)})\cr
 Get the value of .DMevn$sim_time.
 \item \code{get_info()}\cr
 \code{NULL} -> \code{list()}\cr
@@ -67,6 +68,7 @@ Reset the value of .DMevn$sim_time to 0L (L is for forcing type integer
 otherwise 0 is of numeric type).
 \item \code{start_iter(time_step, unit)}\cr
 (\code{integer(1)}, \code{character(1)}) -> \code{self}\cr
+Update the simulation time and returns self.
 }
 }
 
