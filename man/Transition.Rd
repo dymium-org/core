@@ -72,6 +72,15 @@ This can be overwritten to change the order and add extra steps.
 \item \code{update_agents(attr)}\cr
 (\code{character(1)})\cr
 Update the attribute data of the agents that undergo the transition event.
+\item \code{get_result(ids)}\cr
+(\code{integer()}) -> \link[data.table:data.table]{data.table::data.table}\cr
+Returns the simulation result in a \link[data.table:data.table]{data.table::data.table} format with two
+columns \code{id} and \code{response}.
+\item \code{get_nrow_result()}\cr
+Returns the number of rows in the simulation result.
+\item \code{get_decision_maker_ids(response_filter = NULL)}\cr
+(\code{character()}) -> (\code{integer()})\cr
+Returns ids of the agents that have their response equal to \code{response_filter}.
 }
 }
 

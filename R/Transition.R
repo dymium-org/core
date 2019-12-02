@@ -340,7 +340,7 @@ Transition <- R6Class(
 #' @return a character vector
 #' @export
 SupportedTransitionModels <- function() {
-  return(c("train", "list", "data.table"))
+  return(c("train", "list", "data.table", "numeric"))
 }
 
 monte_carlo_sim <- function(prediction, target) {
