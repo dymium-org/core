@@ -63,6 +63,18 @@
 #' (`character(1)`)\cr
 #' Update the attribute data of the agents that undergo the transition event.
 #'
+#' * `get_result(ids)`\cr
+#' (`integer()`) -> [data.table::data.table]\cr
+#' Returns the simulation result in a [data.table::data.table] format with two
+#' columns `id` and `response`.
+#'
+#' * `get_nrow_result()`\cr
+#' Returns the number of rows in the simulation result.
+#'
+#' * `get_decision_maker_ids(response_filter = NULL)`\cr
+#' (`character()`) -> (`integer()`)\cr
+#' Returns ids of the agents that have their response equal to `response_filter`.
+#'
 #'
 #' @param x a Agent class inheritance object
 #' @param model a model object
@@ -79,7 +91,7 @@ Transition <- R6Class(
     initialize = function(x, model, target = NULL, targeted_agents = NULL) {
       # checks
       checkmate::assert_class(x, c("Agent"))
-      if (!is.null(private$.allowed_classes)) checkmate::assert_subset(class(model)[[1]], choices = private$.allowed_classes)
+      checkmate::assert_subset(class(model)[[1]], choices = SupportedTransitionModels())
       checkmate::assert_list(target, any.missing = FALSE, types = 'integerish', names = 'strict', null.ok = TRUE)
       checkmate::assert_integerish(targeted_agents, lower = 1, any.missing = FALSE, null.ok = TRUE)
 
@@ -129,10 +141,6 @@ Transition <- R6Class(
 
     get_nrow_result = function() {
       private$.sim_result[, .N]
-    },
-
-    get_allowed_classes = function() {
-      private$.allowed_classes
     },
 
     filter = function(.data) {
@@ -199,7 +207,6 @@ Transition <- R6Class(
     .sim_result = data.table(), # two columns: id, response
     .target = integer(),
     .targeted_agents = integer(), # a vector containing agent ids of .AgtObj
-    .allowed_classes = NULL,
 
     run_preprocessing_steps = function() {
 
