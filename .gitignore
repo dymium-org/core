@@ -42,3 +42,5 @@ docs/
 .DS_Store
 data-raw
 man
+modules
+scenarios

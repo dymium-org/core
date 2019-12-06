@@ -28,7 +28,9 @@ Imports:
     glue,
     methods,
     modules (>= 0.8.0),
-    here (>= 0.1.0)
+    here (>= 0.1.0),
+    usethis,
+    fs
 Suggests:
     testthat (>= 2.1.0),
     fastmatch (>= 1.1.0),
@@ -87,5 +89,6 @@ Collate:
     'save.R'
     'scheduler.R'
     'templates.R'
+    'usethis.R'
     'utils.R'
     'zzz.R'
