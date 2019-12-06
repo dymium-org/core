@@ -4,7 +4,7 @@
 \alias{dm_save}
 \title{save dymium object}
 \usage{
-dm_save(x, path = getOption("dymium.outputPath"), .overwrite = FALSE)
+dm_save(x, path = getOption("dymium.output_dir"), .overwrite = FALSE)
 }
 \arguments{
 \item{x}{a dymium class object}

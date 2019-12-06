@@ -1,16 +1,34 @@
 # for storing variables that accessible and modifiable by all functions and objects
 .DMevn <- new.env(parent = emptyenv())
 
-.dymiumTempDir <- file.path(tempdir(), "dymium")
+.dymium_tempdir <- file.path(tempdir(), "dymium")
+
+.dymium_options <- function() {
+  return(list(
+    scenario__dir = getOption('dymium.scenario_dir'),
+    output_dir = getOption('dymium.output_dir'),
+    input_dir = getOption('dymium.input_dir')
+  ))
+}
+
+.dymium_options_msg = function() {
+  glue::glue("
+  *----- dymium's options -----*
+  scenario_dir: {getOption('dymium.scenario_dir')}
+  output_dir: {getOption('dymium.output_dir')}
+  input_dir: {getOption('dymium.input_dir')}
+  *----- dymium's options -----*")
+}
 
 .onLoad <- function(libname, pkgname) {
 
   # set global options
   opts <- options()
   opts.dymium <- list(
-    dymium.outputDir = file.path(.dymiumTempDir, "outputs"),
-    dymium.inputDir = file.path(.dymiumTempDir, "inputs")
-    # dymium.logFile = file.path(.dymiumTempDir, "log")
+    dymium.scenario_dir = file.path(.dymium_tempdir),
+    dymium.output_dir = file.path(.dymium_tempdir, "outputs"),
+    dymium.input_dir = file.path(.dymium_tempdir, "inputs")
+    # dymium.logFile = file.path(.dymium_tempdir, "log")
   )
   toset <- !(names(opts.dymium) %in% names(opts))
   if (any(toset)) options(opts.dymium[toset])
@@ -19,7 +37,7 @@
   .DMevn[["sim_time"]] <- 0
 
   # create log file
-  # dir.create(dirname(opts.dymium$dymium.logFile), recursive = T, showWarnings = FALSE)
+  # _dir.create(_dirname(opts.dymium$dymium.logFile), recursive = T, showWarnings = FALSE)
   # file.create(opts.dymium$dymium.logFile)
 
   # setup logger
@@ -33,27 +51,23 @@
   lg$set_propagate(FALSE)
 
   # print to console
-  packageStartupMessage(glue::glue("
-  *----- dymium's options -----*
-  outputDir: {getOption('dymium.outputDir')}
-  inputDir: {getOption('dymium.inputDir')}
-  *----- dymium's options -----*"))
+  packageStartupMessage(.dymium_options_msg())
 
   invisible()
 }
 
 
 .onUnload <- function(libpath) {
-  ## if temp session dir is being used, ensure it gets reset each session
-  if (getOption("dymium.outputDir") == file.path(.dymiumTempDir, "outputs")) {
-    options(dymium.outputDir = NULL)
+  ## if temp session _dir is being used, ensure it gets reset each session
+  if (getOption("dymium.scenario_dir") == file.path(.dymium_tempdir)) {
+    options(dymium.scenario_dir = NULL)
   }
 
-  if (getOption("dymium.inputDir") == file.path(.dymiumTempDir, "inputs")) {
-    options(dymium.inputDir = NULL)
+  if (getOption("dymium.output_dir") == file.path(.dymium_tempdir, "outputs")) {
+    options(dymium.output_dir = NULL)
   }
 
-  # if (getOption("dymium.logFile") == file.path(.dymiumTempDir, "log")) {
-  #   unlink(getOption("dymium.logFile"))
-  # }
+  if (getOption("dymium.input_dir") == file.path(.dymium_tempdir, "inputs")) {
+    options(dymium.input_dir = NULL)
+  }
 }
