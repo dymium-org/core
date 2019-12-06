@@ -7,3 +7,7 @@
 ^codecov\.yml$
 ^tic\.R$
 ^_pkgdown\.yml$
+^scenarios/test-sdfdsf$
+^modules/test1$
+^modules/test2$
+^modules$

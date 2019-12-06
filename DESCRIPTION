@@ -30,6 +30,7 @@ Imports:
     modules (>= 0.8.0),
     here (>= 0.1.0),
     usethis,
+    cli,
     fs
 Suggests:
     testthat (>= 2.1.0),
@@ -86,7 +87,7 @@ Collate:
     'module.R'
     'population-register.R'
     'sampling.R'
-    'save.R'
+    'scenario-utils.R'
     'scheduler.R'
     'templates.R'
     'usethis.R'
