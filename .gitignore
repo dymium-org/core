@@ -41,3 +41,4 @@ docs/
 # excluded files
 .DS_Store
 data-raw
+man
