@@ -8,7 +8,8 @@
   # set global options
   opts <- options()
   opts.dymium <- list(
-    dymium.outputPath = file.path(.dymiumTempDir, "outputs")
+    dymium.outputDir = file.path(.dymiumTempDir, "outputs"),
+    dymium.inputDir = file.path(.dymiumTempDir, "inputs")
     # dymium.logFile = file.path(.dymiumTempDir, "log")
   )
   toset <- !(names(opts.dymium) %in% names(opts))
@@ -34,7 +35,8 @@
   # print to console
   packageStartupMessage(glue::glue("
   *----- dymium's options -----*
-  outputPath: {getOption('dymium.outputPath')}
+  outputDir: {getOption('dymium.outputDir')}
+  inputDir: {getOption('dymium.inputDir')}
   *----- dymium's options -----*"))
 
   invisible()
@@ -43,8 +45,12 @@
 
 .onUnload <- function(libpath) {
   ## if temp session dir is being used, ensure it gets reset each session
-  if (getOption("dymium.outputPath") == file.path(.dymiumTempDir, "outputs")) {
-    options(dymium.outputPath = NULL)
+  if (getOption("dymium.outputDir") == file.path(.dymiumTempDir, "outputs")) {
+    options(dymium.outputDir = NULL)
+  }
+
+  if (getOption("dymium.inputDir") == file.path(.dymiumTempDir, "inputs")) {
+    options(dymium.inputDir = NULL)
   }
 
   # if (getOption("dymium.logFile") == file.path(.dymiumTempDir, "log")) {
