@@ -1,11 +1,11 @@
 # for storing variables that accessible and modifiable by all functions and objects
 .DMevn <- new.env(parent = emptyenv())
 
-.dymium_tempdir <- file.path(tempdir(), "dymium")
+.dymium_tempdir <- file.path(tempdir(), "scenario")
 
 .dymium_options <- function() {
   return(list(
-    scenario__dir = getOption('dymium.scenario_dir'),
+    scenario_dir = getOption('dymium.scenario_dir'),
     output_dir = getOption('dymium.output_dir'),
     input_dir = getOption('dymium.input_dir')
   ))
@@ -21,6 +21,11 @@
 }
 
 .onLoad <- function(libname, pkgname) {
+
+  # create temp directory
+  fs::dir_create(.dymium_tempdir)
+  fs::dir_create(fs::path(.dymium_tempdir, "outputs"))
+  fs::dir_create(fs::path(.dymium_tempdir, "inputs"))
 
   # set global options
   opts <- options()

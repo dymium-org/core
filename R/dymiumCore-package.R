@@ -11,7 +11,7 @@
 #' @import data.table
 #' @import assertthat
 #' @import glue
-#' @importFrom fs path
+#' @importFrom fs path dir_create
 #' @importFrom usethis use_template use_directory
 #' @importFrom here here
 #' @importFrom magrittr freduce functions set_colnames
