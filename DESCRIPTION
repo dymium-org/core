@@ -39,8 +39,9 @@ Suggests:
     pryr (>= 0.1.4),
     sf (>= 0.8),
     covr,
-    mapview
-Roxygen: list(markdown = TRUE, r6 = FALSE)
+    mapview,
+    rmarkdown
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.1
 Collate: 
     'Generic.R'
