@@ -43,10 +43,10 @@ reference:
     - assign_reference
     - alignment
     - starts_with("create_")
-- title: "Module and event templates"
-  desc: "Functions to create module and event files from a provided template."
+- title: "Event, module, and scenario creation"
+  desc: "usethis style functions to create module and event files from a provided template."
   contents:
-    - matches('event|module')
+    - starts_with("use_")
 - title: "Test data"
   contents:
     - starts_with("toy_")
