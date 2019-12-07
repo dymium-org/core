@@ -1,4 +1,9 @@
-#' Create a dymium event file.
+#' Create an event.
+#'
+#' @description
+#'
+#' This function creates an event script from the provided event template inside
+#' a module along with a testtthat test script.
 #'
 #' @param name Name of the event.
 #' @param module Name of the module folder to add a event file to. The function
@@ -9,6 +14,15 @@
 #' @export
 #'
 #' @examples
+#'
+#' \dontrun{
+#'   # Note: running this will create a folder called "modules" and a sub-folder
+#'   #       to your working directory within the folder called "demography"
+#'   use_module(name = "demography")
+#'
+#'   # create an event called 'birth' inside the 'demography' module.
+#'   use_event(name = "birth", module = 'demography')
+#' }
 use_event <- function(name, module) {
   usethis:::check_file_name(name)
 
@@ -30,7 +44,19 @@ use_event <- function(name, module) {
   invisible(event_path)
 }
 
-#' Create a dymium module folder and events
+#' Create and setup a module folder.
+#'
+#' @description
+#' This function creates a new module inside the modules folder of an active r project.
+#' If the 'modules' folder doesn't exist it will create it then adds a new folder
+#' with the name as specified in the `name` argument inside the 'modules' folder.
+#' R scripts to be used across the module will be added which contain the following:
+#'
+#' * a lgr logger script,
+#' * a script that contains constant values, and
+#' * a script for storing helper functions.
+#'
+#' Note that, to add event functions to a module see [use_event].
 #'
 #' @param name Name of the module.
 #'
@@ -41,9 +67,7 @@ use_event <- function(name, module) {
 #' \dontrun{
 #'   # Note: running this will create a folder called "modules" and a sub-folder
 #'   #       to your working directory within the folder called "demography"
-#'   use_module(
-#'     name = "demography"
-#'   )
+#'   use_module(name = "demography")
 #' }
 use_module <- function(name) {
   usethis:::check_file_name(name)
@@ -54,7 +78,7 @@ use_module <- function(name) {
   module_path <- fs::path("modules", name)
 
   if (has_module(name)) {
-    usethis:::ui_stop("The module {name} already exists at {module_path}.")
+    stop(glue("The module {name} already exists at {module_path}."))
   }
 
   usethis::use_directory("modules", ignore = TRUE)
@@ -84,15 +108,26 @@ use_module <- function(name) {
 
 #' Create a dymium scenario folder
 #'
+#' @description
+#' Creates a scenario folder using a standard format which contains an 'inputs' folder,
+#' an 'outputs' folder inside.
+#'
+#'
 #' @param name Name of the scenario
 #' @export
 #'
 #' @examples
+#'
+#' \dontrun{
+#'   use_scenario(name = "demography")
+#' }
 use_scenario <- function(name) {
   usethis:::check_file_name(name)
   path <- fs::path("scenarios", name)
   usethis::use_directory("scenarios", ignore = TRUE)
   usethis::use_directory(path)
+  usethis::use_directory(fs::path(path, "inputs"))
+  usethis::use_directory(fs::path(path, "outputs"))
   invisible(path)
 }
 
