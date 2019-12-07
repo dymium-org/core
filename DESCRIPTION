@@ -40,6 +40,7 @@ Suggests:
     sf (>= 0.8),
     covr,
     mapview,
+    knitr,
     rmarkdown
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.1
@@ -94,3 +95,4 @@ Collate:
     'usethis.R'
     'utils.R'
     'zzz.R'
+VignetteBuilder: knitr
