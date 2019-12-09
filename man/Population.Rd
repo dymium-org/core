@@ -94,26 +94,8 @@ their respective objects.
 }
 }
 
-\examples{
-
-## ------------------------------------------------
-## Method `Population$new`
-## ------------------------------------------------
-
-
-Pop <- Population$new()
-}
 \section{Super classes}{
 \code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{\link[dymiumCore:ContainerGeneric]{dymiumCore::ContainerGeneric}} -> \code{\link[dymiumCore:Container]{dymiumCore::Container}} -> \code{Population}
-}
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{ind}}{the reference to the \link{Individual} object created by Population}
-
-\item{\code{hh}}{the reference to the \link{Household} object created by Population}
-}
-\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -165,34 +147,8 @@ Pop <- Population$new()
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \subsection{Method \code{new()}}{
-Create a \link{Population} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Population$new(ind_data, hh_data, pid_col = NULL, hid_col = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{ind_data}}{(\link[data.table:data.table]{data.table::data.table}) Microdata of Individuals/Persons.}
-
-\item{\code{hh_data}}{(\link[data.table:data.table]{data.table::data.table}) Microdata of Households.}
-
-\item{\code{pid_col}}{(\code{character(1)}) Individual/Person id column in \code{ind_data}.}
-
-\item{\code{hid_col}}{(\code{character(1)}) Household id column in \code{hh_data}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-An \link[R6:R6Class]{R6::R6Class} object of the \link{Population} class.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{
-Pop <- Population$new()
-}
-\if{html}{\out{</div>}}
-
 }
 
 }
