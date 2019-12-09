@@ -42,8 +42,11 @@ Suggests:
     mapview,
     knitr,
     rmarkdown
+Remotes:
+  github::dymium-org/dymiumCore
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.1
+VignetteBuilder: knitr
 Collate: 
     'Generic.R'
     'History.R'
@@ -95,4 +98,3 @@ Collate:
     'usethis.R'
     'utils.R'
     'zzz.R'
-VignetteBuilder: knitr
