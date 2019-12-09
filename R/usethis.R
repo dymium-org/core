@@ -10,6 +10,11 @@
 #' looks for a folder inside the `modules` folder at the root folder of the active
 #' R project. If the module folder is not found or has not been created this will
 #' return an error.
+#' @with_comments a logical value. If `TRUE` the generated event script will contain
+#' comments about what each component inside the script does and some recommendations
+#' for the user to follow when authoring an event. For advance users, you may not need
+#' this hence you may specify `FALSE`. If missing, it will be prompted in the console
+#' for you to decide.
 #'
 #' @export
 #'
@@ -23,7 +28,7 @@
 #'   # create an event called 'birth' inside the 'demography' module.
 #'   use_event(name = "birth", module = 'demography')
 #' }
-use_event <- function(name, module) {
+use_event <- function(name, module, with_comments) {
   .check_file_name(name)
 
   if (!has_module(module)) {
@@ -35,7 +40,16 @@ use_event <- function(name, module) {
   event_path <- fs::path("modules", module, .slug(name, "R"))
   module_path <- fs::path("modules", module)
 
-  usethis::use_template("event.R",
+  if (missing(with_comments)) {
+    with_comments <- c(FALSE, TRUE)[utils::menu(choices = c("No", "Yes"),
+                                         title = "Do you want to have authors' comments in the event script?")]
+  } else {
+    checkmate::assert_logical(with_comments, len = 1, null.ok = FALSE)
+  }
+
+  template <- ifelse(with_comments, "event.R", "event-no-comments.R")
+
+  usethis::use_template(template = template,
                         save_as = event_path,
                         data = list(module_path = module_path,
                                     event = name,

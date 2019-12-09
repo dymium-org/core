@@ -4,7 +4,7 @@
 \alias{use_event}
 \title{Create an event.}
 \usage{
-use_event(name, module)
+use_event(name, module, with_comments)
 }
 \arguments{
 \item{name}{Name of the event.}
