@@ -121,7 +121,7 @@ use_module <- function(name) {
 #' \dontrun{
 #'   use_scenario(name = "demography")
 #' }
-use_scenario <- function(name) {
+use_scenario <- function(name, active = TRUE) {
   usethis:::check_file_name(name)
   path <- fs::path("scenarios", name)
   usethis::use_directory("scenarios", ignore = TRUE)
