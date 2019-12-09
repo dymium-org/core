@@ -60,6 +60,10 @@ download_module <- function(name, repo = dymiumModulesRepo, version, force = FAL
 #' @export
 #'
 #' @examples
+#'
+#' if (FALSE) {
+#'   check_module('test')
+#' }
 check_module <- function(name, repo = dymiumModulesRepo) {
   checkmate::assert_character(name, any.missing = FALSE, len = 1, null.ok = FALSE)
   checkmate::test_subset(name, choices = get_modules(), empty.ok = FALSE)
@@ -78,7 +82,9 @@ check_module <- function(name, repo = dymiumModulesRepo) {
 #'
 #' @examples
 #'
-#' check_module_version('test', version = '0.0.1')
+#' if (FALSE) {
+#'   check_module_version('test', version = '0.0.1')
+#' }
 check_module_version <- function(name, repo = dymiumModulesRepo, version) {
   all_versions <- get_module_versions(name = name, repo = repo)
   res <- checkmate::test_subset(version, choices = all_versions)
@@ -103,7 +109,9 @@ check_module_version <- function(name, repo = dymiumModulesRepo, version) {
 #'
 #' @examples
 #'
-#' get_module_versions("demography")
+#' if (FALSE) {
+#'   get_module_versions("demography")
+#' }
 get_module_versions <- function(name, repo = dymiumModulesRepo) {
   module_files <- get_module_files(name = name, repo = repo)
   versions <- .filter_zip_versions(x = module_files, name = name)
@@ -130,7 +138,9 @@ get_module_versions <- function(name, repo = dymiumModulesRepo) {
 #'
 #' @examples
 #'
-#' get_modules()
+#' if (FALSE) {
+#'   get_modules()
+#' }
 get_modules <- function(repo = dymiumModulesRepo) {
   all_files <- get_all_module_files(repo = repo)
   available_modules <- grep(paste0("^modules/"), all_files, value = TRUE) %>%
@@ -151,7 +161,10 @@ get_modules <- function(repo = dymiumModulesRepo) {
 #'
 #' @examples
 #'
-#' get_module_files("demography")
+#' if (FALSE) {
+#'   get_module_files("demography")
+#' }
+#'
 get_module_files <- function(name, repo = dymiumModulesRepo) {
   checkmate::assert_character(name, len = 1, null.ok = FALSE, any.missing = FALSE)
   if (!checkmate::test_subset(name, choices = get_modules(repo = repo), empty.ok = FALSE)) {
@@ -171,7 +184,10 @@ get_module_files <- function(name, repo = dymiumModulesRepo) {
 #'
 #' @examples
 #'
-#' get_all_module_files("dymium-org/dymiumModules)
+#' if (FALSE) {
+#'   get_all_module_files("dymium-org/dymiumModules)
+#' }
+#'
 get_all_module_files <- function(repo = dymiumModulesRepo) {
   checkmate::assert_character(repo, len = 1, null.ok = FALSE, any.missing = FALSE)
   apiurl <- paste0("https://api.github.com/repos/", repo, "/git/trees/master?recursive=1")
