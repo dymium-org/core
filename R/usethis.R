@@ -10,7 +10,7 @@
 #' looks for a folder inside the `modules` folder at the root folder of the active
 #' R project. If the module folder is not found or has not been created this will
 #' return an error.
-#' @with_comments a logical value. If `TRUE` the generated event script will contain
+#' @param with_comments a logical value. If `TRUE` the generated event script will contain
 #' comments about what each component inside the script does and some recommendations
 #' for the user to follow when authoring an event. For advance users, you may not need
 #' this hence you may specify `FALSE`. If missing, it will be prompted in the console
