@@ -86,6 +86,7 @@ Collate:
     'event-helpers.R'
     'generate-data.R'
     'household-formation.R'
+    'module.R'
     'population-register.R'
     'sampling.R'
     'save.R'

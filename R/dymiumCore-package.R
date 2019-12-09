@@ -20,7 +20,7 @@
 #' @importFrom purrr flatten_int map map_lgl map2 map2_int map2_dfr walk walk2
 #' @importFrom lest case_when
 #' @importFrom matchingR galeShapley.marriageMarket galeShapley.collegeAdmissions
-#' @importFrom utils packageVersion
+#' @importFrom utils packageVersion download.file
 #' @keywords internal
 NULL
 
