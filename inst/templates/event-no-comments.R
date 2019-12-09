@@ -13,9 +13,9 @@ run <- function(world, model = NULL, target = NULL, time_steps = NULL) {
   }
   lg$info("Running {{{event}}}")
   if (is.null(model)) {
-    model <- dm_get_model(world, REQUIRED_MODELS)
+    model <- dymiumCore::get_models(world, REQUIRED_MODELS)
   } else {
-    checkmate::assert_names(names(model), type = "unique", identical.to = REQUIRED_MODELS)
+    dymiumCore::check_required_models(model, REQUIRED_MODELS)
   }
   invisible(world)
 }

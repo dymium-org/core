@@ -51,9 +51,9 @@ run <- function(world, model = NULL, target = NULL, time_steps = NULL) {
   #    you may remove the five lines below entirely and add a warning message to
   #    notify the user when the model argument is not NULL.
   if (is.null(model)) {
-    model <- dm_get_model(world, REQUIRED_MODELS)
+    model <- dymiumCore::get_models(world, REQUIRED_MODELS)
   } else {
-    checkmate::assert_names(names(model), type = "unique", identical.to = REQUIRED_MODELS)
+    dymiumCore::check_required_models(model, REQUIRED_MODELS)
   }
 
   # uncomment the line belows if the event doesn't require `model`
