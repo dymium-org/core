@@ -56,6 +56,10 @@ use_event <- function(name, module) {
 #' * a script that contains constant values, and
 #' * a script for storing helper functions.
 #'
+#' Since dymium modules use the 'modules' and 'checkmate' packages, if these
+#' packages are not installed the function will ask whether you would like to
+#' install them or not.
+#'
 #' Note that, to add event functions to a module see [use_event].
 #'
 #' @param name Name of the module.
@@ -73,7 +77,7 @@ use_module <- function(name) {
   .check_file_name(name)
 
   required_pkgs <- c("modules", "lgr", "checkmate", "here", "R6")
-  sapply(required_pkgs, usethis:::check_installed)
+  sapply(required_pkgs, check_pkg_installed)
 
   module_path <- fs::path("modules", name)
 
@@ -104,6 +108,12 @@ use_module <- function(name) {
   )
 
   invisible(module_path)
+}
+
+check_pkg_installed <- function(pkg) {
+  if (requireNamespace(pkg, quietly = TRUE)) {
+   stop(glue("Package '{pkg}' required. Please install before re-trying."))
+  }
 }
 
 #' Create a dymium scenario folder
