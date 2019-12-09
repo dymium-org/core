@@ -1,73 +1,46 @@
-#' set and get output path
-#'
-#' @param x
-#'
-#' @return return the current output path
-#' @export
-#'
-#' @examples
-#' dm_outputpath()
-dm_output_dir <- function(x) {
-  if (missing(x)) {
-    return(getOption("dymium.output_dir"))
-  }
-  checkmate::assert_directory_exists(x, access = "rw")
-  message("setting output directory ('dymium.output_dir') to: ", x)
-  options(dymium.output_dir = x)
-}
-
-
-#' set and get input path
-#'
-#' @param x
-#'
-#' @return the current input path
-#' @export
-#'
-#' @examples
-dm_input_dir <- function(x) {
-  if (missing(x)) {
-    return(getOption("dymium.input_dir"))
-  }
-  checkmate::assert_directory_exists(x, access = "rw")
-  message("setting input directory ('dymium.input_dir') to: ", x)
-  options(dymium.input_dir = x)
-}
-
-#' set an active scenario directory
+#' Set an active scenario directory.
 #'
 #' @description
+#' This is useful for event functions to access the current active scenario directory.
 #'
-#' This function sets the current scenario directory and creates input and output
-#' folders with they do not exist. However, if the `overwrite` argument is set to
-#' `TRUE` this will overwrite the existing output folder (scenario-dir/outputs).
+#' @param name name of the scenario folder to become active.
 #'
-#' @param x
-#'
-#' @return
+#' @return a list contains scenario directories.
 #' @export
 #'
 #' @examples
-dm_scenario_dir <- function(dir, overwrite = FALSE) {
+#'
+#' if (FALSE) {
+#'  use_module("test")
+#'  set_active_scenario("test")
+#' }
+set_active_scenario <- function(name) {
 
-  if (missing(input_dir) && missing(output_dir)) {
-    .dirs <- list(output_dir = getOption('dymium.output_dir'),
-                  input_dir = getOption('dymium.input_dir'))
-    message(glue::glue("
-    *----- dymium's options -----*
-    output_dir: {.dirs[['output_dir']]}
-    input_dir: {.dirs[['input_dir']]}
-    *----- dymium's options -----*
-                   "))
-    return(invisible(.dirs))
-  }
+  scenario_path <- fs::path_wd("scenarios", name)
+  input_path <- fs::path(scenario_path, "inputs")
+  output_path <- fs::path(scenario_path,  "outputs")
 
-  if (!missing(input_dir)) {
-    dm_input_dir(input_dir)
-  }
+  checkmate::assert_directory_exists(scenario_path, access = "rw")
+  checkmate::assert_directory_exists(input_path, access = "rw")
+  checkmate::assert_directory_exists(output_path, access = "rw")
 
-  if (!missing(output_dir)) {
-    dm_output_dir(output_dir)
-  }
+  opts.dymium <- list(
+    dymium.scenario_dir = scenario_path,
+    dymium.input_dir = input_path,
+    dymium.output_dir = output_path
+  )
+  options(opts.dymium)
 
+  .dymium_options_msg()
+
+  invisible(scenario_path)
+
+}
+
+#' Get the main directories of the currently active scenario folder.
+#'
+#' @return a list of 3 elements: 'scenario', 'inputs' and 'outputs' directories.
+#' @export
+active_scenario <- function() {
+  .dymium_options()
 }
