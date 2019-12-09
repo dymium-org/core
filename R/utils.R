@@ -278,3 +278,12 @@ dt_group_and_sort <- function(x, groupby_col, group_col, sort_order) {
   }
   return(TRUE)
 }
+
+check_names <- function(x, names) {
+  if (!checkmate::test_named(x, type = "unique")) {
+    stop("Names of 'x' must be unique!")
+  }
+  nms <- names(x)
+  return(names %in% nms)
+}
+
