@@ -8,7 +8,7 @@
 Create Individual class, extended Agent class.
 }
 \section{Construction}{
-\preformatted{Ind <- Individual$new()
+\preformatted{Ind <- Individual$new(.data, id_col)
 }
 \itemize{
 \item .data::\link[data.table:data.table]{data.table::data.table}\cr

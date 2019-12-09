@@ -1,4 +1,5 @@
 #' @title Transition for regression model
+#' @inherit Transition
 #' @include Transition.R
 #' @export
 TransitionRegression <- R6Class(

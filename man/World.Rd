@@ -56,6 +56,7 @@ Get a model object by name \code{x}. Note that, this returns a \link{Model} obje
 \link[R6:R6Class]{R6::R6Class} not the actual model itself. To get the model object use \verb{$get()}
 on the \link{Model} object.
 \item \code{get_time()}\cr
+() -> (\code{integer(1)})\cr
 Get the value of .DMevn$sim_time.
 \item \code{get_info()}\cr
 \code{NULL} -> \code{list()}\cr
@@ -69,6 +70,7 @@ Reset the value of .DMevn$sim_time to 0L (L is for forcing type integer
 otherwise 0 is of numeric type).
 \item \code{start_iter(time_step, unit)}\cr
 (\code{integer(1)}, \code{character(1)}) -> \code{self}\cr
+Update the simulation time and returns self.
 }
 }
 

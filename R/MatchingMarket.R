@@ -42,14 +42,6 @@
 #'
 #' @section Methods:
 #'
-#'  * `stochastic_matching(n_choices = 10, method = "pweighted", by_group = FALSE)`\cr
-#'  (`integer(1)`|`c("pweighted", "ranking")`|`logical(1)`) -> `[data.table::data.table()]`\cr
-#'  Simulate matching in a stochastic way.
-#'
-#'  * `optimal_matching()`\cr
-#'  () -> `character()`\cr
-#'  Print a summary of the matching problem.
-#'
 #'  * `split_market()`\cr
 #'  (`logical(1)`) -> `()`\cr
 #'  Create a list of list of data.tables. `list({group_name} = list({sub_market_number} = list(agentset_A = data.table(), agentset_B = data.table())))`.

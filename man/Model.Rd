@@ -5,7 +5,7 @@
 \title{Model class}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting \link{Generic}.}
 \description{
-Provides an interface for model objects to be use in \link{Transition} and \link{World}.
+A container for the supported model objects (see \link{SupportedTransitionModels}).
 }
 \section{Construction}{
 \preformatted{x <- Model$new(x)
@@ -22,11 +22,13 @@ A model object that compatible.
 \item \code{get()}\cr
 () -> (\link[caret:train]{caret::train} | \link[data.table:data.table]{data.table::data.table} | named \code{list})\cr
 Get a model object.
-\item \code{set()}\cr
-() -> (\link[caret:train]{caret::train} | \link[data.table:data.table]{data.table::data.table} | named \code{list})\cr
+\item \code{set(x)}\cr
+(\link[caret:train]{caret::train} | \link[data.table:data.table]{data.table::data.table} | named \code{list})\cr
 Get a model object.
 \item \code{modify()}\cr
+An abstract method.
 \item \code{simulate()}\cr
+An abstract method.
 \item \code{print()}\cr
 }
 }

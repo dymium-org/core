@@ -191,15 +191,22 @@ simulate_classification_datatable <- function(self, private) {
       ))
     }
 
+    if (isTRUE(self$model_by_id)) {
+      # Force to match by `id_col` only
+      sim_data_matching_vars <- id_col
+    } else {
+      sim_data_matching_vars <- c(id_col, matching_vars)
+    }
+
     # simulate choice
     response <-
-      merge(x = private$.sim_data[, .SD, .SDcols = c(id_col, matching_vars)],
+      merge(x = private$.sim_data[, .SD, .SDcols = sim_data_matching_vars],
             y = private$.model,
             by = matching_vars,
             sort = FALSE) %>%
       .[, .SD, .SDcols = names(.)[names(.) %in% c(id_col, .reserved_colnames)]] %>%
       # agent draws a choice from its choiceset (the lengths of the choicesets may vary)
-      .[, response := purrr::map2_chr(probs, choices, ~ {sample(.y, 1, replace = FALSE, prob = .x)})] %>%
+      .[, response := purrr::map2_chr(probs, choices, ~ {sample_choice(.y, 1, replace = FALSE, prob = .x)})] %>%
       .[['response']]
 
     return(response)

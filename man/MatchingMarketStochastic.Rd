@@ -18,6 +18,11 @@ See \link{MatchingMarket}.
 \section{Methods}{
 
 See \link{MatchingMarket}.
+\itemize{
+\item \code{simulate(n_choices = 10, method = c("pweighted", "ranking"), by_group = FALSE, parallel = FALSE)}\cr
+(\code{integer(1)}, \code{character(1)}, \code{logical(1)}, \code{logical(1)}) -> \verb{[data.table::data.table()]}\cr
+Simulate matching stochastically.
+}
 }
 
 \seealso{

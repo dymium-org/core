@@ -5,10 +5,13 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![Build
-Status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://travis-ci.org/dymium-org/dymiumCore)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore)
+[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore)
+[![Build
+Status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://travis-ci.org/dymium-org/dymiumCore)
 [![Codecov test
 coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.svg)](https://codecov.io/gh/dymium-org/dymiumCore?branch=master)
 <!-- badges: end -->
@@ -27,7 +30,7 @@ install from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("dymium-org/dymium")
+remotes::install_github("dymium-org/dymiumCore")
 ```
 
 ## Tutorials
@@ -48,7 +51,7 @@ models.
 ## Currently supported models
 
 Currently, dymiumCore we only support model objects fitted using the
-`caret` package.
+`caret` package for Monte Carlo simulation.
 
 | Package |     Class |                                     Model types |         status |
 | ------: | --------: | ----------------------------------------------: | -------------: |
@@ -56,8 +59,9 @@ Currently, dymiumCore we only support model objects fitted using the
 |  mlogit |  `mlogit` |                        multinomial logit models | in-development |
 |    mlr3 | `Learner` | classification, survival, and regression models |        planned |
 
-**Note that**: data.frames and named lists can be used in the model
-argument of a Transition object.
+**Note that**: rate-based models can be used for simulation as well. To
+use them, you first need to import them as a data.frame and a named
+list.
 
   - If a `data.frame` is provided, it must contain a key column or keys
     columns and must have a column named ‘prob’ that must be a numeric

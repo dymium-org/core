@@ -1,4 +1,6 @@
-#' \code{dymiumCore} package
+#' dymiumCore package
+#'
+#' @details
 #'
 #' Dynamic microsimulation framework for integrated urban models.
 #'
@@ -22,7 +24,7 @@
 #' @importFrom matchingR galeShapley.marriageMarket galeShapley.collegeAdmissions
 #' @importFrom utils packageVersion download.file
 #' @keywords internal
-NULL
+"_PACKAGE"
 
 ## quiets concerns of R CMD check re: the .'s that appear in pipelines
 if(getRversion() >= "2.15.1")  utils::globalVariables(c("."))

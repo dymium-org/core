@@ -2,7 +2,7 @@
 #'
 #' @description
 #'
-#' A class that warps aroun agent and model to perform a Monte Carlo simulation.
+#' A class that perform Monte Carlo simulation on agents using a probabilistic model.
 #' Work flow: `initialise()` -> `filter()` -> `mutate()` -> `simulate()` -> `postprocess()`.
 #' Note that, the order of filter and mutate can be swap by overwriting the `preprocess()` method.
 #' The default order as speficied in the `preprocess` method is:
@@ -59,6 +59,23 @@
 #' By default, preprocess runs `filter()` then `mutate()` as described in the description section.
 #' This can be overwritten to change the order and add extra steps.
 #'
+#' * `update_agents(attr)`\cr
+#' (`character(1)`)\cr
+#' Update the attribute data of the agents that undergo the transition event.
+#'
+#' * `get_result(ids)`\cr
+#' (`integer()`) -> [data.table::data.table]\cr
+#' Returns the simulation result in a [data.table::data.table] format with two
+#' columns `id` and `response`.
+#'
+#' * `get_nrow_result()`\cr
+#' Returns the number of rows in the simulation result.
+#'
+#' * `get_decision_maker_ids(response_filter = NULL)`\cr
+#' (`character()`) -> (`integer()`)\cr
+#' Returns ids of the agents that have their response equal to `response_filter`.
+#'
+#'
 #' @param x a Agent class inheritance object
 #' @param model a model object
 #' @param target a integer
@@ -74,7 +91,7 @@ Transition <- R6Class(
     initialize = function(x, model, target = NULL, targeted_agents = NULL) {
       # checks
       checkmate::assert_class(x, c("Agent"))
-      if (!is.null(private$.allowed_classes)) checkmate::assert_subset(class(model)[[1]], choices = private$.allowed_classes)
+      checkmate::assert_subset(class(model)[[1]], choices = SupportedTransitionModels())
       checkmate::assert_list(target, any.missing = FALSE, types = 'integerish', names = 'strict', null.ok = TRUE)
       checkmate::assert_integerish(targeted_agents, lower = 1, any.missing = FALSE, null.ok = TRUE)
 
@@ -126,10 +143,6 @@ Transition <- R6Class(
       private$.sim_result[, .N]
     },
 
-    get_allowed_classes = function() {
-      private$.allowed_classes
-    },
-
     filter = function(.data) {
       .data
     },
@@ -145,6 +158,17 @@ Transition <- R6Class(
 
     postprocess = function(.data) {
       .data
+    },
+
+    #' @details
+    #' Update the attribute data of the agents that undergo the transition event.
+    #'
+    #' @param attr the column name in agents' attribute data to be updated using the
+    #'  response result from the transition event.
+    #'
+    #' @return NULL
+    update_agents = function(attr) {
+      private$update(attr)
     },
 
     print = function() {
@@ -183,7 +207,6 @@ Transition <- R6Class(
     .sim_result = data.table(), # two columns: id, response
     .target = integer(),
     .targeted_agents = integer(), # a vector containing agent ids of .AgtObj
-    .allowed_classes = NULL,
 
     run_preprocessing_steps = function() {
 
@@ -272,6 +295,38 @@ Transition <- R6Class(
 
       private$.sim_result <- sim_result
       invisible(TRUE)
+    },
+
+    update = function(attr) {
+
+      # prepare agents' data to update
+      Agt <- private$.AgtObj
+      .data <- Agt$get_data(copy = FALSE)
+      id_col <- Agt$get_id_col()
+
+      if (!checkmate::test_names(names(.data), must.include = attr)) {
+        lg$warn("{attr} is being added to the attribute data of {class(Agt)[[1]]}
+                  as it is not an original attribute of {class(Agt)[[1]]}.")
+      }
+
+      # responses
+      ids <- self$get_result()[["id"]]
+      responses <- self$get_result()[["response"]]
+
+      # get index of ids
+      idx_unordered <- .data[get(id_col) %in% ids, which = TRUE]
+      idx_dt <- .data[idx_unordered, ..id_col][, idx := idx_unordered]
+      idx <- merge(x = data.table(id = ids),
+                   y = idx_dt,
+                   by.x = "id", by.y = id_col, sort = FALSE) %>%
+        .[["idx"]]
+
+      # update by reference
+      for (i in seq_along(idx)) {
+        data.table::set(.data, i = idx[i], j = attr, value = responses[i])
+      }
+
+      invisible()
     }
  )
 )
@@ -285,7 +340,7 @@ Transition <- R6Class(
 #' @return a character vector
 #' @export
 SupportedTransitionModels <- function() {
-  return(c("train", "list", "data.table"))
+  return(c("train", "list", "data.table", "numeric"))
 }
 
 monte_carlo_sim <- function(prediction, target) {
@@ -295,7 +350,7 @@ monte_carlo_sim <- function(prediction, target) {
     min.cols = 2,
     any.missing = FALSE,
     null.ok = FALSE,
-    col.names = 'strict'
+    col.names = 'unique'
   )
   choices <- names(prediction)
 

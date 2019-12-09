@@ -62,6 +62,7 @@
 #'  on the [Model] object.
 #'
 #' * `get_time()`\cr
+#'  () -> (`integer(1)`)\cr
 #'  Get the value of .DMevn$sim_time.
 #'
 #' * `get_info()`\cr
@@ -79,6 +80,7 @@
 #'
 #' * `start_iter(time_step, unit)`\cr
 #'  (`integer(1)`, `character(1)`) -> `self`\cr
+#'  Update the simulation time and returns self.
 #'
 #' @export
 World <- R6::R6Class(
@@ -90,10 +92,8 @@ World <- R6::R6Class(
     Entities = list(),
     Models = list(),
     info = list(
-      creator = NA,
       built.datetime = Sys.time(),
       dymiumCore.version = utils::packageVersion("dymiumCore"),
-      dymium.sha = system("git rev-parse HEAD", intern = TRUE),
       R.version = base::version
     ),
     config = NULL,

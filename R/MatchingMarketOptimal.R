@@ -21,12 +21,18 @@
 #' @section Methods:
 #' See [MatchingMarket].
 #'
+#' * `simulate(method = c("one-to-one", "many-to-one"), one_sided = FALSE, optimal_A = TRUE, by_group = FALSE, parallel = FALSE)`\cr
+#' (`character(1)`, `logical(1)`, `logical(1)`, `logical(1)`, `logical(1)`) -> [data.table::data.table]\cr
+#' Simulate using an optimal matching approach.
+#'
+#'
 #' @family MatchingMarket
 #' @export
 MatchingMarketOptimal <- R6::R6Class(
   classname = "MatchingMarketOptimal",
   inherit = MatchingMarket,
   public = list(
+
     simulate = function(method = c("one-to-one", "many-to-one"),
                         one_sided = FALSE,
                         optimal_A = TRUE,
@@ -46,7 +52,6 @@ MatchingMarketOptimal <- R6::R6Class(
       parallel_wrapper <- function(...) {
         if (parallel) {
           stopifnot(requireNamespace('furrr'))
-          # furrr::future_map_dfr(...)
           furrr::future_map_dfr(..., .options = furrr::future_options(globals = "self"))
         } else {
           purrr::map_dfr(...)

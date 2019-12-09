@@ -18,6 +18,11 @@ See \link{MatchingMarket}.
 \section{Methods}{
 
 See \link{MatchingMarket}.
+\itemize{
+\item \code{simulate(method = c("one-to-one", "many-to-one"), one_sided = FALSE, optimal_A = TRUE, by_group = FALSE, parallel = FALSE)}\cr
+(\code{character(1)}, \code{logical(1)}, \code{logical(1)}, \code{logical(1)}, \code{logical(1)}) -> \link[data.table:data.table]{data.table::data.table}\cr
+Simulate using an optimal matching approach.
+}
 }
 
 \seealso{
