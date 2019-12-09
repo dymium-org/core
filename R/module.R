@@ -29,7 +29,16 @@ dymiumModulesRepo <- "dymium-org/dymiumModules"
 download_module <- function(name, repo = dymiumModulesRepo, version, force = FALSE, remove_download = FALSE) {
   modules_path <- fs::path("modules")
   usethis::use_directory('modules')
-  check_module_version(name = name, repo = repo, version = version)
+  if (missing(version)) {
+    cli::cli_alert_warning("The argument 'version' was not specified. The latest \\
+                            version of the module '{.strong {name}}' will be downloaded.")
+    all_versions <- get_module_versions(name = name, repo = repo)
+    version <- all_versions[[length(all_versions)]]
+    cli::cli_alert_info("The latest version of module '{.strong {name}}' is '{version}'.")
+  } else {
+    check_module_version(name = name, repo = repo, version = version)
+  }
+
   module_filename <- paste0(name, "_", version)
   if (isFALSE(force) && fs::dir_exists(fs::path(modules_path, module_filename))) {
     cli::cli_alert_danger("'{.strong {module_filename}}' already exists in \\
@@ -127,7 +136,8 @@ get_module_versions <- function(name, repo = dymiumModulesRepo) {
     gsub(pattern = paste0("modules/", name, "/"), replacement =  "", x = .) %>%
     grep(paste0("^", name, ".+.zip"), x = ., value = TRUE) %>%
     gsub(pattern = paste0(name, "_"), replacement = "", x = .) %>%
-    gsub(pattern = "\\.zip", replacement = "", x = .)
+    gsub(pattern = "\\.zip", replacement = "", x = .) %>%
+    sort()
 }
 
 #' Get the names of available modules from a remote repository
