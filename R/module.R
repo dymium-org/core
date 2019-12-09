@@ -2,36 +2,53 @@ dymiumModulesRepo <- "dymium-org/dymiumModules"
 
 #' Download a module from a repository.
 #'
+#' @description
+#'
+#' Download and extract a module to the 'modules' folder in the active working directory.
+#' If you are using an RStudio project then it will be saved in the 'modules' folder
+#' of your project. If the 'modules' folder does not exist, it will be created.
+#'
 #' @param name name of the module.
 #' @param version the version of the module to download. If not given, the latest version will
 #' be downloaded.
 #' @param force A logical value. force download even though the module already exists locally.
+#' @param remove_download a logical value whether to delete the downloaded zip file or not.
 #' @template repo-arg
 #'
 #' @return path to the module.
 #'
 #' @export
-download_module <- function(name, repo = dymiumModulesRepo, version, force = FALSE) {
-
-  # prepare 'modules' folder
+#'
+#' @examples
+#'
+#' if (FALSE) {
+#'   # download an test module.
+#'   download_modules('test', version = '0.0.1')
+#' }
+#'
+download_module <- function(name, repo = dymiumModulesRepo, version, force = FALSE, remove_download = FALSE) {
   modules_path <- fs::path("modules")
-  use_directory('modules_path')
-
-  # check if the request version exists
+  usethis::use_directory('modules')
   check_module_version(name = name, repo = repo, version = version)
-
-  # download
+  module_filename <- paste0(name, "_", version)
+  if (isFALSE(force) && fs::dir_exists(fs::path(modules_path, module_filename))) {
+    cli::cli_alert_danger("'{.strong {module_filename}}' already exists in \\
+                          directory: '{modules_path}'. Since `force` is FALSE \\
+                          the module will not be overwritten.")
+  }
+  if (force) {
+    cli::cli_alert_warning("Force overwriting the module if already exists.")
+  }
   module_download_url <-
-    paste0("https://github.com/", repo, "/raw/master/modules/", name, "/", name, "_", version, ".zip")
-  tmp_module_path <- "modules/temp-module.zip"
-  utils::download.file(url = module_download_url, destfile = module_path)
-
-  # extract module zip
-  utils::unzip(zipfile = module_path, files = modules_path, overwrite = FALSE)
-
-  # remove zip file
-  fs::file_delete(path = module_path)
-
+    paste0("https://github.com/", repo, "/raw/master/modules/", name, "/", module_filename, ".zip")
+  tmp_module_path <- fs::path("modules", "temp-module.zip")
+  utils::download.file(url = module_download_url, destfile = tmp_module_path, overwrite = FALSE, cacheOK = FALSE)
+  utils::unzip(zipfile = tmp_module_path, exdir = modules_path, overwrite = FALSE)
+  if (remove_download) {
+    fs::file_delete(path = tmp_module_path)
+  }
+  cli::cli_alert_success("'{.strong {name}}' module version {.strong {version}} was successfully downloaded \\
+                         and added to directory: '{modules_path}'")
   invisible()
 }
 
