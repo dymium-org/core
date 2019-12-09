@@ -88,6 +88,7 @@ Collate:
     'household-formation.R'
     'population-register.R'
     'sampling.R'
+    'save.R'
     'scenario-utils.R'
     'scheduler.R'
     'usethis.R'
