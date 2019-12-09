@@ -21,7 +21,7 @@
 # the codes below.
 modules::import('lgr')
 modules::export('lg')
-lg <- lgr::get_logger_glue(name = '{{{module_name}}}')
+lg <- lgr::get_logger_glue(name = '{{{module}}}')
 lg$set_appenders(list(cons = lgr::AppenderConsole$new()))
 lg$appenders$cons$set_layout(lgr::LayoutGlue$new(
   fmt = '[{format(timestamp, \"%H:%M:%S\")}] \\

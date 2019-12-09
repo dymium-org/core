@@ -33,12 +33,13 @@ use_event <- function(name, module) {
   }
 
   event_path <- fs::path("modules", module, .slug(name, "R"))
-  module_path <- fs::path("modules", "module")
+  module_path <- fs::path("modules", module)
 
   usethis::use_template("event.R",
                         save_as = event_path,
                         data = list(module_path = module_path,
-                                    event_name = name),
+                                    event = name,
+                                    module = module),
                         package = "dymiumCore")
 
   invisible(event_path)
@@ -91,19 +92,22 @@ use_module <- function(name) {
   usethis::use_template(
     template = "logger.R",
     save_as = fs::path(module_path, "logger.R"),
-    data = list(module_path = module_path),
+    data = list(module_path = module_path,
+                module = name),
     package = "dymiumCore"
   )
   usethis::use_template(
     template = "constants.R",
     save_as = fs::path(module_path, "constants.R"),
-    data = list(module_path = module_path),
+    data = list(module_path = module_path,
+                module = name),
     package = "dymiumCore"
   )
   usethis::use_template(
     template = "helpers.R",
     save_as = fs::path(module_path, "helpers.R"),
-    data = list(module_path = module_path),
+    data = list(module_path = module_path,
+                module = name),
     package = "dymiumCore"
   )
 
@@ -111,7 +115,7 @@ use_module <- function(name) {
 }
 
 check_pkg_installed <- function(pkg) {
-  if (requireNamespace(pkg, quietly = TRUE)) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
    stop(glue("Package '{pkg}' required. Please install before re-trying."))
   }
 }
