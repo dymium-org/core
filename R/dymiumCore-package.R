@@ -13,6 +13,7 @@
 #' @import glue
 #' @importFrom fs path dir_create
 #' @importFrom usethis use_template use_directory
+#' @importFrom cli cli_alert_info cli_li cli_alert_danger rule symbol cli_text
 #' @importFrom here here
 #' @importFrom magrittr freduce functions set_colnames
 #' @importFrom furrr future_map_dfr future_options
