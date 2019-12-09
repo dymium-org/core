@@ -6,8 +6,6 @@
 \alias{dymiumCore-package}
 \title{dymiumCore package}
 \description{
-\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
-
 A modular microsimulation modelling framework for integrated urban modelling.
 }
 \details{

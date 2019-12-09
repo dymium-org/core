@@ -33,6 +33,19 @@ An abstract method.
 }
 }
 
+\examples{
+
+world <- World$new()
+
+prob_model <- list(yes = 0.95, no = 0.05)
+
+world$add(x = prob_model, name = "prob_model")
+
+world$get(x = "prob_model")
+
+world$get_model(x = "prob_model")
+
+}
 \section{Super class}{
 \code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{Model}
 }

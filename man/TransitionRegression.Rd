@@ -4,71 +4,12 @@
 \alias{TransitionRegression}
 \title{Transition for regression model}
 \description{
-Transition for regression model
-
-Transition for regression model
-}
-\section{Super classes}{
-\code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{\link[dymiumCore:Transition]{dymiumCore::Transition}} -> \code{TransitionRegression}
-}
-\section{Methods}{
-\subsection{Public methods}{
-\itemize{
-\item \href{#method-new}{\code{TransitionRegression$new()}}
-\item \href{#method-clone}{\code{TransitionRegression$clone()}}
-}
-}
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="class">}\href{../../dymiumCore/html/Generic.html#method-class}{\code{dymiumCore::Generic$class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="debug">}\href{../../dymiumCore/html/Generic.html#method-debug}{\code{dymiumCore::Generic$debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="is_dymium_class">}\href{../../dymiumCore/html/Generic.html#method-is_dymium_class}{\code{dymiumCore::Generic$is_dymium_class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="message">}\href{../../dymiumCore/html/Generic.html#method-message}{\code{dymiumCore::Generic$message()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_debug">}\href{../../dymiumCore/html/Generic.html#method-msg_debug}{\code{dymiumCore::Generic$msg_debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_info">}\href{../../dymiumCore/html/Generic.html#method-msg_info}{\code{dymiumCore::Generic$msg_info()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="filter">}\href{../../dymiumCore/html/Transition.html#method-filter}{\code{dymiumCore::Transition$filter()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_allowed_classes">}\href{../../dymiumCore/html/Transition.html#method-get_allowed_classes}{\code{dymiumCore::Transition$get_allowed_classes()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_data">}\href{../../dymiumCore/html/Transition.html#method-get_data}{\code{dymiumCore::Transition$get_data()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_decision_maker_ids">}\href{../../dymiumCore/html/Transition.html#method-get_decision_maker_ids}{\code{dymiumCore::Transition$get_decision_maker_ids()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_nrow_result">}\href{../../dymiumCore/html/Transition.html#method-get_nrow_result}{\code{dymiumCore::Transition$get_nrow_result()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_result">}\href{../../dymiumCore/html/Transition.html#method-get_result}{\code{dymiumCore::Transition$get_result()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="mutate">}\href{../../dymiumCore/html/Transition.html#method-mutate}{\code{dymiumCore::Transition$mutate()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="postprocess">}\href{../../dymiumCore/html/Transition.html#method-postprocess}{\code{dymiumCore::Transition$postprocess()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="preprocess">}\href{../../dymiumCore/html/Transition.html#method-preprocess}{\code{dymiumCore::Transition$preprocess()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="print">}\href{../../dymiumCore/html/Transition.html#method-print}{\code{dymiumCore::Transition$print()}}\out{</span>}
-}
-\out{</details>}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\subsection{Method \code{new()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TransitionRegression$new(x, model, target = NULL, targeted_agents = NULL)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TransitionRegression$clone(deep = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
-}
-\details{
-Update the attribute data of the agents that undergo the transition event.
+A class that perform Monte Carlo simulation on agents using a probabilistic model.
+Work flow: \code{initialise()} -> \code{filter()} -> \code{mutate()} -> \code{simulate()} -> \code{postprocess()}.
+Note that, the order of filter and mutate can be swap by overwriting the \code{preprocess()} method.
+The default order as speficied in the \code{preprocess} method is:\if{html}{\out{<div class="r">}}\preformatted{filter(.data) \%>\%
+ mutate(.)
+}\if{html}{\out{</div>}}
 }
 \section{Construction}{
 \preformatted{Transition$new(x, model, target = NULL, targeted_agents = NULL)
@@ -130,3 +71,62 @@ Returns ids of the agents that have their response equal to \code{response_filte
 }
 }
 
+\section{Super classes}{
+\code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{\link[dymiumCore:Transition]{dymiumCore::Transition}} -> \code{TransitionRegression}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{TransitionRegression$new()}}
+\item \href{#method-clone}{\code{TransitionRegression$clone()}}
+}
+}
+\if{html}{
+\out{<details ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="class">}\href{../../dymiumCore/html/Generic.html#method-class}{\code{dymiumCore::Generic$class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="debug">}\href{../../dymiumCore/html/Generic.html#method-debug}{\code{dymiumCore::Generic$debug()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="is_dymium_class">}\href{../../dymiumCore/html/Generic.html#method-is_dymium_class}{\code{dymiumCore::Generic$is_dymium_class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="message">}\href{../../dymiumCore/html/Generic.html#method-message}{\code{dymiumCore::Generic$message()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_debug">}\href{../../dymiumCore/html/Generic.html#method-msg_debug}{\code{dymiumCore::Generic$msg_debug()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_info">}\href{../../dymiumCore/html/Generic.html#method-msg_info}{\code{dymiumCore::Generic$msg_info()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="filter">}\href{../../dymiumCore/html/Transition.html#method-filter}{\code{dymiumCore::Transition$filter()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_data">}\href{../../dymiumCore/html/Transition.html#method-get_data}{\code{dymiumCore::Transition$get_data()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_decision_maker_ids">}\href{../../dymiumCore/html/Transition.html#method-get_decision_maker_ids}{\code{dymiumCore::Transition$get_decision_maker_ids()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_nrow_result">}\href{../../dymiumCore/html/Transition.html#method-get_nrow_result}{\code{dymiumCore::Transition$get_nrow_result()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_result">}\href{../../dymiumCore/html/Transition.html#method-get_result}{\code{dymiumCore::Transition$get_result()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="mutate">}\href{../../dymiumCore/html/Transition.html#method-mutate}{\code{dymiumCore::Transition$mutate()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="postprocess">}\href{../../dymiumCore/html/Transition.html#method-postprocess}{\code{dymiumCore::Transition$postprocess()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="preprocess">}\href{../../dymiumCore/html/Transition.html#method-preprocess}{\code{dymiumCore::Transition$preprocess()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="print">}\href{../../dymiumCore/html/Transition.html#method-print}{\code{dymiumCore::Transition$print()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="update_agents">}\href{../../dymiumCore/html/Transition.html#method-update_agents}{\code{dymiumCore::Transition$update_agents()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TransitionRegression$new(x, model, target = NULL, targeted_agents = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TransitionRegression$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

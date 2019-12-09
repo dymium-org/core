@@ -71,7 +71,6 @@ object must have a column which its name matches with the id column of the entit
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="filter">}\href{../../dymiumCore/html/Transition.html#method-filter}{\code{dymiumCore::Transition$filter()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_allowed_classes">}\href{../../dymiumCore/html/Transition.html#method-get_allowed_classes}{\code{dymiumCore::Transition$get_allowed_classes()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_data">}\href{../../dymiumCore/html/Transition.html#method-get_data}{\code{dymiumCore::Transition$get_data()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_decision_maker_ids">}\href{../../dymiumCore/html/Transition.html#method-get_decision_maker_ids}{\code{dymiumCore::Transition$get_decision_maker_ids()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_nrow_result">}\href{../../dymiumCore/html/Transition.html#method-get_nrow_result}{\code{dymiumCore::Transition$get_nrow_result()}}\out{</span>}
@@ -80,6 +79,7 @@ object must have a column which its name matches with the id column of the entit
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="postprocess">}\href{../../dymiumCore/html/Transition.html#method-postprocess}{\code{dymiumCore::Transition$postprocess()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="preprocess">}\href{../../dymiumCore/html/Transition.html#method-preprocess}{\code{dymiumCore::Transition$preprocess()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="print">}\href{../../dymiumCore/html/Transition.html#method-print}{\code{dymiumCore::Transition$print()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="update_agents">}\href{../../dymiumCore/html/Transition.html#method-update_agents}{\code{dymiumCore::Transition$update_agents()}}\out{</span>}
 }
 \out{</details>}
 }
@@ -167,66 +167,3 @@ The objects of this class are cloneable with this method.
 }
 }
 }
-\details{
-Update the attribute data of the agents that undergo the transition event.
-}
-\section{Construction}{
-\preformatted{Transition$new(x, model, target = NULL, targeted_agents = NULL)
-}
-\itemize{
-\item \code{x} :: \code{\link{R6}}\cr
-A Agent class inheritance object.
-\item \code{model} :: \code{object}\cr
-A model
-\item \code{target} :: \code{\link[=integer]{integer()}}\cr
-(Default as NULL). A number that forces the number of micro events to occur. For example, if
-`10`` is speficied, there will be 10 agents that under go the event. However,
-if a integer vector is given it must be the same length as the classes in the model.
-This only works for classification models.
-\item \code{targeted_agent} :: \code{\link[=integer]{integer()}}\cr
-(Default as NULL) A integer vectors that contains ids of agents in \code{x} to undergo the event.
-}
-}
-
-\section{Fields}{
-
-\itemize{
-\item \code{NULL}\cr
-}
-}
-
-\section{Methods}{
-
-\itemize{
-\item \code{filter(.data)}\cr
-(\code{\link[data.table:data.table]{data.table::data.table()}}) -> \verb{[data.table::data.table()]}\cr
-\strong{(By default, first of the preprocessing steps)}\cr
-By default this method returns the input \code{.data}. This method can be overwrite
-to give the user the flexibility to 'filter' the data prior to making prediction
-by the given model. Filtering for eligible agents for this transition can be done in this step.
-\item \code{mutate(.data)}\cr
-(\code{\link[data.table:data.table]{data.table::data.table()}}) -> \verb{[data.table::data.table()]}\cr
-\strong{(By default, second of the preprocessing steps)}\cr
-By default this method returns the input \code{.data}. This method can be overwrite
-to give the user the flexibility to 'mutate' the data prior to making prediction
-by the given model. Adding derived variables and historical life course of the agents
-can be done in this step.
-\item \code{preprocess(.data)}\cr
-(\code{\link[data.table:data.table]{data.table::data.table()}}) -> \verb{[data.table::data.table()]}\cr
-By default, preprocess runs \code{filter()} then \code{mutate()} as described in the description section.
-This can be overwritten to change the order and add extra steps.
-\item \code{update_agents(attr)}\cr
-(\code{character(1)})\cr
-Update the attribute data of the agents that undergo the transition event.
-\item \code{get_result(ids)}\cr
-(\code{integer()}) -> \link[data.table:data.table]{data.table::data.table}\cr
-Returns the simulation result in a \link[data.table:data.table]{data.table::data.table} format with two
-columns \code{id} and \code{response}.
-\item \code{get_nrow_result()}\cr
-Returns the number of rows in the simulation result.
-\item \code{get_decision_maker_ids(response_filter = NULL)}\cr
-(\code{character()}) -> (\code{integer()})\cr
-Returns ids of the agents that have their response equal to \code{response_filter}.
-}
-}
-

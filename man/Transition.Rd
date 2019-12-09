@@ -11,9 +11,6 @@ The default order as speficied in the \code{preprocess} method is:\if{html}{\out
  mutate(.)
 }\if{html}{\out{</div>}}
 }
-\details{
-Update the attribute data of the agents that undergo the transition event.
-}
 \section{Construction}{
 \preformatted{Transition$new(x, model, target = NULL, targeted_agents = NULL)
 }
@@ -85,11 +82,11 @@ Returns ids of the agents that have their response equal to \code{response_filte
 \item \href{#method-get_data}{\code{Transition$get_data()}}
 \item \href{#method-get_result}{\code{Transition$get_result()}}
 \item \href{#method-get_nrow_result}{\code{Transition$get_nrow_result()}}
-\item \href{#method-get_allowed_classes}{\code{Transition$get_allowed_classes()}}
 \item \href{#method-filter}{\code{Transition$filter()}}
 \item \href{#method-mutate}{\code{Transition$mutate()}}
 \item \href{#method-preprocess}{\code{Transition$preprocess()}}
 \item \href{#method-postprocess}{\code{Transition$postprocess()}}
+\item \href{#method-update_agents}{\code{Transition$update_agents()}}
 \item \href{#method-print}{\code{Transition$print()}}
 \item \href{#method-clone}{\code{Transition$clone()}}
 }
@@ -160,14 +157,6 @@ Returns ids of the agents that have their response equal to \code{response_filte
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_allowed_classes"></a>}}
-\subsection{Method \code{get_allowed_classes()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Transition$get_allowed_classes()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-filter"></a>}}
 \subsection{Method \code{filter()}}{
 \subsection{Usage}{
@@ -198,6 +187,29 @@ Returns ids of the agents that have their response equal to \code{response_filte
 \if{html}{\out{<div class="r">}}\preformatted{Transition$postprocess(.data)}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-update_agents"></a>}}
+\subsection{Method \code{update_agents()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Transition$update_agents(attr)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{attr}}{the column name in agents' attribute data to be updated using the
+response result from the transition event.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+Update the attribute data of the agents that undergo the transition event.
+}
+
+\subsection{Returns}{
+NULL
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-print"></a>}}
