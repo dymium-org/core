@@ -24,7 +24,7 @@
 #'   use_event(name = "birth", module = 'demography')
 #' }
 use_event <- function(name, module) {
-  usethis:::check_file_name(name)
+  .check_file_name(name)
 
   if (!has_module(module)) {
     stop(glue("A module called '{module}' doesn't exist. Please make \\
@@ -32,7 +32,7 @@ use_event <- function(name, module) {
                before using this function."))
   }
 
-  event_path <- fs::path("modules", module, usethis:::slug(name, "R"))
+  event_path <- fs::path("modules", module, .slug(name, "R"))
   module_path <- fs::path("modules", "module")
 
   usethis::use_template("event.R",
@@ -70,7 +70,7 @@ use_event <- function(name, module) {
 #'   use_module(name = "demography")
 #' }
 use_module <- function(name) {
-  usethis:::check_file_name(name)
+  .check_file_name(name)
 
   required_pkgs <- c("modules", "lgr", "checkmate", "here", "R6")
   sapply(required_pkgs, usethis:::check_installed)
@@ -114,6 +114,8 @@ use_module <- function(name) {
 #'
 #'
 #' @param name Name of the scenario
+#' @param active a logical value with defauly being FALSE. This determines whether
+#' to set the current active scenario to this newly created scenario or not.
 #' @export
 #'
 #' @examples
@@ -122,7 +124,7 @@ use_module <- function(name) {
 #'   use_scenario(name = "demography")
 #' }
 use_scenario <- function(name, active = TRUE) {
-  usethis:::check_file_name(name)
+  .check_file_name(name)
   path <- fs::path("scenarios", name)
   usethis::use_directory("scenarios", ignore = TRUE)
   usethis::use_directory(path)
