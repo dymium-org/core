@@ -2,7 +2,7 @@
 % Please edit documentation in R/World.R
 \name{World}
 \alias{World}
-\title{World2 class}
+\title{A representation of World}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Entity]{dymiumCore::Entity}}
 \description{
 World is used to store other Entities. Think of it as a container that is to be
@@ -48,11 +48,13 @@ The stored instances can be access via \verb{self$<object-type>} or \code{self$g
 (\code{character(1)} | \code{integer(1)})\cr
 Remove an object in element or named \code{x}.
 \item \code{get_entity(x)}\cr
-(\code{character(1)})\cr
+(\code{character(1)}) -> An \link{Entity} object\cr
 Get a reference to the \code{x} Entity object.
 \item \code{get_model(x)}\cr
-(\code{character(1)})\cr
-Get a model object by name \code{x}.
+(\code{character(1)}) -> A \link{Model} object\cr
+Get a model object by name \code{x}. Note that, this returns a \link{Model} object of
+\link[R6:R6Class]{R6::R6Class} not the actual model itself. To get the model object use \verb{$get()}
+on the \link{Model} object.
 \item \code{get_time()}\cr
 Get the value of .DMevn$sim_time.
 \item \code{get_info()}\cr
