@@ -12,28 +12,30 @@
 }
 
 .dymium_options_msg = function() {
-  glue::glue("
-  *----- dymium's options -----*
-  scenario_dir: {getOption('dymium.scenario_dir')}
-  output_dir: {getOption('dymium.output_dir')}
-  input_dir: {getOption('dymium.input_dir')}
-  *----- dymium's options -----*")
+  # cli::cli_text(cli::rule(left = " {cli::symbol$info} dymium's options {cli::symbol$info} "))
+  cli::cli_text(cli::rule(left = " * dymium's options * "))
+  cli::cli_li(items = c(
+    "dymiun.scenario_dir: {getOption('dymium.scenario_dir')}",
+    "dymiun.input_dir: {getOption('dymium.input_dir')}",
+    "dymiun.output_dir: {getOption('dymium.output_dir')}"
+  ))
+  # print("hello")
 }
+
 
 .onLoad <- function(libname, pkgname) {
 
   # create temp directory
   fs::dir_create(.dymium_tempdir)
-  fs::dir_create(fs::path(.dymium_tempdir, "outputs"))
   fs::dir_create(fs::path(.dymium_tempdir, "inputs"))
+  fs::dir_create(fs::path(.dymium_tempdir, "outputs"))
 
   # set global options
   opts <- options()
   opts.dymium <- list(
     dymium.scenario_dir = file.path(.dymium_tempdir),
-    dymium.output_dir = file.path(.dymium_tempdir, "outputs"),
-    dymium.input_dir = file.path(.dymium_tempdir, "inputs")
-    # dymium.logFile = file.path(.dymium_tempdir, "log")
+    dymium.input_dir = file.path(.dymium_tempdir, "inputs"),
+    dymium.output_dir = file.path(.dymium_tempdir, "outputs")
   )
   toset <- !(names(opts.dymium) %in% names(opts))
   if (any(toset)) options(opts.dymium[toset])
@@ -56,10 +58,14 @@
   lg$set_propagate(FALSE)
 
   # print to console
-  packageStartupMessage(.dymium_options_msg())
+  .dymium_options_msg()
+
 
   invisible()
 }
+
+
+
 
 
 .onUnload <- function(libpath) {
