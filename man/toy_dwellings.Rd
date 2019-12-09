@@ -3,7 +3,7 @@
 \docType{data}
 \name{toy_dwellings}
 \alias{toy_dwellings}
-\title{Toy microdata of dwellings}
+\title{Toy dwelling microdata}
 \format{A data frame with 100 rows and 2 variables:
 \describe{
 \item{did}{(\code{integer(1)}) dwelling id}

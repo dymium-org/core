@@ -3,7 +3,7 @@
 \docType{data}
 \name{toy_individuals}
 \alias{toy_individuals}
-\title{Microdata of individuals}
+\title{Toy individual microdata}
 \format{A data table with 346 rows and 9 variables:
 \describe{
 \item{pid}{(\code{integer()}) person id}

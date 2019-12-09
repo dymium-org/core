@@ -2,7 +2,7 @@
 % Please edit documentation in R/TransitionClassification.R
 \name{TransitionClassification}
 \alias{TransitionClassification}
-\title{R6 class for performing Monte Carlo simulation}
+\title{Transition for classification model}
 \description{
 TransitionClassification
 }

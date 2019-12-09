@@ -2,11 +2,11 @@
 % Please edit documentation in R/TransitionRegression.R
 \name{TransitionRegression}
 \alias{TransitionRegression}
-\title{TransitionRegression class}
+\title{Transition for regression model}
 \description{
-TransitionRegression class
+Transition for regression model
 
-TransitionRegression class
+Transition for regression model
 }
 \section{Super classes}{
 \code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{\link[dymiumCore:Transition]{dymiumCore::Transition}} -> \code{TransitionRegression}

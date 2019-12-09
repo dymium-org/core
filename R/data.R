@@ -1,4 +1,4 @@
-#' @title Microdata of individuals
+#' @title Toy individual microdata
 #'
 #' @description
 #'
@@ -22,7 +22,7 @@
 #' }
 'toy_individuals'
 
-#' @title Toy microdata of households
+#' @title Toy household microdata
 #'
 #' @description
 #'
@@ -39,7 +39,7 @@
 #' }
 'toy_households'
 
-#' @title Toy microdata of dwellings
+#' @title Toy dwelling microdata
 #'
 #' @description
 #'
@@ -58,7 +58,7 @@
 #' }
 'toy_dwellings'
 
-#' @title Toy zones
+#' @title Toy zone data
 #'
 #' @description
 #'

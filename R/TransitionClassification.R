@@ -1,4 +1,4 @@
-#' R6 class for performing Monte Carlo simulation
+#' Transition for classification model
 #'
 #' @description
 #' TransitionClassification

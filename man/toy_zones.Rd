@@ -3,7 +3,7 @@
 \docType{data}
 \name{toy_zones}
 \alias{toy_zones}
-\title{Toy zones}
+\title{Toy zone data}
 \format{A \link[sf:sf]{sf::sf} data frame with 11 rows and 14 variables:
 \describe{
 \item{zid}{(\code{integer(1)}) zone id}
