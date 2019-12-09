@@ -4,8 +4,6 @@
 #' This is useful for event functions to access the current active scenario directory.
 #'
 #' @param name name of the scenario folder to become active.
-#' @param active a logical value with defauly being FALSE. This determines whether
-#' to set the current active scenario to this newly created scenario or not.
 #'
 #' @return a list contains scenario directories.
 #' @export

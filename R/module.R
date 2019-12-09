@@ -54,6 +54,7 @@ download_module <- function(name, repo = dymiumModulesRepo, version, force = FAL
 
 #' Check if a module exists in a remote repository
 #'
+#' @param name name of the module to check.
 #' @template repo-arg
 #'
 #' @return a logical value.
