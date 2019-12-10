@@ -2,6 +2,13 @@ url: https://core.dymium.org
 destination: docs
 
 reference:
+- title: Base classes
+  contents:
+    - Generic
+    - Entity
+    - Transition
+    - DataBackend
+    - ContainerGeneric
 - title: "Entities"
   contents:
     - Entity
@@ -18,9 +25,12 @@ reference:
     - Container
     - World
     - Population
+- title: "Transition"
+  contents:
+    - matches("^Transition.")
 - title: "Market"
   contents:
-    - starts_with("MatchingMarket")
+    - starts_with("Match")
 - title: "Transition"
   contents:
     - matches("^Transition.")
@@ -32,6 +42,26 @@ reference:
     - History
     - Model
     - Pipeline
+- title: "Module"
+  desc: "Manage,create and download modules."
+  contents:
+    - check_module
+    - check_module_version
+    - download_module
+    - get_all_module_files
+    - get_modules
+    - get_module_files
+    - get_module_versions
+    - use_module
+- title: "Event"
+  contents:
+    - use_event
+- title: "Scenerio"
+  desc: "Manage scenarios."
+  contents:
+    - active_scenario
+    - set_active_scenario
+    - use_scenario
 - title: "Pipeline utility functions"
   desc: "Functions to be used inside a microsimulation pipeline."
   contents:
@@ -45,20 +75,23 @@ reference:
     - check_supported_model
     - get_models
     - is_scheduled
-- title: "Scenerio"
-  desc: "Functions to manage scenarios."
-- title: "Creation function"
-  desc: "usethis style functions to create files from dymium's templates."
-  contents:
-    - starts_with("use_")
 - title: "Toy data"
   desc: "Data for testing purposes."
   contents:
     - starts_with("toy_")
-- title: Base classes
+    - starts_with("create_toy")
+    - generate_population
+- title: "Miscellaneous"
   contents:
-    - Generic
-    - Entity
-    - Transition
-    - DataBackend
-    - ContainerGeneric
+  - sample_choice
+  - lookup_and_replace
+  - condense_rows
+  - element_wise_expand_lists
+  - condense_rows
+  - household_formation
+  - is_dymium_class
+  - pop_register
+  - unnest_datatable
+  - dt_group_and_sort
+  - get_sim_time
+
