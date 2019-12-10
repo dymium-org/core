@@ -114,9 +114,24 @@ Population <- R6Class(
   public = list(
     # public ------------------------------------------------------------------
 
+    #' @field ind the reference to the [Individual] object created by Population
     ind = NULL,
+    #' @field hh the reference to the [Household] object created by Population
     hh = NULL,
 
+    #' @description
+    #' Create a [Population] object.
+    #'
+    #' @param ind_data ([data.table::data.table]) Microdata of Individuals/Persons.
+    #' @param hh_data ([data.table::data.table]) Microdata of Households.
+    #' @param pid_col (`character(1)`) Individual/Person id column in `ind_data`.
+    #' @param hid_col (`character(1)`) Household id column in `hh_data`.
+    #'
+    #' @return An [R6::R6Class] object of the [Population] class.
+    #'
+    #' @examples
+    #'
+    #' Pop <- Population$new()
     initialize = function(ind_data, hh_data, pid_col = NULL, hid_col = NULL){
       self$add(Individual$new(), name = "Individual")
       self$add(Household$new(), name = "Household")
