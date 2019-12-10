@@ -1,0 +1,46 @@
+---
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(DiagrammeR)
+```
+
+__Meta info__
+
+- Authors: Myname
+- Current version: 0.1
+
+# Module overview
+
+This module provides...
+
+# Release notes
+
+## Version 0.1
+
+This is the first version of this module.
+
+# Events
+
+## Event_1
+
+### Description
+
+### Flowchart
+
+### Rules
+
+### Outcomes
+
+## Event_2
+
+### Description
+
+### Flowchart
+
+### Rules
+
+### Outcomes
+
