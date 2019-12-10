@@ -14,14 +14,11 @@
 #' @section Construction:
 #'
 #' ```
-#' x <- Entity$new(databackend, .data, id_col)
+#' x <- Asset$new(.data, id_col, owner)
 #' ```
 #'
 #' Stores `.data` as a DataBackend object inside the object's list of data (`private$.data`)
 #' and registers the `id_col` (`private$.id_col`).
-#'
-#' * `databackend` :: [DataBackend] classes\cr
-#'   An [R6::R6Class] generator that inherits from `DataBackend`.
 #'
 #' * `.data` :: `data.frame`\cr
 #'   A object that inherits from `data.frame`.
@@ -29,9 +26,11 @@
 #' * `id_col` :: `character(1)`\cr
 #'   The id column of `.data`.
 #'
+#' * `owner` :: an [R6::R6Class] object that inherits [Agent].\cr
+#'
 #' @section Fields:
 #'
-#' * `NULL`\cr`
+#' `NULL`\cr
 #'
 #' @section Methods:
 #'
@@ -39,22 +38,28 @@
 #'  (`integer()`) -> `integer()`\cr
 #'  Returns owner ids.
 #'
+#' * `get_owner_id_col()`\cr
+#'  () -> `character(1)`.\cr
+#'  Returns the id column of the owner object.
+#'
+#' * `get_owner()`\cr
+#'  () -> an [R6::R6Class] object that inherits [Agent].\cr
+#'  Returns the owner object of this asset.
+#'
 #' @export
 Asset <- R6::R6Class(
   classname = "Asset",
   inherit = Entity,
   public = list(
 
-    Owner = NULL, # a reference holder to the instance of the Owner class
-
-    initialize = function(.data, id_col, owner_object) {
+    initialize = function(.data, id_col, owner) {
       if (!missing(.data) & !missing(id_col)) {
         super$initialize(databackend = DataBackendDataTable,
                          .data = .data,
                          id_col = id_col)
       }
-      if (!missing(owner_object)) {
-        self$set_owner(owner_object)
+      if (!missing(owner)) {
+        self$set_owner(owner)
       }
       invisible()
     },
@@ -74,7 +79,7 @@ Asset <- R6::R6Class(
     },
 
     get_owner_id_col = function() {
-
+      self$Owner$get_id_col()
     },
 
     initialise_data = function(.data, id_col, owner_object) {
@@ -89,7 +94,11 @@ Asset <- R6::R6Class(
     },
 
     get_owner = function(id) {
-      private$abstract()
+      private$.Owner
     }
+  ),
+
+  private = list(
+    .Owner = NULL
   )
 )
