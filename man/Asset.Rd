@@ -3,46 +3,20 @@
 \name{Asset}
 \alias{Asset}
 \title{Asset class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Entity}.}
 \description{
 An \link{Asset} represents physical objects such as buildings and vehicles that
 can be owned/rent/belong by or to agents of the \link{Agent} sub classes.
 For example, \link{Household} agents own or rent residential buildings.
 }
-\section{Construction}{
-\preformatted{x <- Entity$new(databackend, .data, id_col)
-}
-
-Stores \code{.data} as a DataBackend object inside the object's list of data (\code{private$.data})
-and registers the \code{id_col} (\code{private$.id_col}).
-\itemize{
-\item \code{databackend} :: \link{DataBackend} classes\cr
-An \link[R6:R6Class]{R6::R6Class} generator that inherits from \code{DataBackend}.
-\item \code{.data} :: \code{data.frame}\cr
-A object that inherits from \code{data.frame}.
-\item \code{id_col} :: \code{character(1)}\cr
-The id column of \code{.data}.
-}
-}
-
-\section{Fields}{
-
-\itemize{
-\item \code{NULL}\cr`
-}
-}
-
-\section{Methods}{
-
-\itemize{
-\item \code{owner(ids)}\cr
-(\code{integer()}) -> \code{integer()}\cr
-Returns owner ids.
-}
-}
-
 \section{Super classes}{
 \code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{\link[dymiumCore:Entity]{dymiumCore::Entity}} -> \code{Asset}
+}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{Owner}}{A place holder to the owner entity, default as NULL.}
+}
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -92,26 +66,55 @@ Returns owner ids.
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \subsection{Method \code{new()}}{
+Create a new asset object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Asset$new(.data, id_col, owner_object)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{.data}}{\code{data.frame}. A object that inherits from \code{data.frame}.}
+
+\item{\code{id_col}}{\code{character(1)}. The id column of \code{.data}.}
+
+\item{\code{owner_object}}{an \link{Entity} object that owns this asset.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+NULL
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-set_owner"></a>}}
 \subsection{Method \code{set_owner()}}{
+Set owner. This assigns the owner object to the \code{Owner} field of this
+asset hence you can access the owner object using \code{x$Owner} (assuming that
+the asset object was named \code{x}).
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Asset$set_owner(x)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{an \link{Entity} object that owns this asset.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_owner_id_col"></a>}}
 \subsection{Method \code{get_owner_id_col()}}{
+Get owner's id column.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Asset$get_owner_id_col()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+a character.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-initialise_data"></a>}}
@@ -124,10 +127,14 @@ Returns owner ids.
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_owner"></a>}}
 \subsection{Method \code{get_owner()}}{
+Return the \code{Owner} field of asset.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Asset$get_owner(id)}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+a \link[R6:R6Class]{R6::R6Class} object that inherits \link{Entity}.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

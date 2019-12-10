@@ -1,14 +1,15 @@
 test_that("initialise", {
-  x <- Asset$new()
-  x$initialise_data(.data = toy_dwellings, id_col = "did")
-  x$add_data(databackend = DataBackendDataTable, toy_dwellings, name = "test")
-  x$get_data(copy = FALSE)[, did := NULL]
-  x$get_data(copy = FALSE)[, bedroom := NULL]
+  asset <- Asset$new()
+  owner <- Household$new(.data = toy_households, id_col = "hid")
+  asset$initialise_data(.data = toy_dwellings, id_col = "did", owner = owner)
+  checkmate::expect_data_table(asset$get_data(), null.ok = FALSE)
+  expect_equal(asset$get_owner_id_col(), owner$get_id_col())
 })
 
 test_that("set_owner", {
-  MyAsset <- Asset$new()
-  MyHousehold <- Household$new(.data = toy_households, id_col = "hid")
-  MyAsset$initialise_data(.data = toy_dwellings, id_col = "did")
-  MyAsset$set_owner(MyHousehold)
+  asset <- Asset$new()
+  owner <- Household$new(.data = toy_households, id_col = "hid")
+  asset$initialise_data(.data = toy_dwellings, id_col = "did")
+  asset$set_owner(owner)
+  expect_equal(asset$get_owner_id_col(), owner$get_id_col())
 })
