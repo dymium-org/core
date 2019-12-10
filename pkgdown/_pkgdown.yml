@@ -21,8 +21,6 @@ reference:
 - title: "Market"
   contents:
     - starts_with("MatchingMarket")
-    - starts_with("Match")
-    - starts_with("Search")
 - title: "Transition"
   contents:
     - matches("^Transition.")
