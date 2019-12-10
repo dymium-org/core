@@ -37,6 +37,10 @@
 #'  Append new data to the object's data list (`private$.data`). the new data
 #'  must be linkable with the attribute data of the object by the id_col.
 #'
+#'  * `check_ids(ids)`\cr
+#'  (`integer()`)\cr
+#'  Return true if all ids exist if not raises an informative error.
+#'
 #'  * `data(name)`\cr
 #'  (`character(1)`) -> (`[dymiumCore::DataBackend]`|`NULL`)\cr
 #'  Returns a reference to a `DataBackend` object with the name that matches `name`.
@@ -306,6 +310,23 @@ Entity <-
           return(FALSE)
         }
         TRUE
+      },
+
+      check_ids = function(ids) {
+        res <- self$ids_exist(ids, by_element = TRUE)
+        if (!all(res)) {
+          msg <- glue(
+            "Not all ids exist. Here are the missing ones: {.missing}",
+            .missing = glue::glue_collapse(
+              ids[!res],
+              sep = ", ",
+              width = 100,
+              last = " and "
+            )
+          )
+          stop(msg)
+        }
+        invisible(TRUE)
       },
 
       summary = function(verbose = TRUE) {
