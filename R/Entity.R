@@ -70,11 +70,11 @@
 #'
 #'  * `get_ids(idx)`\cr
 #'  (`integer()`) -> `integer()`\cr
-#'  Return the ids of the indexes in the argrument `idx`.
+#'  Return the ids of the indexes in the argrument `idx`, respectively.
 #'
 #'  * `get_idx(ids)`\cr
 #'  (`integer()`) -> `integer()`\cr
-#'  Return the indexes of the ids in the argrument `ids`.
+#'  Return the indexes of the ids in the argrument `ids`, respectively.
 #'
 #'  * `get_attr(x, ids)`\cr
 #'  (`character(1)`, `integer()`) -> `vector(type::col)`\cr
