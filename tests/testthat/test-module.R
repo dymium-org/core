@@ -1,35 +1,20 @@
-context("module")
-
-test_that("event no overwriting", {
-  # create script
-  create_new_event(event_name = "age",
-                   module_name = "demography",
-                   module_path = tempdir())
-
-  # try to overwrite
-  expect_error(create_new_event(event_name = "age",
-                                module_name = "demography",
-                                module_path = tempdir(),
-                                        filename = "age"))
+test_that("check_module", {
+  # check_module("demography")
 })
 
-test_that("event no white spaces", {
-  expect_error(create_new_event(event_name = "white space",
-                                module_name = "demography",
-                                module_path = tempdir()))
-
-  expect_error(create_new_event(event_name = "test",
-                                module_name = "white space",
-                                module_path = tempdir()))
+test_that("get_modules", {
+  # get_modules()
 })
 
-
-test_that("module no overwriting", {
-  create_new_module(name = "testModule",
-                    event = c("event1", "event2"),
-                    path = tempdir())
-
-  expect_error(create_new_module(name = "testModule",
-                                 event = c("event1", "event2"),
-                                 path = tempdir()))
+test_that(".filter_zip_versions", {
+  name <- "demography"
+  module_files <- c("modules/demography/readme.txt",
+                    "modules/demography/event1.R",
+                    "modules/demography/demography_1.0.0.zip",
+                    "modules/demography/demography_1.2.0.zip",
+                    "modules/demography/demography_dummy.zip",
+                    "modules/demography/demography_dummy.1.2",
+                    "modules/demography/demography_1.3.0/",
+                    "modules/demography/demography_zip")
+  expect_length(.filter_zip_versions(x = module_files, name), n = 3)
 })

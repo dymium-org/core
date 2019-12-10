@@ -75,3 +75,88 @@ event3 <- function(object) {
 # run events in a random order
 # pipeline$run(x = Pop, shuffle = TRUE)
 }
+\section{Super class}{
+\code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{Pipeline}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{Pipeline$new()}}
+\item \href{#method-set}{\code{Pipeline$set()}}
+\item \href{#method-print}{\code{Pipeline$print()}}
+\item \href{#method-get}{\code{Pipeline$get()}}
+\item \href{#method-run}{\code{Pipeline$run()}}
+\item \href{#method-clone}{\code{Pipeline$clone()}}
+}
+}
+\if{html}{
+\out{<details ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="class">}\href{../../dymiumCore/html/Generic.html#method-class}{\code{dymiumCore::Generic$class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="debug">}\href{../../dymiumCore/html/Generic.html#method-debug}{\code{dymiumCore::Generic$debug()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="is_dymium_class">}\href{../../dymiumCore/html/Generic.html#method-is_dymium_class}{\code{dymiumCore::Generic$is_dymium_class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="message">}\href{../../dymiumCore/html/Generic.html#method-message}{\code{dymiumCore::Generic$message()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_debug">}\href{../../dymiumCore/html/Generic.html#method-msg_debug}{\code{dymiumCore::Generic$msg_debug()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_info">}\href{../../dymiumCore/html/Generic.html#method-msg_info}{\code{dymiumCore::Generic$msg_info()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Pipeline$new(x)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set"></a>}}
+\subsection{Method \code{set()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Pipeline$set(x)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\subsection{Method \code{print()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Pipeline$print()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get"></a>}}
+\subsection{Method \code{get()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Pipeline$get()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-run"></a>}}
+\subsection{Method \code{run()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Pipeline$run(x, shuffle = FALSE, n_loops = 1)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Pipeline$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

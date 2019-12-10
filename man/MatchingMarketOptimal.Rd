@@ -30,3 +30,64 @@ Other MatchingMarket:
 \code{\link{MatchingMarketStochastic}}
 }
 \concept{MatchingMarket}
+\section{Super classes}{
+\code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{\link[dymiumCore:MatchingMarket]{dymiumCore::MatchingMarket}} -> \code{MatchingMarketOptimal}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-simulate}{\code{MatchingMarketOptimal$simulate()}}
+\item \href{#method-clone}{\code{MatchingMarketOptimal$clone()}}
+}
+}
+\if{html}{
+\out{<details ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="class">}\href{../../dymiumCore/html/Generic.html#method-class}{\code{dymiumCore::Generic$class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="debug">}\href{../../dymiumCore/html/Generic.html#method-debug}{\code{dymiumCore::Generic$debug()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="is_dymium_class">}\href{../../dymiumCore/html/Generic.html#method-is_dymium_class}{\code{dymiumCore::Generic$is_dymium_class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="message">}\href{../../dymiumCore/html/Generic.html#method-message}{\code{dymiumCore::Generic$message()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_debug">}\href{../../dymiumCore/html/Generic.html#method-msg_debug}{\code{dymiumCore::Generic$msg_debug()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_info">}\href{../../dymiumCore/html/Generic.html#method-msg_info}{\code{dymiumCore::Generic$msg_info()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="MatchingMarket" data-id="initialize">}\href{../../dymiumCore/html/MatchingMarket.html#method-initialize}{\code{dymiumCore::MatchingMarket$initialize()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="MatchingMarket" data-id="matching_score_A">}\href{../../dymiumCore/html/MatchingMarket.html#method-matching_score_A}{\code{dymiumCore::MatchingMarket$matching_score_A()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="MatchingMarket" data-id="matching_score_B">}\href{../../dymiumCore/html/MatchingMarket.html#method-matching_score_B}{\code{dymiumCore::MatchingMarket$matching_score_B()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="MatchingMarket" data-id="split_by_group">}\href{../../dymiumCore/html/MatchingMarket.html#method-split_by_group}{\code{dymiumCore::MatchingMarket$split_by_group()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="MatchingMarket" data-id="split_by_n">}\href{../../dymiumCore/html/MatchingMarket.html#method-split_by_n}{\code{dymiumCore::MatchingMarket$split_by_n()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="MatchingMarket" data-id="split_market">}\href{../../dymiumCore/html/MatchingMarket.html#method-split_market}{\code{dymiumCore::MatchingMarket$split_market()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-simulate"></a>}}
+\subsection{Method \code{simulate()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MatchingMarketOptimal$simulate(
+  method = c("one-to-one", "many-to-one"),
+  one_sided = FALSE,
+  optimal_A = TRUE,
+  by_group = FALSE,
+  parallel = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MatchingMarketOptimal$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

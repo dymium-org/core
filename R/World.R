@@ -1,4 +1,4 @@
-#' @title World class
+#' @title A representation of World
 #'
 #' @description
 #' World is used to store other Entities. Think of it as a container that is to be
@@ -52,12 +52,14 @@
 #'  Remove an object in element or named `x`.
 #'
 #' * `get_entity(x)`\cr
-#'  (`character(1)`) -> An [R6::R6Class]-[Entity] or its inheritance object\cr
+#'  (`character(1)`) -> An [Entity] object\cr
 #'  Get a reference to the `x` Entity object.
 #'
 #' * `get_model(x)`\cr
-#'  (`character(1)`) An [R6::R6Class]-[Model] object\cr
-#'  Get a model object by name `x`.
+#'  (`character(1)`) -> A [Model] object\cr
+#'  Get a model object by name `x`. Note that, this returns a [Model] object of
+#'  [R6::R6Class] not the actual model itself. To get the model object use `$get()`
+#'  on the [Model] object.
 #'
 #' * `get_time()`\cr
 #'  () -> (`integer(1)`)\cr

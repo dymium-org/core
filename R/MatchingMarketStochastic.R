@@ -90,10 +90,14 @@ MatchingMarketStochastic <- R6::R6Class(
           idx_A = 1,
           idx_B = c(1, 2)
         )
-      assert_that(is.atomic(scores))
-      assert_that(all(is.numeric(scores)))
-      assert_that(length(scores) == 2)
 
+      checkmate::assert_numeric(
+        scores,
+        finite = T,
+        any.missing = FALSE,
+        null.ok = FALSE,
+        len = 2
+      )
 
     },
 
@@ -102,9 +106,9 @@ MatchingMarketStochastic <- R6::R6Class(
                n_choices = 10,
                method = c("pweighted", "ranking")) {
         # CHECK INPUTS
-        assert_that(is.data.table(matching_problem$agentset_A))
-        assert_that(is.data.table(matching_problem$agentset_B))
-        assert_that(is.numeric(n_choices))
+        checkmate::assert_data_table(matching_problem$agentset_A, null.ok = FALSE)
+        checkmate::assert_data_table(matching_problem$agentset_B, null.ok = FALSE)
+        checkmate::assert_count(n_choices, na.ok = FALSE, positive = T, null.ok = FALSE)
         method <- match.arg(method)
 
         n_agentset_A <- nrow(matching_problem$agentset_A)
@@ -159,9 +163,8 @@ MatchingMarketStochastic <- R6::R6Class(
         for (i in seq_along(chooser_pool)) {
           # get chooser index ---
           chooser <- chooser_pool[i]
-          # random select n potential partners ---
-          # adjust number of choices as it the size of the candidate pool
-          # diminishes
+          # randomly select n potential partners ---
+          # adjust number of choices as the size of the candidate pool diminishes
           available_candidates <-
             candidate_pool[which(!is.na(candidate_pool))]
           n_available_candidates <- length(available_candidates)
@@ -186,11 +189,12 @@ MatchingMarketStochastic <- R6::R6Class(
             NA
         }
         # check all choosers found their matches
-        assert_that(noNA(matched_candidate_pool))
-        assert_that(are_equal(
-          length(matched_candidate_pool),
-          uniqueN(matched_candidate_pool)
-        ))
+        checkmate::assert_integerish(
+          matched_candidate_pool,
+          any.missing = FALSE,
+          null.ok = FALSE,
+          unique = TRUE
+        )
 
         # POST PROCESSING, id_A = 'chooser id' and id_B = 'candidate id'
         unmatched_candidates <-

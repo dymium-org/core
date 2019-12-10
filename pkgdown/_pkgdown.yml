@@ -25,29 +25,36 @@ reference:
     - starts_with("Search")
 - title: "Transition"
   contents:
-    - matches("Transition.")
+    - matches("^Transition.")
 - title: "Data backends"
   contents:
     - matches("DataBackend.")
 - title: "Other important classes"
   contents:
-    - Model
     - History
-- title: "Event's helpers"
-  contents:
+    - Model
     - Pipeline
-    - is_scheduled
+- title: "Pipeline utility functions"
+  desc: "Functions to be used inside a microsimulation pipeline."
+  contents:
     - starts_with("dm_")
-- title: "Utility functions"
+- title: "Event utility functions"
+  desc: "Functions to be used inside a event function."
   contents:
     - assign_reference
     - alignment
-    - starts_with("create_")
-- title: "Module and event templates"
-  desc: "Functions to create module and event files from a provided template."
+    - check_required_models
+    - check_supported_model
+    - get_models
+    - is_scheduled
+- title: "Scenerio"
+  desc: "Functions to manage scenarios."
+- title: "Creation function"
+  desc: "usethis style functions to create files from dymium's templates."
   contents:
-    - matches('event|module')
-- title: "Test data"
+    - starts_with("use_")
+- title: "Toy data"
+  desc: "Data for testing purposes."
   contents:
     - starts_with("toy_")
 - title: Base classes

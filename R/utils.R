@@ -260,3 +260,30 @@ dt_group_and_sort <- function(x, groupby_col, group_col, sort_order) {
   stopifnot(nrow(x_new) == length(sort_order))
   x_new
 }
+
+
+.slug = function(x, ext) {
+  x_base <- path_ext_remove(x)
+  x_ext <- path_ext(x)
+  ext <- if (identical(tolower(x_ext), tolower(ext)))
+    x_ext
+  else ext
+  path_ext_set(x_base, ext)
+}
+
+.check_file_name = function(x) {
+  if (!checkmate::test_character(x, pattern = "^[a-zA-Z0-9._-]+$", len = 1, any.missing = FALSE, null.ok = FALSE)) {
+    stop(glue::glue("'{x}' is not a valid file name. It should contain only \\
+                    ASCII letters, numbers, '-', and '_'."))
+  }
+  return(TRUE)
+}
+
+check_names <- function(x, names) {
+  if (!checkmate::test_named(x, type = "unique")) {
+    stop("Names of 'x' must be unique!")
+  }
+  nms <- names(x)
+  return(names %in% nms)
+}
+

@@ -1,220 +1,217 @@
-#' Create new module
+dymiumModulesRepo <- "dymium-org/dymiumModules"
+
+#' Download a module from a repository.
 #'
-#' @param name module
-#' @param event events
-#' @param path path to create module
+#' @description
 #'
-#' @return NULL
+#' Download and extract a module to the 'modules' folder in the active working directory.
+#' If you are using an RStudio project then it will be saved in the 'modules' folder
+#' of your project. If the 'modules' folder does not exist, it will be created.
+#'
+#' @param name name of the module.
+#' @param version the version of the module to download. If not given, the latest version will
+#' be downloaded.
+#' @param force A logical value. force download even though the module already exists locally.
+#' @param remove_download a logical value whether to delete the downloaded zip file or not.
+#' @template repo-arg
+#'
+#' @return path to the module.
+#'
 #' @export
 #'
 #' @examples
 #'
-#' create_new_module("populationDynamic", event = c("age", "birth", "death"), path = tempdir())
-create_new_module <- function(name, event, path) {
-  checkmate::assert_string(name)
-  checkmate::assert_character(event, unique = T)
-  checkmate::assert_string(path)
-  checkmate::assert(.checkNames(name))
-  checkmate::assert(.checkNames(event, allow_numbers = T))
-
-  # check required packages are installed
-  .req_packages <- c('dymiumCore', 'modules', 'R6', 'here', 'lgr')
-  check_result <- .req_packages %in% rownames(utils::installed.packages())
-  if (!all(check_result)) {
-    stop(glue::glue("Some of the required packages are missing. To use create_new_modules \\
-                    these packages need to be installed: {tidied_req_packages}.
-                    Please install these missing packages: {missing_packages}",
-                    tidied_req_packages = glue::glue_collapse(.req_packages, sep = ", ", last = " and "),
-                    missing_packages = glue::glue_collapse(.req_packages[!check_result], sep = ", ", last = " and ")))
+#' if (FALSE) {
+#'   # download an test module.
+#'   download_modules('test', version = '0.0.1')
+#' }
+#'
+download_module <- function(name, repo = dymiumModulesRepo, version, force = FALSE, remove_download = FALSE) {
+  modules_path <- fs::path("modules")
+  usethis::use_directory('modules')
+  if (missing(version)) {
+    cli::cli_alert_warning("The argument 'version' was not specified. The latest \\
+                            version of the module '{.strong {name}}' will be downloaded.")
+    all_versions <- get_module_versions(name = name, repo = repo)
+    version <- all_versions[[length(all_versions)]]
+    cli::cli_alert_info("The latest version of module '{.strong {name}}' is '{version}'.")
+  } else {
+    check_module_version(name = name, repo = repo, version = version)
   }
 
-  module_name <- name
-  module_path <- glue::glue("{path}/{name}")
-  checkmate::assert(checkmate::check_path_for_output(module_path))
-
-  # create a folder for module
-  message(glue::glue("path to module: {module_path}"))
-  message(glue::glue("creating a module folder"))
-  dir.create(path = module_path)
-
-  # create constants.R
-  message(glue::glue("creating constants.R"))
-  cat(make_module_constants(module_path = module_path),
-      file = glue::glue("{module_path}/constants.R"))
-
-  # create helpers
-  message(glue::glue("creating helpers.R"))
-  cat(make_module_helpers(module_path = module_path),
-      file = glue::glue("{module_path}/helpers.R"))
-
-  # create logger.R
-  message(glue::glue("creating logger.R"))
-  cat(make_module_logger(module_name = module_name,
-                         module_path = module_path),
-      file = glue::glue("{module_path}/logger.R"))
-
-
-  for (this_event in event) {
-    create_new_event(event_name = this_event,
-                     module_name = module_name,
-                     module_path = module_path,
-                     filename = this_event)
+  module_filename <- paste0(name, "_", version)
+  if (isFALSE(force) && fs::dir_exists(fs::path(modules_path, module_filename))) {
+    cli::cli_alert_danger("'{.strong {module_filename}}' already exists in \\
+                          directory: '{modules_path}'. Since `force` is FALSE \\
+                          the module will not be overwritten.")
   }
+  if (force) {
+    cli::cli_alert_warning("Force overwriting the module if already exists.")
+  }
+  module_download_url <-
+    paste0("https://github.com/", repo, "/raw/master/modules/", name, "/", module_filename, ".zip")
+  tmp_module_path <- fs::path("modules", "temp-module.zip")
+  utils::download.file(url = module_download_url, destfile = tmp_module_path, overwrite = FALSE, cacheOK = FALSE)
+  utils::unzip(zipfile = tmp_module_path, exdir = modules_path, overwrite = FALSE)
+  if (remove_download) {
+    fs::file_delete(path = tmp_module_path)
+  }
+  cli::cli_alert_success("'{.strong {name}}' module version {.strong {version}} was successfully downloaded \\
+                         and added to directory: '{modules_path}'")
   invisible()
 }
 
-#' Create a event script from an recommended event template
+#' Check if a module exists in a remote repository
 #'
-#' @param event_name `character(1)`\cr
-#'  Name of the event to be created. This will also be used as its event script name
-#'  (i.e. for example if 'age' was given then the script will be named as 'age.R')
-#'  and also as the function name: 'event_(module_name)_(event_name)'.
-#' @param module_name `character(1)`\cr
-#'  Name of the module, this function will be named in this format:
-#'  'event_(module_name)_(event_name)'.
-#' @param module_path `character(1)`\cr
-#'  Directory where the event script will be created.
-#' @param filename `character(1)` or `NULL`\cr
-#'  The name of the script to be created. If `NULL` event_name is used as the filename.
-#' @param author name of aithor(s)
-#' @param author.email author's email
-#' @param module.version module version eg: (0.0.x).
-#' @param dymiumCore.version version of dymiumCore that was used to create the event.
-#' @param .overwrite `logical(1)` default as FALSE.
+#' @param name name of the module to check.
+#' @template repo-arg
 #'
-#' @return Invinsibly returns the path to the generated script.
+#' @return a logical value.
 #' @export
 #'
 #' @examples
 #'
-#' create_new_event(event_name = "age",
-#'                  module_name = "demography",
-#'                  module_path = tempdir())
-create_new_event <-
-  function(event_name, module_name, module_path, filename = NULL,
-           author = NULL, author.email = NULL,
-           module.version = "0.0.1",
-           dymiumCore.version = utils::packageVersion("dymiumCore"),
-           .overwrite = FALSE) {
-  checkmate::assert_character(event_name, len = 1)
-  checkmate::assert_character(module_name, len = 1)
-  checkmate::assert_character(module_path, len = 1)
-  checkmate::assert_directory_exists(module_path)
-  if (event_name != gsub(" ", "", event_name))
-    stop("`event_name` can't contain any spaces")
-  if (module_name != gsub(" ", "", module_name))
-    stop("`module_name` can't contain any spaces")
+#' if (FALSE) {
+#'   check_module('test')
+#' }
+check_module <- function(name, repo = dymiumModulesRepo) {
+  checkmate::assert_character(name, any.missing = FALSE, len = 1, null.ok = FALSE)
+  checkmate::test_subset(name, choices = get_modules(), empty.ok = FALSE)
+}
 
-  # construct path
-  if (is.null(filename)) {
-    message(glue::glue("`filename` was not given, using `event_name`: '{event_name} \\
-                       as the name of the event script."))
+#' Check the existence of a module version
+#'
+#' @param name name of the module.
+#' @param version a character. For example, if you would like to check
+#' for version 0.1.0 type it as a character '0.1.0'.
+#'
+#' @template repo-arg
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+#' if (FALSE) {
+#'   check_module_version('test', version = '0.0.1')
+#' }
+check_module_version <- function(name, repo = dymiumModulesRepo, version) {
+  all_versions <- get_module_versions(name = name, repo = repo)
+  res <- checkmate::test_subset(version, choices = all_versions)
+  if (!res) {
+    cli::cli_alert_warning("'{.strong {name}}' module doesn't have a version {.strong {version}}.")
+    if (length(all_versions) != 0) {
+      cli::cli_alert_info("These are the available versions of '{.strong {name}}' module:")
+      cli::cli_li(items = sort(all_versions))
+    }
+    stop("The request version of the module doesn't exist.")
   }
+  return(res)
+}
 
-  filename <- ifelse(is.null(filename), event_name, filename)
-  if (filename != gsub(" ", "", filename))
-    stop("`filename` can't contain any spaces")
-
-  event_path <- paste0(module_path, "/", filename, ".R")
-  if (!.overwrite)
-    checkmate::assert_path_for_output(event_path)
-
-  # write event template to event_path
-  full_event_name <- glue::glue("event_{module_name}_{event_name}")
-  message(glue::glue("creating an event template"))
-  cat(make_event_recommended_name(event_name, module_name, event_path),
-      make_event_imports(module_path = module_path),
-      template_event_exports,
-      make_event_doc(event_name),
-      make_event_run(event_name),
-      "# private utility functions (.util_*) -------------------------------------",
-      template_event_private_util,
-      template_event_transition,
-      "# exported utility functions (util_*) -------------------------------------",
-      template_event_util,
-      sep = "\n", file = event_path)
-  message(glue::glue("path to event script: {event_path}"))
-
-  # write a testthat test script
-  testthat_path <- glue::glue("{module_path}/tests/testthat")
-  test_path <- glue::glue("{testthat_path}/test-{gsub('_','',event_name) %>% tolower()}.R")
-  if (!file.exists(testthat_path)) {
-    message(glue::glue("make testthat folder: {testthat_path}"))
-    dir.create(testthat_path, recursive = T)
+#' Get all version numbers of a module
+#'
+#' @param name name of the module.
+#' @template repo-arg
+#'
+#' @return a character vector.
+#' @export
+#'
+#' @examples
+#'
+#' if (FALSE) {
+#'   get_module_versions("demography")
+#' }
+get_module_versions <- function(name, repo = dymiumModulesRepo) {
+  module_files <- get_module_files(name = name, repo = repo)
+  versions <- .filter_zip_versions(x = module_files, name = name)
+  if (length(versions) == 0) {
+    stop(glue("'{name}' module has no available versions."))
   }
-  if (!.overwrite)
-    checkmate::assert_path_for_output(test_path)
-  cat(make_event_test(event_name = event_name,
-                      module_name = module_name,
-                      test_path = test_path,
-                      event_path = event_path),
-      file = test_path)
-  message(glue::glue("path to test script: {test_path}"))
+  return(versions)
+}
 
-  invisible(event_path)
+.filter_zip_versions <- function(x, name) {
+  x %>%
+    gsub(pattern = paste0("modules/", name, "/"), replacement =  "", x = .) %>%
+    grep(paste0("^", name, ".+.zip"), x = ., value = TRUE) %>%
+    gsub(pattern = paste0(name, "_"), replacement = "", x = .) %>%
+    gsub(pattern = "\\.zip", replacement = "", x = .) %>%
+    sort()
+}
+
+#' Get the names of available modules from a remote repository
+#'
+#' @template repo-arg
+#'
+#' @return a character vector.
+#' @export
+#'
+#' @examples
+#'
+#' if (FALSE) {
+#'   get_modules()
+#' }
+get_modules <- function(repo = dymiumModulesRepo) {
+  all_files <- get_all_module_files(repo = repo)
+  available_modules <- grep(paste0("^modules/"), all_files, value = TRUE) %>%
+    # replace everything after the second back slash with -1
+    gsub("^([^/]*/[^/]*/).*$","-1", .) %>%
+    gsub("modules/", "", .) %>%
+    grep(pattern = "-1", x = ., value = TRUE, invert = TRUE)
+  return(available_modules)
+}
+
+#' Get all files from a module
+#'
+#' @param name name of the module.
+#' @template repo-arg
+#'
+#' @return a character vector.
+#' @export
+#'
+#' @examples
+#'
+#' if (FALSE) {
+#'   get_module_files("demography")
+#' }
+#'
+get_module_files <- function(name, repo = dymiumModulesRepo) {
+  checkmate::assert_character(name, len = 1, null.ok = FALSE, any.missing = FALSE)
+  if (!checkmate::test_subset(name, choices = get_modules(repo = repo), empty.ok = FALSE)) {
+    stop(glue::glue("'{name}' module doesn't exists in the '{repo}' repository."))
   }
-
-make_event_run <- function(event_name) {
-  template_event_run %>%
-    gsub("\\[event_name\\]", tools::toTitleCase(event_name), x = .)
+  module_files <- get_all_module_files(repo = repo) %>%
+    grep(name, x = ., value = T)
+  return(module_files)
 }
 
-#' @keywords internal
-make_event_doc <- function(event_name = "Title") {
-  gsub("\\[TITLE\\]", tools::toTitleCase(event_name), template_event_doc)
-}
-
-#' @examples make_event_recommended_name("marriage", "demography")
-#' @keywords internal
-make_event_recommended_name <- function(event_name, module_name, event_path) {
-  if (missing(event_path)) {
-    event_path <- "path/to/this-module.R"
+#' Get all files from all modules in a repository.
+#'
+#' @template repo-arg
+#'
+#' @return a character vector.
+#' @export
+#'
+#' @examples
+#'
+#' if (FALSE) {
+#'   get_all_module_files("dymium-org/dymiumModules)
+#' }
+#'
+get_all_module_files <- function(repo = dymiumModulesRepo) {
+  checkmate::assert_character(repo, len = 1, null.ok = FALSE, any.missing = FALSE)
+  apiurl <- paste0("https://api.github.com/repos/", repo, "/git/trees/master?recursive=1")
+  pat <- Sys.getenv("GITHUB_PAT")
+  request <- if (identical(pat, "")) {
+    httr::GET(apiurl)
+  } else {
+    cli::cli_alert_info("Using GitHub PAT from envvar GITHUB_PAT")
+    httr::GET(apiurl, config = list(httr::config(token = pat)))
   }
-  event_name <- gsub(" ", "", event_name) %>% tolower()
-  module_name <- gsub(" ", "", module_name) %>% tolower()
-  rname <- glue::glue("event_{module_name}_{event_name}")
-  glue::glue("# It is recommended to assign this module to a variable called: {rname}
-              # for example: {rname} <- modules::use('{event_path}')")
+  request <- httr::GET(apiurl)
+  httr::stop_for_status(request)
+  all_module_files <- unlist(lapply(httr::content(request)$tree, "[", "path"), use.names = FALSE) %>%
+    grep("^modules/", x = ., value = TRUE)
+  return(all_module_files)
 }
-
-make_event_test <- function(event_name, module_name, test_path, event_path) {
-  testthat_path <- glue::glue("{test_path}/testthat")
-  event_name <- gsub(" ", "", event_name) %>% tolower()
-  module_name <- gsub(" ", "", module_name) %>% tolower()
-  # modify the template
-  template_event_test %>%
-    gsub("\\[test_path\\]", test_path, x = .) %>%
-    gsub("\\[event_path\\]", event_path, x = .) %>%
-    gsub("\\[event_function_name\\]", glue::glue("event_{module_name}_{event_name}"), x = .)
-}
-
-make_event_imports <- function(module_path) {
-  template_event_imports %>%
-    gsub("\\[module_path\\]", module_path, x = .)
-}
-
-make_testthat_folder <- function(event_name, module_name, test_path) {
-
-}
-
-make_module_constants <- function(module_path) {
-  template_module_constants %>%
-    gsub("\\[module_path\\]", module_path, x = .)
-}
-
-make_module_helpers <- function(module_path) {
-  template_module_helpers %>%
-    gsub("\\[module_path\\]", module_path, x = .)
-}
-
-make_module_logger <- function(module_name, module_path) {
-  template_module_logger %>%
-    gsub("\\[module_name\\]", module_name, x = .) %>%
-    gsub("\\[module_path\\]", module_path, x = .)
-}
-
-# .fill_boxes <- function(x) {
-#   x %>%
-#     gsub("\\[module_name\\]", module_name, x = .) %>%
-#     gsub("\\[module_path\\]", module_path, x = .) %>%
-# }

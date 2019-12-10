@@ -13,13 +13,16 @@
 #' @import data.table
 #' @import assertthat
 #' @import glue
+#' @importFrom fs path dir_create path_ext_remove path_ext path_ext_set
+#' @importFrom usethis use_template use_directory
+#' @importFrom cli cli_alert_info cli_li cli_alert_danger rule symbol cli_text
 #' @importFrom here here
 #' @importFrom magrittr freduce functions set_colnames
 #' @importFrom furrr future_map_dfr future_options
 #' @importFrom purrr flatten_int map map_lgl map2 map2_int map2_dfr walk walk2
 #' @importFrom lest case_when
 #' @importFrom matchingR galeShapley.marriageMarket galeShapley.collegeAdmissions
-#' @importFrom utils packageVersion
+#' @importFrom utils packageVersion download.file
 #' @keywords internal
 "_PACKAGE"
 

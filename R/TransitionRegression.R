@@ -1,4 +1,4 @@
-#' @title TransitionRegression class
+#' @title Transition for regression model
 #' @inherit Transition
 #' @include Transition.R
 #' @export
