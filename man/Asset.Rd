@@ -8,24 +8,77 @@ An \link{Asset} represents physical objects such as buildings and vehicles that
 can be owned/rent/belong by or to agents of the \link{Agent} sub classes.
 For example, \link{Household} agents own or rent residential buildings.
 }
+\section{Construction}{
+\preformatted{x <- Asset$new(.data, id_col, owner = NULL)
+}
+
+Stores \code{.data} as a DataBackend object inside the object's list of data (\code{private$.data})
+and registers the \code{id_col} (\code{private$.id_col}).
+\itemize{
+\item \code{.data} :: \code{data.frame}\cr
+A object that inherits from \code{data.frame}.
+\item \code{id_col} :: \code{character(1)}\cr
+The id column of \code{.data}.
+\item \code{owner} :: an \link[R6:R6Class]{R6::R6Class} object that inherits \link{Agent}.\cr
+}
+}
+
+\section{Fields}{
+
+
+\code{NULL}\cr
+}
+
+\section{Methods}{
+
+\itemize{
+\item \code{is_owned(ids)}\cd
+(\code{integer()}) -> (\code{logical()})\cr
+Check if the assets in \code{ids} are owned. If \code{ids} is not given the result will
+be for all assets.
+\item \code{get_owner(ids)}\cr
+(\code{integer()}) -> (\code{integer()})\cr
+Get the owner ids of the assets in \code{ids}.
+\item \code{set_owner(ids, owner_ids)}\cr
+(\code{integer()}|\code{integer()})\cr
+Set the owners in \code{owner_ids} to the assets in \code{ids}. Both arguments must
+have an equal length. An asset can only be owned by one owner.
+\item \code{get_owner_id_col()}\cr
+() -> \code{character(1)}.\cr
+Returns the id column of the owner object.
+\item \code{get_owner_object()}\cr
+() -> an \link[R6:R6Class]{R6::R6Class} object that inherits \link{Agent}.\cr
+Returns the owner object of this asset.
+\item \code{set_owner_object(x)}\cr
+(an \link[R6:R6Class]{R6::R6Class} that inherits \link{Agent})\cr
+Set owner. This assigns the owner object to the \code{Owner} field of this
+asset hence you can access the owner object using \code{x$Owner} (assuming that
+the asset object was named \code{x}).
+\item \code{remove_owner(ids)}\cr
+(\code{integer()})\cr
+Remove the owner ids from the assets in \code{ids} by setting them to \code{NA}.
+\item \code{owner_gets_asset_id(owner_ids)}\cr
+(\code{integer()}) -> (\code{integer()}\cr
+Get the asset ids of the owners in \code{owner_ids}.
+}
+}
+
 \section{Super classes}{
 \code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{\link[dymiumCore:Entity]{dymiumCore::Entity}} -> \code{Asset}
-}
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{Owner}}{A place holder to the owner entity, default as NULL.}
-}
-\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Asset$new()}}
-\item \href{#method-set_owner}{\code{Asset$set_owner()}}
-\item \href{#method-get_owner_id_col}{\code{Asset$get_owner_id_col()}}
 \item \href{#method-initialise_data}{\code{Asset$initialise_data()}}
+\item \href{#method-set_owner_object}{\code{Asset$set_owner_object()}}
+\item \href{#method-get_owner_object}{\code{Asset$get_owner_object()}}
+\item \href{#method-set_owner}{\code{Asset$set_owner()}}
 \item \href{#method-get_owner}{\code{Asset$get_owner()}}
+\item \href{#method-get_owner_id_col}{\code{Asset$get_owner_id_col()}}
+\item \href{#method-is_owned}{\code{Asset$is_owned()}}
+\item \href{#method-remove_owner}{\code{Asset$remove_owner()}}
+\item \href{#method-owner_gets_asset_id}{\code{Asset$owner_gets_asset_id()}}
 \item \href{#method-clone}{\code{Asset$clone()}}
 }
 }
@@ -41,6 +94,7 @@ For example, \link{Household} agents own or rent residential buildings.
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="add_data">}\href{../../dymiumCore/html/Entity.html#method-add_data}{\code{dymiumCore::Entity$add_data()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="check_ids">}\href{../../dymiumCore/html/Entity.html#method-check_ids}{\code{dymiumCore::Entity$check_ids()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="data">}\href{../../dymiumCore/html/Entity.html#method-data}{\code{dymiumCore::Entity$data()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="generate_new_ids">}\href{../../dymiumCore/html/Entity.html#method-generate_new_ids}{\code{dymiumCore::Entity$generate_new_ids()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_attr">}\href{../../dymiumCore/html/Entity.html#method-get_attr}{\code{dymiumCore::Entity$get_attr()}}\out{</span>}
@@ -66,75 +120,82 @@ For example, \link{Household} agents own or rent residential buildings.
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \subsection{Method \code{new()}}{
-Create a new asset object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Asset$new(.data, id_col, owner_object)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Asset$new(.data, id_col, owner = NULL)}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{.data}}{\code{data.frame}. A object that inherits from \code{data.frame}.}
-
-\item{\code{id_col}}{\code{character(1)}. The id column of \code{.data}.}
-
-\item{\code{owner_object}}{an \link{Entity} object that owns this asset.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-NULL
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_owner"></a>}}
-\subsection{Method \code{set_owner()}}{
-Set owner. This assigns the owner object to the \code{Owner} field of this
-asset hence you can access the owner object using \code{x$Owner} (assuming that
-the asset object was named \code{x}).
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Asset$set_owner(x)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{x}}{an \link{Entity} object that owns this asset.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_owner_id_col"></a>}}
-\subsection{Method \code{get_owner_id_col()}}{
-Get owner's id column.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Asset$get_owner_id_col()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-a character.
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-initialise_data"></a>}}
 \subsection{Method \code{initialise_data()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Asset$initialise_data(.data, id_col, owner_object)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Asset$initialise_data(.data, id_col, owner = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set_owner_object"></a>}}
+\subsection{Method \code{set_owner_object()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Asset$set_owner_object(x)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_owner_object"></a>}}
+\subsection{Method \code{get_owner_object()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Asset$get_owner_object()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set_owner"></a>}}
+\subsection{Method \code{set_owner()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Asset$set_owner(ids, owner_ids)}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_owner"></a>}}
 \subsection{Method \code{get_owner()}}{
-Return the \code{Owner} field of asset.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Asset$get_owner(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Asset$get_owner(ids)}\if{html}{\out{</div>}}
 }
 
-\subsection{Returns}{
-a \link[R6:R6Class]{R6::R6Class} object that inherits \link{Entity}.
 }
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_owner_id_col"></a>}}
+\subsection{Method \code{get_owner_id_col()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Asset$get_owner_id_col()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-is_owned"></a>}}
+\subsection{Method \code{is_owned()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Asset$is_owned(ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-remove_owner"></a>}}
+\subsection{Method \code{remove_owner()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Asset$remove_owner(ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-owner_gets_asset_id"></a>}}
+\subsection{Method \code{owner_gets_asset_id()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Asset$owner_gets_asset_id(owner_ids)}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

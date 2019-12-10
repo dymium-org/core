@@ -151,6 +151,7 @@ Returns all unique ids in id_cols in a vector, excluding household ids.
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="add_data">}\href{../../dymiumCore/html/Entity.html#method-add_data}{\code{dymiumCore::Entity$add_data()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="check_ids">}\href{../../dymiumCore/html/Entity.html#method-check_ids}{\code{dymiumCore::Entity$check_ids()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="data">}\href{../../dymiumCore/html/Entity.html#method-data}{\code{dymiumCore::Entity$data()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="generate_new_ids">}\href{../../dymiumCore/html/Entity.html#method-generate_new_ids}{\code{dymiumCore::Entity$generate_new_ids()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_attr">}\href{../../dymiumCore/html/Entity.html#method-get_attr}{\code{dymiumCore::Entity$get_attr()}}\out{</span>}

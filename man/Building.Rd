@@ -3,42 +3,35 @@
 \name{Building}
 \alias{Building}
 \title{Building class}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
 \description{
-Create Building class, extended Agent class.
-}
-\section{Construction}{
-\preformatted{x <- Entity$new(databackend, .data, id_col)
+Create a building object.\preformatted{x <- Building$new(.data, id_col, owner)
 }
 
 Stores \code{.data} as a DataBackend object inside the object's list of data (\code{private$.data})
 and registers the \code{id_col} (\code{private$.id_col}).
 \itemize{
-\item \code{databackend} :: a \link[R6:R6Class]{R6::R6Class} generator\cr
-A \link[R6:R6Class]{R6::R6Class} generator that inherits from \code{DataBackend}.
-\item \code{.data} :: \code{data.frame()}\cr
+\item \code{.data} :: \code{data.frame}\cr
 A object that inherits from \code{data.frame}.
 \item \code{id_col} :: \code{character(1)}\cr
 The id column of \code{.data}.
+\item \code{owner} :: an \link[R6:R6Class]{R6::R6Class} object that inherits \link{Agent}.\cr
 }
 }
-
 \section{Fields}{
 
-\itemize{
-\item \code{NULL}\cr`
-}
+
+\code{NULL}\cr
 }
 
 \section{Methods}{
 
 \itemize{
-\item \code{is_occupied(ids)}\cr
-(\code{integer()}) -> \code{logical()}\cr
-Returns TRUE if dwelling in ids is occupied
 \item \code{is_vacant(ids)}\cr
-(\code{integer()}) -> \code{logical()}\cr
-Returns TRUE if dwelling in ids is vacant.
+(\code{integer()}) -> (\code{logical()})\cr
+Check if the assets in ids are vacant
+\item \code{make_vacant(ids)}\cr
+(\code{integer()})\cr
+Remove owner from those assets in \code{ids}.
 }
 }
 
@@ -48,9 +41,8 @@ Returns TRUE if dwelling in ids is vacant.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-data_template}{\code{Building$data_template()}}
-\item \href{#method-is_occupied}{\code{Building$is_occupied()}}
 \item \href{#method-is_vacant}{\code{Building$is_vacant()}}
+\item \href{#method-make_vacant}{\code{Building$make_vacant()}}
 \item \href{#method-clone}{\code{Building$clone()}}
 }
 }
@@ -66,6 +58,7 @@ Returns TRUE if dwelling in ids is vacant.
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="add_data">}\href{../../dymiumCore/html/Entity.html#method-add_data}{\code{dymiumCore::Entity$add_data()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="check_ids">}\href{../../dymiumCore/html/Entity.html#method-check_ids}{\code{dymiumCore::Entity$check_ids()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="data">}\href{../../dymiumCore/html/Entity.html#method-data}{\code{dymiumCore::Entity$data()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="generate_new_ids">}\href{../../dymiumCore/html/Entity.html#method-generate_new_ids}{\code{dymiumCore::Entity$generate_new_ids()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_attr">}\href{../../dymiumCore/html/Entity.html#method-get_attr}{\code{dymiumCore::Entity$get_attr()}}\out{</span>}
@@ -87,33 +80,30 @@ Returns TRUE if dwelling in ids is vacant.
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="summary">}\href{../../dymiumCore/html/Entity.html#method-summary}{\code{dymiumCore::Entity$summary()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="get_owner">}\href{../../dymiumCore/html/Asset.html#method-get_owner}{\code{dymiumCore::Asset$get_owner()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="get_owner_id_col">}\href{../../dymiumCore/html/Asset.html#method-get_owner_id_col}{\code{dymiumCore::Asset$get_owner_id_col()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="get_owner_object">}\href{../../dymiumCore/html/Asset.html#method-get_owner_object}{\code{dymiumCore::Asset$get_owner_object()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="initialise_data">}\href{../../dymiumCore/html/Asset.html#method-initialise_data}{\code{dymiumCore::Asset$initialise_data()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="initialize">}\href{../../dymiumCore/html/Asset.html#method-initialize}{\code{dymiumCore::Asset$initialize()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="is_owned">}\href{../../dymiumCore/html/Asset.html#method-is_owned}{\code{dymiumCore::Asset$is_owned()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="owner_gets_asset_id">}\href{../../dymiumCore/html/Asset.html#method-owner_gets_asset_id}{\code{dymiumCore::Asset$owner_gets_asset_id()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="remove_owner">}\href{../../dymiumCore/html/Asset.html#method-remove_owner}{\code{dymiumCore::Asset$remove_owner()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="set_owner">}\href{../../dymiumCore/html/Asset.html#method-set_owner}{\code{dymiumCore::Asset$set_owner()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="set_owner_object">}\href{../../dymiumCore/html/Asset.html#method-set_owner_object}{\code{dymiumCore::Asset$set_owner_object()}}\out{</span>}
 }
 \out{</details>}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-data_template"></a>}}
-\subsection{Method \code{data_template()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Building$data_template()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-is_occupied"></a>}}
-\subsection{Method \code{is_occupied()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Building$is_occupied(ids)}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-is_vacant"></a>}}
 \subsection{Method \code{is_vacant()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Building$is_vacant(ids)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-make_vacant"></a>}}
+\subsection{Method \code{make_vacant()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Building$make_vacant(ids)}\if{html}{\out{</div>}}
 }
 
 }

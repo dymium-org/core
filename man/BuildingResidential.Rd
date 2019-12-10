@@ -48,6 +48,7 @@ Returns TRUE if dwelling in ids is vacant.
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="add_data">}\href{../../dymiumCore/html/Entity.html#method-add_data}{\code{dymiumCore::Entity$add_data()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="check_ids">}\href{../../dymiumCore/html/Entity.html#method-check_ids}{\code{dymiumCore::Entity$check_ids()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="data">}\href{../../dymiumCore/html/Entity.html#method-data}{\code{dymiumCore::Entity$data()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="generate_new_ids">}\href{../../dymiumCore/html/Entity.html#method-generate_new_ids}{\code{dymiumCore::Entity$generate_new_ids()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_attr">}\href{../../dymiumCore/html/Entity.html#method-get_attr}{\code{dymiumCore::Entity$get_attr()}}\out{</span>}
@@ -69,11 +70,16 @@ Returns TRUE if dwelling in ids is vacant.
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="summary">}\href{../../dymiumCore/html/Entity.html#method-summary}{\code{dymiumCore::Entity$summary()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="get_owner">}\href{../../dymiumCore/html/Asset.html#method-get_owner}{\code{dymiumCore::Asset$get_owner()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="get_owner_id_col">}\href{../../dymiumCore/html/Asset.html#method-get_owner_id_col}{\code{dymiumCore::Asset$get_owner_id_col()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="get_owner_object">}\href{../../dymiumCore/html/Asset.html#method-get_owner_object}{\code{dymiumCore::Asset$get_owner_object()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="initialise_data">}\href{../../dymiumCore/html/Asset.html#method-initialise_data}{\code{dymiumCore::Asset$initialise_data()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="initialize">}\href{../../dymiumCore/html/Asset.html#method-initialize}{\code{dymiumCore::Asset$initialize()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="is_owned">}\href{../../dymiumCore/html/Asset.html#method-is_owned}{\code{dymiumCore::Asset$is_owned()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="owner_gets_asset_id">}\href{../../dymiumCore/html/Asset.html#method-owner_gets_asset_id}{\code{dymiumCore::Asset$owner_gets_asset_id()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="remove_owner">}\href{../../dymiumCore/html/Asset.html#method-remove_owner}{\code{dymiumCore::Asset$remove_owner()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="set_owner">}\href{../../dymiumCore/html/Asset.html#method-set_owner}{\code{dymiumCore::Asset$set_owner()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Building" data-id="is_occupied">}\href{../../dymiumCore/html/Building.html#method-is_occupied}{\code{dymiumCore::Building$is_occupied()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Asset" data-id="set_owner_object">}\href{../../dymiumCore/html/Asset.html#method-set_owner_object}{\code{dymiumCore::Asset$set_owner_object()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Building" data-id="is_vacant">}\href{../../dymiumCore/html/Building.html#method-is_vacant}{\code{dymiumCore::Building$is_vacant()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Building" data-id="make_vacant">}\href{../../dymiumCore/html/Building.html#method-make_vacant}{\code{dymiumCore::Building$make_vacant()}}\out{</span>}
 }
 \out{</details>}
 }
