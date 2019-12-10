@@ -3,45 +3,30 @@
 \name{TransitionClassification}
 \alias{TransitionClassification}
 \title{Transition for classification model}
+\arguments{
+\item{x}{an \link{Entity} object}
+
+\item{model}{any objects of type in \link{SupportedTransitionModels}.}
+
+\item{target}{a named list where the names corresponds to the choices and the values
+are the number of agents to choose those choices. This imposes an alignment of
+the outcomes to an external constraint.}
+
+\item{targeted_agents}{a integer vector that contains ids of the entities in \code{x}
+to undergo this}
+
+\item{model_by_id}{see in the public field section.}
+}
+\value{
+an \link[R6:R6Class]{R6::R6Class} object
+}
 \description{
 TransitionClassification
+
+Create a \link{TransitionClassification} object.
 }
-\examples{
+\section{Fields}{
 
-## ------------------------------------------------
-## Method `TransitionClassification$new`
-## ------------------------------------------------
-
-
-# create a Individual agent object
-Ind <- Individual$new(.data = toy_individuals, id_col = "pid")
-
-# create a probabilistic model
-driver_status_rate <- data.table::data.table(
-  sex = c('male', 'female'),
-  probs = list(c(0.3,0.7), c(0.4,0.6)),
-  choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
-)
-
-# create a Transition for driver status
-TransitionCandrive <- R6::R6Class(
-  classname = "TransitionCandrive",
-  inherit = TransitionClassification
-)
-
-TransCanDrive <- TransitionCandrive$new(x = Ind, model = driver_status_rate)
-
-barplot(
-  table(TransCanDrive$get_result()[['response']]),
-  main = "Transition result: driver status",
-  col = c('steelblue', 'salmon')
-)
-}
-\section{Super classes}{
-\code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{\link[dymiumCore:Transition]{dymiumCore::Transition}} -> \code{TransitionClassification}
-}
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{model_by_id}}{(\code{logical(1)}) is default as \code{FALSE}. This flag is to indicate
 whether the \code{model} object is meant to be matched by the id column of the entity object
@@ -49,78 +34,10 @@ in \code{x} or not. It should be noted that this flag only matters if the \code{
 of type \code{\link[data.table:data.table]{data.table::data.table()}} where it must contains a numeric column called \code{prob}
 or list columns of type numeric and character called \code{probs} and \code{choices}. The model
 object must have a column which its name matches with the id column of the entity object in \code{x}.}
-}
-\if{html}{\out{</div>}}
-}
-\section{Methods}{
-\subsection{Public methods}{
-\itemize{
-\item \href{#method-new}{\code{TransitionClassification$new()}}
-\item \href{#method-clone}{\code{TransitionClassification$clone()}}
-}
-}
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="class">}\href{../../dymiumCore/html/Generic.html#method-class}{\code{dymiumCore::Generic$class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="debug">}\href{../../dymiumCore/html/Generic.html#method-debug}{\code{dymiumCore::Generic$debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="is_dymium_class">}\href{../../dymiumCore/html/Generic.html#method-is_dymium_class}{\code{dymiumCore::Generic$is_dymium_class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="message">}\href{../../dymiumCore/html/Generic.html#method-message}{\code{dymiumCore::Generic$message()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_debug">}\href{../../dymiumCore/html/Generic.html#method-msg_debug}{\code{dymiumCore::Generic$msg_debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_info">}\href{../../dymiumCore/html/Generic.html#method-msg_info}{\code{dymiumCore::Generic$msg_info()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="filter">}\href{../../dymiumCore/html/Transition.html#method-filter}{\code{dymiumCore::Transition$filter()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_data">}\href{../../dymiumCore/html/Transition.html#method-get_data}{\code{dymiumCore::Transition$get_data()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_decision_maker_ids">}\href{../../dymiumCore/html/Transition.html#method-get_decision_maker_ids}{\code{dymiumCore::Transition$get_decision_maker_ids()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_nrow_result">}\href{../../dymiumCore/html/Transition.html#method-get_nrow_result}{\code{dymiumCore::Transition$get_nrow_result()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="get_result">}\href{../../dymiumCore/html/Transition.html#method-get_result}{\code{dymiumCore::Transition$get_result()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="mutate">}\href{../../dymiumCore/html/Transition.html#method-mutate}{\code{dymiumCore::Transition$mutate()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="postprocess">}\href{../../dymiumCore/html/Transition.html#method-postprocess}{\code{dymiumCore::Transition$postprocess()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="preprocess">}\href{../../dymiumCore/html/Transition.html#method-preprocess}{\code{dymiumCore::Transition$preprocess()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="print">}\href{../../dymiumCore/html/Transition.html#method-print}{\code{dymiumCore::Transition$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Transition" data-id="update_agents">}\href{../../dymiumCore/html/Transition.html#method-update_agents}{\code{dymiumCore::Transition$update_agents()}}\out{</span>}
-}
-\out{</details>}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\subsection{Method \code{new()}}{
-Create a \link{TransitionClassification} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TransitionClassification$new(
-  x,
-  model,
-  target = NULL,
-  targeted_agents = NULL,
-  model_by_id = FALSE
-)}\if{html}{\out{</div>}}
-}
+}}
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{x}}{an \link{Entity} object}
+\examples{
 
-\item{\code{model}}{any objects of type in \link{SupportedTransitionModels}.}
-
-\item{\code{target}}{a named list where the names corresponds to the choices and the values
-are the number of agents to choose those choices. This imposes an alignment of
-the outcomes to an external constraint.}
-
-\item{\code{targeted_agents}}{a integer vector that contains ids of the entities in \code{x}
-to undergo this}
-
-\item{\code{model_by_id}}{see in the public field section.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-an \link[R6:R6Class]{R6::R6Class} object
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{
 # create a Individual agent object
 Ind <- Individual$new(.data = toy_individuals, id_col = "pid")
 
@@ -144,26 +61,4 @@ barplot(
   main = "Transition result: driver status",
   col = c('steelblue', 'salmon')
 )
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TransitionClassification$clone(deep = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }
