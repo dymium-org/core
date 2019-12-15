@@ -58,6 +58,18 @@
 #'  (`expression`) -> `[data.table::data.table()]`\cr
 #'  Return ids of rows matches the expression.
 #'
+#'  * `hatch(ids)`\cr
+#'  (`integer()`)\cr
+#'  Clone existing agents in `ids` and inherit all attributes from their parents
+#'  except for the id attribute.
+#'
+#'  * `add(.data)`\cr
+#'  Add new agents in `.data` to the existing pool of agents. It should be noted,
+#'  that all new agents must have all the columns that the existing agents possess
+#'  with the exception of derived variables which is denoted by the `.` prefix.
+#'  For example, `.past_partner_id` is a derived variable which is allowed to be
+#'  missing in the new agents' data.
+#'
 #' @export
 Agent <- R6Class(
   classname = "Agent",
@@ -112,6 +124,21 @@ Agent <- R6Class(
 
       stop("Something went wrong! please try to debug this or file an issue.")
     },
+
+    hatch = function(ids) {
+      ids_dont_exist <- ids[!self$ids_exist(ids, by_element = TRUE)]
+      if (length(ids_dont_exist) != 0) {
+        stop(glue(
+          "Assertion on 'ids' failed: These ids do not exists {{{.missing_ids}}}",
+          .missing_ids = glue_collapse(ids_dont_exist, sep = ", ")
+        ))
+      }
+      private$add_new_agent_inherit_parent(parent_ids = ids)
+    },
+
+    add = function(.data) {
+      checkmate::assert_data_frame(.data)
+      private$add_new_agent_data(newdata = .data)
     },
 
     subset_ids = function(expr) {
