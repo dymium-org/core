@@ -82,15 +82,20 @@
 #'  Check which of the attribute names given in `x` exist in the attribute data
 #'  of the object.
 #'
-#'  * `ids_exist(ids)`\cr
-#'  (`integer()`) -> `logical()`\cr
+#'  * `ids_exist(ids, by_element = FALSE, include_removed_data = FALSE)`\cr
+#'  (`integer()`, `logical(1)`, `logical(1)`) -> `logical()`\cr
 #'  Returns a logical vector of the same length as the argument `ids`. This function
-#'  checks whether the ids in the argument `ids` exist or not.
+#'  checks whether the ids in the argument `ids` exist or not. If `by_element` is
+#'  TRUE then it will return a logical vector with the same length as `ids` in
+#'  their respective order. And if `inclide_removed_data` is TRUE it will check
+#'  the removed data to see if the ids ever existed.
 #'
-#'  * `idx_exist(idx)`\cr
+#'  * `idx_exist(idx, by_element = FALSE)`\cr
 #'  (`integer()`) -> `logical()`\cr
 #'  Returns a logical vector of the same length as the argument `idx`. This function
-#'  checks whether the indexes in the argument `idx` exist or not.
+#'  checks whether the indexes in the argument `idx` exist or not. If `by_element` is
+#'  TRUE then it will return a logical vector with the same length as `ids` in
+#'  their respective order.
 #'
 #'  * `n()`\cr
 #'  () -> `integer(1)`\cr
