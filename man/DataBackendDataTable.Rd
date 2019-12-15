@@ -2,13 +2,13 @@
 % Please edit documentation in R/DataBackendDataTable.R
 \name{DataBackendDataTable}
 \alias{DataBackendDataTable}
-\title{DataTable}
+\title{data.table::data.table as data backend}
 \format{\link[R6:R6Class]{R6::R6Class} object.}
 \description{
-SpatialData class is immutable.
+DataBackendDataTable class is immutable.
 }
 \section{Construction}{
-\preformatted{x <- SpatialData$new(.data)
+\preformatted{x <- DataBackendDataTable$new(.data)
 }
 \itemize{
 \item \code{data} :: \code{\link[data.table:data.table]{data.table::data.table()}}\cr

@@ -2,7 +2,7 @@
 % Please edit documentation in R/DataBackendSpatialFeature.R
 \name{DataBackendSpatialFeature}
 \alias{DataBackendSpatialFeature}
-\title{DataBackendSpatialFeature}
+\title{sf::sf as data backend}
 \format{\link[R6:R6Class]{R6::R6Class} object.}
 \description{
 For storing spatial data. The data is stored as a data.table but has methods

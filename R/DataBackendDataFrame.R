@@ -1,4 +1,4 @@
-#' @title DataBackendDataFrame
+#' @title data.frame as data backend
 #'
 #' @description
 #'

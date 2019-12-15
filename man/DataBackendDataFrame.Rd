@@ -2,7 +2,7 @@
 % Please edit documentation in R/DataBackendDataFrame.R
 \name{DataBackendDataFrame}
 \alias{DataBackendDataFrame}
-\title{DataBackendDataFrame}
+\title{data.frame as data backend}
 \format{\link[R6:R6Class]{R6::R6Class} object.}
 \description{
 Data backend of data.frame

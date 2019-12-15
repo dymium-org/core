@@ -1,8 +1,8 @@
-#' @title DataTable
+#' @title data.table::data.table as data backend
 #'
 #' @description
 #'
-#' SpatialData class is immutable.
+#' DataBackendDataTable class is immutable.
 #'
 #' @usage NULL
 #' @format [R6::R6Class] object.
@@ -10,7 +10,7 @@
 #'
 #' @section Construction:
 #' ```
-#' x <- SpatialData$new(.data)
+#' x <- DataBackendDataTable$new(.data)
 #' ```
 #'
 #' * `data` :: [data.table::data.table()]\cr
