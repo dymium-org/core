@@ -22,7 +22,7 @@
 #'
 #' @section Methods:
 #'
-#'  * `add(.data)`\cr
+#'  * `add(.data, fill = FALSE)`\cr
 #'  ([data.table::data.table]) -> `NULL`\cr
 #'  Add data.
 #'
@@ -36,16 +36,23 @@ DataBackendDataTable <- R6::R6Class(
       super$initialize(data.table::copy(.data))
     },
 
-    add = function(.data) {
+    add = function(.data, fill = FALSE) {
       checkmate::assert_data_table(.data, min.rows = 1, null.ok = FALSE, col.names = "strict")
-      equality_check <- all.equal(.data[0, ], omit_derived_vars(private$.data[0, ]))
-      if (!isTRUE(equality_check)) {
-        stop(glue(
-          ".data and existing data have {em}.",
-          em = tolower(glue::glue_collapse(equality_check, sep = " and "))
-        ))
+      # check that all existing column names in the newdata (.data) have the same
+      # types as the existing ones.
+      common_names <- Reduce(intersect, list(names(.data), names(self$get())))
+      typeof_new <- sapply(.data, typeof)[common_names]
+      typeof_existing <- sapply(self$get(), typeof)[common_names]
+      check_equality <- all.equal(typeof_existing, typeof_new)
+      if (!isTRUE(check_equality)){
+        cli::cli_alert_danger("Type mismatches found")
+        cli::cli_alert_danger("Type of existing data:")
+        print(typeof_existing)
+        cli::cli_alert_danger("Type of existing new data (.data):")
+        print(typeof_new)
+        stop(check_equality)
       }
-      private$.data <- rbind(private$.data, .data, fill = TRUE)
+      private$.data <- rbind(private$.data, .data, fill = fill)
       invisible()
     },
 

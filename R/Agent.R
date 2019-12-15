@@ -214,7 +214,7 @@ Agent <- R6Class(
         msg = "not all ids in `data` are unique from ids in newdata")
 
       # if pass all the checks then bind to data
-      self$data()$add(.data = newdata)
+      self$data()$add(.data = newdata, fill = TRUE)
 
       invisible()
     }
