@@ -91,3 +91,13 @@ test_that("remove partner", {
 })
 
 
+test_that("invoke a derived variable and add new data", {
+  create_toy_population()
+  ind_ids <- sample(pop$get('Individual')$get_ids(), 50)
+  Ind <- pop$get('Individual')
+  Ind$remove_relationship(ids = ind_ids, type = "partner") # this creates .past_partner_id variable
+  migrants <- pop_register(pop, ind_data = toy_individuals, hh_data = toy_households)
+  n_before <- Ind$n()
+  pop$add_population(ind_data = migrants$ind_data, hh_data = migrants$hh_data)
+  expect_gt(Ind$n(), n_before)
+})
