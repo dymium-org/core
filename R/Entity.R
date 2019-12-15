@@ -410,7 +410,8 @@ Entity <-
           from = self$get_last_id() + 1L,
           to = self$get_last_id() + n,
           by = 1L
-        )
+        ) %>%
+          as.integer()
         # update latest id
         private$.last_id <- private$.last_id + n
         # store the latest set of ids
