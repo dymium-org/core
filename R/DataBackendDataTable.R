@@ -37,15 +37,15 @@ DataBackendDataTable <- R6::R6Class(
     },
 
     add = function(.data) {
-      checkmate::assert(
-        checkmate::check_data_table(.data, min.rows = 1, null.ok = FALSE, col.names = "strict"),
-        checkmate::check_names(names(.data), names(private$.data))
-      )
-      equality_check <- all.equal(.data[0, ], private$.data[0, ])
-      assert_that(isTRUE(equality_check),
-                  msg = glue::glue(".data and existing data have {em}.",
-                                   em = tolower(glue::glue_collapse(equality_check, sep = " and "))))
-      private$.data <- rbind(private$.data, .data)
+      checkmate::assert_data_table(.data, min.rows = 1, null.ok = FALSE, col.names = "strict")
+      equality_check <- all.equal(.data[0, ], omit_derived_vars(private$.data[0, ]))
+      if (!isTRUE(equality_check)) {
+        stop(glue(
+          ".data and existing data have {em}.",
+          em = tolower(glue::glue_collapse(equality_check, sep = " and "))
+        ))
+      }
+      private$.data <- rbind(private$.data, .data, fill = TRUE)
       invisible()
     },
 

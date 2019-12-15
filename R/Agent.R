@@ -84,27 +84,34 @@ Agent <- R6Class(
     },
 
     add_new_agents = function(parent_ids, .data) {
-      assert_that(xor(missing(parent_ids), missing(.data)),
-        msg = "At least and at most of one of the arguments must be given.")
-      assert_that(
-        self$n() != 0,
-        msg = "data is emptied!
-        Can't not create new agents since the data fields are not defined."
-      )
+
+      if (!xor(missing(parent_ids), missing(.data))) {
+        stop("Only one of the arguments must be specified")
+      }
+
+      if (self$n() == 0) {
+        stop(glue(
+          "data is emptied! Can't not create new agents since the data fields \\
+          are not defined."
+        ))
+      }
 
       if (!missing(.data)) {
-        assert_that(is.data.frame(.data))
+        checkmate::assert_data_frame(.data)
         private$add_new_agent_data(newdata = .data)
         return()
       }
 
       if (!missing(parent_ids)) {
-        assert_that(self$ids_exist(ids = parent_ids, by_element = FALSE))
+        if (!self$ids_exist(ids = parent_ids, by_element = FALSE)) {
+          stop(glue("Not all parent_ids exists."))
+        }
         private$add_new_agent_inherit_parent(parent_ids = parent_ids)
         return()
       }
 
-      invisible()
+      stop("Something went wrong! please try to debug this or file an issue.")
+    },
     },
 
     subset_ids = function(expr) {
@@ -157,12 +164,18 @@ Agent <- R6Class(
         msg = "`data` must be a data.table.")
 
       # check that both data are identical in their structures
-      if (all.equal(self$get_data(copy = FALSE)[0, ], newdata[0, ]) != TRUE) {
+      check_res <- all.equal(target = omit_derived_vars(self$get_data(copy = FALSE)[0, ]),
+                             current = newdata[0, ])
+      if (!isTRUE(check_res)) {
         lg$error("showing head of self$data")
         print(head(self$get_data()))
         lg$error("showing head of newdata")
         print(head(newdata))
-        stopifnot(all.equal(self$get_data(copy = FALSE)[0, ], newdata[0, ]), )
+        stop(glue(
+          "Existing data of {self$class()} and `newdata` are not the same for the following reasons:
+          {reasons}",
+          reasons = glue_collapse(paste("- ", check_res), sep = "\n")
+        ))
       }
 
       # check id uniqueness

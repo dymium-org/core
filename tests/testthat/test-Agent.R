@@ -49,7 +49,7 @@ test_that("using Test data", {
   # add_new_agents() ---------
   n_new_agents <- 3L
   n_rows_before_add <- MyAgent$n()
-  MyAgent$add_new_agents(parent_ids = sample(MyAgent$get_ids(), size = n_new_agents))
+  MyAgent$add_new_agents(parent_ids = sample(x = MyAgent$get_ids(), size = n_new_agents))
   expect_equal(n_rows_before_add, MyAgent$n() - n_new_agents)
 
   # remove_agent() ---------
@@ -243,3 +243,13 @@ test_that("Agent add, get, remove and show data methods", {
   x <- MyAgent$summary(verbose = FALSE)
   expect_true(sum(x$nrow_removed) > 0)
 })
+
+test_that("add new agents to existing agents with a derived variable", {
+  create_toy_population()
+  pop$ind$remove_relationship(sample(pop$ind$get_ids(), 50))
+  pop$ind$get_data()
+  new_ind_data <- pop_register(pop, ind_data = toy_individuals)
+  pop$ind$add(new_ind_data$ind_data)
+  expect_equal(nrow(pop$ind$get_data()), nrow(toy_individuals) * 2)
+})
+
