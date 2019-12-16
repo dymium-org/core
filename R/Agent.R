@@ -187,12 +187,10 @@ Agent <- R6Class(
     #
     # ***********************************************************
     add_new_agent_data = function(newdata) {
-      assert_that(is.data.table(newdata),
-        msg = "`data` must be a data.table.")
+      checkmate::assert_data_table(newdata, col.names = 'strict', null.ok = FALSE)
 
       # check that both data are identical in their structures
       check_res <- all.equal(target = omit_derived_vars(self$get_data(copy = FALSE)[0, ]),
-                             current = newdata[0, ])
       if (!isTRUE(check_res)) {
         lg$error("showing head of self$data")
         print(head(self$get_data()))
@@ -205,13 +203,21 @@ Agent <- R6Class(
         ))
       }
 
+      id_col <- self$get_id_col()
       # check id uniqueness
-      assert_that(uniqueN(newdata[[self$get_id_col()]]) == nrow(newdata),
-        msg = "All ids must be unique.")
+      checkmate::assert_integerish(
+        x = newdata[[id_col]],
+        len = nrow(newdata),
+        lower = 1,
+        null.ok = FALSE,
+        any.missing = FALSE,
+        .var.name = "newdata's id column"
+      )
 
       # check id overlapping between new and old data
-      assert_that(!self$ids_exist(newdata[[self$get_id_col()]], by_element = FALSE),
-        msg = "not all ids in `data` are unique from ids in newdata")
+      if (self$ids_exist(newdata[[id_col]], by_element = FALSE)) {
+        stop("Not all ids in `data` are unique from ids in newdata")
+      }
 
       # if pass all the checks then bind to data
       self$data()$add(.data = newdata, fill = TRUE)
