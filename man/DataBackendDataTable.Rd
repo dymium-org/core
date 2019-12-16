@@ -26,7 +26,7 @@ The input \code{\link[data.table:data.table]{data.table::data.table()}}.
 \section{Methods}{
 
 \itemize{
-\item \code{add(.data)}\cr
+\item \code{add(.data, fill = FALSE)}\cr
 (\link[data.table:data.table]{data.table::data.table}) -> \code{NULL}\cr
 Add data.
 }
