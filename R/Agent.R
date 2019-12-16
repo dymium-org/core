@@ -191,6 +191,7 @@ Agent <- R6Class(
 
       # check that both data are identical in their structures
       check_res <- all.equal(target = omit_derived_vars(self$get_data(copy = FALSE)[0, ]),
+                             current = omit_derived_vars(newdata[0, ]))
       if (!isTRUE(check_res)) {
         lg$error("showing head of self$data")
         print(head(self$get_data()))
