@@ -50,7 +50,7 @@ household_formation <- function(Pop, model = NULL, mapping, type) {
   return(invisible())
 }
 
-hf_join <- function(PopObj, mapping) {
+hf_join <- function(Pop, mapping) {
 
   # expand mapping
   mapping_expanded <-
@@ -58,16 +58,16 @@ hf_join <- function(PopObj, mapping) {
     magrittr::set_colnames(., names(mapping))
 
   # join household
-  PopObj$join_household(
+  Pop$join_household(
     ind_ids = mapping_expanded$ind_id,
     hh_ids = mapping_expanded$hh_id
   )
 
 }
 
-hf_new <- function(PopObj, mapping) {
+hf_new <- function(Pop, mapping) {
 
-  HhObj <- PopObj$get("Household")
+  HhObj <- Pop$get("Household")
   # create new households
   # each row of `mapping` represent one household
   HhObj$add_new_agents(n = nrow(mapping))
@@ -79,7 +79,7 @@ hf_new <- function(PopObj, mapping) {
     magrittr::set_colnames(., names(mapping))
 
   # join new households
-  PopObj$join_household(
+  Pop$join_household(
     ind_ids = mapping_expanded$ind_id,
     hh_ids = mapping_expanded$hh_id
   )
@@ -87,9 +87,9 @@ hf_new <- function(PopObj, mapping) {
 }
 
 
-hf_random_join <- function(PopObj, model, mapping) {
+hf_random_join <- function(Pop, model, mapping) {
 
-  HhObj <- PopObj$get("Household")
+  HhObj <- Pop$get("Household")
 
   if (!is.null(model)) {
     sampling_weights <-
@@ -113,7 +113,7 @@ hf_random_join <- function(PopObj, model, mapping) {
     mapping[, hh_id := randomly_selected_hhids]
 
     # join households
-    hf_join(PopObj, mapping)
+    hf_join(Pop, mapping)
   } else {
     non_emptied_hhids <-
       HhObj$get_data()[hhsize != 0, .(hid = get(HhObj$get_id_col()), hhsize)]
@@ -127,6 +127,6 @@ hf_random_join <- function(PopObj, model, mapping) {
     mapping[, hh_id := randomly_selected_hhids]
 
     # join households
-    hf_join(PopObj, mapping)
+    hf_join(Pop, mapping)
   }
 }
