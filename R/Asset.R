@@ -73,10 +73,15 @@ Asset <- R6::R6Class(
   public = list(
 
     initialize = function(.data, id_col, owner = NULL) {
-      if (!missing(.data) & !missing(id_col)) {
-        super$initialize(databackend = DataBackendDataTable,
-                         .data = .data,
-                         id_col = id_col)
+      if (!missing(.data)) {
+        if (!missing(id_col)) {
+          super$initialize(databackend = DataBackendDataTable,
+                           .data = .data,
+                           id_col = id_col)
+        } else {
+          stop(glue::glue("To initialise the attribute data of {self$class()} \\
+                            the `id_col` argument must be given."))
+        }
       }
       if (!is.null(owner)) {
         self$set_owner_object(owner)

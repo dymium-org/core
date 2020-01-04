@@ -30,11 +30,17 @@ Environment <-
     public = list(
 
       initialize = function(.data, id_col) {
-        if (!missing(.data) & !missing(id_col)) {
-          super$initialize(databackend = DataBackendSpatialFeature,
-                           .data = .data,
-                           id_col = id_col)
+        if (!missing(.data)) {
+          if (!missing(id_col)) {
+            super$initialize(databackend = DataBackendSpatialFeature,
+                             .data = .data,
+                             id_col = id_col)
+          } else {
+            stop(glue::glue("To initialise the attribute data of {self$class()} \\
+                            the `id_col` argument must be given."))
+          }
         }
+
         invisible()
       },
 
