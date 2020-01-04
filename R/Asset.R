@@ -98,14 +98,28 @@ Asset <- R6::R6Class(
 
     set_owner_object = function(x) {
       checkmate::assert_r6(x, classes = c("Agent", "Entity"))
-      owner_id_col <- x$get_id_col()
       checkmate::assert_names(x = x$data()$colnames(),
                               must.include = self$get_id_col(),
                               .var.name = "Attribute data of owner 'x'")
-      if (!checkmate::test_subset(self$get_attr(x = owner_id_col),
-                                  choices = x$get_ids())) {
-        stop(glue::glue("Some {x$class()} owner ids in {self$class()} are missing from {x$class()}"))
+
+      owner_id_col <- x$get_id_col()
+      owner_ids_in_self <- na.omit(self$get_attr(x = owner_id_col))
+      x_owner_ids <- x$get_ids()
+      missing_ids <- owner_ids_in_self[!owner_ids_in_self %in% x_owner_ids]
+
+      if (length(missing_ids) != 0) {
+        stop(
+          glue::glue(
+            "Some {x$class()} owner ids in {self$class()} are missing from {x$class()}:\\
+            {{missing_ids}}"
+          )
+        )
       }
+
+      # if (!checkmate::test_subset(self$get_attr(x = owner_id_col),
+      #                             choices = x$get_ids())) {
+      #   stop(glue::glue("Some {x$class()} owner ids in {self$class()} are missing from {x$class()}"))
+      # }
       lg$info("Setting owner of {class(self)[[1]]} to {class(x)[[1]]}")
       private$.Owner <- x
       private$.owner_id_col <- owner_id_col
