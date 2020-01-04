@@ -34,7 +34,7 @@ test_that("is_occupied and is_vacant", {
   Bld <- Building$new()
   Hh <- Household$new(.data = owner_data, id_col = "hid")
 
-  Bld$initialise_data(data, id_col)
+  Bld$initialise_data(building_data, id_col)
   Bld$set_owner_object(x = Hh)
 
   vacant <- is.na(Bld$get_attr("hid"))
