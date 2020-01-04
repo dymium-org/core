@@ -1,6 +1,6 @@
 #' @title Household class
 #'
-#' @format [R6::R6Class] object inheriting from [Agent].
+#' @format [R6::R6Class] object inheriting from [Agent]<-[Entity].
 #' @include Agent.R
 #' @include Individual.R
 #'

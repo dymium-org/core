@@ -3,7 +3,7 @@
 \name{Zone}
 \alias{Zone}
 \title{Zone class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Agent}.}
+\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Environment}<-\link{Entity}.}
 \description{
 Create Zone class, extended Agent class.
 }

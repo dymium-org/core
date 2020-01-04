@@ -1,7 +1,7 @@
 #' Commercial Building class
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object.
+#' @format [R6::R6Class] object inheriting from [Building]<-[Asset]<-[Entity].
 #'
 #' @description  Create Commercial Building class, extended Agent class.
 #'

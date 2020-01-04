@@ -6,7 +6,7 @@
 #' to transform the object back to its intiail sf format.
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object.
+#' @format [R6::R6Class] object inheriting from [DataBackendDataTable]<-[DataBackendDataFrame]<-[DataBackend].
 #' @include DataBackendDataFrame.R
 #'
 #' @section Construction:

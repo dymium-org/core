@@ -3,7 +3,7 @@
 \name{DataBackendSpatialFeature}
 \alias{DataBackendSpatialFeature}
 \title{sf::sf as data backend}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{DataBackendDataTable}<-\link{DataBackendDataFrame}<-\link{DataBackend}.}
 \description{
 For storing spatial data. The data is stored as a data.table but has methods
 to transform the object back to its intiail sf format.

@@ -3,7 +3,7 @@
 \name{DataBackendDataTable}
 \alias{DataBackendDataTable}
 \title{data.table::data.table as data backend}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{DataBackendDataFrame}<-\link{DataBackend}.}
 \description{
 DataBackendDataTable class is immutable.
 }

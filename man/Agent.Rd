@@ -3,7 +3,7 @@
 \name{Agent}
 \alias{Agent}
 \title{Agent}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Entity}.}
 \description{
 Agent class is the generic class for creating urban agents such
 as individuals, households, firms, dwelling and more.

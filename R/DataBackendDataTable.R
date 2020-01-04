@@ -5,7 +5,7 @@
 #' DataBackendDataTable class is immutable.
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object.
+#' @format [R6::R6Class] object inheriting from [DataBackendDataFrame]<-[DataBackend].
 #' @include DataBackendDataFrame.R
 #'
 #' @section Construction:

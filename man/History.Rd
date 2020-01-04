@@ -3,6 +3,7 @@
 \name{History}
 \alias{History}
 \title{History class}
+\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Generic}}
 \description{
 Create History class, record life-course changes of agents.
 }

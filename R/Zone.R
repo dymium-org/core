@@ -1,10 +1,11 @@
 #' @title Zone class
-#'
-#' @format [R6::R6Class] object inheriting from [Agent].
+#' @usage NULL
+#' @format [R6::R6Class] object inheriting from [Environment]<-[Entity].
 #'
 #' @description  Create Zone class, extended Agent class.
 #'
 #' @include Environment.R
+#'
 #' @export
 Zone <- R6::R6Class(
   classname = "Zone",

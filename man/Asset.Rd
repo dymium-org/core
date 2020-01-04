@@ -3,6 +3,7 @@
 \name{Asset}
 \alias{Asset}
 \title{Asset class}
+\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Entity}.}
 \description{
 An \link{Asset} represents physical objects such as buildings and vehicles that
 can be owned/rent/belong by or to agents of the \link{Agent} sub classes.

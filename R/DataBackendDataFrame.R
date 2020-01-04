@@ -5,7 +5,7 @@
 #' Data backend of data.frame
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object.
+#' @format [R6::R6Class] object inheriting from [DataBackend].
 #' @include DataBackend.R
 #'
 #' @export

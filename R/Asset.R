@@ -1,5 +1,7 @@
 #' @title Asset class
 #'
+#' @usage NULL
+#' @format [R6::R6Class] object inheriting from [Entity].
 #' @include Entity.R
 #'
 #' @description

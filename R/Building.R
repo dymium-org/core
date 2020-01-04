@@ -1,5 +1,5 @@
 #' @title Building class
-#'
+#' @format [R6::R6Class] object inheriting from [Asset]<-[Entity].
 #' @include Asset.R
 #'
 #' @description
