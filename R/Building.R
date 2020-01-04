@@ -30,9 +30,9 @@
 #'  (`integer()`) -> (`logical()`)\cr
 #'  Check if the assets in ids are vacant
 #'
-#' * `make_vacant(ids)`\cr
+#' * `vacate(ids)`\cr
 #'  (`integer()`)\cr
-#'  Remove owner from those assets in `ids`.
+#'  This removes the owners of the assets in `ids`.
 #'
 #' @export
 Building <- R6Class(
@@ -44,7 +44,7 @@ Building <- R6Class(
       !super$is_owned(ids)
     },
 
-    make_vacant = function(ids) {
+    vacate = function(ids) {
       super$remove_owner(ids)
     }
   )
