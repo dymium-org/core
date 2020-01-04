@@ -42,7 +42,7 @@ Suggests:
     knitr,
     rmarkdown
 Roxygen: list(markdown = TRUE, r6 = FALSE)
-RoxygenNote: 7.0.1
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Collate: 
     'Generic.R'
