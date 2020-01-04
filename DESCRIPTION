@@ -94,4 +94,5 @@ Collate:
     'utils-pipeline.R'
     'utils-scenario.R'
     'utils.R'
+    'validate.R'
     'zzz.R'
