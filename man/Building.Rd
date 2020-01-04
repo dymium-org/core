@@ -29,9 +29,9 @@ The id column of \code{.data}.
 \item \code{is_vacant(ids)}\cr
 (\code{integer()}) -> (\code{logical()})\cr
 Check if the assets in ids are vacant
-\item \code{make_vacant(ids)}\cr
+\item \code{vacate(ids)}\cr
 (\code{integer()})\cr
-Remove owner from those assets in \code{ids}.
+This removes the owners of the assets in \code{ids}.
 }
 }
 
