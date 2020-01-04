@@ -32,7 +32,7 @@ The id column of \code{.data}.
 \section{Methods}{
 
 \itemize{
-\item \code{is_owned(ids)}\cd
+\item \code{is_owned(ids)}\cr
 (\code{integer()}) -> (\code{logical()})\cr
 Check if the assets in \code{ids} are owned. If \code{ids} is not given the result will
 be for all assets.

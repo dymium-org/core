@@ -30,7 +30,7 @@
 #'
 #' @section Methods:
 #'
-#' * `is_owned(ids)`\cd
+#' * `is_owned(ids)`\cr
 #'  (`integer()`) -> (`logical()`)\cr
 #'  Check if the assets in `ids` are owned. If `ids` is not given the result will
 #'  be for all assets.
