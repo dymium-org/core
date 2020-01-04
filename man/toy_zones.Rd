@@ -25,6 +25,7 @@
 toy_zones
 }
 \description{
-This dataset contains 11 SA2 zones of Melborune CBD, Australia in a \link[sf:sf]{sf::sf} format.
+Note that this dataset requires the \code{sf} package to work properly. This
+dataset contains 11 SA2 zones of Melborune CBD, Australia in a \link[sf:sf]{sf::sf} format.
 }
 \keyword{datasets}

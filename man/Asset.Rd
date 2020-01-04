@@ -3,41 +3,63 @@
 \name{Asset}
 \alias{Asset}
 \title{Asset class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Entity}.}
 \description{
 An \link{Asset} represents physical objects such as buildings and vehicles that
 can be owned/rent/belong by or to agents of the \link{Agent} sub classes.
 For example, \link{Household} agents own or rent residential buildings.
 }
 \section{Construction}{
-\preformatted{x <- Entity$new(databackend, .data, id_col)
+\preformatted{x <- Asset$new(.data, id_col, owner = NULL)
 }
 
 Stores \code{.data} as a DataBackend object inside the object's list of data (\code{private$.data})
 and registers the \code{id_col} (\code{private$.id_col}).
 \itemize{
-\item \code{databackend} :: \link{DataBackend} classes\cr
-An \link[R6:R6Class]{R6::R6Class} generator that inherits from \code{DataBackend}.
 \item \code{.data} :: \code{data.frame}\cr
 A object that inherits from \code{data.frame}.
 \item \code{id_col} :: \code{character(1)}\cr
 The id column of \code{.data}.
+\item \code{owner} :: an \link[R6:R6Class]{R6::R6Class} object that inherits \link{Agent}.\cr
 }
 }
 
 \section{Fields}{
 
-\itemize{
-\item \code{NULL}\cr`
-}
+
+\code{NULL}\cr
 }
 
 \section{Methods}{
 
 \itemize{
-\item \code{owner(ids)}\cr
-(\code{integer()}) -> \code{integer()}\cr
-Returns owner ids.
+\item \code{is_owned(ids)}\cr
+(\code{integer()}) -> (\code{logical()})\cr
+Check if the assets in \code{ids} are owned. If \code{ids} is not given the result will
+be for all assets.
+\item \code{get_owner(ids)}\cr
+(\code{integer()}) -> (\code{integer()})\cr
+Get the owner ids of the assets in \code{ids}.
+\item \code{set_owner(ids, owner_ids)}\cr
+(\code{integer()}|\code{integer()})\cr
+Set the owners in \code{owner_ids} to the assets in \code{ids}. Both arguments must
+have an equal length. An asset can only be owned by one owner.
+\item \code{get_owner_id_col()}\cr
+() -> \code{character(1)}.\cr
+Returns the id column of the owner object.
+\item \code{get_owner_object()}\cr
+() -> an \link[R6:R6Class]{R6::R6Class} object that inherits \link{Agent}.\cr
+Returns the owner object of this asset.
+\item \code{set_owner_object(x)}\cr
+(an \link[R6:R6Class]{R6::R6Class} that inherits \link{Agent})\cr
+Set owner. This assigns the owner object to the \code{Owner} field of this
+asset hence you can access the owner object using \code{x$Owner} (assuming that
+the asset object was named \code{x}).
+\item \code{remove_owner(ids)}\cr
+(\code{integer()})\cr
+Remove the owner ids from the assets in \code{ids} by setting them to \code{NA}.
+\item \code{owner_gets_asset_id(owner_ids)}\cr
+(\code{integer()}) -> (\code{integer()}\cr
+Get the asset ids of the owners in \code{owner_ids}.
 }
 }
 

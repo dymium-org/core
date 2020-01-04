@@ -312,9 +312,19 @@ World <- R6::R6Class(
       invisible()
     },
 
-    start_iter = function(time_step, unit = "iteration") {
+    run_checks = function() {
+      fs <- list(validate_linkages)
+      for (f in fs) {
+        f(self)
+      }
+    },
+
+    start_iter = function(time_step, unit = "iteration", run_checks = FALSE) {
       assert_that(assertthat::is.count(time_step))
       self$set_time(x = time_step)
+      if (run_checks) {
+        self$run_checks()
+      }
       lg$info("Starting {unit}: {self$get_time()}")
       invisible(self)
     }

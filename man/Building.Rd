@@ -3,42 +3,35 @@
 \name{Building}
 \alias{Building}
 \title{Building class}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
 \description{
-Create Building class, extended Agent class.
-}
-\section{Construction}{
-\preformatted{x <- Entity$new(databackend, .data, id_col)
+Create a building object.\preformatted{x <- Building$new(.data, id_col, owner)
 }
 
 Stores \code{.data} as a DataBackend object inside the object's list of data (\code{private$.data})
 and registers the \code{id_col} (\code{private$.id_col}).
 \itemize{
-\item \code{databackend} :: a \link[R6:R6Class]{R6::R6Class} generator\cr
-A \link[R6:R6Class]{R6::R6Class} generator that inherits from \code{DataBackend}.
-\item \code{.data} :: \code{data.frame()}\cr
+\item \code{.data} :: \code{data.frame}\cr
 A object that inherits from \code{data.frame}.
 \item \code{id_col} :: \code{character(1)}\cr
 The id column of \code{.data}.
+\item \code{owner} :: an \link[R6:R6Class]{R6::R6Class} object that inherits \link{Agent}.\cr
 }
 }
-
 \section{Fields}{
 
-\itemize{
-\item \code{NULL}\cr`
-}
+
+\code{NULL}\cr
 }
 
 \section{Methods}{
 
 \itemize{
-\item \code{is_occupied(ids)}\cr
-(\code{integer()}) -> \code{logical()}\cr
-Returns TRUE if dwelling in ids is occupied
 \item \code{is_vacant(ids)}\cr
-(\code{integer()}) -> \code{logical()}\cr
-Returns TRUE if dwelling in ids is vacant.
+(\code{integer()}) -> (\code{logical()})\cr
+Check if the assets in ids are vacant
+\item \code{vacate(ids)}\cr
+(\code{integer()})\cr
+This removes the owners of the assets in \code{ids}.
 }
 }
 

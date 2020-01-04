@@ -87,7 +87,7 @@ check_module <- function(name, repo = dymiumModulesRepo) {
 #'
 #' @template repo-arg
 #'
-#' @return
+#' @return a logical value
 #' @export
 #'
 #' @examples

@@ -1,7 +1,7 @@
 Package: dymiumCore
 Type: Package
 Title: The core functions of a Dynamic Microsimulation framework for Integrated Urban Models
-Version: 0.0.10.9200
+Version: 0.0.11
 Authors@R: c(
     person("Amarin", "Siripanich", email = "amarin@dymium.org", role = c("aut", "cre")),
     person("Taha", "Rashidi", role = c("aut")))
@@ -42,7 +42,7 @@ Suggests:
     knitr,
     rmarkdown
 Roxygen: list(markdown = TRUE, r6 = FALSE)
-RoxygenNote: 7.0.1
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Collate: 
     'Generic.R'
@@ -94,4 +94,5 @@ Collate:
     'utils-pipeline.R'
     'utils-scenario.R'
     'utils.R'
+    'validate.R'
     'zzz.R'
