@@ -37,6 +37,9 @@ The id column of \code{.data}.
 (\code{DataBackend}, \code{data.frame}, \code{character(1)}) -> \code{NULL}\cr
 Append new data to the object's data list (\code{private$.data}). the new data
 must be linkable with the attribute data of the object by the id_col.
+\item \code{check_ids(ids)}\cr
+(\code{integer()})\cr
+Return true if all ids exist if not raises an informative error.
 \item \code{data(name)}\cr
 (\code{character(1)}) -> (\verb{[dymiumCore::DataBackend]}|\code{NULL})\cr
 Returns a reference to a \code{DataBackend} object with the name that matches \code{name}.
@@ -61,10 +64,10 @@ Return removed agent data. If \code{name} is missing, the first data, which shou
 contains the main attributes of the agent object, will be returned.
 \item \code{get_ids(idx)}\cr
 (\code{integer()}) -> \code{integer()}\cr
-Return the ids of the indexes in the argrument \code{idx}.
+Return the ids of the indexes in the argrument \code{idx}, respectively.
 \item \code{get_idx(ids)}\cr
 (\code{integer()}) -> \code{integer()}\cr
-Return the indexes of the ids in the argrument \code{ids}.
+Return the indexes of the ids in the argrument \code{ids}, respectively.
 \item \code{get_attr(x, ids)}\cr
 (\code{character(1)}, \code{integer()}) -> \code{vector(type::col)}\cr
 Extract the attribute from self$data as vector. If \code{ids} is given then only

@@ -15,7 +15,7 @@ check_module_version(name, repo = dymiumModulesRepo, version)
 for version 0.1.0 type it as a character '0.1.0'.}
 }
 \value{
-
+a logical value
 }
 \description{
 Check the existence of a module version

@@ -43,10 +43,50 @@ Please visit
 [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
 to see available modules.
 
-## Structure
+## Overview
 
-The main building blocks of microsimulation are agents, environment and
-models.
+An implementation of a microsimulation model usually consists of these
+four components which are entities, rules, transition, and markets.
+
+### Entities
+
+Entities can be persons, firms, buildings, zones, transport network etc.
+They can be conviniently defined as a class, based on the concept of
+‘objects’ in object-oriented programming. Each entity is known by its
+fields and methods, what it represents and what it can do. A person may
+contains fields such as age, gender, marital status. A person give
+birth, leave parental home, etc. While a household may have household
+size, household id, number of vehicles owned as its fields. A household
+can relocate, have new members and etc.
+
+### Rules
+
+In a microsimulation model, entities are given rules for them to follow
+under different conditions. A rule can simply be an ifelse statement
+such as:
+
+    if age is greater than 16:
+        can_marry 
+    else:
+        cant_marry
+
+or probabilistic such as a rate-based model or a classification model
+(binary logit model, multinomial logit model, hazard-based model, random
+forest, and artificial neural network) that takes attributes of the
+entities as the input variables.
+
+### Transition
+
+Transition takes in a rule and entities then simulate the outcomes of
+the entities given the provided rule. For probabilistic rules, Monte
+Carlo simulation will be performed based on the probabilistic values
+from the rules.
+
+### Market
+
+In microsimulation, a market is where entities are directly interact
+with one another. A market can be an abstraction of a real-estate
+bidding market, a mate matching market, a labour market, etc.
 
 ## Currently supported models
 
