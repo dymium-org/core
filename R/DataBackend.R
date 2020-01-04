@@ -85,6 +85,10 @@ DataBackend <- R6::R6Class(
 
     get_removed = function() {
       private$.removed_data
+    },
+
+    str = function() {
+      str(private$.data)
     }
   ),
 

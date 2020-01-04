@@ -36,29 +36,27 @@ Household <- R6Class(
   public = list(
 
     add_new_agents = function(.data, n){
+
+      # add data
       if (!missing(.data)) {
         super$add_new_agents(.data = .data)
         return(invisible())
       }
-      assert_that(assertthat::is.count(n))
-      data_template <- self$get_data(copy = FALSE)[0, ]
+
+      # generate by n
+      checkmate::assert_count(n, positive = TRUE, na.ok = FALSE, null.ok = FALSE)
       new_ids <- self$generate_new_ids(n = n)
+      id_col <- self$get_id_col()
       newdata <-
-        # all undefined columns will be filled with NAs
-        rbind(data_template, data.table::data.table(hid = new_ids), fill = TRUE)
+        data.table(id_col = new_ids) %>%
+        setnames(old = "id_col", new = id_col) %>%
+        rbind(., self$get_data(copy = FALSE)[0, ], fill = TRUE)
       super$add_new_agents(.data = newdata)
       invisible()
     },
 
     initialise_data = function(.data, id_col = "hid") {
       super$initialise_data(.data = .data, id_col = id_col)
-    }#,
-
-    # data_template = function() {
-    #   data.table(
-    #     hid = integer(),
-    #     hhsize = integer()
-    #     )
-    # }
+    }
   )
 )

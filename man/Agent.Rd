@@ -52,6 +52,16 @@ Generates \code{n} number of new ids.
 \item \code{subset_ids(expression)}\cr
 (\code{expression}) -> \verb{[data.table::data.table()]}\cr
 Return ids of rows matches the expression.
+\item \code{hatch(ids)}\cr
+(\code{integer()})\cr
+Clone existing agents in \code{ids} and inherit all attributes from their parents
+except for the id attribute.
+\item \code{add(.data)}\cr
+Add new agents in \code{.data} to the existing pool of agents. It should be noted,
+that all new agents must have all the columns that the existing agents possess
+with the exception of derived variables which is denoted by the \code{.} prefix.
+For example, \code{.past_partner_id} is a derived variable which is allowed to be
+missing in the new agents' data.
 }
 }
 

@@ -76,14 +76,19 @@ the corresponding values to \code{ids} are returned, in the same order as the \c
 (\code{character()}) -> \code{logical()}\cr
 Check which of the attribute names given in \code{x} exist in the attribute data
 of the object.
-\item \code{ids_exist(ids)}\cr
-(\code{integer()}) -> \code{logical()}\cr
+\item \code{ids_exist(ids, by_element = FALSE, include_removed_data = FALSE)}\cr
+(\code{integer()}, \code{logical(1)}, \code{logical(1)}) -> \code{logical()}\cr
 Returns a logical vector of the same length as the argument \code{ids}. This function
-checks whether the ids in the argument \code{ids} exist or not.
-\item \code{idx_exist(idx)}\cr
+checks whether the ids in the argument \code{ids} exist or not. If \code{by_element} is
+TRUE then it will return a logical vector with the same length as \code{ids} in
+their respective order. And if \code{inclide_removed_data} is TRUE it will check
+the removed data to see if the ids ever existed.
+\item \code{idx_exist(idx, by_element = FALSE)}\cr
 (\code{integer()}) -> \code{logical()}\cr
 Returns a logical vector of the same length as the argument \code{idx}. This function
-checks whether the indexes in the argument \code{idx} exist or not.
+checks whether the indexes in the argument \code{idx} exist or not. If \code{by_element} is
+TRUE then it will return a logical vector with the same length as \code{ids} in
+their respective order.
 \item \code{n()}\cr
 () -> \code{integer(1)}\cr
 Returns the number of entities represented by this object.

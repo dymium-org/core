@@ -1,4 +1,4 @@
-#' @title DataBackendSpatialFeature
+#' @title sf::sf as data backend
 #'
 #' @description
 #'

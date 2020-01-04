@@ -158,6 +158,9 @@ use_scenario <- function(name, active = TRUE) {
   usethis::use_directory(path)
   usethis::use_directory(fs::path(path, "inputs"))
   usethis::use_directory(fs::path(path, "outputs"))
+  if (active) {
+    set_active_scenario(name)
+  }
   invisible(path)
 }
 
