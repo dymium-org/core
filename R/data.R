@@ -62,7 +62,8 @@
 #'
 #' @description
 #'
-#' This dataset contains 11 SA2 zones of Melborune CBD, Australia in a [sf::sf] format.
+#' Note that this dataset requires the [sf] package to work properly. This
+#' dataset contains 11 SA2 zones of Melborune CBD, Australia in a [sf::sf] format.
 #'
 #' @docType data
 #'
