@@ -31,9 +31,6 @@ reference:
 - title: "Market"
   contents:
     - starts_with("Match")
-- title: "Transition"
-  contents:
-    - matches("^Transition.")
 - title: "Data backends"
   contents:
     - matches("DataBackend.")
