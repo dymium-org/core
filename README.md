@@ -16,7 +16,7 @@ Status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://
 coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.svg)](https://codecov.io/gh/dymium-org/dymiumCore?branch=master)
 <!-- badges: end -->
 
-# dymiumCore: <img src="man/figures/logo.png" align="right" alt="" width="120" />
+# dymiumCore <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 **dymiumCore** is an R package which provides a toolbox for developing a
 microsimulation model that is modular and pipable. While the core focus
