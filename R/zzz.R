@@ -78,10 +78,6 @@
   invisible()
 }
 
-
-
-
-
 .onUnload <- function(libpath) {
   ## if temp session _dir is being used, ensure it gets reset each session
   if (getOption("dymium.scenario_dir") == file.path(.dymium_tempdir)) {
