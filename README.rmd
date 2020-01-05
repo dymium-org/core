@@ -47,8 +47,8 @@ Please visit [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModu
 
 ## Overview of the building blocks 
 
-An implementation of a microsimulation model usually consists of these four 
-components which are entities, rules, transition, and markets.
+An implementation of a microsimulation model usually consists of these three 
+components which are entity, transition and market.
 
 ### Entities
 
@@ -128,7 +128,7 @@ choices and their values are their associated probabilities.
 ```
 
 In a binary choice model, it is recommended that the outcome variable should be 
-coded as "yes" and "no" as many of the modules available at (dymium-org/dymiumModules)[https://github.com/dymium-org/dymiumModules]
+coded as "yes" and "no" as many of the modules available at [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
 use with this convention.
 
 
@@ -191,7 +191,11 @@ will get the following error.
 
 To access the log data of your simulation results use the following command.
 
-```{r}
+```{r, eval = FALSE}
 dymiumCore:::lg$appenders$buff$appenders$sim_output$data
+```
+```{r}
+#>   level           timestamp     logger caller        msg                  desc     value
+#> 1   400 2020-01-06 07:29:49 dymiumCore   eval SIM_OUTPUT number_of_individuals      1000
 ```
 

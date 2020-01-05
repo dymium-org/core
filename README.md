@@ -46,7 +46,7 @@ to see the available modules.
 ## Overview of the building blocks
 
 An implementation of a microsimulation model usually consists of these
-four components which are entities, rules, transition, and markets.
+three components which are entity, transition and market.
 
 ### Entities
 
@@ -162,7 +162,7 @@ library(data.table) # use install.packages("data.table") to install
 
 In a binary choice model, it is recommended that the outcome variable
 should be coded as “yes” and “no” as many of the modules available at
-(dymium-org/dymiumModules)\[<https://github.com/dymium-org/dymiumModules>\]
+[dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
 use with this convention.
 
 ### Market
@@ -233,30 +233,9 @@ command.
 
 ``` r
 dymiumCore:::lg$appenders$buff$appenders$sim_output$data
-#>    level           timestamp     logger caller        msg                  desc
-#> 1    400 2020-01-06 07:29:49 dymiumCore   eval SIM_OUTPUT number_of_individuals
-#> 2    400 2020-01-06 07:30:09 dymiumCore   eval SIM_OUTPUT number_of_individuals
-#> 3    400 2020-01-06 07:30:46 dymiumCore   eval SIM_OUTPUT number_of_individuals
-#> 4    400 2020-01-06 08:27:45 dymiumCore   eval SIM_OUTPUT number_of_individuals
-#> 5    400 2020-01-06 08:28:08 dymiumCore   eval SIM_OUTPUT number_of_individuals
-#> 6    400 2020-01-06 08:29:25 dymiumCore   eval SIM_OUTPUT number_of_individuals
-#> 7    400 2020-01-06 08:30:32 dymiumCore   eval SIM_OUTPUT number_of_individuals
-#> 8    400 2020-01-06 08:33:09 dymiumCore   eval SIM_OUTPUT number_of_individuals
-#> 9    400 2020-01-06 08:39:04 dymiumCore   eval SIM_OUTPUT number_of_individuals
-#> 10   400 2020-01-06 08:42:17 dymiumCore   eval SIM_OUTPUT number_of_individuals
-#> 11   400 2020-01-06 08:43:33 dymiumCore   eval SIM_OUTPUT number_of_individuals
-#> 12   400 2020-01-06 08:44:29 dymiumCore   eval SIM_OUTPUT number_of_individuals
-#>    value
-#> 1   1000
-#> 2   1000
-#> 3   1000
-#> 4   1000
-#> 5   1000
-#> 6   1000
-#> 7   1000
-#> 8   1000
-#> 9   1000
-#> 10  1000
-#> 11  1000
-#> 12  1000
+```
+
+``` r
+#>   level           timestamp     logger caller        msg                  desc     value
+#> 1   400 2020-01-06 07:29:49 dymiumCore   eval SIM_OUTPUT number_of_individuals      1000
 ```
