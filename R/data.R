@@ -50,11 +50,11 @@
 #'
 #' @format A data frame with 100 rows and 2 variables:
 #' \describe{
-#'   \item{did}{(`integer(1)`) dwelling id}
-#'   \item{hid}{(`integer(1)`) household id}
-#'   \item{zid}{(`integer(1)`) zone id}
-#'   \item{structure}{(`character(1)`) structure of dwelling}
-#'   \item{bedroom}{(`integer(1)`) number of bedrooms}
+#'   \item{did}{(`integer()`) dwelling id}
+#'   \item{hid}{(`integer()`) household id}
+#'   \item{zid}{(`integer()`) zone id}
+#'   \item{structure}{(`character()`) structure of dwelling}
+#'   \item{bedroom}{(`integer()`) number of bedrooms}
 #' }
 'toy_dwellings'
 
@@ -69,8 +69,8 @@
 #'
 #' @format A [sf::sf] data frame with 11 rows and 14 variables:
 #' \describe{
-#'   \item{zid}{(`integer(1)`) zone id}
-#'   \item{sa2_main}{(`integer(1)`)}
+#'   \item{zid}{(`integer()`) zone id}
+#'   \item{sa2_main}{(`integer()`)}
 #'   \item{sa2_5dig11}{(`character()`)}
 #'   \item{sa2_name11}{(`character()`)}
 #'   \item{sa3_code11}{(`character()`)}
@@ -79,8 +79,8 @@
 #'   \item{sa4_name11}{(`character()`)}
 #'   \item{gcc_code11}{(`character()`)}
 #'   \item{gcc_name11}{(`character()`)}
-#'   \item{ste_code11}{(`character(1)`)}
-#'   \item{ste_name11}{(`integer(1)`)}
+#'   \item{ste_code11}{(`character()`)}
+#'   \item{ste_name11}{(`integer()`)}
 #'   \item{albers_sqm}{(`double()`)}
 #'   \item{geometry}{(`list()`)}
 #' }

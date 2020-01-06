@@ -6,11 +6,11 @@
 \title{Toy dwelling microdata}
 \format{A data frame with 100 rows and 2 variables:
 \describe{
-\item{did}{(\code{integer(1)}) dwelling id}
-\item{hid}{(\code{integer(1)}) household id}
-\item{zid}{(\code{integer(1)}) zone id}
-\item{structure}{(\code{character(1)}) structure of dwelling}
-\item{bedroom}{(\code{integer(1)}) number of bedrooms}
+\item{did}{(\code{integer()}) dwelling id}
+\item{hid}{(\code{integer()}) household id}
+\item{zid}{(\code{integer()}) zone id}
+\item{structure}{(\code{character()}) structure of dwelling}
+\item{bedroom}{(\code{integer()}) number of bedrooms}
 }}
 \usage{
 toy_dwellings
