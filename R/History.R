@@ -5,11 +5,33 @@
 #' @format [R6::R6Class] object inheriting from [Generic]
 #' @include Generic.R
 #' @examples
-#' h <- History$new()
+#'
 #' h$add(
 #'   id = sample(1L:10L, 20, replace = TRUE),
 #'   time = sample(1L:4L, 20, replace = TRUE),
 #'   event = sample(c("Birth", "LeaveHome", "Marriage"), 20, replace = TRUE))
+#' @section Construction:
+#'
+#' ```
+#' Hist <- History$new()
+#' ```
+#'
+#' @section Public Fields:
+#'
+#' * NULL
+#'
+#' @section Public Methods:
+#'
+#' * `add(ids, event, time = .get_sim_time())`\cr
+#' (`integer()`, `character(1)`, `integer(1)`)\cr
+#' Record occurences of an event occured to entities in `ids`.
+#'
+#' * `count(ids, event)`\cr
+#' (`integer()`, `character(1)`)\cr
+#' count the nu
+#'
+#'
+#'
 #' @export
 #' @section Public methods:
 History <- R6::R6Class(

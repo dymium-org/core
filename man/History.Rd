@@ -7,6 +7,30 @@
 \description{
 Create History class, record life-course changes of agents.
 }
+\section{Construction}{
+\preformatted{Hist <- History$new()
+}
+}
+
+\section{Public Fields}{
+
+\itemize{
+\item NULL
+}
+}
+
+\section{Public Methods}{
+
+\itemize{
+\item \code{add(ids, event, time = .get_sim_time())}\cr
+(\code{integer()}, \code{character(1)}, \code{integer(1)})\cr
+Record occurences of an event occured to entities in \code{ids}.
+\item \code{count(ids, event)}\cr
+(\code{integer()}, \code{character(1)})\cr
+count the nu
+}
+}
+
 \section{Public methods}{
 
 \code{add(id, time, event)} -
@@ -51,7 +75,7 @@ all event entries will be converted to lists.
 }
 
 \examples{
-h <- History$new()
+
 h$add(
   id = sample(1L:10L, 20, replace = TRUE),
   time = sample(1L:4L, 20, replace = TRUE),
