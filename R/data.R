@@ -92,7 +92,7 @@
 #'
 #' Note that this dataset requires the `sf` package to work properly. This
 #' dataset contains street network within some SA2 zones of Melborune CBD,
-#' Australia in a [sf::sf] format. This network is contained within the bounds
+#' Australia in a [sf::sf] format. This network is contained within the boundaries
 #' of [toy_zones].
 #'
 #' @docType data
