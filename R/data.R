@@ -85,3 +85,28 @@
 #'   \item{geometry}{(`list()`)}
 #' }
 'toy_zones'
+
+#' @title Toy network data
+#'
+#' @description
+#'
+#' Note that this dataset requires the `sf` package to work properly. This
+#' dataset contains street network within some SA2 zones of Melborune CBD,
+#' Australia in a [sf::sf] format. This network is contained within the bounds
+#' of [toy_zones].
+#'
+#' @docType data
+#'
+#' @format A [sf::sf] data frame with 11 rows and 14 variables:
+#' \describe{
+#'   \item{id}{(`integer()`) zone id}
+#'   \item{nb_lanes}{(`integer()`)}
+#'   \item{speed}{(`double()`)}
+#'   \item{capacity}{(`double()`)}
+#'   \item{rd_type}{(`integer()`)}
+#'   \item{fnode}{(`double()`)}
+#'   \item{tnode}{(`double()`)}
+#'   \item{geometry}{(`list()`)}
+#'   \item{length}{(`double()`)}
+#' }
+'toy_network'
