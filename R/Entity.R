@@ -412,7 +412,7 @@ Entity <-
         if (is.null(self$data())) {
           return(0L)
         } else {
-          self$data()$n()
+          self$data()$nrow()
         }
       },
 
