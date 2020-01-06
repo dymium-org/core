@@ -2,11 +2,65 @@
 #'
 #' @description
 #'
-#' Data backend of data.frame
+#' Data backend of data.frame. It is recommended to use [DataBackendDataTable]
+#' as it is more feature rich, efficient and significantly faster for many operations.
+#' This class is merely an attempt to generalise methods that belong to data.frame.
 #'
 #' @usage NULL
 #' @format [R6::R6Class] object inheriting from [DataBackend].
 #' @include DataBackend.R
+#'
+#' @section Construction:
+#' ```
+#' x <- DataBackendDataFrame$new(.data)
+#' ```
+#'
+#' * `data` :: [data.frame]\cr
+#'   A [data.frame] object.
+#'
+#' @section Fields:
+#'
+#'  * `NULL`\cr
+#'
+#' @section Methods:
+#'
+#'  * `add(.data, fill = FALSE)`\cr
+#'  (`data.frame()`) -> `NULL`\cr
+#'  Add data.
+#'
+#'  * `get(rows, cols, copy = TRUE)`\cr
+#'  (`integer(1)`, `character()`, `logical(1)`) -> `data.frame()`\cr
+#'  Add data.
+#'
+#'  * `remove(.data, fill = FALSE)`\cr
+#'  ([data.table::data.table]) -> `NULL`\cr
+#'  (abstract) Remove the data. (Developer's note: Those records that get removed
+#'  should be stored in `private$.removed_data` see the source code of [DataBackendDataTable]
+#'  for example.)
+#'
+#'  * `view(interactive = FALSE)`\cr
+#'  (`logical(1)`)\cr
+#'  View the data.
+#'
+#'  * `head(n = 5)`\cr
+#'  () -> `data.frame()`\cr
+#'  Get the head of the data.
+#'
+#'  * `ncol()`\cr
+#'  () -> `integer(1)`\cr
+#'  Get the number of columns.
+#'
+#'  * `nrow()`\cr
+#'  () -> `integer(1)`\cr
+#'  Get the number of rows.
+#'
+#'  * `colnames()`\cr
+#'  () -> `character()`\cr
+#'  Get the column names.
+#'
+#'  * `get_removed()`\cr
+#'  () -> `data.frame()`\cr
+#'  Get the removed data.
 #'
 #' @export
 DataBackendDataFrame <-
@@ -28,7 +82,7 @@ DataBackendDataFrame <-
       },
 
       get = function(rows, cols, copy = TRUE) {
-        dataframe_get(self, private, .data = private$.data, rows = rows, cols = cols, copy = copy)
+        .dataframe_get(self, private, .data = private$.data, rows = rows, cols = cols, copy = copy)
       },
 
       remove = function() {
@@ -77,15 +131,15 @@ DataBackendDataFrame <-
       },
 
       n = function() {
-        self$nrow()
+        stop("Method not available")
       },
 
       get_removed = function() {
-        dataframe_get(self, private, .data = private$.removed_data, copy = FALSE)
+        .dataframe_get(self, private, .data = private$.removed_data, copy = FALSE)
       }
     ))
 
-dataframe_get <- function(self, private, .data, rows, cols, copy = TRUE) {
+.dataframe_get <- function(self, private, .data, rows, cols, copy = TRUE) {
   checkmate::assert(
     checkmate::check_data_frame(.data, null.ok = FALSE),
     checkmate::check_logical(copy, any.missing = FALSE, len = 1, null.ok = FALSE)

@@ -5,5 +5,58 @@
 \title{data.frame as data backend}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{DataBackend}.}
 \description{
-Data backend of data.frame
+Data backend of data.frame. It is recommended to use \link{DataBackendDataTable}
+as it is more feature rich, efficient and significantly faster for many operations.
+This class is merely an attempt to generalise methods that belong to data.frame.
 }
+\section{Construction}{
+\preformatted{x <- DataBackendDataFrame$new(.data)
+}
+\itemize{
+\item \code{data} :: \link{data.frame}\cr
+A \link{data.frame} object.
+}
+}
+
+\section{Fields}{
+
+\itemize{
+\item \code{NULL}\cr
+}
+}
+
+\section{Methods}{
+
+\itemize{
+\item \code{add(.data, fill = FALSE)}\cr
+(\code{data.frame()}) -> \code{NULL}\cr
+Add data.
+\item \code{get(rows, cols, copy = TRUE)}\cr
+(\code{integer(1)}, \code{character()}, \code{logical(1)}) -> \code{data.frame()}\cr
+Add data.
+\item \code{remove(.data, fill = FALSE)}\cr
+(\link[data.table:data.table]{data.table::data.table}) -> \code{NULL}\cr
+(abstract) Remove the data. (Developer's note: Those records that get removed
+should be stored in \code{private$.removed_data} see the source code of \link{DataBackendDataTable}
+for example.)
+\item \code{view(interactive = FALSE)}\cr
+(\code{logical(1)})\cr
+View the data.
+\item \code{head(n = 5)}\cr
+() -> \code{data.frame()}\cr
+Get the head of the data.
+\item \code{ncol()}\cr
+() -> \code{integer(1)}\cr
+Get the number of columns.
+\item \code{nrow()}\cr
+() -> \code{integer(1)}\cr
+Get the number of rows.
+\item \code{colnames()}\cr
+() -> \code{character()}\cr
+Get the column names.
+\item \code{get_removed()}\cr
+() -> \code{data.frame()}\cr
+Get the removed data.
+}
+}
+

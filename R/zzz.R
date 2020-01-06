@@ -22,7 +22,6 @@
   # print("hello")
 }
 
-
 .onLoad <- function(libname, pkgname) {
 
   # create temp directory

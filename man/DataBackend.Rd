@@ -5,7 +5,10 @@
 \title{DataBackend class}
 \format{\link[R6:R6Class]{R6::R6Class} object.}
 \description{
-The base class of all DataBackends.
+The base class of all DataBackends. \link{DataBackend} isn't supposed to be use directly.
+It is meant to be implemented by the user. It is recommended that \link{DataBackendDataTable}
+is to be used when adding a non-spatial data and \link{DataBackendSpatialFeature} for
+spatial data.
 }
 \section{Construction}{
 \preformatted{x <- DataBackend$new(.data)

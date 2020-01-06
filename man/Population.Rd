@@ -65,8 +65,9 @@ is given all household members of households in \code{hid} arg will be removed.
 To remove only individuals leave \code{hid} to NULL and specify individuals by their ids
 in \code{pid}.
 \item \code{inspect(ind_ids = NULL, see_hh = FALSE)}\cr
-(\code{integer()}, \code{logical(1)})\cr
-Print to console data of individuals and their households.
+(\code{integer()}, \code{logical(1)}) -> \link[data.table:data.table]{data.table::data.table}\cr
+Print to console data of individuals and their households and return the history
+of \code{ind_ids}.
 \item \code{inspect_members(hhid = NULL)}\cr
 (\code{integer()}) -> \code{\link[data.table:data.table]{data.table::data.table()}}\cr
 Returns Individual$data of all members in \code{hhid}.
