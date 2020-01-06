@@ -28,26 +28,21 @@ History <- R6::R6Class(
     #'   add changes (`event`) of agents (`id`) with a timestamp (`time`)
     #'
     # ***********************************************************
-    add = function(id, event, time = .get_sim_time()) {
-      if (length(id) == 0) {
-        return(invisible())
-      }
+    add = function(ids, event, time = .get_sim_time()) {
+      checkmate::assert_integerish(ids, lower = 0)
+      checkmate::assert(
+        checkmate::check_character(event, len = 1),
+        checkmate::check_character(event, len = length(ids)),
+        combine = "or"
+      )
+      checkmate::assert_number(time, lower = 0, finite = T)
 
-      assert_that(is.numeric(id))
-      assert_that(is.numeric(time))
-      assert_that(is.character(event))
-      if (!is.integer(id)) {
-        id <- as.integer(id)
-      }
-      if (!is.integer(time)) {
-        time <- as.integer(time)
-      }
-
+      browser()
       tmp_data <-
         # put into a data.table
-        data.table(id = id, time = time, event = event) %>%
+        data.table(id = ids, time = time, event = event) %>%
         # reshape the id column into a list column
-        .[, .(id = .(id)), by = .(time, event)] %>%
+        .[, .(id = .(ids)), by = .(time, event)] %>%
         .[, record_time := Sys.time()]
 
       # add new records to private$data
@@ -62,41 +57,40 @@ History <- R6::R6Class(
     #'
     # ***********************************************************
     count = function(ids = NULL, event = NULL) {
-      # avoid naming conflicts
-      # due to scoping issue as pointed out in this SO thread
-      # https://tinyurl.com/y26yb5hn we have to assign the args
-      # to variables with different names to the existing names
-      # of the columns in private$data
-      filter_id <- ids
-      filter_event <- event
-      rm(ids, event)
+      checkmate::assert_integerish(ids, any.missing = FALSE, lower = 0, null.ok = TRUE)
+      checkmate::assert_string(event, null.ok = TRUE)
 
-      dat <- self$get_data()
-      existing_events <- dat[, unique(event)]
+      .data <- self$get_data()
+      existing_events <- .data[, unique(event)]
 
       # filter for only selected events
-      if (!is.null(filter_event)) {
-        assert_that(is.character(filter_event))
-        assert_that(all(filter_event %in% existing_events))
-        dat <- dat[event %in% filter_event, ]
+      if (!is.null(event)) {
+        checkmate::assert_subset(x = event, choices = existing_events, empty.ok = FALSE)
+        lgl <- .data[["event"]] == event
+        .data <- .data[lgl, ]
       }
 
       # filter only selected ids
-      if (!is.null(filter_id)) {
-        assert_that(is.numeric(filter_id))
-        dat <- dat[purrr::map_lgl(id, ~ any(.x %in% filter_id)), ]
+      if (!is.null(ids)) {
+        .data <- .data[purrr::map_lgl(id, ~ any(.x %in% ids)), ]
       }
 
-      # return counts by id and event
-      res <- dat %>%
-        # unlist the id list column: id, time, event
-        .[, lapply(.SD, unlist), by = 1:nrow(dat)] %>%
-        .[, nrow := NULL] %>%
-        .[, .N, by = .(id, event)]
+      # count by id and event
+      if (nrow(.data) != 0) {
+        res <- .data %>%
+          # unlist the id list column: id, time, event
+          .[, lapply(.SD, unlist), by = 1:nrow(.data)] %>%
+          .[, nrow := NULL] %>%
+          .[, .N, by = .(id, event)]
+      } else {
+        return(
+          data.table(id = integer(), event = character(), N = integer())
+        )
+      }
 
-      # return only filtered id
-      if (!is.null(filter_id))
-        return(res[id %in% filter_id, ])
+      # return only requested ids
+      if (!is.null(ids))
+        return(res[id %in% ids, ])
 
       res
     },
