@@ -40,7 +40,6 @@ docs/
 
 # excluded files
 .DS_Store
-data-raw
 modules
 scenarios
 __MACOSX
