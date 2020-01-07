@@ -273,31 +273,15 @@ Population <- R6Class(
     },
 
     inspect = function(ind_ids = NULL, see_hh = FALSE) {
-      checkmate::assert_flag(see_hh, na.ok = FALSE, null.ok = FALSE)
-
-      valid_ind_ids <-
-        ind_ids[self$get("Individual")$ids_exist(ids = ind_ids, by_element = TRUE)]
-
-      ind_hh_ids <- self$get("Individual")$get_household_ids(ids = valid_ind_ids)
-      ind_dt <- self$get("Individual")$get_data()[
-        get(self$get("Individual")$get_id_col()) %in% valid_ind_ids, ]
-      hh_dt <- self$get("Household")$get_data()[
-        get(self$get("Household")$get_id_col()) %in% ind_hh_ids, ]
-
-      if (!is.null(ind_ids)) {
-        cat("--individuals--\n")
-        print(ind_dt)
-        print(self$get("Individual")$history$inspect(ind_ids))
+      checkmate::assert_flag(see_hh)
+      if (see_hh) {
+        return(inspect(
+          entity = self$get("Individual"),
+          ids = ind_ids,
+          related_entity = self$get("Household")
+        ))
       }
-
-      if (see_hh == TRUE) {
-        cat("--households--\n")
-        print(hh_dt)
-      }
-
-      # just to show that some ids don't exist
-      invisible(self$get("Individual")$ids_exist(ids = ind_ids))
-
+      inspect(entity = self$get("Individual"), ids = ind_ids)
     },
 
     inspect_members = function(hhid) {
