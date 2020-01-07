@@ -13,7 +13,8 @@ toy_zones <-
   sf::read_sf("data-raw/australia-2011-sa2-zones/SA2_2011_AUST.shp") %>%
   dplyr::filter(SA3_NAME11 == "Melbourne City") %>%
   janitor::clean_names(.) %>%
-  dplyr::mutate(zid = sa2_main11)
+  dplyr::mutate(zid = as.integer(sa2_main11)) %>%
+  select(zid, everything())
 
 # mapview::mapview(toy_zones)
 pryr::object_size(toy_zones)
