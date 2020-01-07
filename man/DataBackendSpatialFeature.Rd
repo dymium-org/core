@@ -2,8 +2,8 @@
 % Please edit documentation in R/DataBackendSpatialFeature.R
 \name{DataBackendSpatialFeature}
 \alias{DataBackendSpatialFeature}
-\title{DataBackendSpatialFeature}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\title{sf::sf as data backend}
+\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{DataBackendDataTable}<-\link{DataBackendDataFrame}<-\link{DataBackend}.}
 \description{
 For storing spatial data. The data is stored as a data.table but has methods
 to transform the object back to its intiail sf format.
@@ -42,79 +42,3 @@ Get data as an \link[sf:sf]{sf::sf} object.
 }
 }
 
-\section{Super classes}{
-\code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{\link[dymiumCore:DataBackend]{dymiumCore::DataBackend}} -> \code{\link[dymiumCore:DataBackendDataFrame]{dymiumCore::DataBackendDataFrame}} -> \code{\link[dymiumCore:DataBackendDataTable]{dymiumCore::DataBackendDataTable}} -> \code{DataBackendSpatialFeature}
-}
-\section{Methods}{
-\subsection{Public methods}{
-\itemize{
-\item \href{#method-new}{\code{DataBackendSpatialFeature$new()}}
-\item \href{#method-get_sf}{\code{DataBackendSpatialFeature$get_sf()}}
-\item \href{#method-view}{\code{DataBackendSpatialFeature$view()}}
-\item \href{#method-clone}{\code{DataBackendSpatialFeature$clone()}}
-}
-}
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="debug">}\href{../../dymiumCore/html/Generic.html#method-debug}{\code{dymiumCore::Generic$debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="is_dymium_class">}\href{../../dymiumCore/html/Generic.html#method-is_dymium_class}{\code{dymiumCore::Generic$is_dymium_class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="message">}\href{../../dymiumCore/html/Generic.html#method-message}{\code{dymiumCore::Generic$message()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_debug">}\href{../../dymiumCore/html/Generic.html#method-msg_debug}{\code{dymiumCore::Generic$msg_debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_info">}\href{../../dymiumCore/html/Generic.html#method-msg_info}{\code{dymiumCore::Generic$msg_info()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="DataBackend" data-id="class">}\href{../../dymiumCore/html/DataBackend.html#method-class}{\code{dymiumCore::DataBackend$class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="DataBackendDataFrame" data-id="colnames">}\href{../../dymiumCore/html/DataBackendDataFrame.html#method-colnames}{\code{dymiumCore::DataBackendDataFrame$colnames()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="DataBackendDataFrame" data-id="get">}\href{../../dymiumCore/html/DataBackendDataFrame.html#method-get}{\code{dymiumCore::DataBackendDataFrame$get()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="DataBackendDataFrame" data-id="get_removed">}\href{../../dymiumCore/html/DataBackendDataFrame.html#method-get_removed}{\code{dymiumCore::DataBackendDataFrame$get_removed()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="DataBackendDataFrame" data-id="head">}\href{../../dymiumCore/html/DataBackendDataFrame.html#method-head}{\code{dymiumCore::DataBackendDataFrame$head()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="DataBackendDataFrame" data-id="n">}\href{../../dymiumCore/html/DataBackendDataFrame.html#method-n}{\code{dymiumCore::DataBackendDataFrame$n()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="DataBackendDataFrame" data-id="ncol">}\href{../../dymiumCore/html/DataBackendDataFrame.html#method-ncol}{\code{dymiumCore::DataBackendDataFrame$ncol()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="DataBackendDataFrame" data-id="nrow">}\href{../../dymiumCore/html/DataBackendDataFrame.html#method-nrow}{\code{dymiumCore::DataBackendDataFrame$nrow()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="DataBackendDataTable" data-id="add">}\href{../../dymiumCore/html/DataBackendDataTable.html#method-add}{\code{dymiumCore::DataBackendDataTable$add()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="DataBackendDataTable" data-id="remove">}\href{../../dymiumCore/html/DataBackendDataTable.html#method-remove}{\code{dymiumCore::DataBackendDataTable$remove()}}\out{</span>}
-}
-\out{</details>}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\subsection{Method \code{new()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendSpatialFeature$new(.data)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_sf"></a>}}
-\subsection{Method \code{get_sf()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendSpatialFeature$get_sf()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-view"></a>}}
-\subsection{Method \code{view()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendSpatialFeature$view(interactive = FALSE)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendSpatialFeature$clone(deep = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
-}

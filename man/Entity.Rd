@@ -37,6 +37,9 @@ The id column of \code{.data}.
 (\code{DataBackend}, \code{data.frame}, \code{character(1)}) -> \code{NULL}\cr
 Append new data to the object's data list (\code{private$.data}). the new data
 must be linkable with the attribute data of the object by the id_col.
+\item \code{check_ids(ids)}\cr
+(\code{integer()})\cr
+Return true if all ids exist if not raises an informative error.
 \item \code{data(name)}\cr
 (\code{character(1)}) -> (\verb{[dymiumCore::DataBackend]}|\code{NULL})\cr
 Returns a reference to a \code{DataBackend} object with the name that matches \code{name}.
@@ -61,10 +64,10 @@ Return removed agent data. If \code{name} is missing, the first data, which shou
 contains the main attributes of the agent object, will be returned.
 \item \code{get_ids(idx)}\cr
 (\code{integer()}) -> \code{integer()}\cr
-Return the ids of the indexes in the argrument \code{idx}.
+Return the ids of the indexes in the argrument \code{idx}, respectively.
 \item \code{get_idx(ids)}\cr
 (\code{integer()}) -> \code{integer()}\cr
-Return the indexes of the ids in the argrument \code{ids}.
+Return the indexes of the ids in the argrument \code{ids}, respectively.
 \item \code{get_attr(x, ids)}\cr
 (\code{character(1)}, \code{integer()}) -> \code{vector(type::col)}\cr
 Extract the attribute from self$data as vector. If \code{ids} is given then only
@@ -73,14 +76,19 @@ the corresponding values to \code{ids} are returned, in the same order as the \c
 (\code{character()}) -> \code{logical()}\cr
 Check which of the attribute names given in \code{x} exist in the attribute data
 of the object.
-\item \code{ids_exist(ids)}\cr
-(\code{integer()}) -> \code{logical()}\cr
+\item \code{ids_exist(ids, by_element = FALSE, include_removed_data = FALSE)}\cr
+(\code{integer()}, \code{logical(1)}, \code{logical(1)}) -> \code{logical()}\cr
 Returns a logical vector of the same length as the argument \code{ids}. This function
-checks whether the ids in the argument \code{ids} exist or not.
-\item \code{idx_exist(idx)}\cr
+checks whether the ids in the argument \code{ids} exist or not. If \code{by_element} is
+TRUE then it will return a logical vector with the same length as \code{ids} in
+their respective order. And if \code{inclide_removed_data} is TRUE it will check
+the removed data to see if the ids ever existed.
+\item \code{idx_exist(idx, by_element = FALSE)}\cr
 (\code{integer()}) -> \code{logical()}\cr
 Returns a logical vector of the same length as the argument \code{idx}. This function
-checks whether the indexes in the argument \code{idx} exist or not.
+checks whether the indexes in the argument \code{idx} exist or not. If \code{by_element} is
+TRUE then it will return a logical vector with the same length as \code{ids} in
+their respective order.
 \item \code{n()}\cr
 () -> \code{integer(1)}\cr
 Returns the number of entities represented by this object.
@@ -91,232 +99,3 @@ that will be output to console by \code{head()}, if 0 nothing will be printed.
 }
 }
 
-\section{Super class}{
-\code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{Entity}
-}
-\section{Methods}{
-\subsection{Public methods}{
-\itemize{
-\item \href{#method-new}{\code{Entity$new()}}
-\item \href{#method-add_data}{\code{Entity$add_data()}}
-\item \href{#method-data}{\code{Entity$data()}}
-\item \href{#method-get_data}{\code{Entity$get_data()}}
-\item \href{#method-get_data_names}{\code{Entity$get_data_names()}}
-\item \href{#method-has_attr}{\code{Entity$has_attr()}}
-\item \href{#method-get_attr}{\code{Entity$get_attr()}}
-\item \href{#method-get_removed_data}{\code{Entity$get_removed_data()}}
-\item \href{#method-get_ids}{\code{Entity$get_ids()}}
-\item \href{#method-get_idx}{\code{Entity$get_idx()}}
-\item \href{#method-get_id_col}{\code{Entity$get_id_col()}}
-\item \href{#method-remove}{\code{Entity$remove()}}
-\item \href{#method-idx_exist}{\code{Entity$idx_exist()}}
-\item \href{#method-ids_exist}{\code{Entity$ids_exist()}}
-\item \href{#method-summary}{\code{Entity$summary()}}
-\item \href{#method-print}{\code{Entity$print()}}
-\item \href{#method-print_data}{\code{Entity$print_data()}}
-\item \href{#method-n}{\code{Entity$n()}}
-\item \href{#method-get_last_id}{\code{Entity$get_last_id()}}
-\item \href{#method-get_new_ids}{\code{Entity$get_new_ids()}}
-\item \href{#method-generate_new_ids}{\code{Entity$generate_new_ids()}}
-\item \href{#method-clone}{\code{Entity$clone()}}
-}
-}
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="class">}\href{../../dymiumCore/html/Generic.html#method-class}{\code{dymiumCore::Generic$class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="debug">}\href{../../dymiumCore/html/Generic.html#method-debug}{\code{dymiumCore::Generic$debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="is_dymium_class">}\href{../../dymiumCore/html/Generic.html#method-is_dymium_class}{\code{dymiumCore::Generic$is_dymium_class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="message">}\href{../../dymiumCore/html/Generic.html#method-message}{\code{dymiumCore::Generic$message()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_debug">}\href{../../dymiumCore/html/Generic.html#method-msg_debug}{\code{dymiumCore::Generic$msg_debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_info">}\href{../../dymiumCore/html/Generic.html#method-msg_info}{\code{dymiumCore::Generic$msg_info()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
-}
-\out{</details>}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\subsection{Method \code{new()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$new(databackend, .data, id_col)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_data"></a>}}
-\subsection{Method \code{add_data()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$add_data(databackend = DataBackendDataTable, .data, name)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-data"></a>}}
-\subsection{Method \code{data()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$data(name)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_data"></a>}}
-\subsection{Method \code{get_data()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$get_data(name, ids, copy = TRUE)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_data_names"></a>}}
-\subsection{Method \code{get_data_names()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$get_data_names()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-has_attr"></a>}}
-\subsection{Method \code{has_attr()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$has_attr(x)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_attr"></a>}}
-\subsection{Method \code{get_attr()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$get_attr(x, ids)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_removed_data"></a>}}
-\subsection{Method \code{get_removed_data()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$get_removed_data(name)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_ids"></a>}}
-\subsection{Method \code{get_ids()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$get_ids(idx)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_idx"></a>}}
-\subsection{Method \code{get_idx()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$get_idx(ids, expect_na = FALSE)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_id_col"></a>}}
-\subsection{Method \code{get_id_col()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$get_id_col()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-remove"></a>}}
-\subsection{Method \code{remove()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$remove(ids)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-idx_exist"></a>}}
-\subsection{Method \code{idx_exist()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$idx_exist(idx, by_element = FALSE)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ids_exist"></a>}}
-\subsection{Method \code{ids_exist()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$ids_exist(ids, by_element = FALSE, include_removed_data = FALSE)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-summary"></a>}}
-\subsection{Method \code{summary()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$summary(verbose = TRUE)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\subsection{Method \code{print()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$print()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print_data"></a>}}
-\subsection{Method \code{print_data()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$print_data(n = 5)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-n"></a>}}
-\subsection{Method \code{n()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$n()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_last_id"></a>}}
-\subsection{Method \code{get_last_id()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$get_last_id()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_new_ids"></a>}}
-\subsection{Method \code{get_new_ids()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$get_new_ids()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-generate_new_ids"></a>}}
-\subsection{Method \code{generate_new_ids()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$generate_new_ids(n)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Entity$clone(deep = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
-}

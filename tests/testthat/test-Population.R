@@ -88,53 +88,6 @@ test_that("Leave and join household repeatedly.", {
 })
 
 
-# remove_relationship(type = \"partner\") - using dymiumCore::toy_individuals -------------
-test_that("remove_relationship(type = \"partner\") - dymiumCore::toy_individuals", {
-  create_toy_population()
-  ind_ids <- sample(pop$get('Individual')$get_ids(), 100)
-
-  # test remove_relationship
-  # the test is written to test if to see if after the remove_partner is ran
-  # both individuals in ind_ids and their partners have no partner_id, which is
-  # equipvalent to integer(0)
-  ind <- pop$get('Individual')$get_data()
-  my_partners <- ind[pid %in% ind_ids, partner_id] %>%
-    unlist() %>%
-    na.omit()
-  my_partners_partner <- ind[pid %in% my_partners, partner_id] %>% unlist()
-  pop$get('Individual')$remove_relationship(ids = ind_ids, type = "partner")
-  ind_after <- pop$get('Individual')$get_data()
-  my_partners_after <- ind_after[pid %in% my_partners_partner, partner_id] %>% unlist()
-  my_partners_partner_after <- ind_after[pid %in% my_partners, partner_id] %>% unlist()
-  expect_identical(my_partners_after, my_partners_partner_after)
-})
-
-# add_relationship(type = \"partner\") - using sydneycsf11 ----------------
-test_that("add_relationship(type = \"partner\") - using dymiumCore::toy_individuals" ,{
-  # ignore gender and other rules
-  create_toy_population()
-
-  ind_ids <- sample(pop$get('Individual')$get_ids(), 100)
-
-  ind_no_partners <- ind_ids[!pop$get('Individual')$have_relationship(ids = ind_ids, type = "partner")]
-  proposer_ids <- sample(ind_no_partners, size = length(ind_no_partners) / 2 )
-  proposee_ids <- ind_no_partners[!ind_no_partners %in% proposer_ids]
-  proposee_ids <- proposee_ids[seq_along(proposer_ids)]
-
-  dt <- data.table(
-    proposer_id = proposer_ids,
-    proposee_id = proposee_ids
-  )
-
-  proposer_idx <- pop$get('Individual')$get_idx(proposer_ids)
-  proposee_idx <- pop$get('Individual')$get_idx(proposee_ids)
-
-  pop$get('Individual')$add_relationship(ids = proposer_ids, target_ids = proposee_ids, type = "partner")
-  proposer_after <- pop$get('Individual')$get_data()[proposer_idx, ]
-  proposee_after <- pop$get('Individual')$get_data()[proposee_idx, ]
-  expect_identical(proposer_ids, proposee_after$partner_id)
-  expect_identical(proposee_ids, proposer_after$partner_id)
-})
 
 # add_population -----------------------------------------------------------
 test_that("add_population", {

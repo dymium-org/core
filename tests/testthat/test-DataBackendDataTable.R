@@ -22,5 +22,21 @@ test_that("add", {
   x <- DataBackendDataTable$new(data.table(x1 = c(1,2,3), x2 = c(1,2,3)))
   x$add(data.table(x1 = c(4,5), x2 = c(4,5)))
   expect_true(nrow(x$get()) == 5)
-  expect_error(x$add(data.table(x1 = c(1,2,3), x2 = c(1,2,3), x3 = c(1,2,3))), "have different number of columns and different column names")
+  expect_error(x$add(data.table(x1 = c(1,2,3), x2 = c(1,2,3), x3 = c(1,2,3))),
+               "Item 2 has 3 columns, inconsistent with item 1 which has 2 columns. To fill missing columns use fill=TRUE.")
+})
+
+test_that("add fill = TRUE", {
+  x <- DataBackendDataTable$new(data.table(x1 = c(1,2,3), x2 = c(1,2,3)))
+  x$get(copy = FALSE)[, .test := 10]
+  expect_error(x$add(data.table(x1 = c(4,5), x2 = c(4,5)), fill = FALSE),
+               "Item 2 has 2 columns, inconsistent with item 1 which has 3 columns. To fill missing columns use fill=TRUE.")
+  expect_error(x$add(data.table(x1 = c(4,5), x2 = c(4,5), x3 = c(1,2)), fill = FALSE),
+               "Column 3 \\['x3'\\] of item 2 is missing in item 1")
+  x$add(data.table(x1 = c(4,5), x2 = c(4,5), x3 = c(1,2)), fill = TRUE)
+  expect_true(x$nrow() == 5)
+  expect_true(x$ncol() == 4)
+
+  expect_error(x$add(data.table(x1 = c("a","b"), x2 = c("c",5), x3 = c(1,2), .test = 10)),
+               "2 string mismatches")
 })

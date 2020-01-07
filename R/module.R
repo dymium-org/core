@@ -29,14 +29,15 @@ dymiumModulesRepo <- "dymium-org/dymiumModules"
 download_module <- function(name, repo = dymiumModulesRepo, version, force = FALSE, remove_download = FALSE) {
   modules_path <- fs::path("modules")
   usethis::use_directory('modules')
+  all_module_files <- get_all_module_files()
+  all_versions <- extract_module_versions(name = name, filenames = all_module_files)
   if (missing(version)) {
     cli::cli_alert_warning("The argument 'version' was not specified. The latest \\
                             version of the module '{.strong {name}}' will be downloaded.")
-    all_versions <- get_module_versions(name = name, repo = repo)
     version <- all_versions[[length(all_versions)]]
     cli::cli_alert_info("The latest version of module '{.strong {name}}' is '{version}'.")
   } else {
-    check_module_version(name = name, repo = repo, version = version)
+    check_version(version, all_versions, name = name)
   }
 
   module_filename <- paste0(name, "_", version)
@@ -79,7 +80,7 @@ check_module <- function(name, repo = dymiumModulesRepo) {
   checkmate::test_subset(name, choices = get_modules(), empty.ok = FALSE)
 }
 
-#' Check the existence of a module version
+#' Check the existence of a module version.
 #'
 #' @param name name of the module.
 #' @param version a character. For example, if you would like to check
@@ -87,7 +88,7 @@ check_module <- function(name, repo = dymiumModulesRepo) {
 #'
 #' @template repo-arg
 #'
-#' @return
+#' @return a logical value
 #' @export
 #'
 #' @examples
@@ -98,15 +99,28 @@ check_module <- function(name, repo = dymiumModulesRepo) {
 check_module_version <- function(name, repo = dymiumModulesRepo, version) {
   all_versions <- get_module_versions(name = name, repo = repo)
   res <- checkmate::test_subset(version, choices = all_versions)
+  return(check_version(version, all_versions, name = name))
+}
+
+check_version <- function(x, versions, name = "this") {
+  res <- checkmate::test_subset(x, choices = versions)
   if (!res) {
-    cli::cli_alert_warning("'{.strong {name}}' module doesn't have a version {.strong {version}}.")
-    if (length(all_versions) != 0) {
-      cli::cli_alert_info("These are the available versions of '{.strong {name}}' module:")
-      cli::cli_li(items = sort(all_versions))
+    cli::cli_alert_warning("{.strong {name}} module doesn't have a version {.strong {x}}.")
+    if (length(versions) != 0) {
+      cli::cli_alert_info("These are the available versions of {.strong {name}} module:")
+      cli::cli_li(items = sort(versions))
     }
-    stop("The request version of the module doesn't exist.")
+    stop(glue::glue("The requested version of {name} module doesn't exist."))
   }
   return(res)
+}
+
+extract_module_versions <- function(name, filenames) {
+  versions <- .filter_zip_versions(x = filenames, name = name)
+  if (length(versions) == 0) {
+    stop(glue("'{name}' module has no available versions."))
+  }
+  return(versions)
 }
 
 #' Get all version numbers of a module

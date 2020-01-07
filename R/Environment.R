@@ -1,12 +1,20 @@
 #' @title Environment class
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object.
+#' @format [R6::R6Class] object inheriting from [Entity].
 #' @include Entity.R
 #'
 #' @description
 #' The base class for physical environment, infrastructure and boundaries. This
 #' is different from Asset as Environment has no owner or belongs to the public.
+#'
+#' @section Construction:
+#'
+#' ```
+#' x <- Environment$new()
+#' ```
+#'
+#' * NULL\cr
 #'
 #' @section Fields:
 #'
@@ -14,13 +22,7 @@
 #'
 #' @section Methods:
 #'
-#' * `owner(ids)`\cr
-#'  (`integer()`) -> `integer()`\cr
-#'  Returns owner ids.
-#'
-#' * `ownerclass(ids)`\cr
-#'  () -> `character(1)`\cr
-#'  Returns owner's class.
+#' * NULL
 #'
 #' @export
 Environment <-
@@ -30,11 +32,17 @@ Environment <-
     public = list(
 
       initialize = function(.data, id_col) {
-        if (!missing(.data) & !missing(id_col)) {
-          super$initialize(databackend = DataBackendSpatialFeature,
-                           .data = .data,
-                           id_col = id_col)
+        if (!missing(.data)) {
+          if (!missing(id_col)) {
+            super$initialize(databackend = DataBackendSpatialFeature,
+                             .data = .data,
+                             id_col = id_col)
+          } else {
+            stop(glue::glue("To initialise the attribute data of {self$class()} \\
+                            the `id_col` argument must be given."))
+          }
         }
+
         invisible()
       },
 

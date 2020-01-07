@@ -73,8 +73,9 @@
 #'  in `pid`.
 #'
 #' * `inspect(ind_ids = NULL, see_hh = FALSE)`\cr
-#'  (`integer()`, `logical(1)`)\cr
-#'  Print to console data of individuals and their households.
+#'  (`integer()`, `logical(1)`) -> [data.table::data.table]\cr
+#'  Print to console data of individuals and their households and return the history
+#'  of `ind_ids`.
 #'
 #' * `inspect_members(hhid = NULL)`\cr
 #'  (`integer()`) -> [data.table::data.table()]\cr

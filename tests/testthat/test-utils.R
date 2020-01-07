@@ -33,3 +33,17 @@ test_that("lookup_and_replace", {
 
   expect_equal(res, expected_res)
 })
+
+test_that("omit_derived_vars", {
+  .df <- data.frame(a = rep(10, 10), b = rep(10, 10), .c = rep(10, 10), d.d = rep(10, 10))
+  .dt <- data.table(a = rep(10, 10), b = rep(10, 10), .c = rep(10, 10), d.d = rep(10, 10))
+  expect_equal(names(omit_derived_vars(.df)), c("a", "b", "d.d"))
+  expect_equal(names(omit_derived_vars(.dt)), c("a", "b", "d.d"))
+})
+
+test_that("normalise_derived_vars", {
+  .df <- data.frame(a = rep(10, 10), b = rep(10, 10), .c = rep(10, 10), d.d = rep(10, 10))
+  .dt <- data.table::data.table(a = rep(10, 10), b = rep(10, 10), .c = rep(10, 10), d.d = rep(10, 10))
+  expect_equal(names(normalise_derived_vars(.df)), expected = c("a", "b", "c", "d.d"))
+  expect_equal(names(normalise_derived_vars(.dt)), expected = c("a", "b", "c", "d.d"))
+})

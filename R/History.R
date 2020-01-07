@@ -2,7 +2,7 @@
 #'
 #' Create History class, record life-course changes of agents.
 #' @usage NULL
-#' @format NULL
+#' @format [R6::R6Class] object inheriting from [Generic]
 #' @include Generic.R
 #' @examples
 #' h <- History$new()

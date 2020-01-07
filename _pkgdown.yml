@@ -31,9 +31,6 @@ reference:
 - title: "Market"
   contents:
     - starts_with("Match")
-- title: "Transition"
-  contents:
-    - matches("^Transition.")
 - title: "Data backends"
   contents:
     - matches("DataBackend.")
@@ -83,6 +80,8 @@ reference:
     - generate_population
 - title: "Miscellaneous"
   contents:
+  - omit_derived_vars
+  - normalise_derived_vars
   - sample_choice
   - lookup_and_replace
   - condense_rows
