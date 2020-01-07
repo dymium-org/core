@@ -180,12 +180,12 @@ options available to them and interact in a way that mimic bidding.
 
 Note that, the number of alternatives available to each agent is
 customisable to realistically represent a matching situation that is
-being simulated. For example, in a housing search situation it properly
-would be inappropiate to assume that all relocating households have
-perfect knowledge about all the available dwelling units that are on the
-market at any moment in time. Hence, the modeller might want to limit
-the number of alternatives available in the choiceset of each household
-or the number of zones that the households look for their options.
+being simulated. For example, in a housing search situation, it might be
+inappropiate to assume that all relocating households have perfect
+knowledge about all the available dwelling units that are on the market
+at any moment in time. Hence, the modeller might want to limit the
+number of alternatives available in the choiceset of each household or
+the number of zones that the households look for their options.
 
 Currently, there are two implementations of market matching algorithms
 which are
