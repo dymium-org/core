@@ -1,4 +1,3 @@
-
 #' Save an instance of Entity or Container.
 #'
 #' @description
@@ -10,7 +9,7 @@
 #' viewed by calling `getOption("dymium.output_dir")`. `x` will be saved as a .RDS
 #' file with the name being the class name of `x`.
 #'
-#' @return
+#' @return NULL
 #' @export
 #'
 #' @examples
@@ -42,4 +41,5 @@ dm_save <- function(x, dir = getOption("dymium.output_dir")) {
   }
   saveRDS(x, file = path)
   cli::cli_alert_success("Saved {class(x)[[1]]} to path:{path}")
+  invisible()
 }

@@ -198,7 +198,7 @@ test_that("model by targeted_agents", {
 test_that("update", {
   create_toy_population()
   Ind <- pop$get("Individual")
-  ids <- sample(Ind$get_ids(), 10, replace = TRUE)
+  ids <- sample(Ind$get_ids(), 10, replace = FALSE)
 
   # create model
   vector_model <- c(choice_a = 0.2, choice_b = 0.8)

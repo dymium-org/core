@@ -1,7 +1,7 @@
 #' @title Industrial building class
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object.
+#' @format [R6::R6Class] object inheriting from [Building]<-[Asset]<-[Entity].
 #'
 #' @description  Create dwelling class, extended Agent class.
 #'

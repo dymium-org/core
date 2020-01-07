@@ -17,6 +17,6 @@ pop_register(x, ind_data, hh_data)
 a list contains ind_data and hh_data
 }
 \description{
-Assign new ids to the new population using the ids reserved from the input
-population object.
+Assign new ids to a new population. It is crucial that all ids in the relationship
+columns do exist in the data of the new population.
 }

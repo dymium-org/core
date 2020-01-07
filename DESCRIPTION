@@ -1,7 +1,7 @@
 Package: dymiumCore
 Type: Package
 Title: The core functions of a Dynamic Microsimulation framework for Integrated Urban Models
-Version: 0.0.10.9000
+Version: 0.0.11.1
 Authors@R: c(
     person("Amarin", "Siripanich", email = "amarin@dymium.org", role = c("aut", "cre")),
     person("Taha", "Rashidi", role = c("aut")))
@@ -28,7 +28,7 @@ Imports:
     glue (>= 1.3.0),
     here (>= 0.1.0),
     usethis (>= 1.5.0),
-    cli,
+    cli (>= 2.0.0),
     fs (>= 1.3.0),
     httr (>= 1.4.0)
 Suggests:
@@ -37,14 +37,13 @@ Suggests:
     caret (>= 6.0),
     pryr (>= 0.1.4),
     sf (>= 0.8),
+    dodgr (>= 0.2.5),
     covr,
     mapview,
     knitr,
     rmarkdown
-Remotes:
-  github::r-lib/cli
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.1
+Roxygen: list(markdown = TRUE, r6 = FALSE)
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Collate: 
     'Generic.R'
@@ -71,6 +70,7 @@ Collate:
     'MatchingMarketOptimal.R'
     'MatchingMarketStochastic.R'
     'Model.R'
+    'Network.R'
     'Population.R'
     'Pipeline.R'
     'Transition.R'
@@ -96,4 +96,5 @@ Collate:
     'utils-pipeline.R'
     'utils-scenario.R'
     'utils.R'
+    'validate.R'
     'zzz.R'

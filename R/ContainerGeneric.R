@@ -1,6 +1,7 @@
 #' @title ContainerGeneric
 #' @description
-#' ContainerGeneric is the base class for [Container].
+#' ContainerGeneric is the base class for the [Container] classes. [ContainerGeneric]
+#' isn't supposed to be use directly.
 #'
 #' @usage NULL
 #' @format [R6::R6Class] object inheriting from [dymiumCore::Generic]
