@@ -123,7 +123,7 @@ Entity <-
       initialize = function(databackend, .data, id_col) {
         checkmate::assert_string(id_col, na.ok = FALSE, null.ok = FALSE)
         checkmate::assert_names(names(.data), must.include = id_col, type = 'strict')
-        checkmate::assert_vector(.data[[id_col]], unique = TRUE, any.missing = FALSE, null.ok = FALSE, min.len = 1)
+        checkmate::assert_integerish(.data[[id_col]], unique = TRUE, any.missing = FALSE, null.ok = FALSE, min.len = 1)
         private$.data[[1]] <- databackend$new(.data)
         checkmate::assert_r6(private$.data[[1]], classes = "DataBackend", .var.name = "databackend")
         names(private$.data)[1] <- "attrs"
