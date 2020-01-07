@@ -84,6 +84,7 @@ Collate:
     'dymiumCore-package.R'
     'generate-data.R'
     'household-formation.R'
+    'inspect.R'
     'module.R'
     'population-register.R'
     'sampling.R'
