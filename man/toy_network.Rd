@@ -22,7 +22,7 @@ toy_network
 \description{
 Note that this dataset requires the \code{sf} package to work properly. This
 dataset contains street network within some SA2 zones of Melborune CBD,
-Australia in a \link[sf:sf]{sf::sf} format. This network is contained within the bounds
+Australia in a \link[sf:sf]{sf::sf} format. This network is contained within the boundaries
 of \link{toy_zones}.
 }
 \keyword{datasets}
