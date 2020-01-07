@@ -1,7 +1,7 @@
 Package: dymiumCore
 Type: Package
 Title: The core functions of a Dynamic Microsimulation framework for Integrated Urban Models
-Version: 0.0.11.1
+Version: 0.0.11.2
 Authors@R: c(
     person("Amarin", "Siripanich", email = "amarin@dymium.org", role = c("aut", "cre")),
     person("Taha", "Rashidi", role = c("aut")))
@@ -86,6 +86,7 @@ Collate:
     'dymiumCore-package.R'
     'generate-data.R'
     'household-formation.R'
+    'inspect.R'
     'module.R'
     'population-register.R'
     'sampling.R'
