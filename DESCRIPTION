@@ -1,7 +1,7 @@
 Package: dymiumCore
 Type: Package
 Title: The core functions of a Dynamic Microsimulation framework for Integrated Urban Models
-Version: 0.0.11
+Version: 0.0.11.1
 Authors@R: c(
     person("Amarin", "Siripanich", email = "amarin@dymium.org", role = c("aut", "cre")),
     person("Taha", "Rashidi", role = c("aut")))
@@ -37,6 +37,7 @@ Suggests:
     caret (>= 6.0),
     pryr (>= 0.1.4),
     sf (>= 0.8),
+    dodgr (>= 0.2.5),
     covr,
     mapview,
     knitr,
@@ -69,6 +70,7 @@ Collate:
     'MatchingMarketOptimal.R'
     'MatchingMarketStochastic.R'
     'Model.R'
+    'Network.R'
     'Population.R'
     'Pipeline.R'
     'Transition.R'

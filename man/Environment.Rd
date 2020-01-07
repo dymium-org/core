@@ -8,6 +8,14 @@
 The base class for physical environment, infrastructure and boundaries. This
 is different from Asset as Environment has no owner or belongs to the public.
 }
+\section{Construction}{
+\preformatted{x <- Environment$new()
+}
+\itemize{
+\item NULL\cr
+}
+}
+
 \section{Fields}{
 
 \itemize{
@@ -18,12 +26,7 @@ is different from Asset as Environment has no owner or belongs to the public.
 \section{Methods}{
 
 \itemize{
-\item \code{owner(ids)}\cr
-(\code{integer()}) -> \code{integer()}\cr
-Returns owner ids.
-\item \code{ownerclass(ids)}\cr
-() -> \code{character(1)}\cr
-Returns owner's class.
+\item NULL
 }
 }
 

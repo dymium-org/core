@@ -8,19 +8,21 @@
 #' The base class for physical environment, infrastructure and boundaries. This
 #' is different from Asset as Environment has no owner or belongs to the public.
 #'
+#' @section Construction:
+#'
+#' ```
+#' x <- Environment$new()
+#' ```
+#'
+#' * NULL\cr
+#'
 #' @section Fields:
 #'
 #' * `NULL`\cr`
 #'
 #' @section Methods:
 #'
-#' * `owner(ids)`\cr
-#'  (`integer()`) -> `integer()`\cr
-#'  Returns owner ids.
-#'
-#' * `ownerclass(ids)`\cr
-#'  () -> `character(1)`\cr
-#'  Returns owner's class.
+#' * NULL
 #'
 #' @export
 Environment <-
