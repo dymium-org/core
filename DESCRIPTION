@@ -37,6 +37,7 @@ Suggests:
     caret (>= 6.0),
     pryr (>= 0.1.4),
     sf (>= 0.8),
+    dodgr (>= 0.2.5),
     covr,
     mapview,
     knitr,
@@ -69,6 +70,7 @@ Collate:
     'MatchingMarketOptimal.R'
     'MatchingMarketStochastic.R'
     'Model.R'
+    'Network.R'
     'Population.R'
     'Pipeline.R'
     'Transition.R'
