@@ -91,21 +91,17 @@ Carlo simulation.
 |  mlogit |  `mlogit` |                        multinomial logit models | in-development |
 |    mlr3 | `Learner` | classification, survival, and regression models |        planned |
 
-**Note that**: rate-based models can be used for simulation as well. To
-use them, you first need to import them as a data.frame and a named
-list.
+In microsimulation, modellers often use transition probabilities that
+they obtained from official sources. Hence, **dymiumCore** provides an
+easy step to use those transition probabilities in `Transition`. **A
+static rate model**, **a dynamic rate model**, and **a enumerated choice
+model** can be provided in a data.table format. When a data.table is
+provided as the model argument to `Transition`, `Transition` will figure
+out which of the three models the provided data.table matches based on
+the following criteria.
 
-  - If a `data.frame` or `data.table` is provided, it must contain a key
-    column or keys columns and must have a column named ‘prob’ that must
-    be a numeric type with values within \[0,1\] which represent
-    probability values. Recently, models of type data.table have gained
-    a new support where multiple choices can be simulated using a
-    data.table object as a model. The data.table object should contains
-    matching variables and two extra columns which are `probs`, a list
-    column that contains numeric vectors, and `choices`, also a list
-    column but contains character vectors.
-
-<!-- end list -->
+It is **a static rate model**, if the data.table contains a column
+called `prob` which is of type numeric with the value between 0 to 1.
 
 ``` r
 library(data.table) # use install.packages("data.table") to install
@@ -118,7 +114,33 @@ library(data.table) # use install.packages("data.table") to install
 #>       sex prob
 #> 1:   male  0.3
 #> 2: female  0.2
+```
 
+It is **a dynamic rate model**, if the provided data.table contains
+columns that indicate time periods with a prefix `t_` follow by a
+numeric value i.e. `t_0`, `t_2011`, `t_2050`. Those time period columns
+must be of type numeric and the values under those columns must be
+within 0 to 1.
+
+``` r
+(dynamic_rate_based_model <-
+  data.table(
+  sex = c("male", "female"),
+  prob = c(0.3, 0.2),
+  t_2010 = c(0.5, 0.2),
+  t_2011 = c(0.3, 0.1),
+  t_2012 = c(0.4, 0.3)
+))
+#>       sex prob t_2010 t_2011 t_2012
+#> 1:   male  0.3    0.5    0.3    0.4
+#> 2: female  0.2    0.2    0.1    0.3
+```
+
+It is **a choice model**, of the provided data.table contains columns
+that called `probs` and `choices` of the type list that contains numeric
+vectors and character vectors, respectively.
+
+``` r
 (choice_model <-
   data.table(
     sex = c('male', 'female'),
@@ -129,6 +151,15 @@ library(data.table) # use install.packages("data.table") to install
 #> 1:   male 0.3,0.7 can drive,cannot drive
 #> 2: female 0.4,0.6 can drive,cannot drive
 ```
+
+**Note that**, if more the provided data.table matches more than one of
+the three formats then `Transition` will raise an error.
+
+**Suggestion:** you can import transition probability tables that are in
+a `csv` format or a `.xlsx` format to R using the `fread` function from
+the `data.table` package or `read.csv()` from the `utils` package that
+comes preinstalled with R or `read_xlsx()` from the `readxl` package for
+xlsx files.
 
   - A named `list` can be used to represent choices, where the names of
     the list are choices and their values are their associated
