@@ -1,8 +1,11 @@
 #' @title A representation of World
 #'
 #' @description
-#' World is used to store other Entities. Think of it as a container that is to be
-#' passed into event functions and let each event function uses data that it is storing.
+#' World is to be used for storing [Entities], [Models] and [Containers], setting
+#' the simulation clock, and for keeping a log of your simulation outputs. You may
+#' think of it as a container that is to be passed into event functions and let
+#' each event function accesses the instances it needs that are being stored inside
+#' World.
 #'
 #' @usage NULL
 #' @format [R6::R6Class] object inheriting from [dymiumCore::Entity]
@@ -11,7 +14,7 @@
 #' @section Construction:
 #'
 #' ```
-#' x <- World2$new()
+#' x <- World$new()
 #' ```
 #'
 #' * NULL\cr
@@ -72,7 +75,7 @@
 #'
 #' * `set_time(x)`\cr
 #'  (`integer(1)`) -> `NULL`\cr
-#'  Set the value of .DMevn$sim_time.
+#'  Set the time on the World's simulation clock (.DMevn$sim_time).
 #'
 #' * `reset_time()`\cr
 #'  Reset the value of .DMevn$sim_time to 0L (L is for forcing type integer
@@ -294,12 +297,15 @@ World <- R6::R6Class(
       self$info
     },
 
+    # @description Set the simulation clock of World.
+    # @param x An integer value.
     set_time = function(x) {
       assert_that(is.numeric(x))
       assign("sim_time", as.integer(x), envir = .DMevn)
       invisible()
     },
 
+    # @description Print self
     print = function() {
       super$print()
       for (e in self$Entities) {
