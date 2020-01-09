@@ -65,7 +65,6 @@ Collate:
     'Firm.R'
     'Individual.R'
     'Household.R'
-    'Log.R'
     'MatchingMarket.R'
     'MatchingMarketOptimal.R'
     'MatchingMarketStochastic.R'
