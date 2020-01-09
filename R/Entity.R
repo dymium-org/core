@@ -118,7 +118,7 @@ Entity <-
     inherit = Generic,
     public = list(
 
-      history = NULL,
+
       cont = NULL,
 
       initialize = function(databackend, .data, id_col) {
@@ -130,7 +130,6 @@ Entity <-
         names(private$.data)[1] <- "attrs"
         private$.last_id <- max(.data[[id_col]])
         private$.id_col <- id_col
-        self$history <- History$new()
         invisible()
       },
 

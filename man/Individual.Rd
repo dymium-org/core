@@ -21,7 +21,7 @@ Name of the id colum in \code{.data}
 \section{Public Fields}{
 
 \itemize{
-\item \code{history}::\link{History}\cr
+\item NULL\cr
 }
 }
 

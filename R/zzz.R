@@ -40,7 +40,7 @@
   if (any(toset)) options(opts.dymium[toset])
 
   # setup package global variables
-  .DMevn[["sim_time"]] <- 0
+  .DMevn[["sim_time"]] <- 0L
 
   # create log file
   # _dir.create(_dirname(opts.dymium$dymium.logFile), recursive = T, showWarnings = FALSE)

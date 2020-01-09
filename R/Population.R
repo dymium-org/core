@@ -232,7 +232,7 @@ Population <- R6Class(
       }
       # update hid for individidual in ind_ids
       Ind$add_household_id(ids = ind_ids, hh_ids = hh_ids)
-      Ind$history$add(id = ind_ids, event = EVENT$JOINED_HOUSEHOLD)
+      add_history(entity = Ind, ids = ind_ids, event = EVENT$JOINED_HOUSEHOLD)
       # update household attributes
       self$update()
       invisible()
@@ -244,7 +244,8 @@ Population <- R6Class(
       stopifnot(self$get("Household")$ids_exist(ids = self$get("Individual")$get_household_ids(ids = ind_ids)))
       # leave household
       self$get("Individual")$remove_household_id(ids = ind_ids)
-      self$get("Individual")$history$add(id = ind_ids, event = EVENT$LEFT_HOUSEHOLD)
+      add_history(entity = self$get("Individual"),
+                  ids = ind_ids, event = EVENT$LEFT_HOUSEHOLD)
       # households update themselves
       self$update_hhsize()
       invisible()

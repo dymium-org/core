@@ -46,9 +46,9 @@ DataBackendDataTable <- R6::R6Class(
       check_equality <- all.equal(typeof_existing, typeof_new)
       if (!isTRUE(check_equality)){
         cli::cli_alert_danger("Type mismatches found")
-        cli::cli_alert_danger("Type of existing data:")
+        cli::cli_alert_danger("Types of existing data:")
         print(typeof_existing)
-        cli::cli_alert_danger("Type of existing new data (.data):")
+        cli::cli_alert_danger("Types of new data (`.data`):")
         print(typeof_new)
         stop(check_equality)
       }

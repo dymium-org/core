@@ -11,8 +11,6 @@ as individuals, households, firms, dwelling and more.
 \section{Construction}{
 \preformatted{Agt <- Agent$new(...)
 }
-
-During initialisation, \link{History} object is created.
 }
 
 \section{Fields}{
