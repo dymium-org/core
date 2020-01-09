@@ -2,6 +2,7 @@
 % Please edit documentation in R/DataBackend.R
 \name{DataBackend}
 \alias{DataBackend}
+\alias{DataBackends}
 \title{DataBackend class}
 \format{\link[R6:R6Class]{R6::R6Class} object.}
 \description{

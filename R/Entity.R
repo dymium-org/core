@@ -43,8 +43,8 @@
 #'
 #'  * `data(name)`\cr
 #'  (`character(1)`) -> (`[dymiumCore::DataBackend]`|`NULL`)\cr
-#'  Returns a reference to a `DataBackend` object with the name that matches `name`.
-#'  If `name` is not given, the function will try to return the object with name `attrs`.
+#'  Returns a [DataBackend] with the name that matches `name`.
+#'  If `name` is not given, the function will try to return the [DataBackend] with name `attrs`.
 #'  If `attrs` is not present or no `DataBackEnd` objects have been loaded it will
 #'  return `NULL`.
 #
@@ -110,6 +110,7 @@
 #'  Print to console the number of datasets and their dimensions. `n` is the number of rows
 #'  that will be output to console by `head()`, if 0 nothing will be printed.
 #'
+#' @aliases Entities
 #' @export
 Entity <-
   R6::R6Class(
@@ -439,6 +440,13 @@ Entity <-
         private$.new_ids <- new_ids
         # return the latest set of ids
         invisible(new_ids)
+      }
+    ),
+
+    #' @field database a list of all [DataBackends] of the Entity
+    active = list(
+      database = function() {
+        get(".data", envir = private)
       }
     ),
 
