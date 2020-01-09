@@ -13,9 +13,6 @@ dm_save(x, dir = getOption("dymium.output_dir"))
 viewed by calling \code{getOption("dymium.output_dir")}. \code{x} will be saved as a .RDS
 file with the name being the class name of \code{x}.}
 }
-\value{
-
-}
 \description{
 This is part of the dm_* family of functions to be used inside a microsimulation
 pipeline. This saves an instance of Entity or Container to a directory.

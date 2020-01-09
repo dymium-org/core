@@ -2,139 +2,61 @@
 % Please edit documentation in R/DataBackendDataFrame.R
 \name{DataBackendDataFrame}
 \alias{DataBackendDataFrame}
-\title{DataBackendDataFrame}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\title{data.frame as data backend}
+\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{DataBackend}.}
 \description{
-Data backend of data.frame
+Data backend of data.frame. It is recommended to use \link{DataBackendDataTable}
+as it is more feature rich, efficient and significantly faster for many operations.
+This class is merely an attempt to generalise methods that belong to data.frame.
 }
-\section{Super classes}{
-\code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{\link[dymiumCore:DataBackend]{dymiumCore::DataBackend}} -> \code{DataBackendDataFrame}
+\section{Construction}{
+\preformatted{x <- DataBackendDataFrame$new(.data)
 }
+\itemize{
+\item \code{data} :: \link{data.frame}\cr
+A \link{data.frame} object.
+}
+}
+
+\section{Fields}{
+
+\itemize{
+\item \code{NULL}\cr
+}
+}
+
 \section{Methods}{
-\subsection{Public methods}{
+
 \itemize{
-\item \href{#method-new}{\code{DataBackendDataFrame$new()}}
-\item \href{#method-get}{\code{DataBackendDataFrame$get()}}
-\item \href{#method-remove}{\code{DataBackendDataFrame$remove()}}
-\item \href{#method-view}{\code{DataBackendDataFrame$view()}}
-\item \href{#method-head}{\code{DataBackendDataFrame$head()}}
-\item \href{#method-ncol}{\code{DataBackendDataFrame$ncol()}}
-\item \href{#method-colnames}{\code{DataBackendDataFrame$colnames()}}
-\item \href{#method-nrow}{\code{DataBackendDataFrame$nrow()}}
-\item \href{#method-n}{\code{DataBackendDataFrame$n()}}
-\item \href{#method-get_removed}{\code{DataBackendDataFrame$get_removed()}}
-\item \href{#method-clone}{\code{DataBackendDataFrame$clone()}}
+\item \code{add(.data, fill = FALSE)}\cr
+(\code{data.frame()}) -> \code{NULL}\cr
+Add data.
+\item \code{get(rows, cols, copy = TRUE)}\cr
+(\code{integer(1)}, \code{character()}, \code{logical(1)}) -> \code{data.frame()}\cr
+Add data.
+\item \code{remove(.data, fill = FALSE)}\cr
+(\link[data.table:data.table]{data.table::data.table}) -> \code{NULL}\cr
+(abstract) Remove the data. (Developer's note: Those records that get removed
+should be stored in \code{private$.removed_data} see the source code of \link{DataBackendDataTable}
+for example.)
+\item \code{view(interactive = FALSE)}\cr
+(\code{logical(1)})\cr
+View the data.
+\item \code{head(n = 5)}\cr
+() -> \code{data.frame()}\cr
+Get the head of the data.
+\item \code{ncol()}\cr
+() -> \code{integer(1)}\cr
+Get the number of columns.
+\item \code{nrow()}\cr
+() -> \code{integer(1)}\cr
+Get the number of rows.
+\item \code{colnames()}\cr
+() -> \code{character()}\cr
+Get the column names.
+\item \code{get_removed()}\cr
+() -> \code{data.frame()}\cr
+Get the removed data.
 }
-}
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="debug">}\href{../../dymiumCore/html/Generic.html#method-debug}{\code{dymiumCore::Generic$debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="is_dymium_class">}\href{../../dymiumCore/html/Generic.html#method-is_dymium_class}{\code{dymiumCore::Generic$is_dymium_class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="message">}\href{../../dymiumCore/html/Generic.html#method-message}{\code{dymiumCore::Generic$message()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_debug">}\href{../../dymiumCore/html/Generic.html#method-msg_debug}{\code{dymiumCore::Generic$msg_debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_info">}\href{../../dymiumCore/html/Generic.html#method-msg_info}{\code{dymiumCore::Generic$msg_info()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="DataBackend" data-id="add">}\href{../../dymiumCore/html/DataBackend.html#method-add}{\code{dymiumCore::DataBackend$add()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="DataBackend" data-id="class">}\href{../../dymiumCore/html/DataBackend.html#method-class}{\code{dymiumCore::DataBackend$class()}}\out{</span>}
-}
-\out{</details>}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\subsection{Method \code{new()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendDataFrame$new(.data)}\if{html}{\out{</div>}}
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get"></a>}}
-\subsection{Method \code{get()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendDataFrame$get(rows, cols, copy = TRUE)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-remove"></a>}}
-\subsection{Method \code{remove()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendDataFrame$remove()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-view"></a>}}
-\subsection{Method \code{view()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendDataFrame$view(interactive = FALSE)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-head"></a>}}
-\subsection{Method \code{head()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendDataFrame$head(n)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ncol"></a>}}
-\subsection{Method \code{ncol()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendDataFrame$ncol()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-colnames"></a>}}
-\subsection{Method \code{colnames()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendDataFrame$colnames()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-nrow"></a>}}
-\subsection{Method \code{nrow()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendDataFrame$nrow()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-n"></a>}}
-\subsection{Method \code{n()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendDataFrame$n()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_removed"></a>}}
-\subsection{Method \code{get_removed()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendDataFrame$get_removed()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DataBackendDataFrame$clone(deep = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
-}

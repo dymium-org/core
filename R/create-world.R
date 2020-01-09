@@ -23,6 +23,7 @@ create_toy_world <- function() {
   world <<- World$new()
   world$add(Population$new(ind_data = toy_individuals, hh_data = toy_households))
   world$add(BuildingResidential$new(toy_dwellings, "did"))
+  world$get(BuildingResidential)$set_owner_object(world$get(Household))
   world$add(Zone$new(toy_zones, "zid"))
   invisible(world)
 }

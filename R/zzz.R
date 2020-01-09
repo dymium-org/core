@@ -22,7 +22,6 @@
   # print("hello")
 }
 
-
 .onLoad <- function(libname, pkgname) {
 
   # create temp directory
@@ -41,7 +40,7 @@
   if (any(toset)) options(opts.dymium[toset])
 
   # setup package global variables
-  .DMevn[["sim_time"]] <- 0
+  .DMevn[["sim_time"]] <- 0L
 
   # create log file
   # _dir.create(_dirname(opts.dymium$dymium.logFile), recursive = T, showWarnings = FALSE)
@@ -49,13 +48,27 @@
 
   # setup logger
   assign("lg", lgr::get_logger_glue(name = pkgname), envir = parent.env(environment()))
-  lg$set_appenders(list(cons = lgr::AppenderConsole$new()))
-  # lg$add_appender(lgr::AppenderFile$new(opts.dymium$dymium.logFile, layout = lgr::LayoutJson$new()))
+
+  lg$set_appenders(list(cons = lgr::AppenderConsole$new(),
+                        buff = lgr::AppenderBuffer$new()))
+
+  lg$set_propagate(FALSE)
+
+  # config console appender
+  lg$appenders$cons$set_threshold("warn")
   lg$appenders$cons$set_layout(lgr::LayoutGlue$new(
     fmt = "[{format(timestamp, \'%H:%M:%S\')}] \\
             {pad_right(colorize_levels(toupper(level_name)), 5)} \\
             {crayon::yellow(.logger$name)} {caller}: {msg}"))
-  lg$set_propagate(FALSE)
+
+  # config buffer appender
+  # !! Event with a custom field "value" and without a 'msg' field  will be
+  # logged as a simulation output to json
+  sim_output_logfile <- paste0(opts.dymium$dymium.output_dir, "/sim_output.json")
+  fs::file_create(sim_output_logfile)
+  lg$appenders$buff$add_appender(lgr::AppenderJson$new(file = sim_output_logfile), name = "sim_output")
+  filter_sim_output <- function(event) { event$msg == "SIM_OUTPUT" }
+  lg$appenders$buff$appenders$sim_output$set_filters(list(filter_sim_output))
 
   # print to console
   .dymium_options_msg()
@@ -63,10 +76,6 @@
 
   invisible()
 }
-
-
-
-
 
 .onUnload <- function(libpath) {
   ## if temp session _dir is being used, ensure it gets reset each session

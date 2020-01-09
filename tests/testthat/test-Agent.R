@@ -49,7 +49,7 @@ test_that("using Test data", {
   # add_new_agents() ---------
   n_new_agents <- 3L
   n_rows_before_add <- MyAgent$n()
-  MyAgent$add_new_agents(parent_ids = sample(MyAgent$get_ids(), size = n_new_agents))
+  MyAgent$add_new_agents(parent_ids = sample(x = MyAgent$get_ids(), size = n_new_agents))
   expect_equal(n_rows_before_add, MyAgent$n() - n_new_agents)
 
   # remove_agent() ---------
@@ -243,3 +243,32 @@ test_that("Agent add, get, remove and show data methods", {
   x <- MyAgent$summary(verbose = FALSE)
   expect_true(sum(x$nrow_removed) > 0)
 })
+
+test_that("hatch", {
+  create_toy_population()
+  count_before <- pop$ind$n()
+  pop$ind$hatch(1)
+  count_after <- pop$ind$n()
+  expect_gt(count_after, count_before)
+  expect_error(pop$ind$hatch(9999999), "These ids do not exists \\{9999999\\}")
+})
+
+test_that("add", {
+  create_toy_population()
+  count_before <- pop$ind$n()
+  new_ind_data <- pop_register(pop, ind_data = toy_individuals)
+  pop$ind$add(new_ind_data$ind_data)
+  count_after <- pop$ind$n()
+  expect_true(count_after == (count_before + nrow(toy_individuals)))
+})
+
+
+test_that("add new agents to existing agents with a derived variable", {
+  create_toy_population()
+  pop$ind$remove_relationship(sample(pop$ind$get_ids(), 50))
+  pop$ind$get_data()
+  new_ind_data <- pop_register(pop, ind_data = toy_individuals)
+  pop$ind$add(new_ind_data$ind_data)
+  expect_equal(nrow(pop$ind$get_data()), nrow(toy_individuals) * 2)
+})
+

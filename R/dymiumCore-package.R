@@ -12,7 +12,7 @@
 #' @import R6
 #' @import data.table
 #' @import assertthat
-#' @import glue
+#' @importFrom glue glue glue_col glue_collapse
 #' @importFrom fs path dir_create path_ext_remove path_ext path_ext_set
 #' @importFrom usethis use_template use_directory
 #' @importFrom cli cli_alert_info cli_li cli_alert_danger rule symbol cli_text

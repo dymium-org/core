@@ -2,7 +2,7 @@
 % Please edit documentation in R/module.R
 \name{check_module_version}
 \alias{check_module_version}
-\title{Check the existence of a module version}
+\title{Check the existence of a module version.}
 \usage{
 check_module_version(name, repo = dymiumModulesRepo, version)
 }
@@ -15,10 +15,10 @@ check_module_version(name, repo = dymiumModulesRepo, version)
 for version 0.1.0 type it as a character '0.1.0'.}
 }
 \value{
-
+a logical value
 }
 \description{
-Check the existence of a module version
+Check the existence of a module version.
 }
 \examples{
 

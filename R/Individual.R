@@ -3,7 +3,7 @@
 #' Create Individual class, extended Agent class.
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object
+#' @format [R6::R6Class] object inheriting from [Agent]<-[Entity].
 #' @include Agent.R
 #'
 #' @section Construction:
@@ -20,7 +20,7 @@
 #'
 #' @section Public Fields:
 #'
-#'  * `history`::[History]\cr
+#'  * NULL\cr
 #'
 #' @section Public Methods:
 #'
@@ -274,18 +274,30 @@ Individual <- R6::R6Class(
 
       switch(type,
              "partner" = {
-               my_partner_ids <-
-                 self$get_data(copy = FALSE)[get(self$get_id_col()) %in% ids, unlist(partner_id)]
+               self_idx <- self$get_idx(ids)
+               self_data <- self$get_data(copy = FALSE) # create a sematic reference
+
+               partner_ids <-
+                 self_data[self_idx, unlist(partner_id)] %>%
+                 .[!is.na(.)] # remove NAs
+               partner_idx <- self$get_idx(partner_ids)
+
+               checkmate::assert_integerish(
+                 x = partner_ids,
+                 any.missing = FALSE,
+                 unique = TRUE,
+                 null.ok = FALSE,
+                 lower = 1
+               )
+
+               # add partner to .past_partner_id
+               self_data[c(self_idx, partner_idx), .past_partner_id := partner_id]
 
                # self remove partner
-               self$get_data(copy = FALSE)[get(self$get_id_col()) %in% ids,
-                                         # TODO: add partner to history before remove
-                                         partner_id := NA_integer_]
+               self_data[self_idx, partner_id := NA_integer_]
 
                # partner removes self
-               self$get_data(copy = FALSE)[get(self$get_id_col()) %in% my_partner_ids,
-                                         # TODO: add partner to history before remove
-                                         partner_id := NA_integer_]
+               self_data[partner_idx, partner_id := NA_integer_]
              })
 
       invisible()

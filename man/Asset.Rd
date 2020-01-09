@@ -10,139 +10,57 @@ can be owned/rent/belong by or to agents of the \link{Agent} sub classes.
 For example, \link{Household} agents own or rent residential buildings.
 }
 \section{Construction}{
-\preformatted{x <- Entity$new(databackend, .data, id_col)
+\preformatted{x <- Asset$new(.data, id_col, owner = NULL)
 }
 
 Stores \code{.data} as a DataBackend object inside the object's list of data (\code{private$.data})
 and registers the \code{id_col} (\code{private$.id_col}).
 \itemize{
-\item \code{databackend} :: \link{DataBackend} classes\cr
-An \link[R6:R6Class]{R6::R6Class} generator that inherits from \code{DataBackend}.
 \item \code{.data} :: \code{data.frame}\cr
 A object that inherits from \code{data.frame}.
 \item \code{id_col} :: \code{character(1)}\cr
 The id column of \code{.data}.
+\item \code{owner} :: an \link[R6:R6Class]{R6::R6Class} object that inherits \link{Agent}.\cr
 }
 }
 
 \section{Fields}{
 
-\itemize{
-\item \code{NULL}\cr`
-}
+
+\code{NULL}\cr
 }
 
 \section{Methods}{
 
 \itemize{
-\item \code{owner(ids)}\cr
-(\code{integer()}) -> \code{integer()}\cr
-Returns owner ids.
+\item \code{is_owned(ids)}\cr
+(\code{integer()}) -> (\code{logical()})\cr
+Check if the assets in \code{ids} are owned. If \code{ids} is not given the result will
+be for all assets.
+\item \code{get_owner(ids)}\cr
+(\code{integer()}) -> (\code{integer()})\cr
+Get the owner ids of the assets in \code{ids}.
+\item \code{set_owner(ids, owner_ids)}\cr
+(\code{integer()}|\code{integer()})\cr
+Set the owners in \code{owner_ids} to the assets in \code{ids}. Both arguments must
+have an equal length. An asset can only be owned by one owner.
+\item \code{get_owner_id_col()}\cr
+() -> \code{character(1)}.\cr
+Returns the id column of the owner object.
+\item \code{get_owner_object()}\cr
+() -> an \link[R6:R6Class]{R6::R6Class} object that inherits \link{Agent}.\cr
+Returns the owner object of this asset.
+\item \code{set_owner_object(x)}\cr
+(an \link[R6:R6Class]{R6::R6Class} that inherits \link{Agent})\cr
+Set owner. This assigns the owner object to the \code{Owner} field of this
+asset hence you can access the owner object using \code{x$Owner} (assuming that
+the asset object was named \code{x}).
+\item \code{remove_owner(ids)}\cr
+(\code{integer()})\cr
+Remove the owner ids from the assets in \code{ids} by setting them to \code{NA}.
+\item \code{owner_gets_asset_id(owner_ids)}\cr
+(\code{integer()}) -> (\code{integer()}\cr
+Get the asset ids of the owners in \code{owner_ids}.
 }
 }
 
-\section{Super classes}{
-\code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{\link[dymiumCore:Entity]{dymiumCore::Entity}} -> \code{Asset}
-}
-\section{Methods}{
-\subsection{Public methods}{
-\itemize{
-\item \href{#method-new}{\code{Asset$new()}}
-\item \href{#method-set_owner}{\code{Asset$set_owner()}}
-\item \href{#method-get_owner_id_col}{\code{Asset$get_owner_id_col()}}
-\item \href{#method-initialise_data}{\code{Asset$initialise_data()}}
-\item \href{#method-get_owner}{\code{Asset$get_owner()}}
-\item \href{#method-clone}{\code{Asset$clone()}}
-}
-}
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="class">}\href{../../dymiumCore/html/Generic.html#method-class}{\code{dymiumCore::Generic$class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="debug">}\href{../../dymiumCore/html/Generic.html#method-debug}{\code{dymiumCore::Generic$debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="is_dymium_class">}\href{../../dymiumCore/html/Generic.html#method-is_dymium_class}{\code{dymiumCore::Generic$is_dymium_class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="message">}\href{../../dymiumCore/html/Generic.html#method-message}{\code{dymiumCore::Generic$message()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_debug">}\href{../../dymiumCore/html/Generic.html#method-msg_debug}{\code{dymiumCore::Generic$msg_debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_info">}\href{../../dymiumCore/html/Generic.html#method-msg_info}{\code{dymiumCore::Generic$msg_info()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="add_data">}\href{../../dymiumCore/html/Entity.html#method-add_data}{\code{dymiumCore::Entity$add_data()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="data">}\href{../../dymiumCore/html/Entity.html#method-data}{\code{dymiumCore::Entity$data()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="generate_new_ids">}\href{../../dymiumCore/html/Entity.html#method-generate_new_ids}{\code{dymiumCore::Entity$generate_new_ids()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_attr">}\href{../../dymiumCore/html/Entity.html#method-get_attr}{\code{dymiumCore::Entity$get_attr()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_data">}\href{../../dymiumCore/html/Entity.html#method-get_data}{\code{dymiumCore::Entity$get_data()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_data_names">}\href{../../dymiumCore/html/Entity.html#method-get_data_names}{\code{dymiumCore::Entity$get_data_names()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_id_col">}\href{../../dymiumCore/html/Entity.html#method-get_id_col}{\code{dymiumCore::Entity$get_id_col()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_ids">}\href{../../dymiumCore/html/Entity.html#method-get_ids}{\code{dymiumCore::Entity$get_ids()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_idx">}\href{../../dymiumCore/html/Entity.html#method-get_idx}{\code{dymiumCore::Entity$get_idx()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_last_id">}\href{../../dymiumCore/html/Entity.html#method-get_last_id}{\code{dymiumCore::Entity$get_last_id()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_new_ids">}\href{../../dymiumCore/html/Entity.html#method-get_new_ids}{\code{dymiumCore::Entity$get_new_ids()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="get_removed_data">}\href{../../dymiumCore/html/Entity.html#method-get_removed_data}{\code{dymiumCore::Entity$get_removed_data()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="has_attr">}\href{../../dymiumCore/html/Entity.html#method-has_attr}{\code{dymiumCore::Entity$has_attr()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="ids_exist">}\href{../../dymiumCore/html/Entity.html#method-ids_exist}{\code{dymiumCore::Entity$ids_exist()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="idx_exist">}\href{../../dymiumCore/html/Entity.html#method-idx_exist}{\code{dymiumCore::Entity$idx_exist()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="n">}\href{../../dymiumCore/html/Entity.html#method-n}{\code{dymiumCore::Entity$n()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="print">}\href{../../dymiumCore/html/Entity.html#method-print}{\code{dymiumCore::Entity$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="print_data">}\href{../../dymiumCore/html/Entity.html#method-print_data}{\code{dymiumCore::Entity$print_data()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="remove">}\href{../../dymiumCore/html/Entity.html#method-remove}{\code{dymiumCore::Entity$remove()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Entity" data-id="summary">}\href{../../dymiumCore/html/Entity.html#method-summary}{\code{dymiumCore::Entity$summary()}}\out{</span>}
-}
-\out{</details>}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\subsection{Method \code{new()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Asset$new(.data, id_col, owner_object)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_owner"></a>}}
-\subsection{Method \code{set_owner()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Asset$set_owner(x)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_owner_id_col"></a>}}
-\subsection{Method \code{get_owner_id_col()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Asset$get_owner_id_col()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-initialise_data"></a>}}
-\subsection{Method \code{initialise_data()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Asset$initialise_data(.data, id_col, owner_object)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_owner"></a>}}
-\subsection{Method \code{get_owner()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Asset$get_owner(id)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Asset$clone(deep = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
-}

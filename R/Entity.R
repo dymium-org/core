@@ -37,10 +37,14 @@
 #'  Append new data to the object's data list (`private$.data`). the new data
 #'  must be linkable with the attribute data of the object by the id_col.
 #'
+#'  * `check_ids(ids)`\cr
+#'  (`integer()`)\cr
+#'  Return true if all ids exist if not raises an informative error.
+#'
 #'  * `data(name)`\cr
 #'  (`character(1)`) -> (`[dymiumCore::DataBackend]`|`NULL`)\cr
-#'  Returns a reference to a `DataBackend` object with the name that matches `name`.
-#'  If `name` is not given, the function will try to return the object with name `attrs`.
+#'  Returns a [DataBackend] with the name that matches `name`.
+#'  If `name` is not given, the function will try to return the [DataBackend] with name `attrs`.
 #'  If `attrs` is not present or no `DataBackEnd` objects have been loaded it will
 #'  return `NULL`.
 #
@@ -66,11 +70,11 @@
 #'
 #'  * `get_ids(idx)`\cr
 #'  (`integer()`) -> `integer()`\cr
-#'  Return the ids of the indexes in the argrument `idx`.
+#'  Return the ids of the indexes in the argrument `idx`, respectively.
 #'
 #'  * `get_idx(ids)`\cr
 #'  (`integer()`) -> `integer()`\cr
-#'  Return the indexes of the ids in the argrument `ids`.
+#'  Return the indexes of the ids in the argrument `ids`, respectively.
 #'
 #'  * `get_attr(x, ids)`\cr
 #'  (`character(1)`, `integer()`) -> `vector(type::col)`\cr
@@ -82,15 +86,20 @@
 #'  Check which of the attribute names given in `x` exist in the attribute data
 #'  of the object.
 #'
-#'  * `ids_exist(ids)`\cr
-#'  (`integer()`) -> `logical()`\cr
+#'  * `ids_exist(ids, by_element = FALSE, include_removed_data = FALSE)`\cr
+#'  (`integer()`, `logical(1)`, `logical(1)`) -> `logical()`\cr
 #'  Returns a logical vector of the same length as the argument `ids`. This function
-#'  checks whether the ids in the argument `ids` exist or not.
+#'  checks whether the ids in the argument `ids` exist or not. If `by_element` is
+#'  TRUE then it will return a logical vector with the same length as `ids` in
+#'  their respective order. And if `inclide_removed_data` is TRUE it will check
+#'  the removed data to see if the ids ever existed.
 #'
-#'  * `idx_exist(idx)`\cr
+#'  * `idx_exist(idx, by_element = FALSE)`\cr
 #'  (`integer()`) -> `logical()`\cr
 #'  Returns a logical vector of the same length as the argument `idx`. This function
-#'  checks whether the indexes in the argument `idx` exist or not.
+#'  checks whether the indexes in the argument `idx` exist or not. If `by_element` is
+#'  TRUE then it will return a logical vector with the same length as `ids` in
+#'  their respective order.
 #'
 #'  * `n()`\cr
 #'  () -> `integer(1)`\cr
@@ -101,6 +110,7 @@
 #'  Print to console the number of datasets and their dimensions. `n` is the number of rows
 #'  that will be output to console by `head()`, if 0 nothing will be printed.
 #'
+#' @aliases Entities
 #' @export
 Entity <-
   R6::R6Class(
@@ -108,19 +118,18 @@ Entity <-
     inherit = Generic,
     public = list(
 
-      history = NULL,
+
       cont = NULL,
 
       initialize = function(databackend, .data, id_col) {
         checkmate::assert_string(id_col, na.ok = FALSE, null.ok = FALSE)
         checkmate::assert_names(names(.data), must.include = id_col, type = 'strict')
-        checkmate::assert_vector(.data[[id_col]], unique = TRUE, any.missing = FALSE, null.ok = FALSE, min.len = 1)
+        checkmate::assert_integerish(.data[[id_col]], unique = TRUE, any.missing = FALSE, null.ok = FALSE, min.len = 1)
         private$.data[[1]] <- databackend$new(.data)
         checkmate::assert_r6(private$.data[[1]], classes = "DataBackend", .var.name = "databackend")
         names(private$.data)[1] <- "attrs"
         private$.last_id <- max(.data[[id_col]])
         private$.id_col <- id_col
-        self$history <- History$new()
         invisible()
       },
 
@@ -308,6 +317,23 @@ Entity <-
         TRUE
       },
 
+      check_ids = function(ids) {
+        res <- self$ids_exist(ids, by_element = TRUE)
+        if (!all(res)) {
+          msg <- glue(
+            "Not all ids exist. Here are the missing ones: {.missing}",
+            .missing = glue::glue_collapse(
+              ids[!res],
+              sep = ", ",
+              width = 100,
+              last = " and "
+            )
+          )
+          stop(msg)
+        }
+        invisible(TRUE)
+      },
+
       summary = function(verbose = TRUE) {
 
         if (length(private$.data) == 0) {
@@ -386,7 +412,7 @@ Entity <-
         if (is.null(self$data())) {
           return(0L)
         } else {
-          self$data()$n()
+          self$data()$nrow()
         }
       },
 
@@ -405,13 +431,21 @@ Entity <-
           from = self$get_last_id() + 1L,
           to = self$get_last_id() + n,
           by = 1L
-        )
+        ) %>%
+          as.integer()
         # update latest id
         private$.last_id <- private$.last_id + n
         # store the latest set of ids
         private$.new_ids <- new_ids
         # return the latest set of ids
         invisible(new_ids)
+      }
+    ),
+
+    #' @field database a list of all [DataBackends] of the Entity
+    active = list(
+      database = function() {
+        get(".data", envir = private)
       }
     ),
 

@@ -1,9 +1,8 @@
 #' @title Agent
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object.
+#' @format [R6::R6Class] object inheriting from [Entity].
 #' @include Entity.R
-#' @include History.R
 #'
 #' @description
 #' Agent class is the generic class for creating urban agents such
@@ -15,11 +14,7 @@
 #' Agt <- Agent$new(...)
 #' ```
 #'
-#' During initialisation, [History] object is created.
-#'
 #' @section Fields:
-#'
-#'  * `history`\cr
 #'
 #'  * `data`::`data.table::data.table()`\cr
 #'  Contains the attributes of agent. One of the attributes must be a unique id field
@@ -58,6 +53,18 @@
 #'  (`expression`) -> `[data.table::data.table()]`\cr
 #'  Return ids of rows matches the expression.
 #'
+#'  * `hatch(ids)`\cr
+#'  (`integer()`)\cr
+#'  Clone existing agents in `ids` and inherit all attributes from their parents
+#'  except for the id attribute.
+#'
+#'  * `add(.data)`\cr
+#'  Add new agents in `.data` to the existing pool of agents. It should be noted,
+#'  that all new agents must have all the columns that the existing agents possess
+#'  with the exception of derived variables which is denoted by the `.` prefix.
+#'  For example, `.past_partner_id` is a derived variable which is allowed to be
+#'  missing in the new agents' data.
+#'
 #' @export
 Agent <- R6Class(
   classname = "Agent",
@@ -65,10 +72,15 @@ Agent <- R6Class(
   public = list(
     # public ------------------------------------------------------------------
     initialize = function(.data, id_col) {
-      if (!missing(.data) & !missing(id_col)) {
-        super$initialize(databackend = DataBackendDataTable,
-                         .data = .data,
-                         id_col = id_col)
+      if (!missing(.data)) {
+        if (!missing(id_col)) {
+          super$initialize(databackend = DataBackendDataTable,
+                           .data = .data,
+                           id_col = id_col)
+        } else {
+          stop(glue::glue("To initialise the attribute data of {self$class()} \\
+                            the `id_col` argument must be given."))
+        }
       }
       invisible()
     },
@@ -84,27 +96,49 @@ Agent <- R6Class(
     },
 
     add_new_agents = function(parent_ids, .data) {
-      assert_that(xor(missing(parent_ids), missing(.data)),
-        msg = "At least and at most of one of the arguments must be given.")
-      assert_that(
-        self$n() != 0,
-        msg = "data is emptied!
-        Can't not create new agents since the data fields are not defined."
-      )
+
+      if (!xor(missing(parent_ids), missing(.data))) {
+        stop("Only one of the arguments must be specified")
+      }
+
+      if (self$n() == 0) {
+        stop(glue(
+          "data is emptied! Can't not create new agents since the data fields \\
+          are not defined."
+        ))
+      }
 
       if (!missing(.data)) {
-        assert_that(is.data.frame(.data))
+        checkmate::assert_data_frame(.data)
         private$add_new_agent_data(newdata = .data)
         return()
       }
 
       if (!missing(parent_ids)) {
-        assert_that(self$ids_exist(ids = parent_ids, by_element = FALSE))
+        if (!self$ids_exist(ids = parent_ids, by_element = FALSE)) {
+          stop(glue("Not all parent_ids exists."))
+        }
         private$add_new_agent_inherit_parent(parent_ids = parent_ids)
         return()
       }
 
-      invisible()
+      stop("Something went wrong! please try to debug this or file an issue.")
+    },
+
+    hatch = function(ids) {
+      ids_dont_exist <- ids[!self$ids_exist(ids, by_element = TRUE)]
+      if (length(ids_dont_exist) != 0) {
+        stop(glue(
+          "Assertion on 'ids' failed: These ids do not exists {{{.missing_ids}}}",
+          .missing_ids = glue_collapse(ids_dont_exist, sep = ", ")
+        ))
+      }
+      private$add_new_agent_inherit_parent(parent_ids = ids)
+    },
+
+    add = function(.data) {
+      checkmate::assert_data_frame(.data)
+      private$add_new_agent_data(newdata = .data)
     },
 
     subset_ids = function(expr) {
@@ -153,28 +187,41 @@ Agent <- R6Class(
     #
     # ***********************************************************
     add_new_agent_data = function(newdata) {
-      assert_that(is.data.table(newdata),
-        msg = "`data` must be a data.table.")
+      checkmate::assert_data_table(newdata, col.names = 'strict', null.ok = FALSE)
 
       # check that both data are identical in their structures
-      if (all.equal(self$get_data(copy = FALSE)[0, ], newdata[0, ]) != TRUE) {
+      check_res <- all.equal(target = omit_derived_vars(self$get_data(copy = FALSE)[0, ]),
+                             current = omit_derived_vars(newdata[0, ]))
+      if (!isTRUE(check_res)) {
         lg$error("showing head of self$data")
         print(head(self$get_data()))
         lg$error("showing head of newdata")
         print(head(newdata))
-        stopifnot(all.equal(self$get_data(copy = FALSE)[0, ], newdata[0, ]), )
+        stop(glue(
+          "Existing data of {self$class()} and `newdata` are not the same for the following reasons:
+          {reasons}",
+          reasons = glue_collapse(paste("- ", check_res), sep = "\n")
+        ))
       }
 
+      id_col <- self$get_id_col()
       # check id uniqueness
-      assert_that(uniqueN(newdata[[self$get_id_col()]]) == nrow(newdata),
-        msg = "All ids must be unique.")
+      checkmate::assert_integerish(
+        x = newdata[[id_col]],
+        len = nrow(newdata),
+        lower = 1,
+        null.ok = FALSE,
+        any.missing = FALSE,
+        .var.name = "newdata's id column"
+      )
 
       # check id overlapping between new and old data
-      assert_that(!self$ids_exist(newdata[[self$get_id_col()]], by_element = FALSE),
-        msg = "not all ids in `data` are unique from ids in newdata")
+      if (self$ids_exist(newdata[[id_col]], by_element = FALSE)) {
+        stop("Not all ids in `data` are unique from ids in newdata")
+      }
 
       # if pass all the checks then bind to data
-      self$data()$add(.data = newdata)
+      self$data()$add(.data = newdata, fill = TRUE)
 
       invisible()
     }

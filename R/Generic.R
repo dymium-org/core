@@ -45,24 +45,10 @@ Generic <- R6Class(
       return(invisible(self))
     },
 
-    msg_trace = function(...) {
-      lg$trace("({class(self)[1]}) ", ...)
-    },
-
-    msg_debug = function(...) {
-      lg$debug("({class(self)[1]}) ", ...)
-    },
-
-    msg_info = function(...) {
-      lg$info("({class(self)[1]}) ", ...)
-    },
-
-    msg_warn = function(...) {
-      lg$warn("({class(self)[1]})", ...)
-    },
-
-    message = function(...) {
-      self$msg_info(...)
+    log = function(desc, value) {
+      checkmate::assert_string(desc)
+      checkmate::assert_numeric(value, len = 1)
+      lg$info("SIM_OUTPUT", tag = self$class(), desc = desc, value = value)
     },
 
     is_dymium_class = function() {

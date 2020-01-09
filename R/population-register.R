@@ -1,7 +1,7 @@
 #' Population register
 #'
-#' Assign new ids to the new population using the ids reserved from the input
-#' population object.
+#' Assign new ids to a new population. It is crucial that all ids in the relationship
+#' columns do exist in the data of the new population.
 #'
 #' @param x An Dymium's Agent object that contains Population object
 #' @param ind_data a data.table contains individual data

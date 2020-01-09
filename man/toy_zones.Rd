@@ -6,8 +6,8 @@
 \title{Toy zone data}
 \format{A \link[sf:sf]{sf::sf} data frame with 11 rows and 14 variables:
 \describe{
-\item{zid}{(\code{integer(1)}) zone id}
-\item{sa2_main}{(\code{integer(1)})}
+\item{zid}{(\code{integer()}) zone id}
+\item{sa2_main}{(\code{integer()})}
 \item{sa2_5dig11}{(\code{character()})}
 \item{sa2_name11}{(\code{character()})}
 \item{sa3_code11}{(\code{character()})}
@@ -16,8 +16,8 @@
 \item{sa4_name11}{(\code{character()})}
 \item{gcc_code11}{(\code{character()})}
 \item{gcc_name11}{(\code{character()})}
-\item{ste_code11}{(\code{character(1)})}
-\item{ste_name11}{(\code{integer(1)})}
+\item{ste_code11}{(\code{character()})}
+\item{ste_name11}{(\code{integer()})}
 \item{albers_sqm}{(\code{double()})}
 \item{geometry}{(\code{list()})}
 }}
@@ -25,6 +25,7 @@
 toy_zones
 }
 \description{
-This dataset contains 11 SA2 zones of Melborune CBD, Australia in a \link[sf:sf]{sf::sf} format.
+Note that this dataset requires the \code{sf} package to work properly. This
+dataset contains 11 SA2 zones of Melborune CBD, Australia in a \link[sf:sf]{sf::sf} format.
 }
 \keyword{datasets}

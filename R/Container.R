@@ -3,6 +3,7 @@
 #' Container is the base class for [World] and [Population]. It has the basic
 #' functionalities to store and access references of other [R6::R6Class] objects.
 #'
+#'
 #' @usage NULL
 #' @format [R6::R6Class] object inheriting from [dymiumCore::ContainerGeneric]
 #' @include ContainerGeneric.R
@@ -59,6 +60,8 @@
 #'
 #' * `summary()`\cr
 #'  Abstract method.
+#'
+#' @aliases Containers
 #'
 #' @export
 Container <- R6Class(

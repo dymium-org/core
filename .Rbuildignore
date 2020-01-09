@@ -11,4 +11,5 @@
 ^modules/test1$
 ^modules/test2$
 ^modules$
+^scenarios$
 ^man-roxygen

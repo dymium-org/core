@@ -5,11 +5,14 @@
 \title{A representation of World}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Entity]{dymiumCore::Entity}}
 \description{
-World is used to store other Entities. Think of it as a container that is to be
-passed into event functions and let each event function uses data that it is storing.
+World is to be used for storing \link{Entities}, \link{Models} and \link{Containers}, setting
+the simulation clock, and for keeping a log of your simulation outputs. You may
+think of it as a container that is to be passed into event functions and let
+each event function accesses the instances it needs that are being stored inside
+World.
 }
 \section{Construction}{
-\preformatted{x <- World2$new()
+\preformatted{x <- World$new()
 }
 \itemize{
 \item NULL\cr
@@ -64,7 +67,7 @@ Get information about the creation of the world object.
 Dymium's version, dependencies, R version etc.
 \item \code{set_time(x)}\cr
 (\code{integer(1)}) -> \code{NULL}\cr
-Set the value of .DMevn$sim_time.
+Set the time on the World's simulation clock (.DMevn$sim_time).
 \item \code{reset_time()}\cr
 Reset the value of .DMevn$sim_time to 0L (L is for forcing type integer
 otherwise 0 is of numeric type).
@@ -74,157 +77,3 @@ Update the simulation time and returns self.
 }
 }
 
-\section{Super classes}{
-\code{\link[dymiumCore:Generic]{dymiumCore::Generic}} -> \code{\link[dymiumCore:ContainerGeneric]{dymiumCore::ContainerGeneric}} -> \code{\link[dymiumCore:Container]{dymiumCore::Container}} -> \code{World}
-}
-\section{Methods}{
-\subsection{Public methods}{
-\itemize{
-\item \href{#method-new}{\code{World$new()}}
-\item \href{#method-add}{\code{World$add()}}
-\item \href{#method-remove}{\code{World$remove()}}
-\item \href{#method-get_entity}{\code{World$get_entity()}}
-\item \href{#method-get_model}{\code{World$get_model()}}
-\item \href{#method-get_container}{\code{World$get_container()}}
-\item \href{#method-get_time}{\code{World$get_time()}}
-\item \href{#method-get_info}{\code{World$get_info()}}
-\item \href{#method-set_time}{\code{World$set_time()}}
-\item \href{#method-print}{\code{World$print()}}
-\item \href{#method-reset_time}{\code{World$reset_time()}}
-\item \href{#method-start_iter}{\code{World$start_iter()}}
-\item \href{#method-clone}{\code{World$clone()}}
-}
-}
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="class">}\href{../../dymiumCore/html/Generic.html#method-class}{\code{dymiumCore::Generic$class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="debug">}\href{../../dymiumCore/html/Generic.html#method-debug}{\code{dymiumCore::Generic$debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="is_dymium_class">}\href{../../dymiumCore/html/Generic.html#method-is_dymium_class}{\code{dymiumCore::Generic$is_dymium_class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="message">}\href{../../dymiumCore/html/Generic.html#method-message}{\code{dymiumCore::Generic$message()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_debug">}\href{../../dymiumCore/html/Generic.html#method-msg_debug}{\code{dymiumCore::Generic$msg_debug()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_info">}\href{../../dymiumCore/html/Generic.html#method-msg_info}{\code{dymiumCore::Generic$msg_info()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_trace">}\href{../../dymiumCore/html/Generic.html#method-msg_trace}{\code{dymiumCore::Generic$msg_trace()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Generic" data-id="msg_warn">}\href{../../dymiumCore/html/Generic.html#method-msg_warn}{\code{dymiumCore::Generic$msg_warn()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="ContainerGeneric" data-id="check_pos">}\href{../../dymiumCore/html/ContainerGeneric.html#method-check_pos}{\code{dymiumCore::ContainerGeneric$check_pos()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="ContainerGeneric" data-id="n">}\href{../../dymiumCore/html/ContainerGeneric.html#method-n}{\code{dymiumCore::ContainerGeneric$n()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="ContainerGeneric" data-id="summary">}\href{../../dymiumCore/html/ContainerGeneric.html#method-summary}{\code{dymiumCore::ContainerGeneric$summary()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="ContainerGeneric" data-id="unpack">}\href{../../dymiumCore/html/ContainerGeneric.html#method-unpack}{\code{dymiumCore::ContainerGeneric$unpack()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Container" data-id="get">}\href{../../dymiumCore/html/Container.html#method-get}{\code{dymiumCore::Container$get()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="dymiumCore" data-topic="Container" data-id="names">}\href{../../dymiumCore/html/Container.html#method-names}{\code{dymiumCore::Container$names()}}\out{</span>}
-}
-\out{</details>}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\subsection{Method \code{new()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{World$new()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add"></a>}}
-\subsection{Method \code{add()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{World$add(x, name)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-remove"></a>}}
-\subsection{Method \code{remove()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{World$remove(x)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_entity"></a>}}
-\subsection{Method \code{get_entity()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{World$get_entity(x)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_model"></a>}}
-\subsection{Method \code{get_model()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{World$get_model(x)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_container"></a>}}
-\subsection{Method \code{get_container()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{World$get_container(x)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_time"></a>}}
-\subsection{Method \code{get_time()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{World$get_time(x)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_info"></a>}}
-\subsection{Method \code{get_info()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{World$get_info()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_time"></a>}}
-\subsection{Method \code{set_time()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{World$set_time(x)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\subsection{Method \code{print()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{World$print()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-reset_time"></a>}}
-\subsection{Method \code{reset_time()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{World$reset_time()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-start_iter"></a>}}
-\subsection{Method \code{start_iter()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{World$start_iter(time_step, unit = "iteration")}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{World$clone(deep = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
-}

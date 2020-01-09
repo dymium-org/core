@@ -1,13 +1,8 @@
-context("zone class")
-
-test_that("zone-class works", {
-  expect_true(TRUE)
-  # dat <- data.table(zid = 1:10L,
-  #   zname = letters[1:10L],
-  #   test_list = list(c(1, 2, 3), 1, 2))
-  # dat
-  #
-  # zone <- Zone$new()
-  # zone$initialise_data(data = dat, id_col = "zid")
-  # zone$get_data()
+test_that("initialise", {
+  if (requireNamespace("sf")) {
+    expect_error(Zone$new(toy_zones))
+    Zn <- Zone$new(toy_zones, id_col = "zid")
+    checkmate::expect_r6(Zn)
+    checkmate::expect_class(Zn$data()$get_sf(), classes = "sf")
+  }
 })
