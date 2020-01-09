@@ -59,7 +59,6 @@ History <- R6::R6Class(
       )
       checkmate::assert_number(time, lower = 0, finite = T)
 
-      browser()
       tmp_data <-
         # put into a data.table
         data.table(id = ids, time = time, event = event) %>%

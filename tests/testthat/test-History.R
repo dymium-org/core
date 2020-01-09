@@ -12,27 +12,14 @@ test_that("initialise", {
     )
   }
 
-  sample(1L:10L, n_entries, replace = T)
-  sample(c("Birth", "LeaveHome", "Marriage"), n_entries, replace = T)
-
-  h$get_data()
-
   expect_true(data.table::is.data.table(h$get_data()))
   expect_true(length(h$get_data()) != 0)
   expect_true(h$get_data()[, length(unlist(id))] == h$count()[, sum(N)])
   some_ids <- h$get_data()
-  expect_gt(nrow(h$count(), x = 0))
+  expect_gt(nrow(h$count()), 0)
   h$count(ids = 1, event = "Birth")
   expect_error(h$count(event = "nonexisted_event", "'event' failed: Must be a subset of"))
-
-
 })
-
-test_that("", {
-
-})
-
-
 
 # test_that("burn out", {
 #   h <- History$new()
