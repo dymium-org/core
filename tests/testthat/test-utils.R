@@ -47,3 +47,11 @@ test_that("normalise_derived_vars", {
   expect_equal(names(normalise_derived_vars(.df)), expected = c("a", "b", "c", "d.d"))
   expect_equal(names(normalise_derived_vars(.dt)), expected = c("a", "b", "c", "d.d"))
 })
+
+test_that("sample_choice", {
+  expect_setequal(sample_choice(10, 1, replace, replace = T), sample_choice(10, 1))
+  expect_setequal(sample_choice(1, 10, replace = T), rep(1,10))
+  expect_setequal(sample_choice(1, 1, replace = T), 1)
+  expect_error(sample_choice(1, 10),
+               regexp = "cannot take a sample larger than the population when 'replace = FALSE'")
+})
