@@ -14,8 +14,6 @@
 #' Agt <- Agent$new(...)
 #' ```
 #'
-#' During initialisation, [History] object is created.
-#'
 #' @section Fields:
 #'
 #'  * `history`\cr
