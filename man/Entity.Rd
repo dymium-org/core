@@ -2,6 +2,7 @@
 % Please edit documentation in R/Entity.R
 \name{Entity}
 \alias{Entity}
+\alias{Entities}
 \title{Entity class}
 \format{\link[R6:R6Class]{R6::R6Class} object.}
 \description{

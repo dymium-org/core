@@ -2,6 +2,7 @@
 % Please edit documentation in R/Container.R
 \name{Container}
 \alias{Container}
+\alias{Containers}
 \title{Container}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:ContainerGeneric]{dymiumCore::ContainerGeneric}}
 \description{

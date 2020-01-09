@@ -110,6 +110,7 @@
 #'  Print to console the number of datasets and their dimensions. `n` is the number of rows
 #'  that will be output to console by `head()`, if 0 nothing will be printed.
 #'
+#' @aliases Entities
 #' @export
 Entity <-
   R6::R6Class(

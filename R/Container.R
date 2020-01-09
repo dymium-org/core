@@ -61,6 +61,8 @@
 #' * `summary()`\cr
 #'  Abstract method.
 #'
+#' @aliases Containers
+#'
 #' @export
 Container <- R6Class(
   classname = "Container",
