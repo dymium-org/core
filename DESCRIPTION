@@ -61,6 +61,7 @@ Collate:
     'DataBackendDataFrame.R'
     'DataBackendDataTable.R'
     'DataBackendSpatialFeature.R'
+    'Entity-functions.R'
     'Environment.R'
     'Firm.R'
     'Individual.R'
