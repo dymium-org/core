@@ -442,6 +442,13 @@ Entity <-
       }
     ),
 
+    #' @field database a list of all [DataBackends] of the Entity
+    active = list(
+      database = function() {
+        get(".data", envir = private)
+      }
+    ),
+
     private = list(
       .data = list(),
       .id_col = NULL,
