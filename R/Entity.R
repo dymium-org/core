@@ -43,8 +43,8 @@
 #'
 #'  * `data(name)`\cr
 #'  (`character(1)`) -> (`[dymiumCore::DataBackend]`|`NULL`)\cr
-#'  Returns a reference to a `DataBackend` object with the name that matches `name`.
-#'  If `name` is not given, the function will try to return the object with name `attrs`.
+#'  Returns a [DataBackend] with the name that matches `name`.
+#'  If `name` is not given, the function will try to return the [DataBackend] with name `attrs`.
 #'  If `attrs` is not present or no `DataBackEnd` objects have been loaded it will
 #'  return `NULL`.
 #

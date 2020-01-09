@@ -7,6 +7,12 @@
 \description{
 The base class (first building block) for \link{Agent}, \link{Asset} and \link{Environment}.
 }
+\section{Fields}{
+
+\describe{
+\item{\code{database}}{a list of all \link{DataBackends} of the Entity}
+}}
+
 \section{Construction}{
 \preformatted{x <- Entity$new(databackend, .data, id_col)
 }
@@ -42,8 +48,8 @@ must be linkable with the attribute data of the object by the id_col.
 Return true if all ids exist if not raises an informative error.
 \item \code{data(name)}\cr
 (\code{character(1)}) -> (\verb{[dymiumCore::DataBackend]}|\code{NULL})\cr
-Returns a reference to a \code{DataBackend} object with the name that matches \code{name}.
-If \code{name} is not given, the function will try to return the object with name \code{attrs}.
+Returns a \link{DataBackend} with the name that matches \code{name}.
+If \code{name} is not given, the function will try to return the \link{DataBackend} with name \code{attrs}.
 If \code{attrs} is not present or no \code{DataBackEnd} objects have been loaded it will
 return \code{NULL}.
 \item \code{get_id_col}\cr
