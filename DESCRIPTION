@@ -87,7 +87,6 @@ Collate:
     'inspect.R'
     'module.R'
     'population-register.R'
-    'scheduler.R'
     'usethis.R'
     'utils-class.R'
     'utils-event.R'
