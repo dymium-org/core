@@ -3,7 +3,6 @@
 #' @usage NULL
 #' @format [R6::R6Class] object inheriting from [Entity].
 #' @include Entity.R
-#' @include History.R
 #'
 #' @description
 #' Agent class is the generic class for creating urban agents such

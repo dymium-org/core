@@ -20,7 +20,7 @@
 #'
 #' @section Public Fields:
 #'
-#'  * `history`::[History]\cr
+#'  * NULL\cr
 #'
 #' @section Public Methods:
 #'

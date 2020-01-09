@@ -47,7 +47,6 @@ RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Collate: 
     'Generic.R'
-    'History.R'
     'Entity.R'
     'Agent.R'
     'Asset.R'

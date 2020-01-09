@@ -19,7 +19,7 @@ inspect <- function(entity, ids, related_entity = NULL) {
   }
 
   cli::cli_alert_info("History data of {entity$class()}")
-  entity_history <- entity$history$inspect(ids = ids)
+  entity_history <- entity$get_data("history", copy = FALSE)[get(entity$get_id_col()) %in% ids,]
   print(entity_history)
 
   invisible(list(entity = entity_data,
