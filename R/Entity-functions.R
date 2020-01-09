@@ -65,6 +65,18 @@ add_history <- function(entity, ids, event, time = .get_sim_time(), id_col_as_li
     data.table::setnames(., old = "id", new = id_col)
 }
 
+get_history <- function(entity, ids) {
+  checkmate::assert_r6(entity, classes = "Entity")
+  checkmate::assert_integerish(ids, lower = 0)
+  checkmate::assert_string(event)
+}
+
+impute_history <- function(entity, ids, event = NULL) {
+  checkmate::assert_r6(entity, classes = "Entity")
+  checkmate::assert_integerish(ids, lower = 0)
+  checkmate::assert_string(event)
+}
+
 merge_entities <- function(entity_x, entity_y, x_dataname, y_dataname) {
 
 }
