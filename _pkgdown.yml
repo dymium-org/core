@@ -36,7 +36,6 @@ reference:
     - matches("DataBackend.")
 - title: "Other important classes"
   contents:
-    - History
     - Model
     - Pipeline
 - title: "Module"
@@ -50,9 +49,15 @@ reference:
     - get_module_files
     - get_module_versions
     - use_module
-- title: "Event"
+- title: "Event utility functions"
   contents:
     - use_event
+    - assign_reference
+    - alignment
+    - check_required_models
+    - check_supported_model
+    - get_models
+    - is_scheduled
 - title: "Scenerio"
   desc: "Manage scenarios."
   contents:
@@ -63,21 +68,11 @@ reference:
   desc: "Functions to be used inside a microsimulation pipeline."
   contents:
     - starts_with("dm_")
-- title: "Event utility functions"
-  desc: "Functions to be used inside a event function."
-  contents:
-    - assign_reference
-    - alignment
-    - check_required_models
-    - check_supported_model
-    - get_models
-    - is_scheduled
 - title: "Toy data"
   desc: "Data for testing purposes."
   contents:
     - starts_with("toy_")
     - starts_with("create_toy")
-    - generate_population
 - title: "Miscellaneous"
   contents:
   - omit_derived_vars
@@ -92,5 +87,5 @@ reference:
   - pop_register
   - unnest_datatable
   - dt_group_and_sort
-  - get_sim_time
+  - .get_sim_time
 
