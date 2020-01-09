@@ -287,3 +287,16 @@ check_names <- function(x, names) {
   return(names %in% nms)
 }
 
+skip_on_not_master <- function() {
+  if (get_current_git_branch() != "master") {
+    skip("Skip on branch not master")
+  }
+}
+
+get_current_git_branch <- function() {
+  branches <- system("git branch", intern = T)
+  current_branch <-
+    grep("\\*", branches, value = T) %>%
+    gsub("\\*|\\ ", "", .)
+  return(current_branch)
+}
