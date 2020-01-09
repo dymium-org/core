@@ -16,7 +16,6 @@ as individuals, households, firms, dwelling and more.
 \section{Fields}{
 
 \itemize{
-\item \code{history}\cr
 \item \code{data}::\code{data.table::data.table()}\cr
 Contains the attributes of agent. One of the attributes must be a unique id field
 }

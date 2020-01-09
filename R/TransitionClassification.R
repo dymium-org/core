@@ -118,17 +118,37 @@ simulate_classification_train <- function(self, private) {
   monte_carlo_sim(prediction, target = private$.target)
 }
 
+is_dynamic_rate_datatable_model <- function(x, .data) {
+  checkmate::assert_data_table(x, min.rows = 1, col.names = 'strict')
+  time_cols <- is_dynamic_rate_col(names(x))
+  matching_var_cols <- names(x)[!time_cols][names(x)[!time_cols] %in% names(.data)]
+  if (length(matching_var_cols) != 0 & any(time_cols)) {
+    return(TRUE)
+  }
+  return(FALSE)
+}
+
+is_dynamic_rate_col <- function(x) {
+  grepl("^t_[0-9]+$", x)
+}
+
 simulate_classification_datatable <- function(self, private) {
   # save some typing, this is not creating a copy of the model data.table but a reference semetic
   model <- private$.model
   sim_data <- private$.sim_data
   id_col <- private$.AgtObj$get_id_col()
   .reserved_colnames <- c('prob', 'probs', 'choices')
-  matching_vars <- names(model)[!names(model) %in% .reserved_colnames]
+  matching_vars <- names(model)[!names(model) %in% .reserved_colnames & !is_dynamic_rate_col(names(model))]
 
   # checks
-  checkmate::assert_data_table(model, any.missing = FALSE, min.rows = 1, col.names = 'strict', null.ok = FALSE)
-  checkmate::assert_names(names(model), subset.of = c(names(private$.sim_data), .reserved_colnames))
+
+  # check if it is a dynamic rate model
+  dynamic_rate_model_flag <- is_dynamic_rate_datatable_model(model, sim_data)
+
+  if (!dynamic_rate_model_flag) {
+    checkmate::assert_data_table(model, any.missing = FALSE, min.rows = 1, col.names = 'strict', null.ok = FALSE)
+    checkmate::assert_names(names(model), subset.of = c(names(private$.sim_data), .reserved_colnames))
+  }
 
   # two ways that data.table can be used in Transition
   # 1) as an enumerated table of a binary model
@@ -210,6 +230,42 @@ simulate_classification_datatable <- function(self, private) {
       .[['response']]
 
     return(response)
+  }
+
+  # (3) dynamic rate model
+  if (dynamic_rate_model_flag) {
+    current_sim_time <- .get_sim_time()
+    # flag the columns that are a rate column i.e. t_2011, t_2012
+    rate_col_indexes <- is_dynamic_rate_col(names(model))
+    # extract just the time numeric component of the rate column names
+    times <- names(model)[rate_col_indexes] %>%
+      gsub("t_", "", .) %>%
+      as.integer()
+    # find the closest rate column to the current simulation time. i.e. if
+    # there are rate columns for 10 years and the current simulation time is 11
+    # the rate column of year 10 will be used.
+    index_closest_time <- which.min(abs(times - current_sim_time))
+    colname_with_closest_time <- grep(paste0("t_",times[index_closest_time],"$"), names(model), value = T)
+    matchin_var_flags <- !rate_col_indexes
+    # turn the rate colunm with the closest time to the current simulation time as `FALSE`
+    rate_col_indexes[which(names(model) == colname_with_closest_time)] <- FALSE
+    # filter the dynamic rate model with just the matching variable and the current time rate column
+    current_rate_model <- model[, .SD, .SDcols = names(model)[!rate_col_indexes]]
+    # create a prediction table
+    prediction <-
+      merge(x = private$.sim_data[, .SD, .SDcols = c(id_col, matching_vars)],
+            y = current_rate_model,
+            by = matching_vars,
+            all.x = T
+      ) %>%
+      # dropping matching variables
+      .[, .SD, .SDcols = names(.)[!names(.) %in% matching_vars]] %>%
+      # merge to prob to the original ordering of private$.sim_data
+      .[private$.sim_data[, .SD, .SDcols = id_col], on = "pid"] %>%
+      # rename the rate column to prob
+      data.table::setnames(., old = colname_with_closest_time, new = "prob") %>%
+      # create a data.frame that contains 'no' and 'yes' columns
+      .[, .(yes = prob, no = 1 - prob)]
   }
 
   # randomly draw choices
