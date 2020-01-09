@@ -288,9 +288,10 @@ check_names <- function(x, names) {
 }
 
 skip_on_not_master <- function() {
-  if (get_current_git_branch() != "master") {
-    skip("Skip on branch not master")
+  if (get_current_git_branch() == "master") {
+    return(invisible(TRUE))
   }
+  skip("Skip on branch not master")
 }
 
 get_current_git_branch <- function() {
