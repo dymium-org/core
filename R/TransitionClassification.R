@@ -1,10 +1,94 @@
-#' Transition for classification model
+#' Transition for a classification model
 #'
 #' @description
-#' TransitionClassification
+#'
+#' [TransitionClassification] performs a Monte Carlo simulation using a probabilistic
+#' model. Work flow: `initialise()` -> `filter()` -> `mutate()` -> `simulate()`
+#' -> `postprocess()`. Note that, the order of filter and mutate can be swap by
+#' overwriting the `preprocess()` method.
+#'
+#' A class that perform Monte Carlo simulation on agents using a probabilistic model.
+#' Work flow: `initialise()` -> `filter()` -> `mutate()` -> `simulate()` -> `postprocess()`.
+#' Note that, the order of filter and mutate can be swap by overwriting the `preprocess()` method.
+#' The default order as speficied in the `preprocess` method is:
+#'
+#' ```r
+#' filter(.data) %>%
+#'  mutate(.)
+#' ```
+#'
+#' @section Construction:
+#'
+#' ```
+#' TransitionClassification$new(x, model, target = NULL, targeted_agents = NULL)
+#' ```
+#'
+#' * `x` :: [`R6`]\cr
+#'   A Agent class inheritance object.
+#'
+#' * `model` :: `object`\cr
+#'  A model.
+#'
+#' * `target` :: [`integer()`]\cr
+#'  (Default as NULL). A number that forces the number of micro events to occur. For example, if
+#'  `10`` is speficied, there will be 10 agents that under go the event. However,
+#'  if a integer vector is given it must be the same length as the classes in the model.
+#'  This only works for classification models.
+#'
+#' * `targeted_agent` :: [`integer()`]\cr
+#'  (Default as NULL) A integer vectors that contains ids of agents in `x` to undergo the event.
+#'
+#' @section Fields:
+#'
+#'  * `NULL`\cr
+#'
+#' @section Methods:
+#'
+#'  * `filter(.data)`\cr
+#'  ([data.table::data.table()]) -> `[data.table::data.table()]`\cr
+#'  **(By default, first of the preprocessing steps)**\cr
+#'  By default this method returns the input `.data`. This method can be overwrite
+#'  to give the user the flexibility to 'filter' the data prior to making prediction
+#'  by the given model. Filtering for eligible agents for this transition can be done in this step.
+#'
+#'  * `mutate(.data)`\cr
+#'  ([data.table::data.table()]) -> `[data.table::data.table()]`\cr
+#'  **(By default, second of the preprocessing steps)**\cr
+#'  By default this method returns the input `.data`. This method can be overwrite
+#'  to give the user the flexibility to 'mutate' the data prior to making prediction
+#'  by the given model. Adding derived variables and historical life course of the agents
+#'  can be done in this step.
+#'
+#' * `preprocess(.data)`\cr
+#' ([data.table::data.table()]) -> `[data.table::data.table()]`\cr
+#' By default, preprocess runs `filter()` then `mutate()` as described in the description section.
+#' This can be overwritten to change the order and add extra steps.
+#'
+#' * `update_agents(attr)`\cr
+#' (`character(1)`)\cr
+#' Update the attribute data of the agents that undergo the transition event.
+#'
+#' * `get_result(ids)`\cr
+#' (`integer()`) -> [data.table::data.table]\cr
+#' Returns the simulation result in a [data.table::data.table] format with two
+#' columns `id` and `response`.
+#'
+#' * `get_nrow_result()`\cr
+#' Returns the number of rows in the simulation result.
+#'
+#' * `get_decision_maker_ids(response_filter = NULL)`\cr
+#' (`character()`) -> (`integer()`)\cr
+#' Returns ids of the agents that have their response equal to `response_filter`.
+#'
+#'
+#' @param x a Agent class inheritance object
+#' @param model a model object
+#' @param target a integer
 #'
 #' @include Transition.R
 #' @export
+#'
+# TODO: complete documentation
 TransitionClassification <- R6Class(
   classname = "TransitionClassification",
   inherit = Transition,

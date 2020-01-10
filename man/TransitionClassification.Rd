@@ -2,7 +2,7 @@
 % Please edit documentation in R/TransitionClassification.R
 \name{TransitionClassification}
 \alias{TransitionClassification}
-\title{Transition for classification model}
+\title{Transition for a classification model}
 \arguments{
 \item{x}{an \link{Entity} object}
 
@@ -21,7 +21,17 @@ to undergo this}
 an \link[R6:R6Class]{R6::R6Class} object
 }
 \description{
-TransitionClassification
+\link{TransitionClassification} performs a Monte Carlo simulation using a probabilistic
+model. Work flow: \code{initialise()} -> \code{filter()} -> \code{mutate()} -> \code{simulate()}
+-> \code{postprocess()}. Note that, the order of filter and mutate can be swap by
+overwriting the \code{preprocess()} method.
+
+A class that perform Monte Carlo simulation on agents using a probabilistic model.
+Work flow: \code{initialise()} -> \code{filter()} -> \code{mutate()} -> \code{simulate()} -> \code{postprocess()}.
+Note that, the order of filter and mutate can be swap by overwriting the \code{preprocess()} method.
+The default order as speficied in the \code{preprocess} method is:\if{html}{\out{<div class="r">}}\preformatted{filter(.data) \%>\%
+ mutate(.)
+}\if{html}{\out{</div>}}
 
 Create a \link{TransitionClassification} object.
 }
@@ -35,6 +45,66 @@ of type \code{\link[data.table:data.table]{data.table::data.table()}} where it m
 or list columns of type numeric and character called \code{probs} and \code{choices}. The model
 object must have a column which its name matches with the id column of the entity object in \code{x}.}
 }}
+
+\section{Construction}{
+\preformatted{TransitionClassification$new(x, model, target = NULL, targeted_agents = NULL)
+}
+\itemize{
+\item \code{x} :: \code{\link{R6}}\cr
+A Agent class inheritance object.
+\item \code{model} :: \code{object}\cr
+A model.
+\item \code{target} :: \code{\link[=integer]{integer()}}\cr
+(Default as NULL). A number that forces the number of micro events to occur. For example, if
+`10`` is speficied, there will be 10 agents that under go the event. However,
+if a integer vector is given it must be the same length as the classes in the model.
+This only works for classification models.
+\item \code{targeted_agent} :: \code{\link[=integer]{integer()}}\cr
+(Default as NULL) A integer vectors that contains ids of agents in \code{x} to undergo the event.
+}
+}
+
+\section{Fields}{
+
+\itemize{
+\item \code{NULL}\cr
+}
+}
+
+\section{Methods}{
+
+\itemize{
+\item \code{filter(.data)}\cr
+(\code{\link[data.table:data.table]{data.table::data.table()}}) -> \verb{[data.table::data.table()]}\cr
+\strong{(By default, first of the preprocessing steps)}\cr
+By default this method returns the input \code{.data}. This method can be overwrite
+to give the user the flexibility to 'filter' the data prior to making prediction
+by the given model. Filtering for eligible agents for this transition can be done in this step.
+\item \code{mutate(.data)}\cr
+(\code{\link[data.table:data.table]{data.table::data.table()}}) -> \verb{[data.table::data.table()]}\cr
+\strong{(By default, second of the preprocessing steps)}\cr
+By default this method returns the input \code{.data}. This method can be overwrite
+to give the user the flexibility to 'mutate' the data prior to making prediction
+by the given model. Adding derived variables and historical life course of the agents
+can be done in this step.
+\item \code{preprocess(.data)}\cr
+(\code{\link[data.table:data.table]{data.table::data.table()}}) -> \verb{[data.table::data.table()]}\cr
+By default, preprocess runs \code{filter()} then \code{mutate()} as described in the description section.
+This can be overwritten to change the order and add extra steps.
+\item \code{update_agents(attr)}\cr
+(\code{character(1)})\cr
+Update the attribute data of the agents that undergo the transition event.
+\item \code{get_result(ids)}\cr
+(\code{integer()}) -> \link[data.table:data.table]{data.table::data.table}\cr
+Returns the simulation result in a \link[data.table:data.table]{data.table::data.table} format with two
+columns \code{id} and \code{response}.
+\item \code{get_nrow_result()}\cr
+Returns the number of rows in the simulation result.
+\item \code{get_decision_maker_ids(response_filter = NULL)}\cr
+(\code{character()}) -> (\code{integer()})\cr
+Returns ids of the agents that have their response equal to \code{response_filter}.
+}
+}
 
 \examples{
 
