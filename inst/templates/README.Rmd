@@ -1,20 +1,21 @@
 ---
-output: github_document
+output:
+  github_document:
+    toc: true
+    toc_depth: 2
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(DiagrammeR)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 ```
 
-__Meta info__
+# {{{module}}} module documentation
 
-- Authors: Myname
+- Authors: Your name
+- Email: your@email.com
 - Current version: 0.1
 
-# Module overview
-
-This module provides...
+This module provides the following functionalities...
 
 # Release notes
 
@@ -22,25 +23,88 @@ This module provides...
 
 This is the first version of this module.
 
+# Requirements
+
+This module requires the following packages ... and external dependecies such as ... 
+
 # Events
 
-## Event_1
+## Event name 1
+
+### Usage
+
+```{r}
+event_{{{module}}}_eventname <- modules::use("{{{module_path}}}/eventname.R")
+event_{{{module}}}_eventname$run(world, model = NULL, target = NULL, time_steps = NULL)
+```
+
+### Params
+
+* world: a World object.
+* model: a named list.
+
+```{r}
+# For example
+model <- list(x1 = list(yes = 0.5, no = 0.5),
+              x2 = data.table(sex = c("male", "female"), prob = c(0.2, 0.1)))
+```
+
+* target: a named list.
+* time_steps: a numeric vector that indicates the time steps in the simulation clock
+that this event should be run.
 
 ### Description
 
-### Flowchart
+This event does..
 
-### Rules
+### Note
 
-### Outcomes
+Here are some assumptions and settings that you should know about this event..
 
-## Event_2
+### Example
+
+```{r}
+1 + 1
+```
+
+## Event name 2
+
+### Usage
+
+```{r}
+event_{{{module}}}_eventname <- modules::use("{{{module_path}}}/eventname.R")
+event_{{{module}}}_eventname$run(world, model = NULL, target = NULL, time_steps = NULL)
+```
+
+### Params
+
+* world: a World object.
+* model: a named list.
+
+```{r}
+# For example
+model <- list(x1 = list(yes = 0.5, no = 0.5),
+              x2 = data.table(sex = c("male", "female"), prob = c(0.2, 0.1)))
+```
+
+* target: a named list.
+* time_steps: a numeric vector that indicates the time steps in the simulation clock
+that this event should be run.
 
 ### Description
 
-### Flowchart
+This event does..
 
-### Rules
+### Note
 
-### Outcomes
+Here are some assumptions and settings that you should know about this event..
 
+### Example
+
+```{r}
+1 + 1
+```
+
+# Known issues
+
+Here are some known issues
