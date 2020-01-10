@@ -101,3 +101,12 @@ test_that("invoke a derived variable and add new data", {
   pop$add_population(ind_data = migrants$ind_data, hh_data = migrants$hh_data)
   expect_gt(Ind$n(), n_before)
 })
+
+test_that("get_parent_hid", {
+  create_toy_population()
+  Ind <- pop$get('Individual')
+  self_f_hid <- Ind$get_data()[!is.na(father_id), hid]
+  self_m_hid <- Ind$get_data()[!is.na(mother_id), hid]
+  expect_setequal(self_f_hid, Ind$get_parent_hid(ids = Ind$get_data()[!is.na(father_id), pid])[["father_hid"]])
+  expect_setequal(self_m_hid, Ind$get_parent_hid(ids = Ind$get_data()[!is.na(mother_id), pid])[["mother_hid"]])
+})
