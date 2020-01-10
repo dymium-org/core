@@ -21,7 +21,7 @@ Name of the id colum in \code{.data}
 \section{Public Fields}{
 
 \itemize{
-\item \code{history}::\link{History}\cr
+\item NULL\cr
 }
 }
 
@@ -89,12 +89,6 @@ of the same length.
 \item \code{get_parent_hid(ids = NULL)}\cr
 (\code{integer()}) -> \code{\link[data.table:data.table]{data.table::data.table()}}\cr
 Returns a data.table with three columns: pid, father_hid and mother_hid.
-\item \code{living_with_parents(ids = NULL)}\cr
-(\code{integer()}) -> \code{logical()}\cr
-Returns a logical of length \code{ids} if ids is not NULL else the length will be
-equal to the number of rows of the data. The idea is to compare both parents'
-household ids with the household id of self. Dead individuals will always return
-FALSE as their answer.
 \item \code{living_together(self_ids, target_ids)}\cr
 (\code{integer()}, \code{integer()}) -> \code{logical()}\cr
 Check if two individuals are living together in the same household. Returns

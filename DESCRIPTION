@@ -1,7 +1,7 @@
 Package: dymiumCore
 Type: Package
 Title: The core functions of a Dynamic Microsimulation framework for Integrated Urban Models
-Version: 0.0.11.1
+Version: 0.0.11.5
 Authors@R: c(
     person("Amarin", "Siripanich", email = "amarin@dymium.org", role = c("aut", "cre")),
     person("Taha", "Rashidi", role = c("aut")))
@@ -47,7 +47,6 @@ RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Collate: 
     'Generic.R'
-    'History.R'
     'Entity.R'
     'Agent.R'
     'Asset.R'
@@ -61,11 +60,11 @@ Collate:
     'DataBackendDataFrame.R'
     'DataBackendDataTable.R'
     'DataBackendSpatialFeature.R'
+    'Entity-functions.R'
     'Environment.R'
     'Firm.R'
     'Individual.R'
     'Household.R'
-    'Log.R'
     'MatchingMarket.R'
     'MatchingMarketOptimal.R'
     'MatchingMarketStochastic.R'
@@ -84,12 +83,10 @@ Collate:
     'create-world.R'
     'data.R'
     'dymiumCore-package.R'
-    'generate-data.R'
     'household-formation.R'
+    'inspect.R'
     'module.R'
     'population-register.R'
-    'sampling.R'
-    'scheduler.R'
     'usethis.R'
     'utils-class.R'
     'utils-event.R'

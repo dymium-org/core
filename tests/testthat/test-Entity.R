@@ -108,3 +108,9 @@ test_that("check_ids", {
   expect_error(MyObj$check_ids(99999), regexp = "Not all ids exist. Here are the missing ones: 99999")
   expect_equal(MyObj$check_ids(MyObj$get_ids()[1]), TRUE)
 })
+
+test_that("database", {
+  MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
+  checkmate::expect_list(MyObj$database, types = c("DataBackend"), len = 1, any.missing = FALSE, names = "strict")
+})
+

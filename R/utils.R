@@ -10,6 +10,34 @@
 #' @usage lhs \%>\% rhs
 NULL
 
+#' @title Modified version of base::sample for programming in a Monte Carlo simulation
+#'
+#' @description
+#' This version of the sample function removes the feature where x is an integer of length 1
+#' sampling via sample takes place from 1:x. This can bring unexpected behaviour
+#' as mentioned in the documentation of `base::sample()`.
+#'
+#' @param x a vector that contains value(s) that represents a choiceset.
+#' @inheritParams base::sample
+#' @export
+#'
+#' @examples
+#'
+#' sample_choice(7, 10, replace = TRUE) # equipvalent to rep(7, 10)
+#' sample_choice(7, 1)
+#' sample_choice(7) # which is equipvalent to the above
+sample_choice <- function(x, size = 1, replace = FALSE, prob = NULL) {
+  if (length(x) != 1) {
+    sample(x = x, size = size, replace = replace, prob = prob)
+  } else {
+    if (replace || size == 1) {
+      rep(x, size)
+    } else {
+      stop("cannot take a sample larger than the population when 'replace = FALSE'")
+    }
+  }
+}
+
 #' Condense rows
 #'
 #' @description
@@ -287,3 +315,17 @@ check_names <- function(x, names) {
   return(names %in% nms)
 }
 
+skip_on_not_master <- function() {
+  if (get_current_git_branch() == "master") {
+    return(invisible(TRUE))
+  }
+  skip("Skip on branch not master")
+}
+
+get_current_git_branch <- function() {
+  branches <- system("git branch", intern = T)
+  current_branch <-
+    grep("\\*", branches, value = T) %>%
+    gsub("\\*|\\ ", "", .)
+  return(current_branch)
+}

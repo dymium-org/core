@@ -5,11 +5,14 @@
 \title{A representation of World}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Entity]{dymiumCore::Entity}}
 \description{
-World is used to store other Entities. Think of it as a container that is to be
-passed into event functions and let each event function uses data that it is storing.
+World is to be used for storing \link{Entities}, \link{Models} and \link{Containers}, setting
+the simulation clock, and for keeping a log of your simulation outputs. You may
+think of it as a container that is to be passed into event functions and let
+each event function accesses the instances it needs that are being stored inside
+World.
 }
 \section{Construction}{
-\preformatted{x <- World2$new()
+\preformatted{x <- World$new()
 }
 \itemize{
 \item NULL\cr
@@ -64,7 +67,7 @@ Get information about the creation of the world object.
 Dymium's version, dependencies, R version etc.
 \item \code{set_time(x)}\cr
 (\code{integer(1)}) -> \code{NULL}\cr
-Set the value of .DMevn$sim_time.
+Set the time on the World's simulation clock (.DMevn$sim_time).
 \item \code{reset_time()}\cr
 Reset the value of .DMevn$sim_time to 0L (L is for forcing type integer
 otherwise 0 is of numeric type).

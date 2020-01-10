@@ -35,6 +35,8 @@
 #'
 #'  * `print()`\cr
 #'
+#' @aliases Models
+#'
 #' @examples
 #'
 #' world <- World$new()

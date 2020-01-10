@@ -1,10 +1,94 @@
-#' Transition for classification model
+#' Transition for a classification model
 #'
 #' @description
-#' TransitionClassification
+#'
+#' [TransitionClassification] performs a Monte Carlo simulation using a probabilistic
+#' model. Work flow: `initialise()` -> `filter()` -> `mutate()` -> `simulate()`
+#' -> `postprocess()`. Note that, the order of filter and mutate can be swap by
+#' overwriting the `preprocess()` method.
+#'
+#' A class that perform Monte Carlo simulation on agents using a probabilistic model.
+#' Work flow: `initialise()` -> `filter()` -> `mutate()` -> `simulate()` -> `postprocess()`.
+#' Note that, the order of filter and mutate can be swap by overwriting the `preprocess()` method.
+#' The default order as speficied in the `preprocess` method is:
+#'
+#' ```r
+#' filter(.data) %>%
+#'  mutate(.)
+#' ```
+#'
+#' @section Construction:
+#'
+#' ```
+#' TransitionClassification$new(x, model, target = NULL, targeted_agents = NULL)
+#' ```
+#'
+#' * `x` :: [`R6`]\cr
+#'   A Agent class inheritance object.
+#'
+#' * `model` :: `object`\cr
+#'  A model.
+#'
+#' * `target` :: [`integer()`]\cr
+#'  (Default as NULL). A number that forces the number of micro events to occur. For example, if
+#'  `10`` is speficied, there will be 10 agents that under go the event. However,
+#'  if a integer vector is given it must be the same length as the classes in the model.
+#'  This only works for classification models.
+#'
+#' * `targeted_agent` :: [`integer()`]\cr
+#'  (Default as NULL) A integer vectors that contains ids of agents in `x` to undergo the event.
+#'
+#' @section Fields:
+#'
+#'  * `NULL`\cr
+#'
+#' @section Methods:
+#'
+#'  * `filter(.data)`\cr
+#'  ([data.table::data.table()]) -> `[data.table::data.table()]`\cr
+#'  **(By default, first of the preprocessing steps)**\cr
+#'  By default this method returns the input `.data`. This method can be overwrite
+#'  to give the user the flexibility to 'filter' the data prior to making prediction
+#'  by the given model. Filtering for eligible agents for this transition can be done in this step.
+#'
+#'  * `mutate(.data)`\cr
+#'  ([data.table::data.table()]) -> `[data.table::data.table()]`\cr
+#'  **(By default, second of the preprocessing steps)**\cr
+#'  By default this method returns the input `.data`. This method can be overwrite
+#'  to give the user the flexibility to 'mutate' the data prior to making prediction
+#'  by the given model. Adding derived variables and historical life course of the agents
+#'  can be done in this step.
+#'
+#' * `preprocess(.data)`\cr
+#' ([data.table::data.table()]) -> `[data.table::data.table()]`\cr
+#' By default, preprocess runs `filter()` then `mutate()` as described in the description section.
+#' This can be overwritten to change the order and add extra steps.
+#'
+#' * `update_agents(attr)`\cr
+#' (`character(1)`)\cr
+#' Update the attribute data of the agents that undergo the transition event.
+#'
+#' * `get_result(ids)`\cr
+#' (`integer()`) -> [data.table::data.table]\cr
+#' Returns the simulation result in a [data.table::data.table] format with two
+#' columns `id` and `response`.
+#'
+#' * `get_nrow_result()`\cr
+#' Returns the number of rows in the simulation result.
+#'
+#' * `get_decision_maker_ids(response_filter = NULL)`\cr
+#' (`character()`) -> (`integer()`)\cr
+#' Returns ids of the agents that have their response equal to `response_filter`.
+#'
+#'
+#' @param x a Agent class inheritance object
+#' @param model a model object
+#' @param target a integer
 #'
 #' @include Transition.R
 #' @export
+#'
+# TODO: complete documentation
 TransitionClassification <- R6Class(
   classname = "TransitionClassification",
   inherit = Transition,
@@ -118,17 +202,37 @@ simulate_classification_train <- function(self, private) {
   monte_carlo_sim(prediction, target = private$.target)
 }
 
+is_dynamic_rate_datatable_model <- function(x, .data) {
+  checkmate::assert_data_table(x, min.rows = 1, col.names = 'strict')
+  time_cols <- is_dynamic_rate_col(names(x))
+  matching_var_cols <- names(x)[!time_cols][names(x)[!time_cols] %in% names(.data)]
+  if (length(matching_var_cols) != 0 & any(time_cols)) {
+    return(TRUE)
+  }
+  return(FALSE)
+}
+
+is_dynamic_rate_col <- function(x) {
+  grepl("^t_[0-9]+$", x)
+}
+
 simulate_classification_datatable <- function(self, private) {
   # save some typing, this is not creating a copy of the model data.table but a reference semetic
   model <- private$.model
   sim_data <- private$.sim_data
   id_col <- private$.AgtObj$get_id_col()
   .reserved_colnames <- c('prob', 'probs', 'choices')
-  matching_vars <- names(model)[!names(model) %in% .reserved_colnames]
+  matching_vars <- names(model)[!names(model) %in% .reserved_colnames & !is_dynamic_rate_col(names(model))]
 
   # checks
-  checkmate::assert_data_table(model, any.missing = FALSE, min.rows = 1, col.names = 'strict', null.ok = FALSE)
-  checkmate::assert_names(names(model), subset.of = c(names(private$.sim_data), .reserved_colnames))
+
+  # check if it is a dynamic rate model
+  dynamic_rate_model_flag <- is_dynamic_rate_datatable_model(model, sim_data)
+
+  if (!dynamic_rate_model_flag) {
+    checkmate::assert_data_table(model, any.missing = FALSE, min.rows = 1, col.names = 'strict', null.ok = FALSE)
+    checkmate::assert_names(names(model), subset.of = c(names(private$.sim_data), .reserved_colnames))
+  }
 
   # two ways that data.table can be used in Transition
   # 1) as an enumerated table of a binary model
@@ -210,6 +314,42 @@ simulate_classification_datatable <- function(self, private) {
       .[['response']]
 
     return(response)
+  }
+
+  # (3) dynamic rate model
+  if (dynamic_rate_model_flag) {
+    current_sim_time <- .get_sim_time()
+    # flag the columns that are a rate column i.e. t_2011, t_2012
+    rate_col_indexes <- is_dynamic_rate_col(names(model))
+    # extract just the time numeric component of the rate column names
+    times <- names(model)[rate_col_indexes] %>%
+      gsub("t_", "", .) %>%
+      as.integer()
+    # find the closest rate column to the current simulation time. i.e. if
+    # there are rate columns for 10 years and the current simulation time is 11
+    # the rate column of year 10 will be used.
+    index_closest_time <- which.min(abs(times - current_sim_time))
+    colname_with_closest_time <- grep(paste0("t_",times[index_closest_time],"$"), names(model), value = T)
+    matchin_var_flags <- !rate_col_indexes
+    # turn the rate colunm with the closest time to the current simulation time as `FALSE`
+    rate_col_indexes[which(names(model) == colname_with_closest_time)] <- FALSE
+    # filter the dynamic rate model with just the matching variable and the current time rate column
+    current_rate_model <- model[, .SD, .SDcols = names(model)[!rate_col_indexes]]
+    # create a prediction table
+    prediction <-
+      merge(x = private$.sim_data[, .SD, .SDcols = c(id_col, matching_vars)],
+            y = current_rate_model,
+            by = matching_vars,
+            all.x = T
+      ) %>%
+      # dropping matching variables
+      .[, .SD, .SDcols = names(.)[!names(.) %in% matching_vars]] %>%
+      # merge to prob to the original ordering of private$.sim_data
+      .[private$.sim_data[, .SD, .SDcols = id_col], on = "pid"] %>%
+      # rename the rate column to prob
+      data.table::setnames(., old = colname_with_closest_time, new = "prob") %>%
+      # create a data.frame that contains 'no' and 'yes' columns
+      .[, .(yes = prob, no = 1 - prob)]
   }
 
   # randomly draw choices

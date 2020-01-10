@@ -52,6 +52,8 @@
 #'
 #'  * `.removed_data`::`NULL`\cr
 #'
+#' @aliases DataBackends
+#'
 #' @export
 DataBackend <- R6::R6Class(
   classname = "DataBackend",

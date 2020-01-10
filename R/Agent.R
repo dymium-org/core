@@ -3,7 +3,6 @@
 #' @usage NULL
 #' @format [R6::R6Class] object inheriting from [Entity].
 #' @include Entity.R
-#' @include History.R
 #'
 #' @description
 #' Agent class is the generic class for creating urban agents such
@@ -15,11 +14,7 @@
 #' Agt <- Agent$new(...)
 #' ```
 #'
-#' During initialisation, [History] object is created.
-#'
 #' @section Fields:
-#'
-#'  * `history`\cr
 #'
 #'  * `data`::`data.table::data.table()`\cr
 #'  Contains the attributes of agent. One of the attributes must be a unique id field

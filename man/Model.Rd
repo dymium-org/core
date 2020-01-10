@@ -2,6 +2,7 @@
 % Please edit documentation in R/Model.R
 \name{Model}
 \alias{Model}
+\alias{Models}
 \title{Model class}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting \link{Generic}.}
 \description{

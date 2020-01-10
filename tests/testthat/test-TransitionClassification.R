@@ -34,6 +34,37 @@ test_that("datatable - binary", {
 })
 
 
+test_that("datatable - dynamic rate", {
+  create_toy_population()
+  Ind <- pop$get("Individual")
+
+  # create an enumerated dynamic rate model - age, sex, t_*
+  model <- data.table(CJ(sex = c('male', 'female'), age = 0:100)) %>%
+    .[, paste0("t_", c(0:10)) := runif(.N)]
+
+  model_bad1 <- data.table(CJ(sex = c('male', 'female'), age = 0:100)) %>%
+    .[, paste0("t_", LETTERS) := runif(.N)]
+
+  model_bad2 <- data.table(CJ(sex = c('male', 'female'), age = 0:100)) %>%
+    .[, paste0("t_", LETTERS, seq_along(LETTERS)) := runif(.N)]
+
+  model_bad3 <- data.table(CJ(sex = c('male', 'female'), age = 0:100)) %>%
+    .[, paste0("t_", c(0:10), LETTERS[1:10]) := runif(.N)]
+
+  # test models
+  expect_true(is_dynamic_rate_datatable_model(model, Ind$get_data()))
+  expect_false(is_dynamic_rate_datatable_model(model_bad1, Ind$get_data()))
+  expect_false(is_dynamic_rate_datatable_model(model_bad2, Ind$get_data()))
+  expect_false(is_dynamic_rate_datatable_model(model_bad3, Ind$get_data()))
+
+  a_transition <- TransitionClassification$new(Ind, model)
+  checkmate::expect_r6(a_transition, "TransitionClassification")
+  checkmate::expect_data_table(a_transition$get_result(), ncols = 2)
+  checkmate::expect_subset(a_transition$get_result()[['response']], c("yes", "no"))
+  checkmate::expect_integerish(a_transition$get_result()[['id']], lower = 1, unique = T, null.ok = FALSE, any.missing = FALSE)
+})
+
+
 test_that("datatable - choices", {
 
   create_toy_population()

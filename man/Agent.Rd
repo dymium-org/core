@@ -11,14 +11,11 @@ as individuals, households, firms, dwelling and more.
 \section{Construction}{
 \preformatted{Agt <- Agent$new(...)
 }
-
-During initialisation, \link{History} object is created.
 }
 
 \section{Fields}{
 
 \itemize{
-\item \code{history}\cr
 \item \code{data}::\code{data.table::data.table()}\cr
 Contains the attributes of agent. One of the attributes must be a unique id field
 }
