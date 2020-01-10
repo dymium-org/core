@@ -102,13 +102,6 @@
 #'  (`integer()`) -> [data.table::data.table()]\cr
 #'  Returns a data.table with three columns: pid, father_hid and mother_hid.
 #'
-#'  * `living_with_parents(ids = NULL)`\cr
-#'  (`integer()`) -> `logical()`\cr
-#'  Returns a logical of length `ids` if ids is not NULL else the length will be
-#'  equal to the number of rows of the data. The idea is to compare both parents'
-#'  household ids with the household id of self. Dead individuals will always return
-#'  FALSE as their answer.
-#'
 #'  * `living_together(self_ids, target_ids)`\cr
 #'  (`integer()`, `integer()`) -> `logical()`\cr
 #'  Check if two individuals are living together in the same household. Returns
@@ -394,51 +387,59 @@ Individual <- R6::R6Class(
       }
     },
 
-    living_with_parents = function(ids = NULL) {
-      stop("use $living_together instead until this function is fixed.")
-      # TODO: potential bugs
-      # A case where both parents (who have been divorced and living in different
-      # households) are in the matching market at the same time and both needs
-      # to check for dependent children there will be more than one instance of
-      # their children ids in `ids` arg. The bug only shows when we try to
-      # rearrange `data` to match the order of `ids` with `order(match(pid, ids)`
-      # this bug is cauaght by the last asserttion statement that
-      # `result$pid` and ids are not match.
-      #
-      # Potential fixes
-      # - use merge instead of order
-      #
-      # filter out dead individuals
-      active_ind_ids <- ids[self$is_alive(ids = ids)]
-
-      # get parents' household ids
-      parent_hids <- self$get_parent_hid(active_ind_ids)
-      data <-
-        self$get_data(active_ind_ids)[, .(pid, hid)] %>%
-        .[parent_hids, on = self$get_id_col()] %>%
-        .[, rowId := 1:.N]
-
-      # check if self household id is the same as either of the parents'
-      result <-
-        data[, .(living_with_parents = any(hid %in% c(father_hid, mother_hid))),
-             by = .(pid, rowId)][order(match(pid, ids)), ]
-
-      # check if there is any dead individuals in `ids`
-      if (length(active_ind_ids) != length(ids)) {
-        # dead individuals will always return FALSE as their answer
-        dead_ind <-
-          data.table::data.table(pid = ids[!ids %in% active_ind_ids],
-                                 living_with_parents = FALSE)
-        result <- rbind(result, dead_ind) %>%
-          # sort the order of `result` to match the order of `ids`
-          .[list(pid = ids), on = "pid"]
-      }
-
-      # check that we get all the result of the active individuals
-      stopifnot(all(result$pid == ids))
-
-      return(result$living_with_parents)
-    },
+    # @description
+    #
+    #  Returns a logical of length `ids` if ids is not NULL else the length will be
+    #  equal to the number of rows of the data. The idea is to compare both parents'
+    #  household ids with the household id of self. Dead individuals will always return
+    #  FALSE as their answer.
+    #
+    # @return a logical vector with the same length as `ids`
+    # living_with_parents = function(ids = NULL) {
+    #   stop("use $living_together instead until this function is fixed.")
+    #   # TODO: potential bugs
+    #   # A case where both parents (who have been divorced and living in different
+    #   # households) are in the matching market at the same time and both needs
+    #   # to check for dependent children there will be more than one instance of
+    #   # their children ids in `ids` arg. The bug only shows when we try to
+    #   # rearrange `data` to match the order of `ids` with `order(match(pid, ids)`
+    #   # this bug is cauaght by the last asserttion statement that
+    #   # `result$pid` and ids are not match.
+    #   #
+    #   # Potential fixes
+    #   # - use merge instead of order
+    #   #
+    #   # filter out dead individuals
+    #   active_ind_ids <- ids[self$is_alive(ids = ids)]
+    #
+    #   # get parents' household ids
+    #   parent_hids <- self$get_parent_hid(active_ind_ids)
+    #   data <-
+    #     self$get_data(active_ind_ids)[, .(pid, hid)] %>%
+    #     .[parent_hids, on = self$get_id_col()] %>%
+    #     .[, rowId := 1:.N]
+    #
+    #   # check if self household id is the same as either of the parents'
+    #   result <-
+    #     data[, .(living_with_parents = any(hid %in% c(father_hid, mother_hid))),
+    #          by = .(pid, rowId)][order(match(pid, ids)), ]
+    #
+    #   # check if there is any dead individuals in `ids`
+    #   if (length(active_ind_ids) != length(ids)) {
+    #     # dead individuals will always return FALSE as their answer
+    #     dead_ind <-
+    #       data.table::data.table(pid = ids[!ids %in% active_ind_ids],
+    #                              living_with_parents = FALSE)
+    #     result <- rbind(result, dead_ind) %>%
+    #       # sort the order of `result` to match the order of `ids`
+    #       .[list(pid = ids), on = "pid"]
+    #   }
+    #
+    #   # check that we get all the result of the active individuals
+    #   stopifnot(all(result$pid == ids))
+    #
+    #   return(result$living_with_parents)
+    # },
 
     living_together = function(self_ids, target_ids) {
       stopifnot(length(self_ids) == length(target_ids))
@@ -454,11 +455,11 @@ Individual <- R6::R6Class(
         .[, hid.x == hid.y]
       stopifnot(length(result) == length(self_ids))
       result
-    },
-
-    have_resident_child = function(ids) {
-      stop("Has not been implemented yet.")
     }
+
+    # have_resident_child = function(ids) {
+    #   stop("Has not been implemented yet.")
+    # }
 
   ),
 
