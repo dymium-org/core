@@ -104,6 +104,13 @@ use_module <- function(name) {
   usethis::use_directory(module_path)
 
   usethis::use_template(
+    template = "README.rmd",
+    save_as = fs::path(module_path, "README.rmd"),
+    data = list(module_path = module_path,
+                module = name),
+    package = "dymiumCore"
+  )
+  usethis::use_template(
     template = "logger.R",
     save_as = fs::path(module_path, "logger.R"),
     data = list(module_path = module_path,
@@ -126,6 +133,33 @@ use_module <- function(name) {
   )
 
   invisible(module_path)
+}
+
+#' Add a README rmarkdown file to an existing module
+#'
+#' @param name name of an existing module
+#'
+#' @return NULL
+#' @export
+#'
+#' @examples
+#'
+#' \dontrun{
+#' # this assumes that you have a module named 'demography'
+#' use_module_readme(name = "demography")
+#' }
+use_module_readme <- function(name) {
+  module_path <- fs::path("modules", name)
+  if (!has_module(name)) {
+    stop(glue("The module {name} doesn't exists at {module_path}."))
+  }
+  usethis::use_template(
+    template = "README.rmd",
+    save_as = fs::path(module_path, "README.rmd"),
+    data = list(module_path = module_path,
+                module = name),
+    package = "dymiumCore"
+  )
 }
 
 check_pkg_installed <- function(pkg) {
