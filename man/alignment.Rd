@@ -18,5 +18,7 @@ a character vector with the same length as the nubmer of rows of
 of \code{prediction},
 }
 \description{
-Microsimulation alignment
+Microsimulation alignment ensures that the simulation outcome matches its alingment
+target while the selection probabilities are based on the provided probability
+of each decision-maker.
 }
