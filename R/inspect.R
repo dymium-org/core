@@ -16,11 +16,17 @@ inspect <- function(entity, ids, related_entity = NULL) {
     related_entity_ids <- unique(entity$get_attr(x = related_entity$get_id_col(), ids = ids))
     related_entity_data <- related_entity$get_data(ids = related_entity_ids)
     print(related_entity_data)
+  } else {
+    related_entity_data <- NULL
   }
 
-  cli::cli_alert_info("History data of {entity$class()}")
-  entity_history <- entity$get_data("history", copy = FALSE)[get(entity$get_id_col()) %in% ids,]
-  print(entity_history)
+  if (!is.null(entity$database[["history"]])) {
+    entity_history <- entity$get_data("history", copy = FALSE)[get(entity$get_id_col()) %in% ids,]
+    cli::cli_alert_info("History data of {entity$class()}")
+    print(entity_history)
+  } else {
+    entity_history <- NULL
+  }
 
   invisible(list(entity = entity_data,
                  related_entity = related_entity_data,
