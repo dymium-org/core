@@ -35,9 +35,9 @@ install from [GitHub](https://github.com/) with:
 remotes::install_github("dymium-org/dymiumCore")
 ```
 
-## Tutorials
+## Documentation and Tutorials
 
-For tutorials, please check out our pkgdown website at
+For documentation and tutorials, please check out our website at
 <https://core.dymium.org>.
 
 ## Available modules
@@ -50,3 +50,12 @@ to see the available modules.
 
 We are open to collaboration on this project. If you are interested,
 please email us at amarin at dymium.org.
+
+## Development plan (as of 11th Jan 2020)
+
+  - **Version 0.1.0**: Releases all the basic building blocks for
+    microsimulation modelling.
+  - **Version 0.2.0**: Implements model-based calibration.
+  - **Version 0.3.0**: Visualisation functions for life-courses, spatial
+    data, etc.
+  - **Version 0.4.0**: Integration with dymiumGUI.

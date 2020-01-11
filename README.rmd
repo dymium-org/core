@@ -38,9 +38,9 @@ The dymiumCore package has not been released on CRAN, but you can install from [
 remotes::install_github("dymium-org/dymiumCore")
 ```
 
-## Tutorials
+## Documentation and Tutorials
 
-For tutorials, please check out our pkgdown website at [https://core.dymium.org](https://core.dymium.org).
+For documentation and tutorials, please check out our website at [https://core.dymium.org](https://core.dymium.org).
 
 ## Available modules
 
@@ -50,3 +50,9 @@ Please visit [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModu
 
 We are open to collaboration on this project. If you are interested, please email us at amarin at dymium.org.
 
+## Development plan (as of 11th Jan 2020)
+
+- __Version 0.1.0__: Releases all the basic building blocks for microsimulation modelling.
+- __Version 0.2.0__: Implements model-based calibration.
+- __Version 0.3.0__: Visualisation functions for life-courses, spatial data, etc.
+- __Version 0.4.0__: Integration with dymiumGUI.
