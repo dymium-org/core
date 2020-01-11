@@ -1,6 +1,12 @@
 test_that("inspect entities", {
   create_toy_world()
   ids <- c(1,2,3)
+  inspect_res <- inspect(world$Entities$Individual, ids)
+  expect_null(inspect_res$entity_history)
+  expect_null(inspect_res$related_entity)
+  inspect_res <- inspect(world$Entities$Individual, ids, related_entity = world$Entities$Household)
+  checkmate::expect_data_table(inspect_res$related_entity)
+  expect_null(inspect_res$entity_history)
   add_history(world$Entities$Individual, ids = ids, event = "hello")
   inspect_res <- inspect(world$Entities$Individual, ids, world$Entities$Household)
   checkmate::expect_list(inspect_res, types = c("data.table"))
