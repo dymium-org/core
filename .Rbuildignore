@@ -13,3 +13,4 @@
 ^modules$
 ^scenarios$
 ^man-roxygen
+^vignettes$

@@ -1,6 +1,9 @@
 url: https://core.dymium.org
 destination: docs
 
+home:
+  title: A toolbox for building a dynamic microsimulation model in R.
+
 reference:
 - title: Base classes
   contents:
@@ -89,3 +92,27 @@ reference:
   - dt_group_and_sort
   - .get_sim_time
 
+toc:
+  depth: 2
+
+navbar:
+  structure:
+      left:  [home, introduction, reference, articles, news]
+      right: [github]
+  components:
+    home:
+      icon: fas fa-home fa-lg
+      href: index.html
+    introduction:
+      text: Introduction
+      href: articles/dymium-intro.html
+    articles:
+      text: Use cases
+      menu:
+        - text: 'Residential mobility'
+          href: articles/residential-mobility.html
+        - text: 'Mate matching'
+          href: articles/mate-matching.html
+    news:
+      text: News
+      href: news/index.html

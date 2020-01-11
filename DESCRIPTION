@@ -39,9 +39,21 @@ Suggests:
     sf (>= 0.8),
     dodgr (>= 0.2.5),
     covr,
-    mapview,
+    mapview (>= 2.7.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    ggplot2,
+    gganimate (>= 1.0.0),
+    DiagrammeR (>= 1.0.0),
+    caret (>= 6.0.0),
+    randomForest,
+    reactable,
+    transformr (>= 0.1.0),
+    av,
+    png,
+    gifski,
+    magick,
+    ggthemes (>= 4.2.0)
 Roxygen: list(markdown = TRUE, r6 = FALSE)
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr

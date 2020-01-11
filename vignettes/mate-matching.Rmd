@@ -1,0 +1,207 @@
+---
+title: "Mate matching"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Mate matching}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  out.width = '100%',
+  fig.width=7, 
+  fig.height=5, 
+  dpi=150
+)
+```
+
+```{r setup}
+# To install a package use `install.packages('package-name')`
+library(dymium)
+library(data.table)
+library(R6)
+library(dplyr)
+library(ggplot2)
+library(gganimate)
+set.seed(728)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load population
+
+```{r, asis = TRUE}
+# Import individual and household data
+ind_data <- toy_individuals
+
+# Create an Individual object with attribute data
+Ind <- Individual$new(.data = ind_data, id_col = "pid")
+
+# show data
+Ind$get_data()
+```
+## Randomly assign group to agents
+
+All agents will be randomly assigned a group number to them this is to create 
+sub markets. Sub markets are defined such that only agents within the same sub 
+market can interact with each other. This maybe used to mimic agents' social 
+network, geographical boundary, etc. 
+
+```{r}
+n_groups <- 2
+
+# randomly assign group numbers to all agents
+Ind$get_data(copy = FALSE)[, group := sample(paste0("Group_", 1:n_groups), size = .N, replace = TRUE)]
+```
+
+```{r}
+Ind$get_data() %>%
+  ggplot(data = ., aes(x = age, fill = sex)) +
+    geom_density() +
+    facet_grid(group ~ sex) +
+    ggthemes::scale_fill_few() +
+    ggthemes::theme_few(base_size = 12) +
+    labs(title = "Distribution of age by gender and group.")
+```
+
+
+## Implement matching markets 
+
+New matching market can be extended from the available matching market classes 
+which are `MatchingMarketStochastic` and `MatchingMarketOptimal`. In every matching
+problems there are two sides of the market, we call them A and B. Scoring functions
+need to be defined for each side of the market manually by implementing `matching_score_A`
+and `matching_score_B`. `matching_score_A` represent how agents in one side of
+the market evaluate the candidates of the opposite side, and vice versa for 
+`matching_score_B`. The user is expected to change the function but the three 
+main argument for both the scoring functions must remain the same. `self$matching_problem`
+allows the function to access the variables given when the class was created. 
+
+The rule that all agents follow is simple, they want to find a match that has 
+the least age difference, as expressed in the scoring functions `matching_score_A` 
+and `matching_score_B`.
+
+$$ MatchingScore_x = \frac{1}{1+|age_x - age_y|}$$
+```{r}
+require(lattice)
+x <- seq(-10, 10, length.out = 15)  
+y <- x  
+f <- function(x,y) {
+  1 / (1 + abs(x-y))
+}
+z <- outer(x, y, f)  
+wireframe(z, drape=T, col.regions=rainbow(100), zlab = "Score", xlab = "age_x", y = "age_y")
+```
+
+
+```{r}
+MateMatchingStochastic <- R6::R6Class(
+  classname = "StochasticCohabitationMarket",
+  inherit = MatchingMarketStochastic,
+  public = list(
+    matching_score_A = function(matching_problem = self$matching_problem,
+                                idx_A,
+                                idx_B) {
+      scores <- 1 / (1 + abs(
+        matching_problem$agentset_A[["age"]][idx_A] -
+          matching_problem$agentset_B[["age"]][idx_B]
+      ))
+    },
+    matching_score_B = function(matching_problem = self$matching_problem,
+                                idx_B,
+                                idx_A) {
+      scores <- 1 / (1 + abs(
+        matching_problem$agentset_B[["age"]][idx_B] -
+          matching_problem$agentset_A[["age"]][idx_A]
+      ))
+    }
+  )
+)
+```
+
+
+```{r}
+MateMatchingOptimal <- R6::R6Class(
+  classname = "MateMatchingOptimal",
+  inherit = MatchingMarketOptimal,
+  public = list(
+    matching_score_A = function(matching_problem = self$matching_problem, idx_A, idx_B) {
+      outer(X = matching_problem$agentset_B[["age"]][idx_B], # reviewers, rows
+            Y = matching_problem$agentset_A[["age"]][idx_A], # proposers, columns
+            function(x, y) {
+              1 / (1 + abs(x - y))
+            })
+    },
+    matching_score_B = function(matching_problem = self$matching_problem, idx_B, idx_A) {
+      outer(X = matching_problem$agentset_A[["age"]][idx_A], # reviewers, rows
+            Y = matching_problem$agentset_B[["age"]][idx_B], # proposers, columns
+            function(x, y) {
+              1 / (1 + abs(x - y))
+            })
+    }
+  )
+)
+```
+
+## Simulation
+
+```{r}
+# using dplyr's filter
+agentset_A <- Ind$get_data() %>%
+  dplyr::filter(age > 20 & age < 60 & sex == 'male') %>%
+  data.table::setDT(.) # convert back to data.table
+  
+# using data.table syntax for filtering
+agentset_B <- Ind$get_data() %>%
+  .[age %between% c(20, 60) & sex == 'female']
+
+# define id column
+id_col_A <- id_col_B <- 'pid'
+
+# create a market object using its constructor
+StochasticMatching <- MateMatchingStochastic$new(agentset_A, agentset_B, id_col_A, id_col_B, grouping_vars = c('group'))
+
+OptimalMatching <- MateMatchingOptimal$new(agentset_A, agentset_B, id_col_A, id_col_B, grouping_vars = c('group'))
+```
+
+```{r}
+stochastic_matching_result <- 
+  StochasticMatching$simulate(n_choices = 10, # number of potential partners each agent evaluates
+                              method = 'pweighted', # weighted probability
+                              by_group = TRUE) # segments the whole population into by markets by their group
+
+optimal_matching_result <- 
+  OptimalMatching$simulate(method = "one-to-one", # each agent only has one match.
+                           one_sided = FALSE, # agents from both sides of the market have preferences towards each other
+                           optimal_A = TRUE, # optimal for A
+                           by_group = TRUE) # segments the whole population into by markets by their group
+```
+
+## Visualise the match qualities of the two approaches.
+
+```{r}
+stochastic_matching_quality <- 
+  na.omit(stochastic_matching_result) %>%
+  merge(x = ., y = Ind$get_data()[, .(pid, age)], by.x = 'id_A', by.y = 'pid') %>%
+  merge(x = ., y = Ind$get_data()[, .(pid, age)], by.x = 'id_B', by.y = 'pid', suffixes = c('_A', '_B')) %>%
+  .[, age_diff := age_A - age_B]
+
+ggplot(data = stochastic_matching_quality, aes(age_diff)) +
+  geom_density(color = "black", fill = "steelblue") +
+  theme_bw() +
+  labs(title = "A density plot of age differences in the stochastic mate matching market.")
+
+optimal_matching_quality <- 
+  na.omit(optimal_matching_result) %>%
+  merge(x = ., y = Ind$get_data()[, .(pid, age)], by.x = 'id_A', by.y = 'pid') %>%
+  merge(x = ., y = Ind$get_data()[, .(pid, age)], by.x = 'id_B', by.y = 'pid', suffixes = c('_A', '_B')) %>%
+  .[, age_diff := age_A - age_B]
+
+ggplot(data = optimal_matching_quality, aes(age_diff)) +
+  geom_density(color = "black", fill = "salmon") +
+  theme_bw() +
+  labs(title = "A density plot of age differences in the optimal mate matching market.")
+```
+
