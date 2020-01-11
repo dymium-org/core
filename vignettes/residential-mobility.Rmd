@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(dymium)
+library(dymiumCore)
 library(data.table)
 library(sf)
 library(ggplot2)

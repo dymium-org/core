@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 # To install a package use `install.packages('package-name')`
-library(dymium)
+library(dymiumCore)
 library(data.table)
 library(R6)
 library(dplyr)
