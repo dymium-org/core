@@ -53,6 +53,7 @@ Suggests:
     png,
     gifski,
     magick,
+    prettydoc,
     ggthemes (>= 4.2.0)
 Roxygen: list(markdown = TRUE, r6 = FALSE)
 RoxygenNote: 7.0.2

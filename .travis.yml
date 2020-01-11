@@ -26,6 +26,7 @@ before_install:
 
 r_packages:
   - caret
+  - prettydoc
 
 env:
   global:
