@@ -27,8 +27,8 @@ extended to apply in other contexts as well.
 
 ## Installation
 
-The dymiumCore package has not been released on CRAN, but you can
-install from [GitHub](https://github.com/) with:
+`dymiumCore` is not available on CRAN. You can install directly from
+GitHub using `remotes`:
 
 ``` r
 # install.packages("remotes")
@@ -37,7 +37,7 @@ remotes::install_github("dymium-org/dymiumCore")
 
 ## Documentation and Tutorials
 
-For documentation and tutorials, please check out our website at
+For documentation and tutorials, please check our website at
 <https://core.dymium.org>.
 
 ## Available modules
