@@ -1,4 +1,3 @@
-
 #' @title is dymium class
 #' @param x any object
 #'
