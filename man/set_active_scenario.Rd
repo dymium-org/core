@@ -17,7 +17,7 @@ This is useful for event functions to access the current active scenario directo
 }
 \examples{
 
-if (FALSE) {
+\dontrun{
  use_module("test")
  set_active_scenario("test")
 }

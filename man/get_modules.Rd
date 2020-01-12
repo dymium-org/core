@@ -17,7 +17,7 @@ Get the names of available modules from a remote repository
 }
 \examples{
 
-if (FALSE) {
+\dontrun{
   get_modules()
 }
 }

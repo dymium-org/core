@@ -34,7 +34,7 @@ of your project. If the 'modules' folder does not exist, it will be created.
 }
 \examples{
 
-if (FALSE) {
+\dontrun{
   # download an test module.
   download_modules('test', version = '0.0.1')
 }

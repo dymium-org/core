@@ -21,7 +21,7 @@ dymiumModulesRepo <- "dymium-org/dymiumModules"
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   # download an test module.
 #'   download_modules('test', version = '0.0.1')
 #' }
@@ -71,7 +71,7 @@ download_module <- function(name, repo = dymiumModulesRepo, version, force = FAL
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   check_module('test')
 #' }
 check_module <- function(name, repo = dymiumModulesRepo) {
@@ -92,7 +92,7 @@ check_module <- function(name, repo = dymiumModulesRepo) {
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   check_module_version('test', version = '0.0.1')
 #' }
 check_module_version <- function(name, repo = dymiumModulesRepo, version) {
@@ -132,7 +132,7 @@ extract_module_versions <- function(name, filenames) {
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   get_module_versions("demography")
 #' }
 get_module_versions <- function(name, repo = dymiumModulesRepo) {
@@ -162,7 +162,7 @@ get_module_versions <- function(name, repo = dymiumModulesRepo) {
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   get_modules()
 #' }
 get_modules <- function(repo = dymiumModulesRepo) {
@@ -185,7 +185,7 @@ get_modules <- function(repo = dymiumModulesRepo) {
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   get_module_files("demography")
 #' }
 #'
@@ -208,7 +208,7 @@ get_module_files <- function(name, repo = dymiumModulesRepo) {
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   get_all_module_files("dymium-org/dymiumModules)
 #' }
 #'
