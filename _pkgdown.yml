@@ -12,7 +12,7 @@ reference:
     - Transition
     - DataBackend
     - ContainerGeneric
-- title: "Entities"
+- title: Entity classes
   contents:
     - Entity
     - Agent
@@ -23,18 +23,18 @@ reference:
     - starts_with("Building")
     - Environment
     - Zone
-- title: "Container"
+- title: Container classes
   contents:
     - Container
     - World
     - Population
-- title: "Transition"
+- title: Transition classes
   contents:
     - matches("^Transition.")
-- title: "Market"
+- title: Market classes
   contents:
     - starts_with("Match")
-- title: "Data backends"
+- title: Data backend classes
   contents:
     - matches("DataBackend.")
 - title: "Other important classes"
