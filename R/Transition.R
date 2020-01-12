@@ -420,4 +420,5 @@ is_regression <- function(x) {
     }
     stop("The model is neither regression or classification.")
   }
+  return(FALSE)
 }
