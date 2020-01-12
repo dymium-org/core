@@ -23,6 +23,12 @@ reference:
     - starts_with("Building")
     - Environment
     - Zone
+- title: Entity functions
+  desc: "Functions for Entity classes"
+  contents:
+    - add_history
+    - inspect
+    - pop_register
 - title: Container classes
   contents:
     - Container
@@ -84,10 +90,8 @@ reference:
   - lookup_and_replace
   - condense_rows
   - element_wise_expand_lists
-  - condense_rows
   - household_formation
   - is_dymium_class
-  - pop_register
   - unnest_datatable
   - dt_group_and_sort
   - .get_sim_time
