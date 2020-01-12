@@ -34,12 +34,11 @@ download_module <- function(name, repo = dymiumModulesRepo, version, force = FAL
   if (missing(version)) {
     cli::cli_alert_warning("The argument 'version' was not specified. The latest \\
                             version of the module '{.strong {name}}' will be downloaded.")
-    version <- all_versions[[length(all_versions)]]
+    version <- max(numeric_version(all_versions, strict = TRUE))
     cli::cli_alert_info("The latest version of module '{.strong {name}}' is '{version}'.")
   } else {
     check_version(version, all_versions, name = name)
   }
-
   module_filename <- paste0(name, "_", version)
   if (isFALSE(force) && fs::dir_exists(fs::path(modules_path, module_filename))) {
     cli::cli_alert_danger("'{.strong {module_filename}}' already exists in \\
