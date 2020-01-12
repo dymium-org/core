@@ -331,6 +331,10 @@ Transition <- R6Class(
  )
 )
 
+
+# Functions ---------------------------------------------------------------
+
+
 #' Classes of supported objects to be use in Transition.
 #'
 #' @description
@@ -340,7 +344,7 @@ Transition <- R6Class(
 #' @return a character vector
 #' @export
 SupportedTransitionModels <- function() {
-  return(c("train", "list", "data.table", "numeric"))
+  return(c("train", "list", "data.table", "numeric", "glm", "lm"))
 }
 
 monte_carlo_sim <- function(prediction, target) {
@@ -362,3 +366,58 @@ monte_carlo_sim <- function(prediction, target) {
   }
 }
 
+#' Simulate a transition of entities
+#'
+#' @param entity an [Entity] object
+#' @param model a model object that belongs to the classes in [SupportedTransitionModels].
+#' @param target a named list that is the target for alignment.
+#' @param update default as NULL. This indicates whether `entity` should be updated
+#' using the outcomes from the transtion. To update an attribute of `entity` the name
+#' of the attribute to be updated must be specified as a character value.
+#'
+#' @return a data.table with two columns: id and response.
+#' @export
+#'
+#' @examples
+#'
+#' # load data
+#' create_toy_population()
+#' Ind <- pop$get("Individual")
+#'
+#' # create model
+#' model_lm <- glm(age ~ sex + marital_status, data = Ind$get_data(), family = "gaussian")
+#' model_glm <- glm(I(sex == "male") ~ age + marital_status, data = Ind$get_data(), family = "binomial")
+#'
+#' # simulation transition
+#' transition(Ind, model_lm)
+#' transition(Ind, model_glm)
+transition <- function(entity, model, target = NULL, targeted_agents = NULL, update_attr = NULL) {
+  if (is_regression(model)) {
+    trans <- TransitionRegression$new(entity, model, target, targeted_agents)
+  } else {
+    trans <- TransitionClassification$new(entity, model, target, targeted_agents)
+  }
+  if (!is.null(update_attr)) {
+    trans$update_agents(update_attr)
+  }
+  trans$get_result()
+}
+
+is_regression <- function(x) {
+  if (inherits(x, "train")) {
+    if (x$modelType == "Regression")
+      return(TRUE)
+    if (x$modelType == "Classification")
+      return(FALSE)
+    stop("The model is neither regression or classification.")
+  }
+  if (inherits(x, "lm")) {
+    if(family(x)$link %in% c("identity", "log")) {
+      return(TRUE)
+    }
+    if(family(x)$link %in% c("logit", "probit")) {
+      return(FALSE)
+    }
+    stop("The model is neither regression or classification.")
+  }
+}

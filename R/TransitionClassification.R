@@ -170,6 +170,7 @@ TransitionClassification <- R6Class(
         "data.table" = simulate_classification_datatable(self, private),
         "list" = simulate_classification_list(self, private),
         "numeric" = simulate_classification_numeric(self, private),
+        "glm" = simulate_classification_glm(self, private),
         stop(
           glue::glue(
             "{class(self)[[1]]} class doesn't have an implementation of {class(private$.model)} \\
@@ -362,6 +363,21 @@ simulate_classification_numeric <- function(self, private) {
   # checks
   checkmate::assert_numeric(private$.model, lower = 0, finite = TRUE, any.missing = FALSE, null.ok = FALSE, names = 'strict')
   simulate_classification_list(self, private)
+}
+
+simulate_classification_glm <- function(self, private) {
+  lg$trace("simulate_classification_binomial")
+
+  stopifnot(!is_regression(private$.model))
+
+  prediction <-
+    data.table(yes = predict(
+      private$.model,
+      newdata = private$.sim_data,
+      type = "response"
+    ))[, no := 1 - yes]
+
+  monte_carlo_sim(prediction, private$.target)
 }
 
 simulate_classification_list <- function(self, private) {

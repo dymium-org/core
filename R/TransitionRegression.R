@@ -26,6 +26,8 @@ TransitionRegression <- R6Class(
       response <- switch(
         EXPR = class(private$.model)[[1]],
         "train" = simulate_regression_train(self, private),
+        "glm" = simulate_regression_glm(self, private),
+        "lm" = simulate_regression_glm(self, private),
         stop(
           glue::glue(
             "Transition class doesn't have an implementation of {class(private$.model)} \\
@@ -40,10 +42,16 @@ TransitionRegression <- R6Class(
 )
 
 simulate_regression_train <- function(self, private) {
-  lg$trace('simulate_classification_numeric')
+  lg$trace('simulate_regression_train')
   checkmate::assert_class(private$.model, classes = 'train')
   checkmate::assert_true(private$.model$modelType == "Regression")
   # make prediction
   predict(object = private$.model, newdata = private$.sim_data, type = "raw")
+}
+
+simulate_regression_glm <- function(self, private) {
+  lg$trace('simulate_regression_glm')
+  # make prediction
+  predict(object = private$.model, newdata = private$.sim_data, type = "response")
 }
 

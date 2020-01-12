@@ -37,3 +37,33 @@ test_that("initialise by targeted_agents", {
 })
 
 
+test_that("transition fn", {
+
+  create_toy_population()
+  Ind <- pop$get("Individual")
+
+  # create model
+  model_r <- caret::train(age ~ sex + marital_status, data = Ind$get_data(), method = 'glm', family = gaussian())
+  model_c <- caret::train(I(ifelse(sex == "male", "yes", "no")) ~ age + marital_status, data = Ind$get_data(), method = 'glm', family = binomial())
+  model_lm <- glm(age ~ sex + marital_status, data = Ind$get_data(), family = "gaussian")
+  model_glm <- glm(I(sex == "male") ~ age + marital_status, data = Ind$get_data(), family = "binomial")
+
+  checkmate::expect_data_table(transition(Ind, model_r))
+  checkmate::expect_data_table(transition(Ind, model_c))
+  checkmate::expect_data_table(transition(Ind, model_lm))
+  checkmate::expect_data_table(transition(Ind, model_glm))
+
+})
+
+
+# load data
+create_toy_population()
+Ind <- pop$get("Individual")
+
+# create model
+model_lm <- glm(age ~ sex + marital_status, data = Ind$get_data(), family = "gaussian")
+model_glm <- glm(I(sex == "male") ~ age + marital_status, data = Ind$get_data(), family = "binomial")
+
+# simulation transition
+transition(Ind, model_lm)
+transition(Ind, model_glm)
