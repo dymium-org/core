@@ -75,11 +75,6 @@
 #' (`character()`) -> (`integer()`)\cr
 #' Returns ids of the agents that have their response equal to `response_filter`.
 #'
-#'
-#' @param x a Agent class inheritance object
-#' @param model a model object
-#' @param target a integer
-#'
 #' @export
 # TransitionClass ---------------------------------------------------------
 Transition <- R6Class(
@@ -160,13 +155,6 @@ Transition <- R6Class(
       .data
     },
 
-    #' @details
-    #' Update the attribute data of the agents that undergo the transition event.
-    #'
-    #' @param attr the column name in agents' attribute data to be updated using the
-    #'  response result from the transition event.
-    #'
-    #' @return NULL
     update_agents = function(attr) {
       private$update(attr)
     },
@@ -368,10 +356,17 @@ monte_carlo_sim <- function(prediction, target) {
 
 #' Simulate a transition of entities
 #'
+#' @description
+#'
+#' This function warps [TransitionClassification] and [TransitionRegression]. It
+#' figures out what is the type of the given model.
+#'
 #' @param entity an [Entity] object
 #' @param model a model object that belongs to the classes in [SupportedTransitionModels].
 #' @param target a named list that is the target for alignment.
-#' @param update default as NULL. This indicates whether `entity` should be updated
+#' @param targeted_agents a integer vector that contains ids of `entity` to undergo
+#' the transition.
+#' @param update_attr default as NULL. This indicates whether `entity` should be updated
 #' using the outcomes from the transtion. To update an attribute of `entity` the name
 #' of the attribute to be updated must be specified as a character value.
 #'
@@ -384,14 +379,20 @@ monte_carlo_sim <- function(prediction, target) {
 #' create_toy_population()
 #' Ind <- pop$get("Individual")
 #'
-#' # create model
-#' model_lm <- glm(age ~ sex + marital_status, data = Ind$get_data(), family = "gaussian")
-#' model_glm <- glm(I(sex == "male") ~ age + marital_status, data = Ind$get_data(), family = "binomial")
+#' # fit a OLS regression model
+#' model_lm <- glm(age ~ sex + marital_status,
+#'                 data = Ind$get_data(),
+#'                 family = "gaussian")
 #'
-#' # simulation transition
-#' transition(Ind, model_lm)
-#' transition(Ind, model_glm)
-transition <- function(entity, model, target = NULL, targeted_agents = NULL, update_attr = NULL) {
+#' # fit a logit model
+#' model_glm <- glm(I(sex == "male") ~ age + marital_status,
+#'                  data = Ind$get_data(),
+#'                  family = "binomial")
+#'
+#' # simulation transitions
+#' trans(Ind, model_lm)
+#' trans(Ind, model_glm)
+trans <- function(entity, model, target = NULL, targeted_agents = NULL, update_attr = NULL) {
   if (is_regression(model)) {
     trans <- TransitionRegression$new(entity, model, target, targeted_agents)
   } else {

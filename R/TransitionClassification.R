@@ -81,14 +81,8 @@
 #' Returns ids of the agents that have their response equal to `response_filter`.
 #'
 #'
-#' @param x a Agent class inheritance object
-#' @param model a model object
-#' @param target a integer
-#'
 #' @include Transition.R
 #' @export
-#'
-# TODO: complete documentation
 TransitionClassification <- R6Class(
   classname = "TransitionClassification",
   inherit = Transition,
