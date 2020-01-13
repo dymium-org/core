@@ -49,10 +49,10 @@ test_that("transition fn", {
   model_lm <- glm(age ~ sex + marital_status, data = Ind$get_data(), family = "gaussian")
   model_glm <- glm(I(sex == "male") ~ age + marital_status, data = Ind$get_data(), family = "binomial")
 
-  checkmate::expect_data_table(transition(Ind, model_ls))
-  checkmate::expect_data_table(transition(Ind, model_r))
-  checkmate::expect_data_table(transition(Ind, model_c))
-  checkmate::expect_data_table(transition(Ind, model_lm))
-  checkmate::expect_data_table(transition(Ind, model_glm))
+  checkmate::expect_data_table(trans(Ind, model_ls))
+  checkmate::expect_data_table(trans(Ind, model_r))
+  checkmate::expect_data_table(trans(Ind, model_c))
+  checkmate::expect_data_table(trans(Ind, model_lm))
+  checkmate::expect_data_table(trans(Ind, model_glm))
 
 })
