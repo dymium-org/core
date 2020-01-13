@@ -123,6 +123,17 @@ impute_history <- function(entity, ids, event = NULL) {
   checkmate::assert_string(event)
 }
 
+combine_histories <- function(x) {
+  get_history(x) %>%
+    purrr::keep(., ~ !is.null(.x)) %>%
+    purrr::map2(.x = ., .y = names(.),
+                 .f = ~ {
+                   .x %>%
+                     data.table::setnames(., old = 4, new = "id") %>%
+                     data.table::set(., j = "entity", value = .y)}) %>%
+    rbindlist(.)
+}
+
 merge_entities <- function(entity_x, entity_y, x_dataname, y_dataname) {
 
 }
