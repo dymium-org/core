@@ -31,11 +31,9 @@ test_that("inspect entities", {
 
 test_that("get_history", {
   create_toy_world()
-  n_ids <- 10000
-  add_history(world$Entities$Individual, ids = seq_len(n_ids), event = "test_event1", time = 1)
-  add_history(world$Entities$Individual, ids = seq_len(n_ids), event = "test_event2", time = 2)
-  hist <- world$Entities$Individual$get_data("history", copy = FALSE)
-
+  n_ids <- 1000
+  add_history(world$get("Individual"), ids = seq_len(n_ids), event = "test_event1", time = 1)
+  add_history(world$get("Individual"), ids = seq_len(n_ids), event = "test_event2", time = 2)
   checkmate::expect_list(get_history(world), types = c("data.table", "NULL"))
-  checkmate::expect_data_table(get_history(world$Entities$Individual))
+  checkmate::expect_data_table(get_history(world$get("Individual")))
 })
