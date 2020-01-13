@@ -75,11 +75,6 @@
 #' (`character()`) -> (`integer()`)\cr
 #' Returns ids of the agents that have their response equal to `response_filter`.
 #'
-#'
-#' @param x a Agent class inheritance object
-#' @param model a model object
-#' @param target a integer
-#'
 #' @export
 # TransitionClass ---------------------------------------------------------
 Transition <- R6Class(
@@ -160,13 +155,6 @@ Transition <- R6Class(
       .data
     },
 
-    #' @details
-    #' Update the attribute data of the agents that undergo the transition event.
-    #'
-    #' @param attr the column name in agents' attribute data to be updated using the
-    #'  response result from the transition event.
-    #'
-    #' @return NULL
     update_agents = function(attr) {
       private$update(attr)
     },
@@ -331,6 +319,10 @@ Transition <- R6Class(
  )
 )
 
+
+# Functions ---------------------------------------------------------------
+
+
 #' Classes of supported objects to be use in Transition.
 #'
 #' @description
@@ -340,7 +332,7 @@ Transition <- R6Class(
 #' @return a character vector
 #' @export
 SupportedTransitionModels <- function() {
-  return(c("train", "list", "data.table", "numeric"))
+  return(c("train", "list", "data.table", "numeric", "glm", "lm"))
 }
 
 monte_carlo_sim <- function(prediction, target) {
@@ -362,3 +354,72 @@ monte_carlo_sim <- function(prediction, target) {
   }
 }
 
+#' Simulate a transition of entities
+#'
+#' @description
+#'
+#' This function warps [TransitionClassification] and [TransitionRegression]. It
+#' figures out what is the type of the given model.
+#'
+#' @param entity an [Entity] object
+#' @param model a model object that belongs to the classes in [SupportedTransitionModels].
+#' @param target a named list that is the target for alignment.
+#' @param targeted_agents a integer vector that contains ids of `entity` to undergo
+#' the transition.
+#' @param update_attr default as NULL. This indicates whether `entity` should be updated
+#' using the outcomes from the transtion. To update an attribute of `entity` the name
+#' of the attribute to be updated must be specified as a character value.
+#'
+#' @return a data.table with two columns: id and response.
+#' @export
+#'
+#' @examples
+#'
+#' # load data
+#' create_toy_population()
+#' Ind <- pop$get("Individual")
+#'
+#' # fit a OLS regression model
+#' model_lm <- glm(age ~ sex + marital_status,
+#'                 data = Ind$get_data(),
+#'                 family = "gaussian")
+#'
+#' # fit a logit model
+#' model_glm <- glm(I(sex == "male") ~ age + marital_status,
+#'                  data = Ind$get_data(),
+#'                  family = "binomial")
+#'
+#' # simulation transitions
+#' trans(Ind, model_lm)
+#' trans(Ind, model_glm)
+trans <- function(entity, model, target = NULL, targeted_agents = NULL, update_attr = NULL) {
+  if (is_regression(model)) {
+    trans <- TransitionRegression$new(entity, model, target, targeted_agents)
+  } else {
+    trans <- TransitionClassification$new(entity, model, target, targeted_agents)
+  }
+  if (!is.null(update_attr)) {
+    trans$update_agents(update_attr)
+  }
+  trans$get_result()
+}
+
+is_regression <- function(x) {
+  if (inherits(x, "train")) {
+    if (x$modelType == "Regression")
+      return(TRUE)
+    if (x$modelType == "Classification")
+      return(FALSE)
+    stop("The model is neither regression or classification.")
+  }
+  if (inherits(x, "lm")) {
+    if(family(x)$link %in% c("identity", "log")) {
+      return(TRUE)
+    }
+    if(family(x)$link %in% c("logit", "probit")) {
+      return(FALSE)
+    }
+    stop("The model is neither regression or classification.")
+  }
+  return(FALSE)
+}

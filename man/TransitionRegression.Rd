@@ -11,9 +11,6 @@ The default order as speficied in the \code{preprocess} method is:\if{html}{\out
  mutate(.)
 }\if{html}{\out{</div>}}
 }
-\details{
-Update the attribute data of the agents that undergo the transition event.
-}
 \section{Construction}{
 \preformatted{Transition$new(x, model, target = NULL, targeted_agents = NULL)
 }

@@ -28,6 +28,7 @@ reference:
   contents:
     - add_history
     - inspect
+    - transition
     - pop_register
 - title: Container classes
   contents:

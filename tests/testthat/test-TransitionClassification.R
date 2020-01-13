@@ -240,3 +240,4 @@ test_that("update", {
   expect_true("test" %in% names(Ind$get_data()))
   checkmate::assert_character(names(table(Ind$get_attr("test"))), min.len = 1, unique = TRUE, null.ok = FALSE)
 })
+
