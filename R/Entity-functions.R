@@ -1,4 +1,5 @@
-#' Add history to entity
+# History -----------------------------------------------------------------
+#' Add history to Entity
 #'
 #' @description
 #' Recording past events of entities allow them to have memory of their past
@@ -65,11 +66,55 @@ add_history <- function(entity, ids, event, time = .get_sim_time(), id_col_as_li
     data.table::setnames(., old = "id", new = id_col)
 }
 
-get_history <- function(entity, ids) {
-  checkmate::assert_r6(entity, classes = "Entity")
-  checkmate::assert_integerish(ids, lower = 0)
-  checkmate::assert_string(event)
+
+#' Get Entity history
+#'
+#' @description
+#'
+#' Get the history data of a given Entity. If a [Container] object is given then
+#' this will return a list of data.tables or NULL if an [Entity] in the [Container]
+#' doesn't have any history data.
+#'
+#' @param x An [Entity] or [Container] object
+#'
+#' @return a list of data.table or `NULL`.
+#' @export
+#'
+#' @examples
+#'
+#' create_toy_world()
+#'
+#' add_history(world$get("Individual"),
+#'             ids = 1:100,
+#'             event = "test_event1",
+#'             time = 1)
+#'
+#' get_history(world)
+#' get_history(world$get("Individual"))
+get_history <- function(x) {
+  UseMethod("get_history", x)
 }
+
+get_history.Container <- function(x) {
+  purrr::map(
+    .x = x$Entities,
+    .f = ~ {
+      if (!is.null(.x$database[["history"]]))
+        return(.x$get_data("history"))
+      else
+        return(NULL)
+    }
+  )
+}
+
+get_history.Entity <- function(x) {
+  if (!is.null(x$database[["history"]]))
+    return(x$get_data("history"))
+  else
+    return(NULL)
+}
+
+
 
 impute_history <- function(entity, ids, event = NULL) {
   checkmate::assert_r6(entity, classes = "Entity")
