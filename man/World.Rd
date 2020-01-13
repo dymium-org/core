@@ -11,6 +11,16 @@ think of it as a container that is to be passed into event functions and let
 each event function accesses the instances it needs that are being stored inside
 World.
 }
+\section{Fields}{
+
+\describe{
+\item{\code{containers}}{a list of all \link{Containers} stored in World.}
+
+\item{\code{containers}}{a list of all \link{Entities} stored in World.}
+
+\item{\code{containers}}{a list of all \link{Models} stored in World.}
+}}
+
 \section{Construction}{
 \preformatted{x <- World$new()
 }
@@ -22,19 +32,23 @@ World.
 \section{Public Fields}{
 
 \itemize{
-\item \code{config}\cr
-Contains the config file that was used to create the instance, if there is any.
 \item \code{Cont}\cr
 Contains the objects those were added using \code{self$add(...)}.
-\item \code{Containers}\cr
-Contains the \link{Container}, and its inheritences, objects those were added using \code{self$add(...)}.
-\item \code{Entities}\cr
-Contains the \link{Entity}, and its inheritences, objects those were added using \code{self$add(...)}.
-\item \code{Models}\cr
-Contains the \link{Model} objects those were added using \code{self$add(...)}.
 \item \code{info}\cr
 Contains information about the World object such as dymium's version it was
 created with, its built date, creator info, R version, etc.
+}
+}
+
+\section{Active fields (read-only)}{
+
+\itemize{
+\item \code{containers}\cr
+Contains the \link{Container}, and its inheritences, objects those were added using \code{self$add(...)}.
+\item \code{entities}\cr
+Contains the \link{Entity}, and its inheritences, objects those were added using \code{self$add(...)}.
+\item \code{models}\cr
+Contains the \link{Model} objects those were added using \code{self$add(...)}.
 }
 }
 
@@ -44,8 +58,8 @@ created with, its built date, creator info, R version, etc.
 \item \code{add(x, name)}\cr
 (\link[dymiumCore:Entity]{dymiumCore::Entity} and inheritances | \link[dymiumCore:Container]{dymiumCore::Container} | an object of the classes in
 \link[dymiumCore:SupportedTransitionModels]{dymiumCore::SupportedTransitionModels})\cr
-Add an object the allowed types to \code{self$Cont}, \code{self$Entities}, \code{self$Containers},
-\code{self$Models}. Only one instance of each class are allowed to be stored.
+Add an object the allowed types to \code{self$Cont}, \code{self$entities}, \code{self$containers},
+\code{self$models}. Only one instance of each class are allowed to be stored.
 The stored instances can be access via \verb{self$<object-type>} or \code{self$get(x)}
 \item \code{remove(x)}\cr
 (\code{character(1)} | \code{integer(1)})\cr

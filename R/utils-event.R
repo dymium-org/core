@@ -13,9 +13,9 @@
 #' world$add(testModel, "testModel")
 #' get_models(world, "testModel")
 get_models <- function(x, model_names) {
-  checkmate::assert_r6(x, classes = "World", public = c("get", "Models"))
+  checkmate::assert_r6(x, classes = "World", public = c("get", "models"))
   checkmate::assert_character(model_names, any.missing = FALSE, null.ok = FALSE)
-  checkmate::assert_subset(model_names, choices = names(x$Models))
+  checkmate::assert_subset(model_names, choices = names(x$models))
   model <- list()
   for (.model_name in model_names) {
     .pos <- length(model) + 1
