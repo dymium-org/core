@@ -95,14 +95,28 @@ get_history <- function(x) {
   UseMethod("get_history", x)
 }
 
-get_history.Container <- function(x) {
+get_history.World <- function(x) {
   purrr::map(
-    .x = x$Entities,
+    .x = x$Cont,
     .f = ~ {
-      if (!is.null(.x$database[["history"]]))
-        return(.x$get_data("history"))
-      else
-        return(NULL)
+      if (inherits(.x, "Entity")) {
+        if (!is.null(.x$database[["history"]]))
+          return(.x$get_data("history"))
+      }
+      return(NULL)
+    }
+  )
+}
+
+get_history.Population <- function(x) {
+  purrr::map(
+    .x = x$Cont,
+    .f = ~ {
+      if (inherits(.x, "Entity")) {
+        if (!is.null(.x$database[["history"]]))
+          return(.x$get_data("history"))
+      }
+      return(NULL)
     }
   )
 }
