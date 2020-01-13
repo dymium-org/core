@@ -27,3 +27,14 @@ test_that("inspect entities", {
   checkmate::assert_set_equal(unique(inspect_res$entity$pid), ids)
   checkmate::assert_set_equal(unique(inspect_res$entity_history$pid), ids)
 })
+
+
+test_that("get_history", {
+  create_toy_world()
+  n_ids <- 1000
+  add_history(world$get("Individual"), ids = seq_len(n_ids), event = "test_event1", time = 1)
+  add_history(world$get("Individual"), ids = seq_len(n_ids), event = "test_event2", time = 2)
+  checkmate::expect_list(get_history(world), types = c("data.table", "NULL"))
+  checkmate::expect_list(get_history(world$get("Population")), types = c("data.table", "NULL"))
+  checkmate::expect_data_table(get_history(world$get("Individual")))
+})
