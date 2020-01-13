@@ -52,7 +52,7 @@ add_history <- function(entity, ids, event, time = .get_sim_time(), id_col_as_li
 # this shouldn't be used anywhere that is not inside `add_history()` function
 .create_history_data <- function(id_col, time, event, id) {
   data.table(time = time,
-             created_datetime = Sys.time(),
+             created_timestamp = Sys.time(),
              event = event,
              id = list(id)) %>%
     data.table::setnames(., old = "id", new = id_col)
@@ -60,7 +60,7 @@ add_history <- function(entity, ids, event, time = .get_sim_time(), id_col_as_li
 
 .create_history_data2 <- function(id_col, time, event, id) {
   data.table(time = as.integer(time),
-             created_datetime = as.integer(Sys.time()),
+             created_timestamp = as.integer(Sys.time()),
              event = as.factor(event),
              id = id) %>%
     data.table::setnames(., old = "id", new = id_col)
