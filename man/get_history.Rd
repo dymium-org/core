@@ -2,12 +2,20 @@
 % Please edit documentation in R/Entity-functions.R
 \name{get_history}
 \alias{get_history}
+\alias{get_history.Container}
+\alias{get_history.Entity}
 \title{Get Entity history}
 \usage{
-get_history(x)
+get_history(x, ...)
+
+\method{get_history}{Container}(x, ...)
+
+\method{get_history}{Entity}(x, ...)
 }
 \arguments{
-\item{x}{An \link{Entity} or \link{Container} object}
+\item{x}{An R6 object that belongs to one of these classes: \link{Entity}, \link{Population} and \link{World}.}
+
+\item{...}{(not being used) dots}
 }
 \value{
 a list of data.table or \code{NULL}.

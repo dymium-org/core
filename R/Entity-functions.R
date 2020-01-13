@@ -75,7 +75,8 @@ add_history <- function(entity, ids, event, time = .get_sim_time(), id_col_as_li
 #' this will return a list of data.tables or NULL if an [Entity] in the [Container]
 #' doesn't have any history data.
 #'
-#' @param x An [Entity] or [Container] object
+#' @param x An R6 object that belongs to one of these classes: [Entity], [Population] and [World].
+#' @param ... (not being used) dots
 #'
 #' @return a list of data.table or `NULL`.
 #' @export
@@ -91,43 +92,29 @@ add_history <- function(entity, ids, event, time = .get_sim_time(), id_col_as_li
 #'
 #' get_history(world)
 #' get_history(world$get("Individual"))
-get_history <- function(x) {
+get_history <- function(x, ...) {
   UseMethod("get_history", x)
 }
 
-get_history.World <- function(x) {
+#' @rdname get_history
+#' @export
+get_history.Container <- function(x, ...) {
   purrr::map(
-    .x = x$Cont,
+    .x = x$Cont[sapply(x$Cont, function(x) inherits(x, "Entity"))],
     .f = ~ {
-      if (inherits(.x, "Entity")) {
-        if (!is.null(.x$database[["history"]]))
-          return(.x$get_data("history"))
-      }
-      return(NULL)
+      get_history.Entity(.x)
     }
   )
 }
 
-get_history.Population <- function(x) {
-  purrr::map(
-    .x = x$Cont,
-    .f = ~ {
-      if (inherits(.x, "Entity")) {
-        if (!is.null(.x$database[["history"]]))
-          return(.x$get_data("history"))
-      }
-      return(NULL)
-    }
-  )
-}
-
-get_history.Entity <- function(x) {
+#' @rdname get_history
+#' @export
+get_history.Entity <- function(x, ...) {
   if (!is.null(x$database[["history"]]))
     return(x$get_data("history"))
   else
     return(NULL)
 }
-
 
 
 impute_history <- function(entity, ids, event = NULL) {
