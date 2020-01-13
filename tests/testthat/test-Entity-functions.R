@@ -52,11 +52,7 @@ test_that("combine_histories", {
       add_history(Bd, ids = sample(Bd$get_ids(), n), event = sample(paste0("event-", 1:5), 1), time = t)
     }
   }
-
-  combine_histories(Ind)
-
   chist <- combine_histories(world)
   checkmate::expect_data_table(chist)
   checkmate::expect_names(names(chist), identical.to = c("time", "created_timestamp", "event", "id", "entity"))
-
 })
