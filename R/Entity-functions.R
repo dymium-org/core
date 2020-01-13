@@ -123,6 +123,19 @@ impute_history <- function(entity, ids, event = NULL) {
   checkmate::assert_string(event)
 }
 
+#' Combine history data of Entities into a single data.frame.
+#'
+#' @param x a R6 object that inherits [Container] such as [World].
+#'
+#' @return a data.table with five columns: time, created_timestamp, event, id, entity
+#' @export
+#'
+#' @examples
+#'
+#' create_toy_world()
+#' Ind <- world$get("Individual")
+#' add_history(Ind, ids = sample(Ind$get_ids(), 10), event = "event1", time = 1)
+#' combine_histories(world)
 combine_histories <- function(x) {
   get_history(x) %>%
     purrr::keep(., ~ !is.null(.x)) %>%
