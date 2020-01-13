@@ -27,6 +27,8 @@ reference:
   desc: "Functions for Entity classes"
   contents:
     - add_history
+    - get_history
+    - combine_histories
     - inspect
     - pop_register
 - title: Container classes
