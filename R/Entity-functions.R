@@ -187,13 +187,26 @@ inspect <- function(entity, ids, related_entity = NULL) {
   print(entity_data)
 
   if (!is.null(related_entity)) {
-    if (!related_entity$get_id_col() %in% entity$data()$colnames()) {
+    if (!entity$get_id_col() %in% related_entity$data()$colnames() &
+        !related_entity$get_id_col() %in% entity$data()$colnames()) {
       stop(glue::glue("'entity' cannot be linked with 'related_entity' \\
                       through their id variables."))
     }
     cli::cli_alert_info("Attribute data of {related_entity$class()}")
-    related_entity_ids <- unique(entity$get_attr(x = related_entity$get_id_col(), ids = ids))
-    related_entity_data <- related_entity$get_data(ids = related_entity_ids)
+    # entities are 'members' to related entities
+    if (related_entity$get_id_col() %in% entity$data()$colnames()) {
+      cli::cli_alert_info("Note that, entities are 'members' to related entities.")
+      related_entity_ids <-
+        entity$get_attr(x = related_entity$get_id_col(), ids = ids)
+      related_entity_data <-
+        related_entity$get_data(ids = related_entity_ids)
+    }
+    # entities are 'groups' of related entities
+    if (entity$get_id_col() %in% related_entity$data()$colnames()) {
+      cli::cli_alert_info("Note that, entities are 'groups' of related entities.")
+      related_entity_data <-
+        related_entity$get_data(copy = FALSE)[get(entity$get_id_col()) %in% ids]
+    }
     print(related_entity_data)
   } else {
     related_entity_data <- NULL

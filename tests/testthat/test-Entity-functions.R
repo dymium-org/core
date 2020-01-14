@@ -14,6 +14,7 @@ test_that("add_history", {
 
 test_that("inspect entities", {
   create_toy_world()
+  # test 1
   ids <- c(1,2,3)
   inspect_res <- inspect(world$get("Individual"), ids)
   expect_null(inspect_res$entity_history)
@@ -26,6 +27,22 @@ test_that("inspect entities", {
   checkmate::expect_list(inspect_res, types = c("data.table"))
   checkmate::assert_set_equal(unique(inspect_res$entity$pid), ids)
   checkmate::assert_set_equal(unique(inspect_res$entity_history$pid), ids)
+
+  # test 2
+  Ind <- world$get("Individual")
+  Hh <- world$get("Household")
+  Dwl <- world$entities$BuildingResidential
+  Zn <- world$entities$Zone
+  hh_ind_data <- inspect(Hh, ids = 1:10, related_entity = Ind)
+  ind_hh_data <- inspect(Ind, ids = 1:10, related_entity = Hh)
+  inspect(Ind, ids = 1:10, related_entity = Dwl)
+  checkmate::expect_set_equal(hh_ind_data$entity$hid, hh_ind_data$related_entity$hid)
+  checkmate::expect_set_equal(ind_hh_data$entity$hid, ind_hh_data$related_entity$hid)
+
+  # test 3
+  E1 <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
+  E2 <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
+  inspect(E1, 1:10, E2)
 })
 
 
