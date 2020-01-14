@@ -52,18 +52,16 @@ or probabilistic such as a rate-based model or a classification model
 and artificial neural network) that takes attributes of the entities as the
 input variables.
 
-dymium provides a class called `TransitionClassification` and `TransitionRegression` which
-take in a rule and entities then simulate the outcomes of the entities given the provided rule. 
-For probabilistic rules, Monte Carlo simulation will be performed based on the probabilistic values from the rules.
+dymium provides a class called `TransitionClassification` and `TransitionRegression` which take in a rule and entities then simulate the outcomes of the entities given the provided rule.  For probabilistic rules, Monte Carlo simulation will be performed based on the probabilistic values from the rules.
 
-Currently, dymiumCore we only support model objects fitted using the `caret` package, 
-a named list, and a data.frame or data.table for Monte Carlo simulation.
+Currently, `dymiumCore` only supports the model objects fitted using `caret` and `stats` in the `Transition` classes.
 
-| Package |     Class |                                     Model types |         status |
-| ------: | --------: | ----------------------------------------------: | -------------: |
-|   caret |   `train` |            classification and regression models |      supported |
-|  mlogit |  `mlogit` |                        multinomial logit models | in-development |
-|    mlr3 | `Learner` | classification, survival, and regression models |        planned |
+| Package |        Class |                                     Model types |         status |
+| ------: | -----------: | ----------------------------------------------: | -------------: |
+|   caret |      `train` |            classification and regression models |      supported |
+|   stats | `lm` & `glm` |                   generalised regression models |      supported |
+|  mlogit |     `mlogit` |                        multinomial logit models | in-development |
+|    mlr3 |    `Learner` | classification, survival, and regression models |        planned |
 
 In microsimulation, modellers often use transition probabilities that they obtained 
 from official sources. Hence, __dymiumCore__ provides an easy step to use those
@@ -134,7 +132,6 @@ choices and their values are their associated probabilities.
 In a binary choice model, it is recommended that the outcome variable should be 
 coded as "yes" and "no" as many of the modules available at [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
 use with this convention.
-
 
 ### Market
 

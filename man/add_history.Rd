@@ -2,7 +2,7 @@
 % Please edit documentation in R/Entity-functions.R
 \name{add_history}
 \alias{add_history}
-\title{Add history to entity}
+\title{Add history to Entity}
 \usage{
 add_history(entity, ids, event, time = .get_sim_time(), id_col_as_list = FALSE)
 }

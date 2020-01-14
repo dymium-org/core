@@ -3,16 +3,6 @@
 \name{Transition}
 \alias{Transition}
 \title{Transition class}
-\arguments{
-\item{x}{a Agent class inheritance object}
-
-\item{model}{a model object}
-
-\item{target}{a integer}
-
-\item{attr}{the column name in agents' attribute data to be updated using the
-response result from the transition event.}
-}
 \description{
 A class that perform Monte Carlo simulation on agents using a probabilistic model.
 Work flow: \code{initialise()} -> \code{filter()} -> \code{mutate()} -> \code{simulate()} -> \code{postprocess()}.
@@ -20,9 +10,6 @@ Note that, the order of filter and mutate can be swap by overwriting the \code{p
 The default order as speficied in the \code{preprocess} method is:\if{html}{\out{<div class="r">}}\preformatted{filter(.data) \%>\%
  mutate(.)
 }\if{html}{\out{</div>}}
-}
-\details{
-Update the attribute data of the agents that undergo the transition event.
 }
 \section{Construction}{
 \preformatted{Transition$new(x, model, target = NULL, targeted_agents = NULL)
