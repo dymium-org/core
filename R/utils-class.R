@@ -117,3 +117,31 @@ normalise_derived_vars <- function(.data) {
   names(.data)[flag_derived_vars] <- substring(names(.data), 2)[flag_derived_vars]
   return(.data)
 }
+
+#' Get log from Generic
+#'
+#' @param x a [Generic] object.
+#'
+#' @return a log data.table.
+#' @export
+#'
+#' @examples
+get_log <- function(x) {
+  UseMethod("get_log", x)
+}
+
+#' @rdname get_log
+#' @export
+get_log.Generic <- function(x) {
+  return(x$.__enclos_env__$private$.log)
+}
+
+#' @rdname get_log
+#' @export
+get_log.Container <- function(x) {
+  return(
+    purrr::map(x$Cont, ~ .x$.__enclos_env__$private$.log) %>%
+      purrr::keep(., ~ !is.null(.x)) %>%
+      rbindlist(.)
+  )
+}
