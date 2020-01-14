@@ -1,13 +1,28 @@
 #' Population register
 #'
-#' Assign new ids to a new population. It is crucial that all ids in the relationship
-#' columns do exist in the data of the new population.
+#' Assign new ids to new population data.
 #'
-#' @param x An Dymium's Agent object that contains Population object
-#' @param ind_data a data.table contains individual data
-#' @param hh_data a data.table contains household data
+#' @param x an R6 [Population] object.
+#' @param ind_data a data.table that contains individual data
+#' @param hh_data a data.table that contains household data
 #'
-#' @return a list contains ind_data and hh_data
+#' @note
+#'
+#' It is expected that the provided data in `ind_data` and `hh_data` have the same
+#' structure or columns as the individual and household data in the [Population] object
+#' in `x`. Also, it is crucial that all ids in the relationship columns do exist in
+#' the data of the new population data.
+#'
+#' @return a list contains ind_data and hh_data as data.tables.
+#'
+#' @examples
+#'
+#' create_toy_world()
+#'
+#' pop <- world$get("Population")
+#'
+#' new_population_data <- pop_register(pop, toy_individuals, toy_households)
+#'
 #' @export
 pop_register <- function(x, ind_data, hh_data) {
 

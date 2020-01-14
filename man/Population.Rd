@@ -3,10 +3,10 @@
 \name{Population}
 \alias{Population}
 \title{Population}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Container]{dymiumCore::Container}.}
+\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Container}<-\link{ContainerGeneric}<-\link{Generic}.}
 \description{
-Population contains an instance of \link{Individual} and \link{Household} and methods
-that modify both if its contained objects simutaneously.
+A \link{Container} specifically made for a \link{Individual} object and a \link{Household} object.
+It also contains methods that modify both if its contained objects simutaneously.
 }
 \section{Construction}{
 \preformatted{Pop <- Population$new()

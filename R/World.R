@@ -8,7 +8,7 @@
 #' World.
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object inheriting from [dymiumCore::Entity]
+#' @format [R6::R6Class] object inheriting from [Container]<-[ContainerGeneric]<-[Generic].
 #' @include Generic.R
 #'
 #' @section Construction:
@@ -51,6 +51,13 @@
 #' * `remove(x)`\cr
 #'  (`character(1)` | `integer(1)`)\cr
 #'  Remove an object in element or named `x`.
+#'
+#' * `get(x)`\cr
+#'  (`character(1)`) -> (`an R6 object`)\cr
+#'  Get the value of the key in `x`. For example, if your [World] object contains
+#'  a [Population] object, then you can simply call `world$get("Population")` to
+#'  get the [Population] object, assuming that the [World] object is named `world`
+#'  in your calling scope.
 #'
 #' * `get_entity(x)`\cr
 #'  (`character(1)`) -> An [Entity] object\cr

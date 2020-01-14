@@ -3,7 +3,7 @@
 \name{World}
 \alias{World}
 \title{A representation of World}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Entity]{dymiumCore::Entity}}
+\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Container}<-\link{ContainerGeneric}<-\link{Generic}.}
 \description{
 World is to be used for storing \link{Entities}, \link{Models} and \link{Containers}, setting
 the simulation clock, and for keeping a log of your simulation outputs. You may
@@ -64,6 +64,12 @@ The stored instances can be access via \verb{self$<object-type>} or \code{self$g
 \item \code{remove(x)}\cr
 (\code{character(1)} | \code{integer(1)})\cr
 Remove an object in element or named \code{x}.
+\item \code{get(x)}\cr
+(\code{character(1)}) -> (\verb{an R6 object})\cr
+Get the value of the key in \code{x}. For example, if your \link{World} object contains
+a \link{Population} object, then you can simply call \code{world$get("Population")} to
+get the \link{Population} object, assuming that the \link{World} object is named \code{world}
+in your calling scope.
 \item \code{get_entity(x)}\cr
 (\code{character(1)}) -> An \link{Entity} object\cr
 Get a reference to the \code{x} Entity object.

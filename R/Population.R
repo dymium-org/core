@@ -2,11 +2,11 @@
 #'
 #' @description
 #'
-#' Population contains an instance of [Individual] and [Household] and methods
-#' that modify both if its contained objects simutaneously.
+#' A [Container] specifically made for a [Individual] object and a [Household] object.
+#' It also contains methods that modify both if its contained objects simutaneously.
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object inheriting from [dymiumCore::Container].
+#' @format [R6::R6Class] object inheriting from [Container]<-[ContainerGeneric]<-[Generic].
 #' @include Individual.R
 #' @include Household.R
 #'
