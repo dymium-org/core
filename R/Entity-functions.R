@@ -190,7 +190,7 @@ inspect <- function(entity, ids, related_entity = NULL) {
     if (!entity$get_id_col() %in% related_entity$data()$colnames() &
         !related_entity$get_id_col() %in% entity$data()$colnames()) {
       stop(glue::glue("'entity' cannot be linked with 'related_entity' \\
-                      through their id variables."))
+                      through their primary id variables."))
     }
     cli::cli_alert_info("Attribute data of {related_entity$class()}")
     # entities are 'members' to related entities
