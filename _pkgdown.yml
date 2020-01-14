@@ -1,6 +1,12 @@
 url: https://core.dymium.org
 destination: docs
 
+template:
+  params:
+    docsearch:
+      api_key: 5b9cd61032daf2c5966b7cd693157aa2
+      index_name: dymiumcore
+
 home:
   title: A toolbox for building a dynamic microsimulation model in R.
 
