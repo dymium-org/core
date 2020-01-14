@@ -72,15 +72,6 @@
 #'  To remove only individuals leave `hid` to NULL and specify individuals by their ids
 #'  in `pid`.
 #'
-#' * `inspect(ind_ids = NULL, see_hh = FALSE)`\cr
-#'  (`integer()`, `logical(1)`) -> [data.table::data.table]\cr
-#'  Print to console data of individuals and their households and return the history
-#'  of `ind_ids`.
-#'
-#' * `inspect_members(hhid = NULL)`\cr
-#'  (`integer()`) -> [data.table::data.table()]\cr
-#'  Returns Individual$data of all members in `hhid`.
-#'
 #' * `count_all(verbose = TRUE)`\cr
 #'  Print out the number of individuals and households to console.
 #'
@@ -95,14 +86,6 @@
 #'  mask all the household update functions that need to be adjust after changes
 #'  in household members or in their attributes; such as change in partnership status,
 #'  change of income, birth.
-#'
-#' * `keep_log(var, value, time = .get_sim_time()`\cr
-#'  (`character(1)`,`list`|`integer(1)`|`character(1)`|`logical(1)`, `integer(1)`)\cr
-#'  Keep log of events. `var` usually uses one of these prefixes "all", "occ", "count" or "id".
-#'
-#' * `get_log(type = "all")`\cr
-#'  (c("all", "occ", "count", "id")) -> [data.table::data.table()]\cr
-#'  Get the event log stored by `keep_log`.
 #'
 #' * `check_unique_id_cols(ind_data, hh_data = NULL)`\cr
 #'  ([data.table::data.table()], [data.table::data.table()]) -> `logical(1)`\cr
@@ -267,23 +250,6 @@ Population <- R6Class(
       }
     },
 
-    inspect = function(ind_ids = NULL, see_hh = FALSE) {
-      checkmate::assert_flag(see_hh)
-      if (see_hh) {
-        return(inspect(
-          entity = self$get("Individual"),
-          ids = ind_ids,
-          related_entity = self$get("Household")
-        ))
-      }
-      inspect(entity = self$get("Individual"), ids = ind_ids)
-    },
-
-    inspect_members = function(hhid) {
-      checkmate::assert_integerish(hhid, null.ok = FALSE, any.missing = FALSE)
-      self$get("Individual")$get_data()[get(self$get("Individual")$get_hid_col()) == hhid, ]
-    },
-
     count_all = function(verbose = TRUE) {
       n_individuals <- self$get("Individual")$n()
       n_individuals_in_households <- self$get_sum_hhsize()
@@ -411,45 +377,6 @@ Population <- R6Class(
 
     update = function() {
       self$update_hhsize()
-    },
-
-    get_log = function(type = "all"){
-
-      if (type == "all") {
-        return(data.table::copy(private$.log))
-      }
-
-      if (type == "id") {
-        return(data.table::copy(private$.log)[grepl("^id:", var),])
-      }
-
-      .extract_value_from_list <- function(dt) {
-        dt[, value := sapply(value, function(x) x)]
-      }
-
-      if (type %in% c("count", "occ")) {
-        dt <- data.table::copy(private$.log) %>%
-          .[grepl(pattern = paste0("^", type, ":"), x = var), ]
-        if (is.list(dt$value)) {
-          # manipulated the column by reference hence no need to
-          # assign back (dt <- ..) to dt
-          .extract_value_from_list(dt)
-        }
-        return(dt)
-      }
-
-      stop(type, " doesn't match any of {all, count, occ, id}.")
-
-    },
-
-    keep_log = function(var, value, time = .get_sim_time()){
-      new_log_entry <- data.table(var = var, value = value, time = time)
-      private$.log <- rbind(private$.log, new_log_entry)
-      invisible()
     }
-  ),
-
-  private = list(
-    .log = data.table()
   )
 )
