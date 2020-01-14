@@ -15,7 +15,7 @@ pop_register <- function(x, ind_data, hh_data) {
 
   PopObj <- x
 
-  assert_that(is.data.table(ind_data))
+  checkmate::assert_data_table(ind_data)
   # 1) register new ids
   new_ind_ids <-
     PopObj$get('Individual')$generate_new_ids(
@@ -44,7 +44,7 @@ pop_register <- function(x, ind_data, hh_data) {
   # existing households, where immigrants' household id column
   # will be assigned with their new households.
   if (!missing(hh_data)) {
-    assert_that(is.data.table(hh_data))
+    checkmate::assert_data_table(hh_data)
 
     # 1) register new ids
     new_hh_ids <-

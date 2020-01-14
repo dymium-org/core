@@ -155,8 +155,9 @@ DataBackendDataFrame <-
   }
 
   if (copy == FALSE & is.data.table(.data)) {
-    assert_that(missing(rows) & missing(cols),
-                msg = "Can't return a reference semetic to a subset of a data.table.")
+    if (!missing(rows) & !missing(cols)) {
+      stop("Can't return a reference semetic to a subset of a data.table.")
+    }
     return(.data)
   }
 

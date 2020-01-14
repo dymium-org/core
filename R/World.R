@@ -295,7 +295,7 @@ World <- R6::R6Class(
     # @description Set the simulation clock of World.
     # @param x An integer value.
     set_time = function(x) {
-      assert_that(is.numeric(x))
+      checkmate::assert_integerish(x, lower = 0, len = 1)
       assign("sim_time", as.integer(x), envir = .DMevn)
       invisible()
     },
@@ -321,7 +321,7 @@ World <- R6::R6Class(
     },
 
     start_iter = function(time_step, unit = "iteration", run_checks = FALSE) {
-      assert_that(assertthat::is.count(time_step))
+      checkmate::assert_count(time_step, positive = T, na.ok = FALSE, null.ok = FALSE)
       self$set_time(x = time_step)
       if (run_checks) {
         self$run_checks()

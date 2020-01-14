@@ -143,7 +143,6 @@ Population <- R6Class(
           stop("`pid_col` is not given.")
         }
       }
-
       # automatically figure out hid col
       if (is.null(hid_col)) {
         if ("hid" %in% names(hh_data)) {
@@ -153,9 +152,7 @@ Population <- R6Class(
           stop("`hid_col` is not given.")
         }
       }
-
       checkmate::assert_names(names(ind_data), must.include = hid_col)
-
       if (!checkmate::test_set_equal(unique(ind_data[[hid_col]]), hh_data[[hid_col]])) {
         stop(
           glue::glue(
@@ -164,18 +161,14 @@ Population <- R6Class(
           )
         )
       }
-
       if (!"hhsize" %in% names(hh_data)) {
         lg$warn("Creating `hhsize` as it is not provided with `hh_data`.")
         hhsize_dt <- ind_data[, .(hhsize = .N), by = c(hid_col)]
         hh_data <- hh_data[hhsize_dt, , on = c(hid_col)]
       }
-
-      stopifnot(are_equal(nrow(ind_data), hh_data[, sum(hhsize)]))
-
+      stopifnot(nrow(ind_data) == hh_data[, sum(hhsize)])
       self$get("Individual")$initialise_data(ind_data, id_col = pid_col, hid_col = hid_col)
       self$get("Household")$initialise_data(hh_data, id_col = hid_col)
-
       invisible()
     },
 
@@ -196,8 +189,9 @@ Population <- R6Class(
         # check that all individuals belong to existing households
         stopifnot(hid_col %in% names(ind_data))
         newdata_hids <- ind_data[[hid_col]]
-        assert_that(self$get("Household")$ids_exist(newdata_hids),
-                    msg = "Not all household ids of the new individual data exist")
+        if (!self$get("Household")$ids_exist(newdata_hids)) {
+          stop("Not all household ids of the new individual data exist")
+        }
       } else {
         # add both household and individual data
         checkmate::assert_data_frame(hh_data, null.ok = FALSE)
@@ -317,9 +311,10 @@ Population <- R6Class(
       n_households <- self$get("Household")$n()
       n_non_emptied_households <- sum(self$get_hhsize() != 0)
       n_emptied_households <- n_non_emptied_households - n_non_emptied_households
-      assert_that(n_households == n_non_emptied_households,
-                  msg = lg$error("Emptied households exist.\\
-                                 There are {n_emptied_households} empied households."))
+      if (n_households != n_non_emptied_households) {
+        stop(glue::glue("Emptied households exist. There are {n_emptied_households} \\
+                        empied households."))
+      }
       lg$info("check_hhsize: returns consitence is true.")
       return(invisible(list(
         n_inds = n_individuals,
@@ -340,17 +335,17 @@ Population <- R6Class(
         unique() %>%
         .[!is.na(.)]
       # check uniqueness
-      assert_that(!self$get("Individual")$ids_exist(ind_data_pids, by_element = FALSE),
-        msg = "There are ids that exist in data already.")
+      if (self$get("Individual")$ids_exist(ind_data_pids, by_element = FALSE)) {
+        stop("There are ids that exist in data already.")
+      }
       # if no hh_data is given then all household id should be NA
       if (missing(hh_data))  {
-        assert_that(all(is.na(ind_data[[hid_col]])),
-                    msg = glue::glue("Not all household ids are NAs. When \\
-                                   hh_data is not given it is expected that \\
-                                   individuals in ind_data will join existing
-                                   households hence all their household id \\
-                                   which in this case is `{hid_col}` should all \\
-                                   be NAs."))
+        if (!all(is.na(ind_data[[hid_col]]))) {
+          stop(glue::glue("Not all household ids are NAs. When hh_data is not \\
+                            given it is expected that individuals in ind_data will \\
+                            join existing households hence all their household id \\
+                           which in this case is `{hid_col}` should all be NAs."))
+        }
       }
       # for household id (hid)
       if (!missing(hh_data)) {
@@ -364,10 +359,12 @@ Population <- R6Class(
           unique() %>%
           .[!is.na(.)]
         # check uniqueness
-        assert_that(!self$get("Household")$ids_exist(hh_data_hids),
-          msg = "Some hids in hh_data exist in the household data of the existing population")
-        assert_that(!self$get("Household")$ids_exist(ind_data_hids),
-          msg = "Some hids in ind_data exist in the household data of the existing population")
+        if (self$get("Household")$ids_exist(hh_data_hids)) {
+          stop("Some hids in hh_data exist in the household data of the existing population")
+        }
+        if (self$get("Household")$ids_exist(ind_data_hids)) {
+          stop("Some hids in ind_data exist in the household data of the existing population")
+        }
       }
       return(TRUE)
     },
@@ -379,7 +376,7 @@ Population <- R6Class(
           self$get("Individual")$get_data()[, .(hhsize = .N), by = c(hid_col)]
         hids <- self$get("Household")$get_ids()
       } else {
-        assert_that(self$get("Household")$ids_exist(hids))
+        stopifnot(self$get("Household")$ids_exist(hids))
         hhsize_dt <-
           self$get("Individual")$get_data()[get(hid_col) %in% hids,
                               .(hhsize = .N),

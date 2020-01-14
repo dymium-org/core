@@ -5,41 +5,32 @@
 #' This family of functions change the state of individual data and
 #' household data of the input Pop-class object.
 #'
-#' @param Pop a [Population] object
-#' @param mapping a data.table with two columns {ind_id, hh_id}. hh_id is
-#'  only required when type == "join" or "randomjoin".
-#' @name household_formation
-#' @rdname houeshold_formation
-#'
-#' @return `NULL`
-NULL
-
-#' @param Pop A [Population] object.
-#'
-#' @param model a model
-#' @param mapping a [data.tabe::data.table()]
+#' @param Pop [Population].
+#' @param model a named list that contains a distribution of household sizes that
+#' the new individuals/households are going to join. For example, `list(1 = 0.5, 2 = 0.5)`.
+#' @param mapping a [data.tabe::data.table()] that contains two columns: `ind_id`
+#' and `hh_id`.
 #' @param type one of 'join', 'randomjoin' or 'new'.
 #'
+#' @return `NULL`
 #' @export
 #' @rdname household_formation
 household_formation <- function(Pop, model = NULL, mapping, type) {
-
-  assert_that(is.data.table(mapping))
-  assert_that(ncol(mapping) == 2)
-  assert_that(all(names(mapping) %in% c("ind_id", "hh_id")))
+  checkmate::assert_data_table(mapping)
+  checkmate::assert_names(names(mapping), subset.of = c("ind_id", "hh_id"))
 
   switch(
     type,
     "join" = {
-      assertthat::assert_that(mapping[, all(is.numeric(hh_id)) == TRUE])
+      stopifnot(mapping[, all(is.numeric(hh_id)) == TRUE])
       hf_join(Pop, mapping)
     },
     "randomjoin" = {
-      assertthat::assert_that(mapping[, all(is.na(hh_id)) == TRUE])
+      stopifnot(mapping[, all(is.na(hh_id)) == TRUE])
       hf_random_join(Pop, model, mapping)
     },
     "new" = {
-      assertthat::assert_that(mapping[, all(is.na(hh_id)) == TRUE])
+      stopifnot(mapping[, all(is.na(hh_id)) == TRUE])
       hf_new(Pop, mapping)
     },
     stop(paste0(
