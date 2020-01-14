@@ -12,7 +12,9 @@ reference:
     - Transition
     - DataBackend
     - ContainerGeneric
-- title: Entity classes
+    - is_dymium_class
+- title: Entities
+  desc:
   contents:
     - Entity
     - Agent
@@ -23,33 +25,40 @@ reference:
     - starts_with("Building")
     - Environment
     - Zone
-- title: Entity functions
-  desc: "Functions for Entity classes"
+    - Network
+- title: Containers
+  contents:
+    - Container
+    - World
+    - Population
+    - pop_register
+    - household_formation
+- title: Logging
   contents:
     - add_history
     - get_history
     - combine_histories
     - inspect
-    - transition
-    - pop_register
-- title: Container classes
+    - get_log
+- title: Transitions
   contents:
-    - Container
-    - World
-    - Population
-- title: Transition classes
-  contents:
+    - trans
     - matches("^Transition.")
-- title: Market classes
+    - SupportedTransitionModels
+- title: Markets
   contents:
     - starts_with("Match")
-- title: Data backend classes
+- title: Data backends
   contents:
     - matches("DataBackend.")
-- title: "Other important classes"
+- title: Model
   contents:
     - Model
+- title: "Pipeline"
+  desc: Functions to be used inside a microsimulation pipeline
+  contents:
     - Pipeline
+    - starts_with("dm_")
 - title: "Module"
   desc: "Manage,create and download modules."
   contents:
@@ -61,7 +70,9 @@ reference:
     - get_module_files
     - get_module_versions
     - use_module
-- title: "Event utility functions"
+    - use_module_readme
+- title: "Event"
+  desc: creates an event script and handy functions to use within event functions.
   contents:
     - use_event
     - assign_reference
@@ -71,15 +82,11 @@ reference:
     - get_models
     - is_scheduled
 - title: "Scenerio"
-  desc: "Manage scenarios."
+  desc: Creates and manages scenarios.
   contents:
     - active_scenario
     - set_active_scenario
     - use_scenario
-- title: "Pipeline utility functions"
-  desc: "Functions to be used inside a microsimulation pipeline."
-  contents:
-    - starts_with("dm_")
 - title: "Toy data"
   desc: "Data for testing purposes."
   contents:
@@ -87,17 +94,16 @@ reference:
     - starts_with("create_toy")
 - title: "Miscellaneous"
   contents:
+  - .get_sim_time
   - omit_derived_vars
   - normalise_derived_vars
   - sample_choice
   - lookup_and_replace
   - condense_rows
   - element_wise_expand_lists
-  - household_formation
-  - is_dymium_class
   - unnest_datatable
   - dt_group_and_sort
-  - .get_sim_time
+  - validate_linkages
 
 toc:
   depth: 2
