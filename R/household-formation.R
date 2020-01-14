@@ -8,7 +8,7 @@
 #' @param Pop [Population].
 #' @param model a named list that contains a distribution of household sizes that
 #' the new individuals/households are going to join. For example, `list(1 = 0.5, 2 = 0.5)`.
-#' @param mapping a [data.tabe::data.table()] that contains two columns: `ind_id`
+#' @param mapping a [data.table::data.table()] that contains two columns: `ind_id`
 #' and `hh_id`.
 #' @param type one of 'join', 'randomjoin' or 'new'.
 #'
