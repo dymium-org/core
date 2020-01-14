@@ -19,4 +19,7 @@ toy_dwellings
 This dataset contains a toy population of dwellings that is linked with \link{toy_individuals} and \link{toy_households}.
 This dataset is only to be used for testing dymium packages.
 }
+\examples{
+toy_dwellings
+}
 \keyword{datasets}

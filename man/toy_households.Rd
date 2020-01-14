@@ -17,4 +17,7 @@ This dataset contains a toy population of households that is linked with \link{t
 that contains its corresponding toy population of individuals. This dataset is only to be used for testing
 dymium packages.
 }
+\examples{
+toy_households
+}
 \keyword{datasets}

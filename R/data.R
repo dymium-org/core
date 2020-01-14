@@ -20,6 +20,9 @@
 #'   \item{father_id}{(`integer()`)}
 #'   \item{mother_id}{(`integer()`)}
 #' }
+#'
+#' @examples
+#' toy_individuals
 'toy_individuals'
 
 #' @title Toy household microdata
@@ -37,6 +40,8 @@
 #'   \item{hid}{(`integer()`) household id}
 #'   \item{did}{(`integer()`) dwelling id}
 #' }
+#' @examples
+#' toy_households
 'toy_households'
 
 #' @title Toy dwelling microdata
@@ -56,6 +61,8 @@
 #'   \item{structure}{(`character()`) structure of dwelling}
 #'   \item{bedroom}{(`integer()`) number of bedrooms}
 #' }
+#' @examples
+#' toy_dwellings
 'toy_dwellings'
 
 #' @title Toy zone data
@@ -84,6 +91,8 @@
 #'   \item{albers_sqm}{(`double()`)}
 #'   \item{geometry}{(`list()`)}
 #' }
+#' @examples
+#' toy_zones
 'toy_zones'
 
 #' @title Toy transport network data
