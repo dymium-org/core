@@ -86,7 +86,7 @@
 #' }
 'toy_zones'
 
-#' @title Toy network data
+#' @title Toy transport network data
 #'
 #' @description
 #'
@@ -109,4 +109,7 @@
 #'   \item{geometry}{(`list()`)}
 #'   \item{length}{(`double()`)}
 #' }
-'toy_network'
+#' @seealso toy_zones
+#' @examples
+#' toy_transport_network
+'toy_transport_network'
