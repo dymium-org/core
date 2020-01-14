@@ -12,7 +12,7 @@ household_formation(Pop, model = NULL, mapping, type)
 \item{model}{a named list that contains a distribution of household sizes that
 the new individuals/households are going to join. For example, \verb{list(1 = 0.5, 2 = 0.5)}.}
 
-\item{mapping}{a \code{\link[data.tabe:data.table]{data.tabe::data.table()}} that contains two columns: \code{ind_id}
+\item{mapping}{a \code{\link[data.table:data.table]{data.table::data.table()}} that contains two columns: \code{ind_id}
 and \code{hh_id}.}
 
 \item{type}{one of 'join', 'randomjoin' or 'new'.}
