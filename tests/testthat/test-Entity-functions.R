@@ -35,7 +35,6 @@ test_that("inspect entities", {
   Zn <- world$entities$Zone
   hh_ind_data <- inspect(Hh, ids = 1:10, related_entity = Ind)
   ind_hh_data <- inspect(Ind, ids = 1:10, related_entity = Hh)
-  inspect(Ind, ids = 1:10, related_entity = Dwl)
   checkmate::expect_set_equal(hh_ind_data$entity$hid, hh_ind_data$related_entity$hid)
   checkmate::expect_set_equal(ind_hh_data$entity$hid, ind_hh_data$related_entity$hid)
 
