@@ -38,3 +38,21 @@ test_that("get_history", {
   checkmate::expect_list(get_history(world$get("Population")), types = c("data.table", "NULL"))
   checkmate::expect_data_table(get_history(world$get("Individual")))
 })
+
+test_that("combine_histories", {
+  create_toy_world()
+  Ind <- world$get("Individual")
+  Hh <- world$get("Household")
+  Bd <- world$get("BuildingResidential")
+  for (t in 1:10) {
+    for (e in 1:5) {
+      n <- sample(1:20, 1)
+      add_history(Ind, ids = sample(Ind$get_ids(), n), event = sample(paste0("event-", 1:5), 1), time = t)
+      add_history(Hh, ids = sample(Hh$get_ids(), n), event = sample(paste0("event-", 1:5), 1), time = t)
+      add_history(Bd, ids = sample(Bd$get_ids(), n), event = sample(paste0("event-", 1:5), 1), time = t)
+    }
+  }
+  chist <- combine_histories(world)
+  checkmate::expect_data_table(chist)
+  checkmate::expect_names(names(chist), identical.to = c("time", "created_timestamp", "event", "id", "entity"))
+})
