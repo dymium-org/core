@@ -64,13 +64,6 @@ Remove population from \verb{$ind} and \verb{$hh} of this \code{Pop} object. If 
 is given all household members of households in \code{hid} arg will be removed.
 To remove only individuals leave \code{hid} to NULL and specify individuals by their ids
 in \code{pid}.
-\item \code{inspect(ind_ids = NULL, see_hh = FALSE)}\cr
-(\code{integer()}, \code{logical(1)}) -> \link[data.table:data.table]{data.table::data.table}\cr
-Print to console data of individuals and their households and return the history
-of \code{ind_ids}.
-\item \code{inspect_members(hhid = NULL)}\cr
-(\code{integer()}) -> \code{\link[data.table:data.table]{data.table::data.table()}}\cr
-Returns Individual$data of all members in \code{hhid}.
 \item \code{count_all(verbose = TRUE)}\cr
 Print out the number of individuals and households to console.
 \item \code{get_hhsize(hids)}\cr
@@ -82,12 +75,6 @@ Update household size.
 mask all the household update functions that need to be adjust after changes
 in household members or in their attributes; such as change in partnership status,
 change of income, birth.
-\item \verb{keep_log(var, value, time = .get_sim_time()}\cr
-(\code{character(1)},\code{list}|\code{integer(1)}|\code{character(1)}|\code{logical(1)}, \code{integer(1)})\cr
-Keep log of events. \code{var} usually uses one of these prefixes "all", "occ", "count" or "id".
-\item \code{get_log(type = "all")}\cr
-(c("all", "occ", "count", "id")) -> \code{\link[data.table:data.table]{data.table::data.table()}}\cr
-Get the event log stored by \code{keep_log}.
 \item \code{check_unique_id_cols(ind_data, hh_data = NULL)}\cr
 (\code{\link[data.table:data.table]{data.table::data.table()}}, \code{\link[data.table:data.table]{data.table::data.table()}}) -> \code{logical(1)}\cr
 Check that all id cols of the input data are unique from the existing ids in
