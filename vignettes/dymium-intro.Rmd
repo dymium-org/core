@@ -172,7 +172,7 @@ that are their unlikely matches.
 
 ### Logging
 
-There are a few ways that you can log in dymium. To choose which of the logging methods is suitable a situation please consider the following. Please note that, this subsection is only to give a brief overview of the methods so please see its documentation for more details.
+There are a few ways that you can log in dymium. To choose which of the logging methods is suitable in your please consider the following. Please note that, this subsection is only to give a brief overview of the methods so please see its documentation for more details.
 
 #### Logging with `lgr`
 
