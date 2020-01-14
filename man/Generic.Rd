@@ -30,7 +30,10 @@ global environment of the current seesion.
 \item \code{log(desc, value, tag = "", time = .get_sim_time(), .lg = parent.frame()[["lg"]])}\cr
 (\code{character(1)}, any objects, \code{character(1)}, \code{integer(1)}, \link[lgr:Logger]{lgr::Logger})\cr
 For logging simulation outcomes to \code{private$.log}. \code{get_log(x)} can be used to
-extract the log data from any object that inherit \code{Generic}.
+extract the log data from any object that inherit \code{Generic}. Note that, the
+logger in \code{log} can be specified. By default, it tries to look in the \code{parent.frame}
+the calling scope to find a logger named \code{lg} which is the default name used in
+dymium modules. If not found, then it will automatically use dymiumCore's logger.
 \item \code{is_dymium_class()}\cr
 Returns \code{TRUE}. Use for internal checking.
 }
