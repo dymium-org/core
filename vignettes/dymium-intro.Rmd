@@ -1,6 +1,11 @@
 ---
-title: "Introduction"
-output: rmarkdown::html_vignette
+title: "Introduction to dymiumCore"
+author: "Amarin Siripanich"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+
 vignette: >
   %\VignetteIndexEntry{Introduction}
   %\VignetteEngine{knitr::rmarkdown}
