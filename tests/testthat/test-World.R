@@ -84,7 +84,7 @@ test_that("remove", {
 
 test_that("active fields", {
   create_toy_world()
-  checkmate::expect_list(world$entities, types = "Entity")
-  checkmate::expect_list(world$models, types = c("Model", NULL))
-  checkmate::expect_list(world$containers, types = c("Container"))
+  checkmate::expect_list(world$entities, types = "Entity", names = "strict")
+  checkmate::expect_list(world$models, types = c("Model", NULL), names = "strict")
+  checkmate::expect_list(world$containers, types = c("Container"), names = "strict")
 })
