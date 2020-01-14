@@ -26,6 +26,7 @@ library(R6)
 library(dplyr)
 library(ggplot2)
 library(gganimate)
+library(patchwork)
 set.seed(728)
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -182,16 +183,19 @@ optimal_matching_result <-
 ## Visualise the match qualities of the two approaches.
 
 ```{r}
+agediff_range <- c(-20, 20)
+
 stochastic_matching_quality <- 
   na.omit(stochastic_matching_result) %>%
   merge(x = ., y = Ind$get_data()[, .(pid, age)], by.x = 'id_A', by.y = 'pid') %>%
   merge(x = ., y = Ind$get_data()[, .(pid, age)], by.x = 'id_B', by.y = 'pid', suffixes = c('_A', '_B')) %>%
   .[, age_diff := age_A - age_B]
 
-ggplot(data = stochastic_matching_quality, aes(age_diff)) +
+p_1 <- ggplot(data = stochastic_matching_quality, aes(age_diff)) +
   geom_density(color = "black", fill = "steelblue") +
   theme_bw() +
-  labs(title = "A density plot of age differences in the stochastic mate matching market.")
+  scale_x_continuous(limits = agediff_range) +
+  labs(title = "Stochastic market")
 
 optimal_matching_quality <- 
   na.omit(optimal_matching_result) %>%
@@ -199,9 +203,14 @@ optimal_matching_quality <-
   merge(x = ., y = Ind$get_data()[, .(pid, age)], by.x = 'id_B', by.y = 'pid', suffixes = c('_A', '_B')) %>%
   .[, age_diff := age_A - age_B]
 
-ggplot(data = optimal_matching_quality, aes(age_diff)) +
+p_2 <- ggplot(data = optimal_matching_quality, aes(age_diff)) +
   geom_density(color = "black", fill = "salmon") +
   theme_bw() +
-  labs(title = "A density plot of age differences in the optimal mate matching market.")
+  scale_x_continuous(limits = agediff_range) +
+  labs(title = "Optimal market")
+
+p_1 + p_2 + 
+  plot_annotation(title = 'A comparison of two age-difference density plots',
+                  theme = theme(plot.title = element_text(size = 18, face = "bold")))
 ```
 

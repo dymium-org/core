@@ -49,6 +49,7 @@ Suggests:
     randomForest,
     reactable,
     transformr (>= 0.1.0),
+    patchwork (>= 1.0.0),
     av,
     png,
     gifski,
