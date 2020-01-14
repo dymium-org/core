@@ -8,26 +8,26 @@ test_that("add", {
 
   # add container
   w$add(Population$new())
-  expect_error(w$add(Population$new()), "Individual already exists in Entities")
+  expect_error(w$add(Population$new()), "Individual already exists in .entities")
 
   # add entities
   w$add(Agent$new())
   w$add(Firm$new())
-  expect_length(w$Entities, 4)
-  expect_error(w$add(Individual$new()), "Individual already exists in Entities")
-  expect_error(w$add(Household$new()), "Household already exists in Entities")
+  expect_length(w$entities, 4)
+  expect_error(w$add(Individual$new()), "Individual already exists in .entities")
+  expect_error(w$add(Household$new()), "Household already exists in .entities")
 
   # add model
   w$add(list(x = 1), "testModel")
   expect_error(w$add(list(x = 1), "badName1"), "Must comply to pattern")
   w$add(list(x = 1), "testModelTwo")
-  expect_length(w$Models, 2)
+  expect_length(w$models, 2)
 })
 
 test_that("get", {
   w <- World$new()
   w$add(Population$new())
-  w$get("Individual")
+  checkmate::expect_r6(w$get("Individual"), classes = "Individual")
 })
 
 test_that("get_entity", {
@@ -70,13 +70,21 @@ test_that("remove", {
   w <- World$new()
   w$add(Population$new())
   w$remove("Individual")
-  expect_null(w$Entities$Individual)
-  expect_null(w$Containers$Population$Cont$Individual)
+  expect_error(w$get("Individual"),
+               "Must be element of set \\{'Household','Population'\\}")
+  expect_error(w$get("Population")$get("Individual"),
+               "Must be element of set \\{'Household'\\}")
 
   w <- World$new()
   w$add(Population$new())
   .first_object_name <- w$names()[1]
-  .first_object_name
   w$remove(1)
   expect_error(w$get(.first_object_name), regexp = "Must be element of set")
+})
+
+test_that("active fields", {
+  create_toy_world()
+  checkmate::expect_list(world$entities, types = "Entity", names = "strict")
+  checkmate::expect_list(world$models, types = c("Model", NULL), names = "strict")
+  checkmate::expect_list(world$containers, types = c("Container"), names = "strict")
 })
