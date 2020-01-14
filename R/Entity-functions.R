@@ -211,3 +211,55 @@ inspect <- function(entity, ids, related_entity = NULL) {
                  related_entity = related_entity_data,
                  entity_history = entity_history))
 }
+
+#' Plot history data
+#'
+#' @param x a history data as a data.table or [Container].
+#' @param by_entity Subplots by entitiy. A logical value `TRUE` by default.
+#'
+#' @return a ggplot object
+#' @export
+plot_history <- function(x, by_entity = TRUE) {
+  if (!requireNamespace("ggplot2", quietly = T)) {
+    stop("Please install `ggplot2` to use this function.")
+  }
+  if (!requireNamespace("patchwork", quietly = T)) {
+    stop("Please install `patchwork` to use this function.")
+  }
+  if (!requireNamespace("scales", quietly = T)) {
+    stop("Please install `scales` to use this function.")
+  }
+
+  if (inherits(x, "Container")) {
+    x <- combine_histories(x)
+  }
+
+  checkmate::assert_data_table(x)
+  checkmate::assert_names(names(x),
+                          permutation.of = c("time", "created_timestamp", "event",
+                                             "id", "entity"))
+  if (by_entity) {
+    p <-
+      (purrr::map(
+        .x = x[, unique(entity)],
+        .f = ~ {
+          p <-
+            ggplot2::ggplot(data = x[entity == .x], ggplot2::aes(time, fill = event)) +
+            ggplot2::geom_bar() +
+            ggplot2::scale_x_continuous(breaks = scales::pretty_breaks()) +
+            ggplot2::labs(title = .x)
+        }
+      ) %>% {Reduce(`/`, .)}) +
+      patchwork::plot_layout(guides = 'collect') &
+      patchwork::plot_annotation(title = "An aggregate plot of all Entities' historical events",
+                      theme = ggplot2::theme(plot.title = ggplot2::element_text(size = 14, face = "bold")))
+  } else {
+    p <-
+      ggplot2::ggplot(data = x, ggplot2::aes(time, fill = event)) +
+      ggplot2::geom_bar() +
+      ggplot2::scale_x_continuous(breaks = scales::pretty_breaks()) +
+      ggplot2::labs(title = "An aggregate plot of all Entities' historical events") +
+      ggplot2::theme(plot.title = ggplot2::element_text(size = 14, face = "bold"))
+  }
+  return(p)
+}

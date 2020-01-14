@@ -38,6 +38,7 @@ reference:
     - add_history
     - get_history
     - combine_histories
+    - plot_history
     - inspect
     - get_log
 - title: Transitions
