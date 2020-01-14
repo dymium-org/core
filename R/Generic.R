@@ -18,14 +18,18 @@
 #'
 #' @section Methods:
 #'
-#'   * `debug()`\cr
-#'   () -> `self & private`\cr
-#'   Makes debugging the object easier by assigning self and private to the
-#'   global environment of the current seesion.
+#' * `debug()`\cr
+#' () -> `self & private`\cr
+#' Makes debugging the object easier by assigning self and private to the
+#' global environment of the current seesion.
 #'
-#'   * `message(x, ...)`\cr
-#'   Print `message` onto the console with the object classname append in front of
-#'   the message. To turn this off, set options(dymium.agent.verbose = FALSE).
+#' * `log(desc, value, tag = "", time = .get_sim_time(), .lg = parent.frame()[["lg"]])`\cr
+#' (`character(1)`, any objects, `character(1)`, `integer(1)`, [lgr::Logger])\cr
+#' For logging simulation outcomes to `private$.log`. `get_log(x)` can be used to
+#' extract the log data from any object that inherit `Generic`.
+#'
+#' * `is_dymium_class()`\cr
+#' Returns `TRUE`. Use for internal checking.
 #'
 #' @section Private field
 #'
@@ -53,17 +57,19 @@ Generic <- R6Class(
       return(invisible(self))
     },
 
-    log = function(desc, value, tag = "", time = .get_sim_time()) {
+    log = function(desc, value, tag = "", time = .get_sim_time(), .lg = parent.frame()[["lg"]]) {
       checkmate::assert_string(desc, null.ok = FALSE, na.ok = FALSE)
       checkmate::assert_vector(value, any.missing = FALSE, null.ok = FALSE)
       checkmate::assert_string(tag, null.ok = FALSE, na.ok = FALSE)
       checkmate::assert_integerish(time, lower = 0, len = 1, null.ok = FALSE)
       .caller = lgr::get_caller(-2)
+      if (is.null(.lg))
+        .lg <- lg
       if (length(value) != 1) {
-        lg$info("{desc}: {.value}", caller = .caller,
+        .lg$info("{desc}: {.value}", caller = .caller,
                 .value = glue::glue_collapse(value, sep = ", ", width = 100))
       } else {
-        lg$info("{desc}: {value}", caller = .caller)
+        .lg$info("{desc}: {value}", caller = .caller)
       }
 
       lg$trace("logging to private$.log")
