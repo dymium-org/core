@@ -44,11 +44,11 @@ created with, its built date, creator info, R version, etc.
 
 \itemize{
 \item \code{containers}\cr
-Contains the \link{Container}, and its inheritences, objects those were added using \code{self$add(...)}.
+Contains \link{Containers} those were added using \code{self$add(...)}.
 \item \code{entities}\cr
-Contains the \link{Entity}, and its inheritences, objects those were added using \code{self$add(...)}.
+Contains \link{Entities} those were added using \code{self$add(...)}.
 \item \code{models}\cr
-Contains the \link{Model} objects those were added using \code{self$add(...)}.
+Contains \link{Models} those were added using \code{self$add(...)}.
 }
 }
 

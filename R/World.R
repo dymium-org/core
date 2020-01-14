@@ -31,13 +31,13 @@
 #' @section Active fields (read-only):
 #'
 #' * `containers`\cr
-#'  Contains the [Container], and its inheritences, objects those were added using `self$add(...)`.
+#'  Contains [Containers] those were added using `self$add(...)`.
 #'
 #' * `entities`\cr
-#'  Contains the [Entity], and its inheritences, objects those were added using `self$add(...)`.
+#'  Contains [Entities] those were added using `self$add(...)`.
 #'
 #' * `models`\cr
-#'  Contains the [Model] objects those were added using `self$add(...)`.
+#'  Contains [Models] those were added using `self$add(...)`.
 #'
 #' @section Public Methods:
 #'
