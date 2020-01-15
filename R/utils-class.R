@@ -142,6 +142,7 @@ get_log.Container <- function(x) {
   return(
     purrr::map(x$Cont, ~ .x$.__enclos_env__$private$.log) %>%
       purrr::keep(., ~ !is.null(.x)) %>%
-      rbindlist(.)
+      rbindlist(.) %>%
+      data.table::setorder(., time, created_timestamp)
   )
 }
