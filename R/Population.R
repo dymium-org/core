@@ -250,7 +250,7 @@ Population <- R6Class(
 
     check_hhsize = function() {
       n_individuals <- self$get("Individual")$n()
-      n_members_in_households <- self$get_sum_hhsize()
+      n_members_in_households <- sum(self$get_hhsize())
       n_households <- self$get("Household")$n()
       n_non_emptied_households <- sum(self$get_hhsize() != 0)
       n_emptied_households <- n_non_emptied_households - n_non_emptied_households
@@ -340,10 +340,6 @@ Population <- R6Class(
         .[is.na(hhsize), hhsize := 0]
 
       return(hhsize_dt[["hhsize"]])
-    },
-
-    get_sum_hhsize = function(hids) {
-      sum(self$get_hhsize(hids))
     },
 
     update_hhsize = function() {
