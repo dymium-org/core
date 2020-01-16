@@ -92,6 +92,7 @@ Collate:
     'World.R'
     'Zone.R'
     'alignment.R'
+    'checkmate.R'
     'checks.R'
     'constants.R'
     'create-world.R'
