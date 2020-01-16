@@ -1,19 +1,25 @@
 #' Check if ids exist in Entity.
 #'
 #' @param x an R6 [Entity] object
-#' @param ids [integer()]\cr
+#' @param ids [\code{integer()}]\cr
 #'  Ids of Entity to check.
-#' @param informative [logical(1)]\cr
+#' @param include_removed_data [\code{logical(1)}]\cr
+#'  Should the removed data of `x` be checked.
+#' @param informative [\code{logical(1)}]\cr
 #'  Whether to return the missing ids in error message.
 #'
 #' @return a logical value.
 #' @export
-check_entity_ids <- function(x, ids, informative = TRUE) {
+check_entity_ids <- function(x, ids, include_removed_data = FALSE, informative = TRUE) {
   assert_entity(x)
   checkmate::assert_integerish(ids, any.missing = FALSE, lower = 1)
-  res <- checkmate::check_subset(x = ids, choices = x$get_ids(), fmatch = TRUE)
+  all_ids <- x$get_ids()
+  if (include_removed_data) {
+    all_ids <- c(all_ids, x$database$attrs$get_removed()[[x$get_id_col()]])
+  }
+  res <- checkmate::check_subset(x = ids, choices = all_ids, fmatch = TRUE)
   if (!isTRUE(res) && informative) {
-    missing_ids <- ids[!ids %in% x$get_ids()]
+    missing_ids <- ids[!ids %in% all_ids]
     if (length(missing_ids) != 0) {
       return(glue::glue("These ids don't exist in {class(x)[[1]]}: {.ids}",
                         .ids = glue::glue_collapse(missing_ids, sep = ", ", width = 200, last = " and ")))

@@ -7,15 +7,23 @@
 \alias{assert_entity_ids}
 \title{Check if ids exist in Entity.}
 \usage{
-check_entity_ids(x, ids, informative = TRUE)
+check_entity_ids(x, ids, include_removed_data = FALSE, informative = TRUE)
 
-test_entity_ids(x, ids, informative = TRUE)
+test_entity_ids(x, ids, include_removed_data = FALSE, informative = TRUE)
 
-expect_entity_ids(x, ids, informative = TRUE, info = NULL, label = vname(x))
+expect_entity_ids(
+  x,
+  ids,
+  include_removed_data = FALSE,
+  informative = TRUE,
+  info = NULL,
+  label = vname(x)
+)
 
 assert_entity_ids(
   x,
   ids,
+  include_removed_data = FALSE,
   informative = TRUE,
   .var.name = checkmate::vname(x),
   add = NULL
@@ -24,10 +32,13 @@ assert_entity_ids(
 \arguments{
 \item{x}{an R6 \link{Entity} object}
 
-\item{ids}{\code{\link[=integer]{integer()}}\cr
+\item{ids}{\link{\code{integer()}}\cr
 Ids of Entity to check.}
 
-\item{informative}{\link{logical(1)}\cr
+\item{include_removed_data}{\link{\code{logical(1)}}\cr
+Should the removed data of \code{x} be checked.}
+
+\item{informative}{\link{\code{logical(1)}}\cr
 Whether to return the missing ids in error message.}
 }
 \value{
