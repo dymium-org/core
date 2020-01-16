@@ -377,6 +377,11 @@ Population <- R6Class(
 
     update = function() {
       self$update_hhsize()
+    print = function() {
+      super$print()
+      for (e in self$Cont) {
+        e$print()
+      }
     }
   )
 )
