@@ -211,8 +211,8 @@ Population <- R6Class(
     join_household = function(ind_ids, hh_ids) {
       Ind <- self$get(Individual)
       Hh <- self$get(Household)
-      stopifnot(Ind$ids_exist(ids = ind_ids))
-      stopifnot(Hh$ids_exist(ids = hh_ids))
+      assert_entity_ids(Ind, ind_ids)
+      assert_entity_ids(Hh, hh_ids)
       # make sure all individuals in ind_ids don't have hid
       all_hids_are_na <-
         all(is.na(Ind$get_attr(x = Ind$get_hid_col(), ids = ind_ids)))
