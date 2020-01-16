@@ -19,7 +19,7 @@ modules::export('^run$|^REQUIRED_MODELS$') # default exported functions
 #       the models as required.
 # Example:
 #       REQUIRED_MODELS <- c("MyBinaryModel", "MyRegressionModel")
-REQUIRED_MODELS <- c()
+REQUIRED_MODELS <- NULL
 
 # Main function -----------------------------------------------------------
 #' {{{event}}}
@@ -42,19 +42,17 @@ run <- function(world, model = NULL, target = NULL, time_steps = NULL) {
   # logging to console
   lg$info('Running {{{event}}}')
 
-  # check the model argument
+  # check the `model` argument
   # Note:
-  # 1) if the model argument is given, meaning not NULL by default, the given model
-  #    objects will be used instead of the saved model objects inside 'world',
-  #    if there are any.
+  # 1) if the `model` argument is given, meaning not `NULL` by default, the objects
+  #    inside will be used first instead of the added model objects inside 'world'.
+  #    However, if there are some required models that cannot be found in `model`
+  #    it try to find them in `world`. If they are yet to be found then an error
+  #    will be returned.
   # 2) if the event is deterministic like 'ageing' or doesn't require models then
   #    you may remove the five lines below entirely and add a warning message to
   #    notify the user when the model argument is not NULL.
-  if (is.null(model)) {
-    model <- dymiumCore::get_models(world, REQUIRED_MODELS)
-  } else {
-    dymiumCore::check_required_models(model, REQUIRED_MODELS)
-  }
+  model <- pick_models(model, world, REQUIRED_MODELS)
 
   # uncomment the line belows if the event doesn't require `model`
   # eg. If the event is deterministic like ageing.
