@@ -1,14 +1,15 @@
 #' Check if ids exist in Entity.
 #'
-#' @param x an R6 [Entity] object
-#' @param ids [\code{integer()}]\cr
-#'  Ids of Entity to check.
-#' @param include_removed_data [\code{logical(1)}]\cr
-#'  Should the removed data of `x` be checked.
-#' @param informative [\code{logical(1)}]\cr
-#'  Whether to return the missing ids in error message.
+#' @param x [Entity]\cr
+#' an R6 [Entity] object
+#' @param ids (`logical(1)`)\cr
+#' Ids of Entity to check.
+#' @param include_removed_data (`any`)\cr
+#' Should the removed data of `x` be checked.
+#' @param informative (`logical(1)`)\cr
+#' Whether to return the missing ids in error message.
 #'
-#' @return a logical value.
+#' @return (`logical(1)`).
 #' @export
 check_entity_ids <- function(x, ids, include_removed_data = FALSE, informative = TRUE) {
   assert_entity(x)
@@ -29,20 +30,23 @@ check_entity_ids <- function(x, ids, include_removed_data = FALSE, informative =
 }
 
 #' @export
+#' @inheritParams checkmate::makeAssertion
+#' @rdname check_entity_ids
+assert_entity_ids <- checkmate::makeAssertionFunction(check_entity_ids)
+
+#' @export
 #' @rdname check_entity_ids
 test_entity_ids <- checkmate::makeTestFunction(check_entity_ids)
 
 #' @export
+#' @inheritParams checkmate::makeExpectation
 #' @rdname check_entity_ids
 expect_entity_ids <- checkmate::makeExpectationFunction(check_entity_ids)
 
-#' @export
-#' @rdname check_entity_ids
-assert_entity_ids <- checkmate::makeAssertionFunction(check_entity_ids)
-
 #' Check if an argument is from the Entity class.
 #'
-#' @param x an object to be checked.
+#' @param x (`any`)\cr
+#'  An object to be checked.
 #'
 #' @return a logical value if TRUE or an character containing an error message.
 #' @export
@@ -51,6 +55,7 @@ check_entity <- function(x) {
 }
 
 #' @export
+#' @inheritParams checkmate::makeAssertion
 #' @rdname check_entity
 assert_entity <- checkmate::makeAssertionFunction(check_entity)
 
@@ -59,6 +64,7 @@ assert_entity <- checkmate::makeAssertionFunction(check_entity)
 test_entity <- checkmate::makeTestFunction(check_entity)
 
 #' @export
+#' @inheritParams checkmate::makeExpectation
 #' @rdname check_entity
 expect_entity <- checkmate::makeExpectationFunction(check_entity)
 
@@ -79,7 +85,8 @@ check_subset2 <- function(x, choices, informative = TRUE) {
 
 #' Check if an argument is an object that is supported by [Transition]
 #'
-#' @param x an object.
+#' @param x (`any`)\cr
+#' an object to check.
 #'
 #' @return a logical value if TRUE, if false then returns an error message
 #' @export
@@ -94,6 +101,7 @@ check_transition_supported_model <- function(x) {
 }
 
 #' @export
+#' @inheritParams checkmate::makeAssertion
 #' @rdname check_transition_supported_model
 assert_transition_supported_model <- checkmate::makeAssertionFunction(check_transition_supported_model)
 
@@ -102,6 +110,7 @@ assert_transition_supported_model <- checkmate::makeAssertionFunction(check_tran
 test_transition_supported_model <- checkmate::makeTestFunction(check_transition_supported_model)
 
 #' @export
+#' @inheritParams checkmate::makeExpectation
 #' @rdname check_transition_supported_model
 expect_transition_supported_model <- checkmate::makeExpectationFunction(check_transition_supported_model)
 
@@ -141,6 +150,7 @@ check_required_models <- function(x, names, check_supported_model = TRUE) {
 }
 
 #' @export
+#' @inheritParams checkmate::makeAssertion
 #' @rdname check_required_models
 assert_required_models <- checkmate::makeAssertionFunction(check_required_models)
 
@@ -149,5 +159,6 @@ assert_required_models <- checkmate::makeAssertionFunction(check_required_models
 test_required_models <- checkmate::makeTestFunction(check_required_models)
 
 #' @export
+#' @inheritParams checkmate::makeExpectation
 #' @rdname check_required_models
 expect_required_models <- checkmate::makeExpectationFunction(check_required_models)

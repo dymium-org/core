@@ -21,6 +21,16 @@ expect_transition_supported_model(x, info = NULL, label = vname(x))
 }
 \arguments{
 \item{x}{an object.}
+
+\item{.var.name}{[\code{character(1)}]\cr
+The custom name for \code{x} as passed to any \code{assert*} function.
+Defaults to a heuristic name lookup.}
+
+\item{info}{[\code{character(1)}]\cr
+See \code{\link[testthat]{expect_that}}}
+
+\item{label}{[\code{character(1)}]\cr
+See \code{\link[testthat]{expect_that}}}
 }
 \value{
 a logical value if TRUE, if false then returns an error message

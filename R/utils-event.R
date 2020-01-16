@@ -35,11 +35,11 @@ get_models <- function(x, model_names) {
 #' pick the `model_one` from `model` and not the other `model_one` in `world`. It
 #' go over both objects to find all models with names in `required_models`.
 #'
-#' @param model [\code{list()}]\cr
-#'  a named list that contains models that [Transition] supports.
+#' @param model `logical(1)`\cr
+#' A named list that contains models that [Transition] supports.
 #' @param world a [World] object.
-#' @param required_models [\code{character()|`NULL`}]\cr
-#'  a character vector contains names of required models.
+#' @param required_models `character()`\cr
+#' A character vector contains names of required models.
 #'
 #' @note
 #' This is used by event functions to prioritise which models, from the user argument

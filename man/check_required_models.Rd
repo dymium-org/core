@@ -34,6 +34,16 @@ expect_required_models(
 
 \item{check_supported_model}{Whether to check that each element in \code{x} are
 supported by \link{Transition} using \code{assert_transition_supported_model()}.}
+
+\item{.var.name}{[\code{character(1)}]\cr
+The custom name for \code{x} as passed to any \code{assert*} function.
+Defaults to a heuristic name lookup.}
+
+\item{info}{[\code{character(1)}]\cr
+See \code{\link[testthat]{expect_that}}}
+
+\item{label}{[\code{character(1)}]\cr
+See \code{\link[testthat]{expect_that}}}
 }
 \value{
 TRUE if all the required models exist else throws an error.

@@ -7,13 +7,13 @@
 pick_models(model, world, required_models)
 }
 \arguments{
-\item{model}{\link{\code{list()}}\cr
-a named list that contains models that \link{Transition} supports.}
+\item{model}{\code{logical(1)}\cr
+A named list that contains models that \link{Transition} supports.}
 
 \item{world}{a \link{World} object.}
 
-\item{required_models}{\link{\code{character()|`NULL`}}\cr
-a character vector contains names of required models.}
+\item{required_models}{\code{character()}\cr
+A character vector contains names of required models.}
 }
 \value{
 a list of models.
