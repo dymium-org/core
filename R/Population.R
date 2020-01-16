@@ -240,7 +240,7 @@ Population <- R6Class(
       invisible()
     },
 
-    remove_emptied_households = function(update_hhsize = FALSE) {
+    remove_emptied_households = function(update_hhsize = TRUE) {
       checkmate::assert_flag(update_hhsize, na.ok = FALSE)
       if (update_hhsize) {
         self$update_hhsize()

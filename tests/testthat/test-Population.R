@@ -168,7 +168,7 @@ test_that("remove_emptied_households", {
 
   Ind$remove(ids = 1:100)
 
-  pop$remove_emptied_households()
+  pop$remove_emptied_households(update_hhsize = TRUE)
 
   n_hh_after <- Hh$n()
   n_ind_after <- Ind$n()
