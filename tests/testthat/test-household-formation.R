@@ -6,13 +6,12 @@ test_that("household_formation - join household", {
   Hh <- pop$get("Household")
 
   # test data for join household
-  ind_id_list <- list(c(1,2,3), c(4,5))
+  ind_id_list <- list(c(sample(Ind$get_ids(), 3)), c(sample(Ind$get_ids(), 2)))
   mapping <- data.table(
     ind_id = ind_id_list,
     hh_id = c(1,2)
   )
   pop$leave_household(ind_ids = mapping[, unlist(ind_id)])
-  Ind$get_data()
   household_formation(pop, mapping = mapping, type = "join")
   expect_true(
     all(Ind$get_household_ids(ids = unlist(ind_id_list)) == c(1,1,1,2,2))
