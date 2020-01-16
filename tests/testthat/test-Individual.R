@@ -6,7 +6,7 @@ test_that("individual class's methods", {
 
 # is_alive ----------------------------------------------------------------
 
-  expect_equal(object = Ind$is_alive(c(Ind$get_ids()[1], 99999999, Ind$get_ids()[1])),
+  expect_equal(object = Ind$is_alive(c(1,999999,2)),
                expected = c(TRUE, FALSE, TRUE))
 
 # get_children functions --------------------------------------------------

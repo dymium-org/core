@@ -44,9 +44,6 @@ The id column of \code{.data}.
 (\code{DataBackend}, \code{data.frame}, \code{character(1)}) -> \code{NULL}\cr
 Append new data to the object's data list (\code{private$.data}). the new data
 must be linkable with the attribute data of the object by the id_col.
-\item \code{check_ids(ids)}\cr
-(\code{integer()})\cr
-Return true if all ids exist if not raises an informative error.
 \item \code{data(name)}\cr
 (\code{character(1)}) -> (\verb{[dymiumCore::DataBackend]}|\code{NULL})\cr
 Returns a \link{DataBackend} with the name that matches \code{name}.
@@ -83,13 +80,10 @@ the corresponding values to \code{ids} are returned, in the same order as the \c
 (\code{character()}) -> \code{logical()}\cr
 Check which of the attribute names given in \code{x} exist in the attribute data
 of the object.
-\item \code{ids_exist(ids, by_element = FALSE, include_removed_data = FALSE)}\cr
-(\code{integer()}, \code{logical(1)}, \code{logical(1)}) -> \code{logical()}\cr
-Returns a logical vector of the same length as the argument \code{ids}. This function
-checks whether the ids in the argument \code{ids} exist or not. If \code{by_element} is
-TRUE then it will return a logical vector with the same length as \code{ids} in
-their respective order. And if \code{inclide_removed_data} is TRUE it will check
-the removed data to see if the ids ever existed.
+\item \code{ids_exist(ids, include_removed_data = FALSE)}\cr
+(\code{integer()}, \code{logical(1)}) -> \code{logical()}\cr
+Check whether \code{ids} exist or not.  And if \code{inclide_removed_data} is \code{TRUE} it
+will also check the removed data.
 \item \code{idx_exist(idx, by_element = FALSE)}\cr
 (\code{integer()}) -> \code{logical()}\cr
 Returns a logical vector of the same length as the argument \code{idx}. This function

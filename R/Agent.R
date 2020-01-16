@@ -115,7 +115,7 @@ Agent <- R6Class(
       }
 
       if (!missing(parent_ids)) {
-        if (!self$ids_exist(ids = parent_ids, by_element = FALSE)) {
+        if (!test_entity_ids(self, parent_ids)) {
           stop(glue("Not all parent_ids exists."))
         }
         private$add_new_agent_inherit_parent(parent_ids = parent_ids)
@@ -126,13 +126,7 @@ Agent <- R6Class(
     },
 
     hatch = function(ids) {
-      ids_dont_exist <- ids[!self$ids_exist(ids, by_element = TRUE)]
-      if (length(ids_dont_exist) != 0) {
-        stop(glue(
-          "Assertion on 'ids' failed: These ids do not exists {{{.missing_ids}}}",
-          .missing_ids = glue_collapse(ids_dont_exist, sep = ", ")
-        ))
-      }
+      assert_entity_ids(self, ids)
       private$add_new_agent_inherit_parent(parent_ids = ids)
     },
 
@@ -155,7 +149,8 @@ Agent <- R6Class(
     },
 
     is_alive = function(ids) {
-      self$ids_exist(ids, by_element = TRUE)
+      checkmate::assert_integerish(ids, any.missing = FALSE, lower = 1)
+      return(ids %in% self$get_ids())
     }
   ),
   private = list(
@@ -216,7 +211,7 @@ Agent <- R6Class(
       )
 
       # check id overlapping between new and old data
-      if (self$ids_exist(newdata[[id_col]], by_element = FALSE)) {
+      if (test_entity_ids(self, newdata[[id_col]])) {
         stop("Not all ids in `data` are unique from ids in newdata")
       }
 

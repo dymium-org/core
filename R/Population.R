@@ -248,6 +248,7 @@ Population <- R6Class(
       Hh <- self$get("Household")
       hh_with_hhsize_0 <- Hh$get_data()[hhsize == 0, get(Hh$get_id_col())]
       if (length(hh_with_hhsize_0) != 0) {
+        self$log(desc = "n_emptied_households_removed", value = length(hh_with_hhsize_0))
         Hh$remove(ids = hh_with_hhsize_0)
       }
       invisible()
@@ -300,7 +301,7 @@ Population <- R6Class(
         unique() %>%
         .[!is.na(.)]
       # check uniqueness
-      if (self$get("Individual")$ids_exist(ind_data_pids, by_element = FALSE)) {
+      if (self$get("Individual")$ids_exist(ind_data_pids)) {
         stop("There are ids that exist in data already.")
       }
       # if no hh_data is given then all household id should be NA

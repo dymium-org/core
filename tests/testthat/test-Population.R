@@ -142,6 +142,8 @@ test_that("check_unique_id_cols", {
       )
   )
 
+  pop$check_unique_id_cols(ind_data = copy(dymiumCore::toy_individuals)[, `:=`(pid = 9999, hid = NA_integer_)])
+
   expect_error(
     pop$check_unique_id_cols(
       ind_data = copy(dymiumCore::toy_individuals)[, `:=`(pid = 9999)],

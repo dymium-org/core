@@ -54,17 +54,16 @@ test_that("get_idx", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   expect_length(MyObj$get_idx(c(2,1,4,2)), 4)
   expect_equal(MyObj$get_idx(c(2,1,4,2)), c(2,1,4,2))
-  expect_error(MyObj$get_idx(c(2,1,4,2,NA)), "These ids do not exist")
-  expect_error(MyObj$get_idx(c(2,1,4,2,1000)), "These ids do not exist")
+  expect_error(MyObj$get_idx(c(2,1,4,2,NA)), "Contains missing values \\(element 5\\).")
+  expect_error(MyObj$get_idx(c(2,1,4,2,1000)), "These ids don't exist in Entity: 1000")
 })
 
 test_that("ids_exist", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   rand_ids <- sample(MyObj$get_data()[[MyObj$get_id_col()]], 3)
-  expect_equal(MyObj$ids_exist(ids = rand_ids, by_element = T), rep(TRUE, 3))
-  expect_equal(MyObj$ids_exist(ids = c(rand_ids, 9999999), by_element = T), c(rep(TRUE, 3), FALSE))
-  expect_equal(MyObj$ids_exist(ids = c(rand_ids, 9999999), by_element = FALSE), FALSE)
-  expect_error(MyObj$ids_exist(ids = NA, by_element = FALSE), "Contains missing values")
+  expect_true(MyObj$ids_exist(ids = rand_ids))
+  expect_equal(MyObj$ids_exist(ids = c(rand_ids, 9999999)), FALSE)
+  expect_error(MyObj$ids_exist(ids = NA), "Contains missing values")
 })
 
 test_that("idx_exist", {
@@ -93,7 +92,7 @@ test_that("get_attr", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   checkmate::expect_integerish(MyObj$get_attr(MyObj$get_id_col()), any.missing = FALSE, min.len = 1, null.ok = FALSE, unique = TRUE)
   expect_error(MyObj$get_attr("abcd"), "failed: Must include the elements \\{abcd\\}")
-  expect_error(MyObj$get_attr('age', ids = c(99999999)), regexp = 'These ids do not exist')
+  expect_error(MyObj$get_attr('age', ids = c(99999999)), regexp = "These ids don't exist in Entity: 99999999")
   checkmate::expect_integerish(MyObj$get_attr('age', ids = c(1,2,3)), lower = 0, any.missing = FALSE, len = 3, null.ok = FALSE)
 })
 
@@ -101,12 +100,6 @@ test_that("generate_new_ids", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   checkmate::expect_integerish(MyObj$get_attr(MyObj$get_id_col()), any.missing = FALSE, min.len = 1, null.ok = FALSE, unique = TRUE)
   expect_error(MyObj$get_attr("abcd"), "failed: Must include the elements \\{abcd\\}")
-})
-
-test_that("check_ids", {
-  MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
-  expect_error(MyObj$check_ids(99999), regexp = "Not all ids exist. Here are the missing ones: 99999")
-  expect_equal(MyObj$check_ids(MyObj$get_ids()[1]), TRUE)
 })
 
 test_that("database", {
