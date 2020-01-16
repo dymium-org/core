@@ -456,7 +456,6 @@ Individual <- R6::R6Class(
       stopifnot(length(result) == length(self_ids))
       result
     }
-
     # have_resident_child = function(ids) {
     #   stop("Has not been implemented yet.")
     # }
@@ -467,6 +466,7 @@ Individual <- R6::R6Class(
     # private -----------------------------------------------------------------
     .hid_col = character(),
     relationship_types = c("father", "mother", "partner", "children"),
+
     # ***********************************************************
     # get_relationship(ids, type):
     #    return a list of ids those match the relationship type of the input

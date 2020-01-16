@@ -270,17 +270,14 @@ Entity <-
 
       remove = function(ids) {
         checkmate::assert_integerish(ids, any.missing = FALSE, unique = TRUE, lower = 1, min.len = 1)
-
         if (length(private$.data) == 0) {
           lg$warn("There is no data to be removed!")
           return(invisible())
         }
-
         for (DataObj in private$.data) {
           idx <- which(DataObj$get(copy = FALSE)[[private$.id_col]] %in% ids)
           DataObj$remove(rows = idx)
         }
-
         invisible()
       },
 
