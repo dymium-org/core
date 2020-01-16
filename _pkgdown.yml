@@ -84,9 +84,8 @@ reference:
     - use_event
     - assign_reference
     - alignment
-    - check_required_models
-    - check_supported_model
     - get_models
+    - pick_models
     - is_scheduled
 - title: "Scenerio"
   desc: Creates and manages scenarios.
@@ -111,6 +110,12 @@ reference:
   - unnest_datatable
   - dt_group_and_sort
   - validate_linkages
+- title: Checkmate functions
+  contents:
+  - starts_with("check_")
+  - starts_with("assert_")
+  - starts_with("test_")
+  - starts_with("expect_")
 
 toc:
   depth: 2
