@@ -72,9 +72,6 @@
 #'  To remove only individuals leave `hid` to NULL and specify individuals by their ids
 #'  in `pid`.
 #'
-#' * `count_all(verbose = TRUE)`\cr
-#'  Print out the number of individuals and households to console.
-#'
 #' * `get_hhsize(hids = NULL)`\cr
 #'  (`integer()` | `NULL`) -> (`integer()`)\cr
 #'  Get household size of the households in `hids` if `NULL` then household size
@@ -249,27 +246,6 @@ Population <- R6Class(
       if (!is.null(pid)) {
         self$get("Individual")$remove(ids = pid)
       }
-    },
-
-    count_all = function(verbose = TRUE) {
-      n_individuals <- self$get("Individual")$n()
-      n_individuals_in_households <- self$get_sum_hhsize()
-      n_households <- self$get("Household")$n()
-      n_non_emptied_households <- sum(self$get_hhsize() != 0)
-
-      if (verbose) {
-        cat("Total no. individuals: ", n_individuals, "\n")
-        cat("Total no. members in a household: ", n_individuals_in_households, "\n")
-        cat("Total no. households: ", n_households, "\n")
-        cat("Total no. non-emptied households: ", n_non_emptied_households, "\n")
-      }
-
-      return(invisible(list(
-        n_individuals = n_individuals,
-        n_individuals_in_households = n_individuals_in_households,
-        n_households = n_households,
-        n_non_emptied_households = n_non_emptied_households
-        )))
     },
 
     check_hhsize = function() {
