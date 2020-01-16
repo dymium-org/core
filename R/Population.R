@@ -75,9 +75,10 @@
 #' * `count_all(verbose = TRUE)`\cr
 #'  Print out the number of individuals and households to console.
 #'
-#' * `get_hhsize(hids)`\cr
-#'  (`integer()`)\cr
-#'  Get hhsize from individual's data and merge it to household data.
+#' * `get_hhsize(hids = NULL)`\cr
+#'  (`integer()` | `NULL`) -> (`integer()`)\cr
+#'  Get household size of the households in `hids` if `NULL` then household size
+#'  of all households will be returned.
 #'
 #' * `update_hhsize()`\cr
 #'  Update household size.
@@ -335,18 +336,17 @@ Population <- R6Class(
       return(TRUE)
     },
 
-    get_hhsize = function(hids) {
+    get_hhsize = function(hids = NULL) {
       hid_col <- self$get("Individual")$get_hid_col()
-      if (missing(hids)) {
+      if (is.null(hids)) {
         hhsize_dt <-
           self$get("Individual")$get_data()[, .(hhsize = .N), by = c(hid_col)]
         hids <- self$get("Household")$get_ids()
       } else {
         stopifnot(self$get("Household")$ids_exist(hids))
         hhsize_dt <-
-          self$get("Individual")$get_data()[get(hid_col) %in% hids,
-                              .(hhsize = .N),
-                              by = c(hid_col)]
+          self$get("Individual")$get_data() %>%
+          .[get(hid_col) %in% hids, .(hhsize = .N), by = c(hid_col)]
       }
 
       # make sure all hids in the household object are get returned
