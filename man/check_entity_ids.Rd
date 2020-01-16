@@ -33,18 +33,21 @@ expect_entity_ids(
 \item{x}{\link{Entity}\cr
 an R6 \link{Entity} object}
 
-\item{ids}{\link{logical(1)}\cr
+\item{ids}{(\code{logical(1)})\cr
 Ids of Entity to check.}
 
-\item{include_removed_data}{\link{any}\cr
+\item{include_removed_data}{(\code{any})\cr
 Should the removed data of \code{x} be checked.}
 
-\item{informative}{\link{logical(1)}\cr
+\item{informative}{(\code{logical(1)})\cr
 Whether to return the missing ids in error message.}
 
 \item{.var.name}{[\code{character(1)}]\cr
 The custom name for \code{x} as passed to any \code{assert*} function.
 Defaults to a heuristic name lookup.}
+
+\item{add}{\link[checkmate:AssertCollection]{checkmate::AssertCollection}\cr
+Collection to store assertions. See \link[checkmate:AssertCollection]{checkmate::AssertCollection}.}
 
 \item{info}{[\code{character(1)}]\cr
 See \code{\link[testthat]{expect_that}}}
@@ -53,7 +56,7 @@ See \code{\link[testthat]{expect_that}}}
 See \code{\link[testthat]{expect_that}}}
 }
 \value{
-\link{logical(1)}.
+(\code{logical(1)}).
 }
 \description{
 Check if ids exist in Entity.

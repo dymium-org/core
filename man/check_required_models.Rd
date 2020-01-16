@@ -39,6 +39,9 @@ supported by \link{Transition} using \code{assert_transition_supported_model()}.
 The custom name for \code{x} as passed to any \code{assert*} function.
 Defaults to a heuristic name lookup.}
 
+\item{add}{\link[checkmate:AssertCollection]{checkmate::AssertCollection}\cr
+Collection to store assertions. See \link[checkmate:AssertCollection]{checkmate::AssertCollection}.}
+
 \item{info}{[\code{character(1)}]\cr
 See \code{\link[testthat]{expect_that}}}
 

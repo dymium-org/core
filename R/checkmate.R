@@ -8,6 +8,7 @@
 #' Should the removed data of `x` be checked.
 #' @param informative (`logical(1)`)\cr
 #' Whether to return the missing ids in error message.
+#' @inheritParams checkmate::makeCheck
 #'
 #' @return (`logical(1)`).
 #' @export
@@ -30,6 +31,8 @@ check_entity_ids <- function(x, ids, include_removed_data = FALSE, informative =
 }
 
 #' @export
+#' @param add [checkmate::AssertCollection]\cr
+#'  Collection to store assertions. See [checkmate::AssertCollection].
 #' @inheritParams checkmate::makeAssertion
 #' @rdname check_entity_ids
 assert_entity_ids <- checkmate::makeAssertionFunction(check_entity_ids)
@@ -55,6 +58,8 @@ check_entity <- function(x) {
 }
 
 #' @export
+#' @param add [checkmate::AssertCollection]\cr
+#'  Collection to store assertions. See [checkmate::AssertCollection].
 #' @inheritParams checkmate::makeAssertion
 #' @rdname check_entity
 assert_entity <- checkmate::makeAssertionFunction(check_entity)
@@ -101,7 +106,10 @@ check_transition_supported_model <- function(x) {
 }
 
 #' @export
+#' @param add [checkmate::AssertCollection]\cr
+#'  Collection to store assertions. See [checkmate::AssertCollection].
 #' @inheritParams checkmate::makeAssertion
+#'
 #' @rdname check_transition_supported_model
 assert_transition_supported_model <- checkmate::makeAssertionFunction(check_transition_supported_model)
 
@@ -150,6 +158,8 @@ check_required_models <- function(x, names, check_supported_model = TRUE) {
 }
 
 #' @export
+#' @param add [checkmate::AssertCollection]\cr
+#'  Collection to store assertions. See [checkmate::AssertCollection].
 #' @inheritParams checkmate::makeAssertion
 #' @rdname check_required_models
 assert_required_models <- checkmate::makeAssertionFunction(check_required_models)
