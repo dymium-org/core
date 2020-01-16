@@ -266,7 +266,7 @@ Population <- R6Class(
       }
       if (!is.null(pid)) {
         self$get("Individual")$remove(ids = pid)
-        self$update()
+        self$remove_emptied_households(update_hhsize = TRUE)
       }
     },
 
@@ -371,7 +371,6 @@ Population <- R6Class(
 
     update = function() {
       self$update_hhsize()
-      self$remove_emptied_households(update_hhsize = TRUE)
     },
 
     print = function() {
