@@ -2,12 +2,21 @@
 % Please edit documentation in R/checkmate.R
 \name{check_entity_ids}
 \alias{check_entity_ids}
+\alias{assert_entity_ids}
 \alias{test_entity_ids}
 \alias{expect_entity_ids}
-\alias{assert_entity_ids}
 \title{Check if ids exist in Entity.}
 \usage{
 check_entity_ids(x, ids, include_removed_data = FALSE, informative = TRUE)
+
+assert_entity_ids(
+  x,
+  ids,
+  include_removed_data = FALSE,
+  informative = TRUE,
+  .var.name = checkmate::vname(x),
+  add = NULL
+)
 
 test_entity_ids(x, ids, include_removed_data = FALSE, informative = TRUE)
 
@@ -19,30 +28,35 @@ expect_entity_ids(
   info = NULL,
   label = vname(x)
 )
-
-assert_entity_ids(
-  x,
-  ids,
-  include_removed_data = FALSE,
-  informative = TRUE,
-  .var.name = checkmate::vname(x),
-  add = NULL
-)
 }
 \arguments{
-\item{x}{an R6 \link{Entity} object}
+\item{x}{\link{Entity}\cr
+an R6 \link{Entity} object}
 
-\item{ids}{\link{\code{integer()}}\cr
+\item{ids}{(\code{logical(1)})\cr
 Ids of Entity to check.}
 
-\item{include_removed_data}{\link{\code{logical(1)}}\cr
+\item{include_removed_data}{(\code{any})\cr
 Should the removed data of \code{x} be checked.}
 
-\item{informative}{\link{\code{logical(1)}}\cr
+\item{informative}{(\code{logical(1)})\cr
 Whether to return the missing ids in error message.}
+
+\item{.var.name}{[\code{character(1)}]\cr
+The custom name for \code{x} as passed to any \code{assert*} function.
+Defaults to a heuristic name lookup.}
+
+\item{add}{\link[checkmate:AssertCollection]{checkmate::AssertCollection}\cr
+Collection to store assertions. See \link[checkmate:AssertCollection]{checkmate::AssertCollection}.}
+
+\item{info}{[\code{character(1)}]\cr
+See \code{\link[testthat]{expect_that}}}
+
+\item{label}{[\code{character(1)}]\cr
+See \code{\link[testthat]{expect_that}}}
 }
 \value{
-a logical value.
+(\code{logical(1)}).
 }
 \description{
 Check if ids exist in Entity.
