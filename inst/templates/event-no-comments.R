@@ -4,18 +4,12 @@ modules::expose(here::here("{{{module_path}}}/logger.R"))
 constants <- modules::use(here::here("{{{module_path}}}/constants.R"))
 helpers <- modules::use(here::here("{{{module_path}}}/helpers.R"))
 modules::export("^run$|^REQUIRED_MODELS$")
-
-REQUIRED_MODELS <- c()
-
+REQUIRED_MODELS <- NULL
 run <- function(world, model = NULL, target = NULL, time_steps = NULL) {
   if (!dymiumCore::is_scheduled(time_steps)) {
     return(invisible(world))
   }
   lg$info("Running {{{event}}}")
-  if (is.null(model)) {
-    model <- dymiumCore::get_models(world, REQUIRED_MODELS)
-  } else {
-    dymiumCore::check_required_models(model, REQUIRED_MODELS)
-  }
+  model <- pick_models(model, world, REQUIRED_MODELS)
   invisible(world)
 }

@@ -64,7 +64,7 @@
 #'  Returns the names of all data objects (in `private$.data`) that belongs to this object.
 #'
 #'  * `get_removed_data(name)`\cr
-#'  (`character(1)`) -> `[data.table::data.table()]`\cr
+#'  (`character(1)`) -> [data.table::data.table()]\cr
 #'  Return removed agent data. If `name` is missing, the first data, which should
 #'  contains the main attributes of the agent object, will be returned.
 #'
