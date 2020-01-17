@@ -12,10 +12,6 @@ run <- function(world, model = NULL, target = NULL, time_steps = NULL) {
     return(invisible(world))
   }
   lg$info("Running {{{event}}}")
-  if (is.null(model)) {
-    model <- dymiumCore::get_models(world, REQUIRED_MODELS)
-  } else {
-    dymiumCore::check_required_models(model, REQUIRED_MODELS)
-  }
+  model <- pick_models(model, world, REQUIRED_MODELS)
   invisible(world)
 }
