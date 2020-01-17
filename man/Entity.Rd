@@ -63,7 +63,7 @@ objects have been loaded it will return \code{NULL}.
 () -> \code{character()}\cr
 Returns the names of all data objects (in \code{private$.data}) that belongs to this object.
 \item \code{get_removed_data(name)}\cr
-(\code{character(1)}) -> \verb{[data.table::data.table()]}\cr
+(\code{character(1)}) -> \code{\link[data.table:data.table]{data.table::data.table()}}\cr
 Return removed agent data. If \code{name} is missing, the first data, which should
 contains the main attributes of the agent object, will be returned.
 \item \code{get_ids(idx)}\cr
