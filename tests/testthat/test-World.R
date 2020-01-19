@@ -74,6 +74,9 @@ test_that("remove", {
                "Must be element of set \\{'Household','Population'\\}")
   expect_error(w$get("Population")$get("Individual"),
                "Must be element of set \\{'Household'\\}")
+  w$add(list(hi = 1), "model")
+  w$remove("model")
+  checkmate::expect_list(w$models, len = 0)
 
   w <- World$new()
   w$add(Population$new())

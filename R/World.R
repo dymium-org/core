@@ -213,10 +213,13 @@ World <- R6::R6Class(
       if (length(.pos_entities) != 0) private$.entities[[.pos_entities]] <- NULL
       if (length(.pos_models) != 0) private$.models[[.pos_models]] <- NULL
 
+      browser()
       # Go through all `containers` stored in World and remove the object which
       # its name matches `name`
       for (c in self$containers) {
-        c$remove(name)
+        if (x %in% c$names()) {
+          c$remove(name)
+        }
       }
 
       invisible()
