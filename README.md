@@ -21,9 +21,21 @@ coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.
 # dymiumCore <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 **dymiumCore** is an R package which provides a toolbox for developing a
-microsimulation model that is modular and pipable. While the core focus
-of the package is for modelling urban systems, dymium can be easily
-extended to apply in other contexts as well.
+microsimulation model. While the core focus of the package is for
+modelling urban systems, dymium can be easily extended to apply in other
+contexts as well.
+
+# Why `dymiumCore`?
+
+  - written in R
+  - easy to setup
+  - ready-to-use events see
+    [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
+  - modular and sharable
+  - equipped with the basic building blocks for building a modular
+    microsimulation model
+  - can use parameters from various model objects (i.e. \[stats::lm\],
+    \[stats::glm\], \[caret::train\]).
 
 ## Installation
 
@@ -53,9 +65,22 @@ please email us at amarin at dymium.org.
 
 ## Development plan (as of 11th Jan 2020)
 
-  - **Version 0.1.0**: Releases all the basic building blocks for
-    microsimulation modelling.
-  - **Version 0.2.0**: Implements model-based calibration.
-  - **Version 0.3.0**: Visualisation functions for life-courses, spatial
-    data, etc.
-  - **Version 0.4.0**: Integration with dymiumGUI.
+  - [x] **Version 0.1.0**: (21 Jan 2020) Releases all the basic building
+    blocks for microsimulation modelling.
+  - [ ] **Version 0.2.0**: Implements model-based calibration.
+  - [ ] **Version 0.3.0**: Visualisation functions for life-courses,
+    spatial data, etc.
+  - [ ] **Version 0.4.0**: Integration with dymiumGUI.
+
+# Similar frameworks
+
+Urban Land-use
+
+  - [UrbanSim](https://github.com/UDST/urbansim)
+  - [SILO](https://github.com/msmobility/silo)
+  - [ILUTE](https://github.com/TravelModellingGroup/ILUTE)
+
+Demography
+
+  - [MicSim](https://cran.r-project.org/web/packages/MicSim/index.html)
+  - [neworder](https://github.com/virgesmith/neworder)
