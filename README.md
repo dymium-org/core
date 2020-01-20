@@ -32,8 +32,8 @@ contexts as well.
   - ready-to-use events see
     [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
   - modular and sharable
-  - equipped with the basic building blocks for building a modular
-    microsimulation model
+  - equipped with the basic building blocks for building a
+    microsimulation model that is flexible and extensible.
   - can use parameters from various model objects (i.e. \[stats::lm\],
     \[stats::glm\], \[caret::train\]).
 

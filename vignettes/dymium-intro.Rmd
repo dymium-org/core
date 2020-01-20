@@ -20,16 +20,57 @@ knitr::opts_chunk$set(
 library(dymiumCore)
 ```
 
-This vignette introduces the basic building blocks of `dymiumCore`, how they can be put together to create a microsimulation model, and how to take advantage of existing modules from  the [dymiumModules](https://github.com/dymium-org/dymiumModules) repository. 
+This vignette introduces the basic building blocks for microsimulation in `dymiumCore`, how they can be put together to create a microsimulation model, and how to take advantage of existing modules from the [dymiumModules](https://github.com/dymium-org/dymiumModules) repository. 
 
-# Microsimulation modelling using `dymiumCore`
+# Why another microsimulation package?
 
-Microsimulation models, regardless of their study contexts, generally share the same basic components which are agents or entities, rules and market interactions.
+As an R user, I feel that there are so many great packages that can makes R a complete platform for microsimulation and yet, to my knowledge, no one has taken advantage of this fact. The stages of microsimulation modelling is no different from the stages of any other modelling excerises in general, at least at the high-level. They can be broken down as the following:
+
+1. __Data preparation__: synthesise microdata and estimate models. 
+2. __Microsimulation__: microsimulate agents in the microdata using the estimated models.
+3. __Validation__: check the simulation result againts real-world observed statistics. 
+4. __Calibration__: slightly nudge some parameters of the estimated models to have a better validation result.
+5. __Sensitivity analysis__: make use of the model for policy analysis.
+
+These stages often done under different programming environments which makes it extremely hard for anyone to keep track of the scripts, the package dependencies, the software licences involved, and the data produced during the development phrase. Inevitably, those issues will cause the model to be shorted-lived. These issues can be solved effectively with packages that are readily avaiable in R.
+
+## Data preparation
+
+In the first stage, packages for data manipulation such as [data.table](http://r-datatable.com), [dplyr](https://dplyr.tidyverse.org), the recent dplyr-like packages that use data.table as their backend such as [dtplyr](https://github.com/tidyverse/dtplyr) and [tidydt](https://github.com/markfairbanks/tidydt), and [sf](https://r-spatial.github.io/sf/index.html) for working with geopgrahical data are immensely useful. 
+
+### Systhesise microdata
+
+To represent the initial state of the simulation we need microdata and often the microdata that we need is only available as a small sample of the true population. This is to prevent the survey participants from being identified. Hence, we often need to synthesise/reconstruct a population that resembles the true population using the microdata and some known margins of the true population. Luckily, as an R user you have many well deleloped packages to choose from for systhesising data such as [MultiLevelIPF](https://github.com/krlmlr/MultiLevelIPF), [simPop](https://cran.r-project.org/web/packages/simPop/index.html), [mipfp](https://cran.r-project.org/web/packages/mipfp/mipfp.pdf). Even a book on this topic, [Spatial Microsimulation with R by Robin Lovelace and Morgane Dumont](https://spatial-microsim-book.robinlovelace.net), in R is available!
+
+### Esimate models
+
+Statistical modelling is one of the main strengths of the R ecosystem. My very impression of R was how easy it was for me to fit various models from a OLS regression to a binary logit modelling using just one function, which is `stats::glm()`. Since, most microsimulation models relies on probalistic models, (and also rule-based models) to simulate the decisions made by its agents, there are a vast amount of packages that can facilitate model fitting. `stats`, [caret](https://cran.r-project.org/web/packages/caret/caret.pdf), [mlr](https://mlr.mlr-org.com), [mlogit](https://cran.r-project.org/web/packages/mlogit/index.html) and more can be used for this purpose. Even if a person only know the `caret` package alone, he/she can have access to 238 different model implementations, from basic econometric models to advanced machine-learning models. This provides an extensive playground for microsimulation modellers be more experimental and go beyond the traditional knowledge of the field. 
+
+## Microsimulation
+
+There are very few R packages for microsimulation. The few packages that are available are somewhat feature lacking and not meant for a large-scale microsimulation model that is flexible to addition of new behavior and easy to maintain. Hence, this is where we, the authors, see a place for `dymiumCore` in the R package ecosystem. 
+
+## Validation
+
+A microsimulation model should be validated visually and numerically. For visualisation, most R users probably turn to [ggplot2](https://ggplot2.tidyverse.org) and its [extensions](http://www.ggplot2-exts.org/gallery/). Spatial data can be visualised using `ggmap`, `leaflet`, `mapview` and more. For numerical comparison, [Metrics](https://cran.r-project.org/web/packages/Metrics/index.html) provides many commonly used evaluation metrics for regression and classification problems. 
+
+## Calibration
+
+Calibration is often used in large-scale models (a system of many models), which many microsimulation models are, to adjust for their errors and ultimately improve the accuracy of the submodels and the overall result. As you may know, calibration is a complex process especially for large-scale models, which are often viewed as black-box models, as it can be very expensive (time and computing resources) to perform. However, if you wish to calibrate your microsimulation model [mlrMBO](https://mlrmbo.mlr-org.com) are here for you.
+
+_(A tutorial on using `mlrMBO` for calibration of a dymium microsimulation model is being drafted and will be released soon.)_
+
+## Reproducibility
+
+More general issues such as reproducibility and maintainability of the programming environments used can be easily solved using [drake](https://github.com/ropensci/drake) and [renv](https://github.com/rstudio/renv). `drake` helps you to manage your workflow in an organised and reproducible way while `renv` takes care of your dependencies.
+
+# Main requirements
+
+dymiumCore relies on a number of R packages under the hood such as [R6](https://r6.r-lib.org) and [data.table](http://r-datatable.com). Hence, if you are looking to extend dymiumCore or develop new modules that are compatible a good understanding of those mentioned packages is the one of main requirements. 
 
 # Overview of the building blocks 
 
-An implementation of a microsimulation model usually consists of these three 
-components which are entity, transition and market.
+Microsimulation models, regardless of their study contexts, generally share the same basic components which are entities and rules. The rest of the article focuses on the main building blocks of microsimulation in term of implementation. 
 
 ## Entities
 
@@ -42,6 +83,9 @@ a household may have household size, household id, number of vehicles owned as
 its fields. A household can relocate, have new members and etc.
 
 ## Transition
+
+Entities are usually given rules for them to follow 
+
 
 In a microsimulation model, entities are given rules for them to follow under 
 different conditions. A rule can simply be an ifelse statement such as:

@@ -1,0 +1,27 @@
+---
+title: "dymiumCore for developers"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{dymiumCore for developers}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(dymiumCore)
+```
+
+# Classes
+
+# Event functions
+
+# Transition
+
+# Logging

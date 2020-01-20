@@ -132,11 +132,21 @@ navbar:
       text: Introduction
       href: articles/dymium-intro.html
     articles:
-      text: Use cases
+      text: Articles
       menu:
+        - text: 'Manual'
+        - text: 'For developers'
+          href: articles/for-developers.html
+        - text: 'For modellers'
+          href: articles/for-modellers.html
+        - text: 'For end users'
+          href: articles/for-endusers.html
+        - text: 'Use cases'
         - text: 'Residential mobility'
           href: articles/residential-mobility.html
         - text: 'Mate matching'
+          href: articles/mate-matching.html
+        - text: 'Use a caret model in Transition'
           href: articles/mate-matching.html
     news:
       text: News

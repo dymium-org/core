@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, warning=FALSE}
 # To install a package use `install.packages('package-name')`
 library(dymiumCore)
 library(data.table)
