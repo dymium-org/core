@@ -5,9 +5,13 @@
 \title{Transition for regression model}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Transition}}
 \description{
-Note that, TransitionRegression only returns a raw output of the simulation result.
 This is particularly useful for updating agents' attributes that can be modelled
 using a regression model.
+}
+\note{
+TransitionRegression only returns a raw output of the simulation result.
+In a future update, there will be an option which allows the prediction result
+to be drawn from a distribution to add randomness to the result.
 }
 \section{Construction}{
 \preformatted{Transition$new(x, model, target = NULL, targeted_agents = NULL)
@@ -15,15 +19,11 @@ using a regression model.
 \itemize{
 \item \code{x} :: \link[R6:R6Class]{R6::R6Class}\cr
 A Agent class inheritance object.
-\item \code{model} :: \verb{any object} of \link{SupportedTransitionModels}\cr
+\item \code{model} :: \verb{any object} in \link{SupportedTransitionModels}\cr
 A model object to be used to simulate transition.
-\item \code{target} :: \code{\link[=integer]{integer()}}\cr
-(Default as NULL). A number that forces the number of micro events to occur. For example, if
-`10`` is speficied, there will be 10 agents that under go the event. However,
-if a integer vector is given it must be the same length as the classes in the model.
-This only works for classification models.
 \item \code{targeted_agent} :: \code{\link[=integer]{integer()}}\cr
-(Default as NULL) A integer vectors that contains ids of agents in \code{x} to undergo the event.
+(Default as NULL)
+A integer vectors that contains ids of agents in \code{x} to undergo the event.
 }
 }
 
@@ -70,5 +70,5 @@ Returns ids of the agents that have their response equal to \code{response_filte
 }
 
 \seealso{
-\link{TransitionClassification}
+\link{TransitionClassification} and \link{trans}.
 }

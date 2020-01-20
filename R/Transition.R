@@ -151,8 +151,8 @@ Transition <- R6Class(
         self$mutate(.)
     },
 
-    postprocess = function(.data) {
-      .data
+    postprocess = function(.sim_result) {
+      .sim_result
     },
 
     update_agents = function(attr) {
@@ -388,6 +388,8 @@ monte_carlo_sim <- function(prediction, target) {
 #'
 #' @return a data.table with two columns: id and response.
 #' @export
+#'
+#' @seealso [TransitionClassification] and [TransitionRegression].
 #'
 #' @examples
 #'
