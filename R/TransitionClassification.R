@@ -23,7 +23,7 @@
 #' TransitionClassification$new(x, model, target = NULL, targeted_agents = NULL)
 #' ```
 #'
-#' * `x` :: [R6:R6Class]\cr
+#' * `x` :: [R6::R6Class]\cr
 #'   An [Entity] object or its inheritances.
 #'
 #' * `model` :: `any object` in [SupportedTransitionModels]\cr
