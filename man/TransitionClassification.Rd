@@ -44,7 +44,7 @@ Create a \link{TransitionClassification} object.
 \preformatted{TransitionClassification$new(x, model, target = NULL, targeted_agents = NULL)
 }
 \itemize{
-\item \code{x} :: \link{R6:R6Class}\cr
+\item \code{x} :: \link[R6:R6Class]{R6::R6Class}\cr
 An \link{Entity} object or its inheritances.
 \item \code{model} :: \verb{any object} in \link{SupportedTransitionModels}\cr
 A model object to be used to simulate transition.
