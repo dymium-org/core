@@ -8,7 +8,6 @@
 #' Should the removed data of `x` be checked.
 #' @param informative (`logical(1)`)\cr
 #' Whether to return the missing ids in error message.
-#' @inheritParams checkmate::makeCheck
 #'
 #' @return (`logical(1)`).
 #' @export

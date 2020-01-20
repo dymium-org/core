@@ -1,5 +1,28 @@
 #' @title Transition for regression model
-#' @inherit Transition
+#'
+#' @description
+#'
+#' Note that, TransitionRegression only returns a raw output of the simulation result.
+#'
+#'
+#' @format [R6::R6Class] object inheriting from [Transition]
+#' @section Construction:
+#'
+#' ```
+#' Transition$new(x, model, target = NULL, targeted_agents = NULL)
+#' ```
+#' See [Transition], for a description of the arguments.
+#'
+#' @section Fields
+#'
+#' See [Transition].
+#'
+#' @section Methods
+#'
+#' See [Transition].
+#'
+#' @seealso [TransitionClassification]
+#'
 #' @include Transition.R
 #' @export
 TransitionRegression <- R6Class(

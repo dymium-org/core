@@ -323,15 +323,31 @@ Transition <- R6Class(
 # Functions ---------------------------------------------------------------
 
 
-#' Classes of supported objects to be use in Transition.
+#' Get all object classes that are supported by Transition
 #'
 #' @description
 #' Currently, these classes are supported in the `model` argument of the Transition's
-#' constructor: [caret::train], a named `list`, and [data.table::data.table].
+#' constructor:
+#' - [caret::train],
+#' - [stats::lm],
+#' - [stats::glm],
+#' - a numeric vector,
+#' - a named `list`, and
+#' - [data.table::data.table].
+#'
+#' @note See the 'Transition' section of the
+#' [dymiumCore's introduction](https://core.dymium.org/articles/dymium-intro.html)
+#' webpage for more detail.
 #'
 #' @return a character vector
 #' @export
 SupportedTransitionModels <- function() {
+  get_supported_models()
+}
+
+#' @rdname SupportedTransitionModels
+#' @export
+get_supported_models <- function() {
   return(c("train", "list", "data.table", "numeric", "glm", "lm"))
 }
 
