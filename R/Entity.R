@@ -26,9 +26,9 @@
 #' * `id_col` :: `character(1)`\cr
 #'   The id column of `.data`.
 #'
-#' @section Fields:
+#' @section Active Fields (read-only):
 #'
-#'  * `cont`: a reference semantic to its [Container] object. Default as NULL.
+#'  * `database`: a list of [DataBackend] objects that [Entity] possess.
 #'
 #' @section Methods:
 #'
@@ -110,9 +110,6 @@ Entity <-
     classname = "Entity",
     inherit = Generic,
     public = list(
-
-
-      cont = NULL,
 
       initialize = function(databackend, .data, id_col) {
         checkmate::assert_string(id_col, na.ok = FALSE, null.ok = FALSE)

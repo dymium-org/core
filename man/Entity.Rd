@@ -30,10 +30,10 @@ The id column of \code{.data}.
 }
 }
 
-\section{Fields}{
+\section{Active Fields (read-only)}{
 
 \itemize{
-\item \code{cont}: a reference semantic to its \link{Container} object. Default as NULL.
+\item \code{database}: a list of \link{DataBackend} objects that \link{Entity} possess.
 }
 }
 

@@ -2,14 +2,30 @@
 % Please edit documentation in R/Transition.R
 \name{SupportedTransitionModels}
 \alias{SupportedTransitionModels}
-\title{Classes of supported objects to be use in Transition.}
+\alias{get_supported_models}
+\title{Get all object classes that are supported by Transition}
 \usage{
 SupportedTransitionModels()
+
+get_supported_models()
 }
 \value{
 a character vector
 }
 \description{
 Currently, these classes are supported in the \code{model} argument of the Transition's
-constructor: \link[caret:train]{caret::train}, a named \code{list}, and \link[data.table:data.table]{data.table::data.table}.
+constructor:
+\itemize{
+\item \link[caret:train]{caret::train},
+\item \link[stats:lm]{stats::lm},
+\item \link[stats:glm]{stats::glm},
+\item a numeric vector,
+\item a named \code{list}, and
+\item \link[data.table:data.table]{data.table::data.table}.
+}
+}
+\note{
+See the 'Transition' section of the
+\href{https://core.dymium.org/articles/dymium-intro.html}{dymiumCore's introduction}
+webpage for more detail.
 }

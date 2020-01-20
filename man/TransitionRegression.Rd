@@ -3,22 +3,20 @@
 \name{TransitionRegression}
 \alias{TransitionRegression}
 \title{Transition for regression model}
+\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Transition}}
 \description{
-A class that perform Monte Carlo simulation on agents using a probabilistic model.
-Work flow: \code{initialise()} -> \code{filter()} -> \code{mutate()} -> \code{simulate()} -> \code{postprocess()}.
-Note that, the order of filter and mutate can be swap by overwriting the \code{preprocess()} method.
-The default order as speficied in the \code{preprocess} method is:\if{html}{\out{<div class="r">}}\preformatted{filter(.data) \%>\%
- mutate(.)
-}\if{html}{\out{</div>}}
+Note that, TransitionRegression only returns a raw output of the simulation result.
+This is particularly useful for updating agents' attributes that can be modelled
+using a regression model.
 }
 \section{Construction}{
 \preformatted{Transition$new(x, model, target = NULL, targeted_agents = NULL)
 }
 \itemize{
-\item \code{x} :: \code{\link{R6}}\cr
+\item \code{x} :: \link[R6:R6Class]{R6::R6Class}\cr
 A Agent class inheritance object.
-\item \code{model} :: \code{object}\cr
-A model
+\item \code{model} :: \verb{any object} of \link{SupportedTransitionModels}\cr
+A model object to be used to simulate transition.
 \item \code{target} :: \code{\link[=integer]{integer()}}\cr
 (Default as NULL). A number that forces the number of micro events to occur. For example, if
 `10`` is speficied, there will be 10 agents that under go the event. However,
@@ -71,3 +69,6 @@ Returns ids of the agents that have their response equal to \code{response_filte
 }
 }
 
+\seealso{
+\link{TransitionClassification}
+}
