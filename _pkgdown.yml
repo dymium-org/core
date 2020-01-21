@@ -144,6 +144,8 @@ navbar:
         - text: 'Use cases'
         - text: 'Residential mobility'
           href: articles/residential-mobility.html
+        - text: 'Residential mobility2'
+          href: articles/residential-mobility2.html
         - text: 'Mate matching'
           href: articles/mate-matching.html
         - text: 'Marital status'
