@@ -18,6 +18,10 @@ knitr::opts_chunk$set(
 library(dymiumCore)
 ```
 
+# Main requirements
+
+dymiumCore relies on a number of R packages under the hood such as [R6](https://r6.r-lib.org) and [data.table](http://r-datatable.com). Hence, if you are looking to extend dymiumCore or develop new modules that are compatible a good understanding of those mentioned packages is the one of main requirements. 
+
 # Classes
 
 # Event functions

@@ -32,7 +32,7 @@ As an R user, I feel that there are so many great packages that can makes R a co
 4. __Calibration__: slightly nudge some parameters of the estimated models to have a better validation result.
 5. __Sensitivity analysis__: make use of the model for policy analysis.
 
-These stages often done under different programming environments which makes it extremely hard for anyone to keep track of the scripts, the package dependencies, the software licences involved, and the data produced during the development phrase. Inevitably, those issues will cause the model to be shorted-lived. These issues can be solved effectively with packages that are readily avaiable in R.
+These stages are often done under different programming environments which makes it extremely difficult for anyone to keep track of the scripts, the dependencies, the software licences involved, and the data produced during the development phrase. Inevitably, those issues will cause the model to be shorted-lived. These issues as well as all the stages of microsimulation modelling can be solved and done effectively with packages that are freely avaiable in R.
 
 ## Data preparation
 
@@ -64,9 +64,6 @@ _(A tutorial on using `mlrMBO` for calibration of a dymium microsimulation model
 
 More general issues such as reproducibility and maintainability of the programming environments used can be easily solved using [drake](https://github.com/ropensci/drake) and [renv](https://github.com/rstudio/renv). `drake` helps you to manage your workflow in an organised and reproducible way while `renv` takes care of your dependencies.
 
-# Main requirements
-
-dymiumCore relies on a number of R packages under the hood such as [R6](https://r6.r-lib.org) and [data.table](http://r-datatable.com). Hence, if you are looking to extend dymiumCore or develop new modules that are compatible a good understanding of those mentioned packages is the one of main requirements. 
 
 # Overview of the building blocks 
 
@@ -84,9 +81,6 @@ its fields. A household can relocate, have new members and etc.
 
 ## Transition
 
-Entities are usually given rules for them to follow 
-
-
 In a microsimulation model, entities are given rules for them to follow under 
 different conditions. A rule can simply be an ifelse statement such as:
 
@@ -97,12 +91,16 @@ else:
     cant_marry
 ```
 
-or probabilistic such as a rate-based model or a classification model 
+This rule is deterministic since it makes sure that all individual agents above the age of 16 can get married.
+
+To use probabilistic rules you may want to use a rate-based model or a classification model 
 (binary logit model, multinomial logit model, hazard-based model, random forest, 
 and artificial neural network) that takes attributes of the entities as the
 input variables.
 
-dymium provides a class called `TransitionClassification` and `TransitionRegression` which take in a rule and entities then simulate the outcomes of the entities given the provided rule.  For probabilistic rules, Monte Carlo simulation will be performed based on the probabilistic values from the rules.
+`dymiumCore` provides `TransitionClassification` and `TransitionRegression`, both are [R6::R6Class], which take in a rule and entities then simulate the outcomes of the entities given the provided rule.  For probabilistic rules, Monte Carlo simulation will be performed based on the probabilistic values from the rules.
+
+### Supported models
 
 Currently, `dymiumCore` only supports the model objects fitted using `caret` and `stats` in the `Transition` classes.
 
@@ -112,6 +110,9 @@ Currently, `dymiumCore` only supports the model objects fitted using `caret` and
 |   stats | `lm` & `glm` |                   generalised regression models |      supported |
 |  mlogit |     `mlogit` |                        multinomial logit models | in-development |
 |    mlr3 |    `Learner` | classification, survival, and regression models |        planned |
+
+
+### Using transition probabilities
 
 In microsimulation, modellers often use transition probabilities that they obtained 
 from official sources. Hence, __dymiumCore__ provides an easy step to use those
