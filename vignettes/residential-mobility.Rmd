@@ -3,8 +3,8 @@ title: "Residential mobility"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Residential mobility}
-  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -245,18 +245,18 @@ count <- merge(count, toy_zones, by = "zid") %>%
 
 As a spatial plot..
 
-```{r, warning=FALSE} 
-anim <-
-  ggplot(count) +
-  geom_sf(aes(fill = count)) +
-  geom_sf_label(aes(label = sa2_name11)) +
-  # Here come the gganimate specific bits
-  labs(title = "Spatial distribution of households", 
-       subtitle = "Iteration: {frame_time}") +
-  scale_fill_viridis_c(option = "B") +
-  transition_time(iteration)
-animate(anim, width = 800, height = 800, res = 100)
-```
+<!-- # ```{r, warning=FALSE}  -->
+<!-- # anim <- -->
+<!-- #   ggplot(count) + -->
+<!-- #   geom_sf(aes(fill = count)) + -->
+<!-- #   geom_sf_label(aes(label = sa2_name11)) + -->
+<!-- #   # Here come the gganimate specific bits -->
+<!-- #   labs(title = "Spatial distribution of households",  -->
+<!-- #        subtitle = "Iteration: {frame_time}") + -->
+<!-- #   scale_fill_viridis_c(option = "B") + -->
+<!-- #   transition_time(iteration) -->
+<!-- # animate(anim, width = 800, height = 800, res = 100) -->
+<!-- # ``` -->
 
 <!-- ```{r gapgif, fig.show='animate', ffmpeg.format='gif', dev='jpeg', fig.asp = 1, fig.align = "center", fig.width =  7, message=FALSE, warning=FALSE} -->
 <!-- plots <- purrr::map(1:10, ~ { -->
@@ -271,20 +271,20 @@ animate(anim, width = 800, height = 800, res = 100)
 <!-- purrr::walk(plots, print) -->
 <!-- ``` -->
 
-As a time series plot..
+<!-- As a time series plot.. -->
 
-```{r}
-anim <- 
-  ggplot(count, aes(iteration, count, group = sa2_name11)) +
-  geom_line() + 
-  geom_segment(aes(xend = 10, yend = count), linetype = 2, colour = 'grey') + 
-  geom_point(size = 2) + 
-  geom_text(aes(x = 10.1, label = sa2_name11), hjust = 0) + 
-  coord_cartesian(clip = 'off') + 
-  transition_reveal(iteration) + 
-  theme_minimal() + 
-  labs(title = "Counts of households by zones") +
-  theme(plot.margin = margin(5.5, 40, 5.5, 5.5))
-animate(anim, width = 800, height = 600, res = 100)
-```
+<!-- ```{r} -->
+<!-- anim <-  -->
+<!--   ggplot(count, aes(iteration, count, group = sa2_name11)) + -->
+<!--   geom_line() +  -->
+<!--   geom_segment(aes(xend = 10, yend = count), linetype = 2, colour = 'grey') +  -->
+<!--   geom_point(size = 2) +  -->
+<!--   geom_text(aes(x = 10.1, label = sa2_name11), hjust = 0) +  -->
+<!--   coord_cartesian(clip = 'off') +  -->
+<!--   transition_reveal(iteration) +  -->
+<!--   theme_minimal() +  -->
+<!--   labs(title = "Counts of households by zones") + -->
+<!--   theme(plot.margin = margin(5.5, 40, 5.5, 5.5)) -->
+<!-- animate(anim, width = 800, height = 600, res = 100) -->
+<!-- ``` -->
 
