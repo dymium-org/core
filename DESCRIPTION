@@ -42,18 +42,12 @@ Suggests:
     knitr,
     rmarkdown,
     ggplot2 (>= 3.0.0),
-    gganimate (>= 1.0.0),
     DiagrammeR (>= 1.0.0),
     caret (>= 6.0.0),
     randomForest,
     reactable,
-    transformr (>= 0.1.0),
     patchwork (>= 1.0.0),
     scales (>= 1.1.0),
-    av,
-    png,
-    gifski,
-    magick,
     prettydoc,
     ggthemes (>= 4.2.0)
 Roxygen: list(markdown = TRUE, r6 = FALSE)
