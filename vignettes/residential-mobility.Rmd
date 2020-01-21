@@ -17,7 +17,8 @@ knitr::opts_chunk$set(
   out.width = '100%',
   fig.align = "center", 
   fig.width =  7,
-  dpi = 150,
+  fig.height =  5,
+  dpi = 200,
   warning = FALSE
 )
 ```
@@ -27,7 +28,7 @@ library(dymiumCore)
 library(data.table)
 library(sf)
 library(ggplot2)
-library(gganimate)
+library(patchwork)
 library(DiagrammeR)
 
 set.seed(728)
@@ -72,7 +73,7 @@ Here is the map of all the zones in this example.
 <!-- ``` -->
 
 
-```{r,  fig.align = "center", echo = FALSE, fig.cap="Melbourne CBD, Australia", warning=FALSE}
+```{r,  fig.align = "center", echo = FALSE, fig.cap="Melbourne CBD, Australia", warning=FALSE, fig.height=3}
 # set seed for reproducible widget id
 if (requireNamespace("htmltools", quietly = TRUE)) {
   htmlwidgets::setWidgetIdSeed(42)
@@ -209,7 +210,7 @@ The steps of the residential mobility event are inside the following function.
 
 ```{r}
 event_ltmobility_residentialRelocation <- function(world) {
-  # Get the household object from `world`
+  # Create a reference to the household object stored in world
   Hh <- world$get("Household")  
 
   # simulate the first stage - move or not move? ----
@@ -259,7 +260,7 @@ event_ltmobility_residentialRelocation <- function(world) {
 
 ### Create a microsimulation pipeline
 
-To simulate the residential mobility event for multiple iterations we can simply use a flow control statement such as a 'for' loop. The below chunk of codes run the residential mobility event that we have just created for 10 iterations and at the end of each iteration the total number of households in each zone will be stored inside `count_ls` which will be indexed by the iteration number.
+To simulate the residential mobility event for multiple iterations we can simply use a flow control statement such as a 'for' loop. The chunk of codes below runs the residential mobility event that we have just created for 10 iterations. At the end of each iteration the total number of households in each zone will be stored inside `count_ls` which will be indexed by its iteration number.
 
 ```{r, warning=FALSE}
 start_iter <- 1
@@ -271,13 +272,13 @@ for (i in start_iter:end_iter) {
   
   # record the count of households by zone in each iteration
   count_ls[[i]] <-
-    world$get("Household")$get_data()[, .(count = .N, iteration = i), by = zid]
+    world$get("Household")$get_data() %>% # returns the attribute data of the households
+    .[, .(count = .N, iteration = i), by = zid] # count the total number of households by zone
 }
-
 ```
 
 
-## Visualise the result
+## Visualise the simulation result
 
 To visualise the spatial dynamic of households we use the `gganimate` and `ggplot` packages.
 
@@ -289,46 +290,37 @@ count <- merge(count, toy_zones, by = "zid") %>%
 
 As a spatial plot..
 
-```{r, warning=FALSE}
-anim <-
- ggplot(count) +
- geom_sf(aes(fill = count)) +
- geom_sf_label(aes(label = sa2_name11)) +
- # Here come the gganimate specific bits
- labs(title = "Spatial distribution of households",
-      subtitle = "Iteration: {frame_time}") +
- scale_fill_viridis_c(option = "B") +
- transition_time(iteration)
-animate(anim, width = 800, height = 800, res = 100)
-```
-
-```{r gapgif, fig.show='animate', ffmpeg.format='gif', dev='jpeg', fig.asp = 1, fig.align = "center", fig.width =  7, message=FALSE, warning=FALSE}
-plots <- purrr::map(1:10, ~ {
-  ggplot(subset(count, iteration == .x)) +
+```{r, fig.width=7, fig.height=10}
+p_before <-
+  ggplot(data = subset(count, iteration == 1)) +
     geom_sf(aes(fill = count)) +
-    geom_sf_label(aes(label = sa2_name11)) +
-    # Here come the gganimate specific bits
-    scale_fill_viridis_c(option = "B", limits = c(0,28)) +
-    labs(title = "Spatial distribution of households",
-         subtitle = paste0("Iteration: ", .x))
-})
-purrr::walk(plots, print)
+    geom_sf_label(aes(label = sa2_name11), label.size = 0.7) +
+    scale_fill_viridis_c(option = "B", limits = c(0,30)) +
+    labs(title = paste0("Iteration: ", 1))
+
+p_after <- 
+   ggplot(data = subset(count, iteration == 10)) +
+    geom_sf(aes(fill = count)) +
+    geom_sf_label(aes(label = sa2_name11), label.size = 0.7) +
+    scale_fill_viridis_c(option = "B", limits = c(0,30)) +
+    labs(title = paste0("Iteration: ", 10))
+
+p_before / p_after +
+  plot_layout(guides = 'collect') &
+  plot_annotation(title = 'Spatial distribution of households')
 ```
 
 As a time series plot..
 
-```{r}
-anim <-
-  ggplot(count, aes(iteration, count, group = sa2_name11)) +
+```{r, fig.width=7, fig.height=5}
+ggplot(count, aes(iteration, count, group = sa2_name11)) +
   geom_line() +
-  geom_segment(aes(xend = 10, yend = count), linetype = 2, colour = 'grey') +
-  geom_point(size = 2) +
-  geom_text(aes(x = 10.1, label = sa2_name11), hjust = 0) +
+  geom_point(size = 1.5) +
   coord_cartesian(clip = 'off') +
-  transition_reveal(iteration) +
-  theme_minimal() +
-  labs(title = "Counts of households by zones") +
-  theme(plot.margin = margin(5.5, 40, 5.5, 5.5))
-animate(anim, width = 800, height = 600, res = 100)
+  theme_bw() +
+  scale_x_continuous(breaks = scales::pretty_breaks()) +
+  labs(title = "The total number of households by SA2 zone") +
+  theme(plot.margin = margin(5.5, 40, 5.5, 5.5)) +
+  facet_wrap(~ sa2_name11)
 ```
 
