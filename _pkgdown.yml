@@ -146,8 +146,8 @@ navbar:
           href: articles/residential-mobility.html
         - text: 'Mate matching'
           href: articles/mate-matching.html
-        - text: 'Use a caret model in Transition'
-          href: articles/mate-matching.html
+        - text: 'Marital status'
+          href: articles/marital-status.html
     news:
       text: News
       href: news/index.html
