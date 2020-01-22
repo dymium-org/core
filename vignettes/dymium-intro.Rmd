@@ -20,16 +20,11 @@ knitr::opts_chunk$set(
 library(dymiumCore)
 ```
 
-This vignette introduces the basic building blocks of `dymiumCore`, how they can be put together to create a microsimulation model, and how to take advantage of existing modules from  the [dymiumModules](https://github.com/dymium-org/dymiumModules) repository. 
-
-# Microsimulation modelling using `dymiumCore`
-
-Microsimulation models, regardless of their study contexts, generally share the same basic components which are agents or entities, rules and market interactions.
+This vignette introduces the basic building blocks for microsimulation in `dymiumCore`, how they can be put together to create a microsimulation model, and how to take advantage of existing modules from the [dymiumModules](https://github.com/dymium-org/dymiumModules) repository. 
 
 # Overview of the building blocks 
 
-An implementation of a microsimulation model usually consists of these three 
-components which are entity, transition and market.
+Microsimulation models, regardless of their study contexts, generally share the same basic components which are entities and rules. The rest of the article focuses on the main building blocks of microsimulation in term of implementation. 
 
 ## Entities
 
@@ -53,12 +48,16 @@ else:
     cant_marry
 ```
 
-or probabilistic such as a rate-based model or a classification model 
+This rule is deterministic since it makes sure that all individual agents above the age of 16 can get married.
+
+To use probabilistic rules you may want to use a rate-based model or a classification model 
 (binary logit model, multinomial logit model, hazard-based model, random forest, 
 and artificial neural network) that takes attributes of the entities as the
 input variables.
 
-dymium provides a class called `TransitionClassification` and `TransitionRegression` which take in a rule and entities then simulate the outcomes of the entities given the provided rule.  For probabilistic rules, Monte Carlo simulation will be performed based on the probabilistic values from the rules.
+`dymiumCore` provides `TransitionClassification` and `TransitionRegression`, both are [R6::R6Class], which take in a rule and entities then simulate the outcomes of the entities given the provided rule.  For probabilistic rules, Monte Carlo simulation will be performed based on the probabilistic values from the rules.
+
+### Supported models
 
 Currently, `dymiumCore` only supports the model objects fitted using `caret` and `stats` in the `Transition` classes.
 
@@ -68,6 +67,9 @@ Currently, `dymiumCore` only supports the model objects fitted using `caret` and
 |   stats | `lm` & `glm` |                   generalised regression models |      supported |
 |  mlogit |     `mlogit` |                        multinomial logit models | in-development |
 |    mlr3 |    `Learner` | classification, survival, and regression models |        planned |
+
+
+### Using transition probabilities
 
 In microsimulation, modellers often use transition probabilities that they obtained 
 from official sources. Hence, __dymiumCore__ provides an easy step to use those

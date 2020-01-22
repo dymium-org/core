@@ -1,0 +1,23 @@
+---
+title: "dymiumCore for end users"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{dymiumCore for end users}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, warning=FALSE}
+library(dymiumCore)
+```
+
+# Introduction
+
+Currently, a graphical user interface (GUI) is under development. Once it is ready, our end users can interact with dymium models via the GUI. The GUI will allow the end users to perform policy analysis on a microsimulation model and visualise the simulation result. Keep an eye on [dymiumGUI](https://github.com/dymium-org/dymiumGUI) for the its release!

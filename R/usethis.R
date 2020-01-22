@@ -104,7 +104,7 @@ use_module <- function(name) {
   usethis::use_directory(module_path)
 
   usethis::use_template(
-    template = "README.rmd",
+    template = "module-README.rmd",
     save_as = fs::path(module_path, "README.rmd"),
     data = list(module_path = module_path,
                 module = name),
@@ -154,7 +154,7 @@ use_module_readme <- function(name) {
     stop(glue("The module {name} doesn't exists at {module_path}."))
   }
   usethis::use_template(
-    template = "README.rmd",
+    template = "module-README.rmd",
     save_as = fs::path(module_path, "README.rmd"),
     data = list(module_path = module_path,
                 module = name),

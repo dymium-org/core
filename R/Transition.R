@@ -151,8 +151,8 @@ Transition <- R6Class(
         self$mutate(.)
     },
 
-    postprocess = function(.data) {
-      .data
+    postprocess = function(.sim_result) {
+      .sim_result
     },
 
     update_agents = function(attr) {
@@ -389,6 +389,8 @@ monte_carlo_sim <- function(prediction, target) {
 #' @return a data.table with two columns: id and response.
 #' @export
 #'
+#' @seealso [TransitionClassification] and [TransitionRegression].
+#'
 #' @examples
 #'
 #' # load data
@@ -410,9 +412,9 @@ monte_carlo_sim <- function(prediction, target) {
 #' trans(Ind, model_glm)
 trans <- function(entity, model, target = NULL, targeted_agents = NULL, update_attr = NULL) {
   if (is_regression(model)) {
-    trans <- TransitionRegression$new(entity, model, target, targeted_agents)
+    trans <- TransitionRegression$new(x = entity, model = model, targeted_agents = targeted_agents)
   } else {
-    trans <- TransitionClassification$new(entity, model, target, targeted_agents)
+    trans <- TransitionClassification$new(x = entity, model = model, target = target, targeted_agents = targeted_agents)
   }
   if (!is.null(update_attr)) {
     trans$update_agents(update_attr)

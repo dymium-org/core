@@ -2,20 +2,20 @@
 #'
 #' @description
 #'
-#' [TransitionClassification] performs a Monte Carlo simulation using a probabilistic
-#' model. Work flow: `initialise()` -> `filter()` -> `mutate()` -> `simulate()`
-#' -> `postprocess()`. Note that, the order of filter and mutate can be swap by
-#' overwriting the `preprocess()` method.
+#' [TransitionClassification] performs Monte Carlo simulation on a probabilistic
+#' model. In a simpler term, a psuedo random number generator is used to simulate
+#' the outcome based on the probability from the model.
 #'
-#' A class that perform Monte Carlo simulation on agents using a probabilistic model.
-#' Work flow: `initialise()` -> `filter()` -> `mutate()` -> `simulate()` -> `postprocess()`.
+#' This has the following work flow:
+#' 1. `initialise(x, model, target, targeted_agents)` ->
+#' 2. `filter(.data)`: filter agents to apply the transition to.
+#' 3. `mutate(.data)`: add variables to the data of the filtered agents.
+#' 4. `simulate()`: simulate the transition outcome using the probabilistic model
+#' 5. `postprocess(.sim_result)`: post-processing the simulation result.
+#'
 #' Note that, the order of filter and mutate can be swap by overwriting the `preprocess()` method.
-#' The default order as speficied in the `preprocess` method is:
-#'
-#' ```r
-#' filter(.data) %>%
-#'  mutate(.)
-#' ```
+#' This may be useful in cases where agent selection for the transition depends
+#' on one or more derived variables.
 #'
 #' @section Construction:
 #'
@@ -23,24 +23,43 @@
 #' TransitionClassification$new(x, model, target = NULL, targeted_agents = NULL)
 #' ```
 #'
-#' * `x` :: [`R6`]\cr
-#'   A Agent class inheritance object.
+#' * `x` :: [R6::R6Class]\cr
+#'   An [Entity] object or its inheritances.
 #'
-#' * `model` :: `object`\cr
-#'  A model.
+#' * `model` :: `any object` in [SupportedTransitionModels]\cr
+#'  A model object to be used to simulate transition.
 #'
-#' * `target` :: [`integer()`]\cr
-#'  (Default as NULL). A number that forces the number of micro events to occur. For example, if
-#'  `10`` is speficied, there will be 10 agents that under go the event. However,
-#'  if a integer vector is given it must be the same length as the classes in the model.
-#'  This only works for classification models.
+#' * `target` :: a named `list()`\cr
+#'  (Default as NULL).
+#'  A named list where the names of its elements correspond to the choices and
+#'  the values are the number of agents to choose those choices. This ensure that
+#'  the aggregate outcome of the transition matches a macro target. This is known
+#'  as 'alignment' see, Li, J., & O'Donoghue, C. (2012). Evaluating binary alignment
+#'  methods in microsimulation models. For example, in a transition where the probabilistic
+#'  model predicts only two outcomes, a binary model, "yes" and "no". If the target
+#'  is a list of yes = 10 and no = 20 (i.e. `r list(yes = 10, no = 20)`), this will
+#'  ensure that there will be 10 decision makers whom select 'yes' and 20 decision makers
+#'  that select 'no'. However, this doesn't mean that all decision makers have
+#'  an equal odd of select 'yes' or 'no', the odd is still to be determined by the given
+#'  probalistic model. See [alignment] for more detail.
 #'
-#' * `targeted_agent` :: [`integer()`]\cr
-#'  (Default as NULL) A integer vectors that contains ids of agents in `x` to undergo the event.
+#' * `targeted_agent` :: `integer()`\cr
+#'  (Default as NULL)
+#'  An integer vector that contains agents' ids of the [Entity] in `x` to undergo
+#'  the transition. If this is given then `target` will be ignored.
+#'
+#' * `model_by_id` :: `logical(1)`\cr
+#' This flag is to indicate whether the `model` object is meant to be matched
+#' by the id column of the entity object in `x` or not. It should be noted that
+#' this flag only matters if the `model` object is of type [data.table::data.table()]
+#' where it must contains a numeric column called `prob` or list columns of type
+#' numeric and character called `probs` and `choices`. The model object must have
+#' a column which its name matches with the id column of the entity object in `x`.
 #'
 #' @section Fields:
 #'
-#'  * `NULL`\cr
+#'  * `model_by_id` :: (`logical(1)`)\cr
+#'  See argument in the construction section.
 #'
 #' @section Methods:
 #'
@@ -81,8 +100,35 @@
 #' Returns ids of the agents that have their response equal to `response_filter`.
 #'
 #'
+#' @seealso [TransitionRegression] and [trans].
 #' @include Transition.R
 #' @export
+#'
+#' @examples
+#'
+#' # create a Individual agent object
+#' Ind <- Individual$new(.data = toy_individuals, id_col = "pid")
+#'
+#' # create a probabilistic model
+#' driver_status_rate <- data.table::data.table(
+#'   sex = c('male', 'female'),
+#'   probs = list(c(0.3,0.7), c(0.4,0.6)),
+#'   choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
+#' )
+#'
+#' # create a Transition for driver status
+#' TransitionCandrive <- R6::R6Class(
+#'   classname = "TransitionCandrive",
+#'   inherit = TransitionClassification
+#' )
+#'
+#' TransCanDrive <- TransitionCandrive$new(x = Ind, model = driver_status_rate)
+#'
+#' barplot(
+#'   table(TransCanDrive$get_result()[['response']]),
+#'   main = "Transition result: driver status",
+#'   col = c('steelblue', 'salmon')
+#' )
 TransitionClassification <- R6Class(
   classname = "TransitionClassification",
   inherit = Transition,
@@ -92,12 +138,6 @@ TransitionClassification <- R6Class(
 
   public = list(
 
-    #' @field model_by_id (`logical(1)`) is default as `FALSE`. This flag is to indicate
-    #'  whether the `model` object is meant to be matched by the id column of the entity object
-    #'  in `x` or not. It should be noted that this flag only matters if the `model` object is
-    #'  of type [data.table::data.table()] where it must contains a numeric column called `prob`
-    #'  or list columns of type numeric and character called `probs` and `choices`. The model
-    #'  object must have a column which its name matches with the id column of the entity object in `x`.
     model_by_id = NULL,
 
     #' @description
@@ -114,31 +154,7 @@ TransitionClassification <- R6Class(
     #'
     #' @return an [R6::R6Class] object
     #'
-    #' @examples
-    #'
-    #' # create a Individual agent object
-    #' Ind <- Individual$new(.data = toy_individuals, id_col = "pid")
-    #'
-    #' # create a probabilistic model
-    #' driver_status_rate <- data.table::data.table(
-    #'   sex = c('male', 'female'),
-    #'   probs = list(c(0.3,0.7), c(0.4,0.6)),
-    #'   choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
-    #' )
-    #'
-    #' # create a Transition for driver status
-    #' TransitionCandrive <- R6::R6Class(
-    #'   classname = "TransitionCandrive",
-    #'   inherit = TransitionClassification
-    #' )
-    #'
-    #' TransCanDrive <- TransitionCandrive$new(x = Ind, model = driver_status_rate)
-    #'
-    #' barplot(
-    #'   table(TransCanDrive$get_result()[['response']]),
-    #'   main = "Transition result: driver status",
-    #'   col = c('steelblue', 'salmon')
-    #' )
+
     initialize = function(x, model, target = NULL, targeted_agents = NULL, model_by_id = FALSE) {
       self$model_by_id <- model_by_id
       super$initialize(x, model, target = target, targeted_agents = targeted_agents)

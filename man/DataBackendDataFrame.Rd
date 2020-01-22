@@ -34,16 +34,17 @@ Add data.
 \item \code{get(rows, cols, copy = TRUE)}\cr
 (\code{integer(1)}, \code{character()}, \code{logical(1)}) -> \code{data.frame()}\cr
 Add data.
-\item \code{remove(.data, fill = FALSE)}\cr
-(\link[data.table:data.table]{data.table::data.table}) -> \code{NULL}\cr
+\item \code{remove(rows, cols)}\cr
+(\code{integer()}, \code{integer()}) -> \code{NULL}\cr
 (abstract) Remove the data. (Developer's note: Those records that get removed
 should be stored in \code{private$.removed_data} see the source code of \link{DataBackendDataTable}
 for example.)
 \item \code{view(interactive = FALSE)}\cr
 (\code{logical(1)})\cr
-View the data.
+View the data. If \code{interactive} is TRUE, the data will be shown in your
+data tab if you are using RStudio.
 \item \code{head(n = 5)}\cr
-() -> \code{data.frame()}\cr
+(\code{integer(1)}) -> \code{data.frame()}\cr
 Get the head of the data.
 \item \code{ncol()}\cr
 () -> \code{integer(1)}\cr

@@ -21,53 +21,65 @@ to undergo this}
 an \link[R6:R6Class]{R6::R6Class} object
 }
 \description{
-\link{TransitionClassification} performs a Monte Carlo simulation using a probabilistic
-model. Work flow: \code{initialise()} -> \code{filter()} -> \code{mutate()} -> \code{simulate()}
--> \code{postprocess()}. Note that, the order of filter and mutate can be swap by
-overwriting the \code{preprocess()} method.
+\link{TransitionClassification} performs Monte Carlo simulation on a probabilistic
+model. In a simpler term, a psuedo random number generator is used to simulate
+the outcome based on the probability from the model.
 
-A class that perform Monte Carlo simulation on agents using a probabilistic model.
-Work flow: \code{initialise()} -> \code{filter()} -> \code{mutate()} -> \code{simulate()} -> \code{postprocess()}.
+This has the following work flow:
+\enumerate{
+\item \code{initialise(x, model, target, targeted_agents)} ->
+\item \code{filter(.data)}: filter agents to apply the transition to.
+\item \code{mutate(.data)}: add variables to the data of the filtered agents.
+\item \code{simulate()}: simulate the transition outcome using the probabilistic model
+\item \code{postprocess(.sim_result)}: post-processing the simulation result.
+}
+
 Note that, the order of filter and mutate can be swap by overwriting the \code{preprocess()} method.
-The default order as speficied in the \code{preprocess} method is:\if{html}{\out{<div class="r">}}\preformatted{filter(.data) \%>\%
- mutate(.)
-}\if{html}{\out{</div>}}
+This may be useful in cases where agent selection for the transition depends
+on one or more derived variables.
 
 Create a \link{TransitionClassification} object.
 }
-\section{Fields}{
-
-\describe{
-\item{\code{model_by_id}}{(\code{logical(1)}) is default as \code{FALSE}. This flag is to indicate
-whether the \code{model} object is meant to be matched by the id column of the entity object
-in \code{x} or not. It should be noted that this flag only matters if the \code{model} object is
-of type \code{\link[data.table:data.table]{data.table::data.table()}} where it must contains a numeric column called \code{prob}
-or list columns of type numeric and character called \code{probs} and \code{choices}. The model
-object must have a column which its name matches with the id column of the entity object in \code{x}.}
-}}
-
 \section{Construction}{
 \preformatted{TransitionClassification$new(x, model, target = NULL, targeted_agents = NULL)
 }
 \itemize{
-\item \code{x} :: \code{\link{R6}}\cr
-A Agent class inheritance object.
-\item \code{model} :: \code{object}\cr
-A model.
-\item \code{target} :: \code{\link[=integer]{integer()}}\cr
-(Default as NULL). A number that forces the number of micro events to occur. For example, if
-`10`` is speficied, there will be 10 agents that under go the event. However,
-if a integer vector is given it must be the same length as the classes in the model.
-This only works for classification models.
-\item \code{targeted_agent} :: \code{\link[=integer]{integer()}}\cr
-(Default as NULL) A integer vectors that contains ids of agents in \code{x} to undergo the event.
+\item \code{x} :: \link[R6:R6Class]{R6::R6Class}\cr
+An \link{Entity} object or its inheritances.
+\item \code{model} :: \verb{any object} in \link{SupportedTransitionModels}\cr
+A model object to be used to simulate transition.
+\item \code{target} :: a named \code{list()}\cr
+(Default as NULL).
+A named list where the names of its elements correspond to the choices and
+the values are the number of agents to choose those choices. This ensure that
+the aggregate outcome of the transition matches a macro target. This is known
+as 'alignment' see, Li, J., & O'Donoghue, C. (2012). Evaluating binary alignment
+methods in microsimulation models. For example, in a transition where the probabilistic
+model predicts only two outcomes, a binary model, "yes" and "no". If the target
+is a list of yes = 10 and no = 20 (i.e. \verb{r list(yes = 10, no = 20)}), this will
+ensure that there will be 10 decision makers whom select 'yes' and 20 decision makers
+that select 'no'. However, this doesn't mean that all decision makers have
+an equal odd of select 'yes' or 'no', the odd is still to be determined by the given
+probalistic model. See \link{alignment} for more detail.
+\item \code{targeted_agent} :: \code{integer()}\cr
+(Default as NULL)
+An integer vector that contains agents' ids of the \link{Entity} in \code{x} to undergo
+the transition. If this is given then \code{target} will be ignored.
+\item \code{model_by_id} :: \code{logical(1)}\cr
+This flag is to indicate whether the \code{model} object is meant to be matched
+by the id column of the entity object in \code{x} or not. It should be noted that
+this flag only matters if the \code{model} object is of type \code{\link[data.table:data.table]{data.table::data.table()}}
+where it must contains a numeric column called \code{prob} or list columns of type
+numeric and character called \code{probs} and \code{choices}. The model object must have
+a column which its name matches with the id column of the entity object in \code{x}.
 }
 }
 
 \section{Fields}{
 
 \itemize{
-\item \code{NULL}\cr
+\item \code{model_by_id} :: (\code{logical(1)})\cr
+See argument in the construction section.
 }
 }
 
@@ -131,4 +143,7 @@ barplot(
   main = "Transition result: driver status",
   col = c('steelblue', 'salmon')
 )
+}
+\seealso{
+\link{TransitionRegression} and \link{trans}.
 }

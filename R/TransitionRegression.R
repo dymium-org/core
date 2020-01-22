@@ -1,10 +1,13 @@
 #' @title Transition for regression model
 #'
 #' @description
-#'
-#' Note that, TransitionRegression only returns a raw output of the simulation result.
 #' This is particularly useful for updating agents' attributes that can be modelled
 #' using a regression model.
+#'
+#' @note
+#' TransitionRegression only returns a raw output of the simulation result.
+#' In a future update, there will be an option which allows the prediction result
+#' to be drawn from a distribution to add randomness to the result.
 #'
 #' @format [R6::R6Class] object inheriting from [Transition]
 #' @section Construction:
@@ -15,17 +18,12 @@
 #' * `x` :: [R6::R6Class]\cr
 #'   A Agent class inheritance object.
 #'
-#' * `model` :: `any object` of [SupportedTransitionModels]\cr
+#' * `model` :: `any object` in [SupportedTransitionModels]\cr
 #'  A model object to be used to simulate transition.
 #'
-#' * `target` :: [`integer()`]\cr
-#'  (Default as NULL). A number that forces the number of micro events to occur. For example, if
-#'  `10`` is speficied, there will be 10 agents that under go the event. However,
-#'  if a integer vector is given it must be the same length as the classes in the model.
-#'  This only works for classification models.
-#'
 #' * `targeted_agent` :: [`integer()`]\cr
-#'  (Default as NULL) A integer vectors that contains ids of agents in `x` to undergo the event.
+#'  (Default as NULL)
+#'  A integer vectors that contains ids of agents in `x` to undergo the event.
 #'
 #' @section Fields:
 #'
@@ -69,16 +67,34 @@
 #' (`character()`) -> (`integer()`)\cr
 #' Returns ids of the agents that have their response equal to `response_filter`.
 #'
-#' @seealso [TransitionClassification]
+#' @seealso [TransitionClassification] and [trans].
 #'
 #' @include Transition.R
 #' @export
+#'
+#' @example
+#' # load toy data
+#' create_toy_population()
+#' Ind <- pop$get("Individual")
+#'
+#' # fit a OLS regression model
+#' model_lm <- glm(age ~ sex + marital_status,
+#'                 data = Ind$get_data(),
+#'                 family = "gaussian")
+#' summary(model_lm)
+#'
+#' TransAge <- TransitionRegression$new(Ind, model = model_lm)
+#' # see the simulation result
+#' TransAge
+#'
+#' # update the individual agents' 'age' field using their simulated age
+#' TransAge$update_agents(attr = "age")
 TransitionRegression <- R6Class(
   classname = "TransitionRegression",
   inherit = Transition,
   public = list(
-    initialize = function(x, model, target = NULL, targeted_agents = NULL) {
-      super$initialize(x, model, target = target, targeted_agents = targeted_agents)
+    initialize = function(x, model, targeted_agents = NULL) {
+      super$initialize(x, model, target = NULL, targeted_agents = targeted_agents)
     }
   ),
 

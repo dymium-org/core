@@ -47,3 +47,6 @@ model_glm <- glm(I(sex == "male") ~ age + marital_status,
 trans(Ind, model_lm)
 trans(Ind, model_glm)
 }
+\seealso{
+\link{TransitionClassification} and \link{TransitionRegression}.
+}
