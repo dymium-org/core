@@ -191,6 +191,7 @@ test_that('target works', {
     TransitionClassification$new(Ind, model = list_model, target = good_target2)
   expect_equal(as.numeric(table(a_good_transition_2$get_result()[['response']])),
                c(10))
+  expect_equal(nrow(a_good_transition_2$get_result()), nrow(Ind$get_data()))
   expect_error(
     TransitionClassification$new(Ind, model = list_model, target = bad_target1),
     "The sum of targets cannot exceed the number of agents that are undergoing this transition."

@@ -188,15 +188,7 @@ TransitionClassification <- R6Class(
           )
         )
       )
-
-      if (!is.null(private$.target)) {
-        # remove .sim_data that were used in target
-        private$.sim_data <- private$.sim_data[-which(is.na(response))]
-        # filter all NAs from response
-        response <- response[!is.na(response)]
-      }
-
-      response
+      return(response)
     }
  )
 )

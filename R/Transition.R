@@ -169,10 +169,10 @@ Transition <- R6Class(
       }
 
       if (is.character(private$.sim_result[['response']])) {
-        .value <-
-          glue::glue_collapse(unique(private$.sim_result[['response']]),
-                              sep = ", ",
-                              width = 100)
+        rs <- summary(as.factor(private$.sim_result[['response']]))
+        .value <- paste0(names(rs), ": ",
+                        round(rs, 2),
+                        collapse = " | ")
       }
 
       msg <- glue::glue(
@@ -261,25 +261,27 @@ Transition <- R6Class(
                                     equal to the number of row of the data used \\
                                     to simulate it."))
       }
-      checkmate::assert(
-        checkmate::check_character(response, any.missing = FALSE, null.ok = FALSE),
-        checkmate::check_numeric(response, finite = TRUE, any.missing = FALSE, null.ok = FALSE),
-        combine = 'or'
-      )
 
       # construct simulation result
       sim_result <-
-        data.table::data.table(
-          id = private$.sim_data[[private$.AgtObj$get_id_col()]],
-          response = response
-        )
+        data.table::data.table(id = private$.sim_data[[private$.AgtObj$get_id_col()]],
+                               response = response)
 
-      checkmate::assert(
-        checkmate::check_integerish(sim_result[['id']], unique = TRUE),
-        checkmate::check_data_table(sim_result, any.missing = FALSE, null.ok = FALSE),
-        checkmate::check_names(names(sim_result), identical.to = c("id", "response")),
-        combine = 'and'
-      )
+      if (is.null(private$.target)) {
+        checkmate::assert(
+          checkmate::check_integerish(sim_result[['id']], unique = TRUE),
+          checkmate::check_data_table(sim_result, any.missing = FALSE, null.ok = FALSE),
+          checkmate::check_names(names(sim_result), identical.to = c("id", "response")),
+          combine = 'and'
+        )
+      } else {
+        checkmate::assert(
+          checkmate::check_integerish(sim_result[['id']], any.missing = FALSE, unique = TRUE),
+          checkmate::check_data_table(sim_result, any.missing = TRUE, null.ok = FALSE),
+          checkmate::check_names(names(sim_result), identical.to = c("id", "response")),
+          combine = 'and'
+        )
+      }
 
       private$.sim_result <- sim_result
       invisible(TRUE)
@@ -360,6 +362,11 @@ monte_carlo_sim <- function(prediction, target) {
     null.ok = FALSE,
     col.names = 'unique'
   )
+
+  if (!is.data.table(prediction)) {
+    setDT(prediction)
+  }
+
   choices <- names(prediction)
 
   if (!is.null(target)) {
