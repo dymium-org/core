@@ -1,6 +1,8 @@
 # dymiumCore 0.1.2
 
 - `TransitionClassification` now treats `probs` as probability weights and not exact probability values that should add up to 1. 
+- Removed deprecated Population's methods: `get_sum_hhsize` and `count_all`.
+- Fixed World's remove method in commit c0df66d.
 
 # dymiumCore 0.1.1
 
