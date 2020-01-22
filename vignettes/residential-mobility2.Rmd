@@ -2,7 +2,7 @@
 title: "Residential mobility2"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Residential mobility}
+  %\VignetteIndexEntry{Residential mobility2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
