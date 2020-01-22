@@ -4,7 +4,7 @@
 \alias{inspect}
 \title{Inspect Entity}
 \usage{
-inspect(entity, ids, related_entity = NULL)
+inspect(entity, ids, related_entity = NULL, verbose = TRUE)
 }
 \arguments{
 \item{entity}{an \link{Entity} object or its inheritance object}
@@ -14,9 +14,12 @@ inspect(entity, ids, related_entity = NULL)
 \item{related_entity}{an \link{Entity} object or its inheritance object which must
 be related to \code{entity} but not the same as \code{entity}. For example, \code{related_entity}
 can be \link{Household} if \code{entity} is \link{Individual}.}
+
+\item{verbose}{:: \code{logical(1)}
+Should the data be printed to console.}
 }
 \value{
-a list of data.tables.
+a named ist of data.tables.
 }
 \description{
 Return and print to console the attribute data of entities within an \link{Entity}

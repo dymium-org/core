@@ -164,8 +164,10 @@ merge_entities <- function(entity_x, entity_y, x_dataname, y_dataname) {
 #' @param related_entity an [Entity] object or its inheritance object which must
 #' be related to `entity` but not the same as `entity`. For example, `related_entity`
 #' can be [Household] if `entity` is [Individual].
+#' @param verbose :: `logical(1)`
+#' Should the data be printed to console.
 #'
-#' @return a list of data.tables.
+#' @return a named ist of data.tables.
 #' @export
 #'
 #' @examples
@@ -177,7 +179,7 @@ merge_entities <- function(entity_x, entity_y, x_dataname, y_dataname) {
 #'   ids = c(1:3),
 #'   related_entity = world$get("Household")
 #' )
-inspect <- function(entity, ids, related_entity = NULL) {
+inspect <- function(entity, ids, related_entity = NULL, verbose = TRUE) {
   checkmate::assert_r6(entity, classes = c("Entity"))
   checkmate::assert_integerish(ids, lower = 0, any.missing = FALSE)
   checkmate::assert_r6(related_entity, classes = c("Entity"), null.ok = TRUE)
@@ -192,10 +194,15 @@ inspect <- function(entity, ids, related_entity = NULL) {
       stop(glue::glue("'entity' cannot be linked with 'related_entity' \\
                       through their primary id variables."))
     }
-    cli::cli_alert_info("Attribute data of {related_entity$class()}")
+    if (verbose)  {
+      cli::cli_alert_info("Attribute data of {related_entity$class()}")
+    }
+
     # entities are 'members' to related entities
     if (related_entity$get_id_col() %in% entity$data()$colnames()) {
-      cli::cli_alert_info("Note that, entities are 'members' to related entities.")
+      if (verbose)  {
+        cli::cli_alert_info("Note that, entities are 'members' to related entities.")
+      }
       related_entity_ids <-
         entity$get_attr(x = related_entity$get_id_col(), ids = ids)
       related_entity_data <-
@@ -203,19 +210,26 @@ inspect <- function(entity, ids, related_entity = NULL) {
     }
     # entities are 'groups' of related entities
     if (entity$get_id_col() %in% related_entity$data()$colnames()) {
-      cli::cli_alert_info("Note that, entities are 'groups' of related entities.")
+      if (verbose)  {
+        cli::cli_alert_info("Note that, entities are 'groups' of related entities.")
+      }
       related_entity_data <-
         related_entity$get_data(copy = FALSE)[get(entity$get_id_col()) %in% ids]
     }
-    print(related_entity_data)
+
+    if (verbose) {
+      print(related_entity_data)
+    }
   } else {
     related_entity_data <- NULL
   }
 
   if (!is.null(entity$database[["history"]])) {
     entity_history <- entity$get_data("history", copy = FALSE)[get(entity$get_id_col()) %in% ids,]
-    cli::cli_alert_info("History data of {entity$class()}")
-    print(entity_history)
+    if (verbose) {
+      cli::cli_alert_info("History data of {entity$class()}")
+      print(entity_history)
+    }
   } else {
     entity_history <- NULL
   }
