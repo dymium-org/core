@@ -287,8 +287,8 @@ simulate_classification_datatable <- function(self, private) {
         .y = private$.model[['choices']],
         .f = ~ {
           (length(.x) == length(.y)) & # same correspoding number of prob to choice
-            (all(.x %between% c(0, 1))) & # probability value
-            (all(sum(.x) == 1)) # sum to 1
+            # (all(.x %between% c(0, 1))) & # probability value
+            (all(sum(.x) != 0)) # sum to 1
         }))
 
     if (.choices_and_probs_are_valid == FALSE) {
