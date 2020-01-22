@@ -32,7 +32,7 @@ Every module in [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumM
 
 I recommend that before you download any module you should first see its README page inside the repository. For example, if you want to know about the `demography` module or the events it has you should visit https://github.com/dymium-org/dymiumModules/tree/master/modules/demography.
 
-Once you are certain which module you want then use `download_module()`. This function allows modules to be downloaded into your active RStudio project. For example, if you would like to download the `matsim` module:
+Once you are certain which module you want then use `download_module()`. This function allows modules to be downloaded into your active RStudio project. For example, if you would like to download the `demography` module:
 
 ```{r, eval=FALSE}
 download_module("demography")
@@ -66,6 +66,12 @@ event_demography_birth$REQUIRED_MODELS
 
 
 # Let's put together a microsimulation model
+
+Each module may requires some specific entity classes. For example, the demography module requires a population of individuals that group into households. Hence, it needs `Individual` and `Household`.
+
+```{r}
+
+```
 
 
 ```{r}
