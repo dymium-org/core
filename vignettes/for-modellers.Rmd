@@ -30,7 +30,6 @@ Every module in [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumM
 
 # Download and use existing modules
 
-
 I recommend that before you download any module you should first see its README page inside the repository. For example, if you want to know about the `demography` module or the events it has you should visit https://github.com/dymium-org/dymiumModules/tree/master/modules/demography.
 
 Once you are certain which module you want then use `download_module()`. This function allows modules to be downloaded into your active RStudio project. For example, if you would like to download the `matsim` module:

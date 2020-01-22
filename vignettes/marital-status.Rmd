@@ -20,37 +20,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Pre-requisitons
-
-It is recommended that you use RStudio as your R 
-[IDE](https://en.wikipedia.org/wiki/Integrated_development_environment) 
-which can be downloaded for free from [this link](www.rstudio.com/download). 
-dymium heavily relies on the `data.table` package for data operations and the `R6` 
-package for creating and extending classes. It is recommended that you get yourself 
-familiar with those two packages. However, it should be quite straight forward to
-see how they are being used in the getting started guide. So feel free to go on 
-and read the rest of the guide! :) and also to let me know how I can improve this
-so that you can better understand **dymium**. 
-
-## Installation
-
-This tutorial is a quick start guide to build your first microsimulation model pipeline with `dymium`. 
-
-```{r eval = FALSE}
-# the lines below install the `remotes` package if it is not already installed.
-if (!require("remotes")) {
-  install.packages("remotes")  
-}
-
-# this install the `dymium` package from its github repo.
-remotes::install_github("dymium-org/dymium")
-```
-
-By install the `dymium` package it will automatically install other dymium packages
-such as `dymiumCore` and `dymiumGUI` as part of its dependencies. Basically, the `dymium`
-package act as a master package that when it is loaded it loads all other dymium packages,
-like the `tidyverse` package.
-
 ## Build your world!
 
 In dymium, a 'world' object contains everything from representations of entities
