@@ -37,10 +37,6 @@
 #'  Append new data to the object's data list (`private$.data`). the new data
 #'  must be linkable with the attribute data of the object by the id_col.
 #'
-#'  * `check_ids(ids)`\cr
-#'  (`integer()`)\cr
-#'  Return true if all ids exist if not raises an informative error.
-#'
 #'  * `data(name)`\cr
 #'  (`character(1)`) -> (`[dymiumCore::DataBackend]`|`NULL`)\cr
 #'  Returns a [DataBackend] with the name that matches `name`.
@@ -86,13 +82,10 @@
 #'  Check which of the attribute names given in `x` exist in the attribute data
 #'  of the object.
 #'
-#'  * `ids_exist(ids, by_element = FALSE, include_removed_data = FALSE)`\cr
-#'  (`integer()`, `logical(1)`, `logical(1)`) -> `logical()`\cr
-#'  Returns a logical vector of the same length as the argument `ids`. This function
-#'  checks whether the ids in the argument `ids` exist or not. If `by_element` is
-#'  TRUE then it will return a logical vector with the same length as `ids` in
-#'  their respective order. And if `inclide_removed_data` is TRUE it will check
-#'  the removed data to see if the ids ever existed.
+#'  * `ids_exist(ids, include_removed_data = FALSE)`\cr
+#'  (`integer()`, `logical(1)`) -> `logical()`\cr
+#'  Check whether `ids` exist or not.  And if `inclide_removed_data` is `TRUE` it
+#'   will also check the removed data.
 #'
 #'  * `idx_exist(idx, by_element = FALSE)`\cr
 #'  (`integer()`) -> `logical()`\cr
@@ -242,15 +235,7 @@ Entity <-
         }
         all_ids <- self$data()$get(col = private$.id_col)[[1]]
         if (expect_na == FALSE) {
-          if (checkmate::test_subset(ids, all_ids, empty.ok = FALSE, fmatch = TRUE) == FALSE) {
-            missing_ids <- ids[!ids %in% all_ids]
-            stop(
-              glue::glue(
-                "These ids do not exist: {missing_ids_char}",
-                missing_ids_char = glue::glue_collapse(missing_ids, sep = ", ", width = 50, last = " and ")
-              )
-            )
-          }
+          assert_entity_ids(self, ids)
         }
         sorted_idx <- which(all_ids %in% ids)
         sorted_ids <- all_ids[sorted_idx]
@@ -267,17 +252,14 @@ Entity <-
 
       remove = function(ids) {
         checkmate::assert_integerish(ids, any.missing = FALSE, unique = TRUE, lower = 1, min.len = 1)
-
         if (length(private$.data) == 0) {
           lg$warn("There is no data to be removed!")
           return(invisible())
         }
-
         for (DataObj in private$.data) {
           idx <- which(DataObj$get(copy = FALSE)[[private$.id_col]] %in% ids)
           DataObj$remove(rows = idx)
         }
-
         invisible()
       },
 
@@ -290,49 +272,11 @@ Entity <-
         }
       },
 
-      ids_exist = function(ids, by_element = FALSE, include_removed_data = FALSE) {
-        # can't have any NAs or numeric values with decimal points
-        checkmate::assert_integerish(x = ids, lower = 0, any.missing = FALSE)
-        AttrsDataObj <- self$data()
-        all_ids <- AttrsDataObj$get(col = private$.id_col)[[1]]
-        if (include_removed_data) {
-          all_ids <- c(all_ids, AttrsDataObj$get_removed()[[self$get_id_col()]])
-        }
-        if (by_element) {
-          return(ids %in% all_ids)
-        }
-        if (!all(ids %in% all_ids)) {
-          if (lg$threshold >= 500) {
-            non_existed_ids <- ids[!ids %in% all_ids]
-            lg$debug("{length(non_existed_ids)} ids don't exist: {non_existed_ids_char}.",
-                     non_existed_ids_char = glue::glue_collapse(non_existed_ids,
-                                                                sep = ", ",
-                                                                width = 50))
-          }
-          return(FALSE)
-        }
-        TRUE
-      },
-
-      check_ids = function(ids) {
-        res <- self$ids_exist(ids, by_element = TRUE)
-        if (!all(res)) {
-          msg <- glue(
-            "Not all ids exist. Here are the missing ones: {.missing}",
-            .missing = glue::glue_collapse(
-              ids[!res],
-              sep = ", ",
-              width = 100,
-              last = " and "
-            )
-          )
-          stop(msg)
-        }
-        invisible(TRUE)
+      ids_exist = function(ids, include_removed_data = FALSE) {
+        test_entity_ids(self, ids, include_removed_data = include_removed_data)
       },
 
       summary = function(verbose = TRUE) {
-
         if (length(private$.data) == 0) {
           summary_dt <-
             data.table(

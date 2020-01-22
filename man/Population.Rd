@@ -54,25 +54,27 @@ must not be in any household prior to joining a new one. Individual's
 existing household can be removed using \code{leave_household}.
 \item \code{leave_household(ind_ids)}\cr
 (\code{integer()})\cr
-Remove the individuals' household ids in ind_ids and update the households'
-affected attributes, from members leaving the household.
+Remove the household ids of the individuals in ind_ids and update the households'
+affected attributes, from their members leaving. Note that, if the
+household has no individuals then it will be removed. This will only cause
+a problem if all members of two or more households are to swap their households.
+There are no good reasons why that case should be allowed anyway.
 \item \code{remove_emptied_households()}\cr
-Remove emptied households.
+Remove all emptied households.
 \item \code{remove_population(pid = NULL, hid = NULL)}\cr
 (\code{integer()}, \code{integer()})\cr
 Remove population from \verb{$ind} and \verb{$hh} of this \code{Pop} object. If only \code{hid}
 is given all household members of households in \code{hid} arg will be removed.
 To remove only individuals leave \code{hid} to NULL and specify individuals by their ids
 in \code{pid}.
-\item \code{count_all(verbose = TRUE)}\cr
-Print out the number of individuals and households to console.
-\item \code{get_hhsize(hids)}\cr
-(\code{integer()})\cr
-Get hhsize from individual's data and merge it to household data.
+\item \code{get_hhsize(hids = NULL)}\cr
+(\code{integer()} | \code{NULL}) -> (\code{integer()})\cr
+Get household size of the households in \code{hids} if \code{NULL} then household size
+of all households will be returned.
 \item \code{update_hhsize()}\cr
-Update household size.
+Update household size of all household agents.
 \item \code{update()}\cr
-mask all the household update functions that need to be adjust after changes
+Masks all the household update functions that need to be adjust after changes
 in household members or in their attributes; such as change in partnership status,
 change of income, birth.
 \item \code{check_unique_id_cols(ind_data, hh_data = NULL)}\cr

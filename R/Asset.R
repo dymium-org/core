@@ -176,7 +176,6 @@ Asset <- R6::R6Class(
 
     get_owner = function(ids) {
       if (!missing(ids)) {
-        self$check_ids(ids)
         return(self$get_attr(x = self$get_owner_id_col(), ids = ids))
       }
       self$get_attr(x = self$get_owner_id_col())
@@ -200,7 +199,7 @@ Asset <- R6::R6Class(
         stop("All assets in `ids` must have owners.")
       }
       owner <- self$get_owner_object()
-      owner$check_ids(owner_ids)
+      assert_entity_ids(owner, owner_ids)
 
       # self removes
       self_idx <- self$get_idx(ids)
