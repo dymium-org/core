@@ -69,13 +69,15 @@ Returns individual ids matches the input \code{hids}.
 \item \code{get_hid_col()}\cr
 () -> \code{character(1)}\cr
 Returns household id or \code{hid} of the individual-object.
-\item \code{add_relationship(ids, target_ids, type = c('father', 'mother', 'partner'))}\cr
-(\code{integer()}, \code{integer()}, \code{character(1)})\cr
-Return nothing, but it adds relationship of the type specifies in \code{type} by
-the user with the id of \code{target_ids} to individuals with ids in \code{ids}.
+\item \code{add_relationship(ids, target_ids, type)}\cr
+(\code{integer()}, \code{integer()}, \code{'father'|'mother'|'partner'})\cr
+Adds \code{target_ids} to the relationship column in \code{type} of the individual
+agents in \code{ids}. Note that, if \code{type} is 'partner' then both agents with id in
+\code{ids} and \code{target_ids} will add each other as 'partner'. Hence, no need for
+you to call this function twice to assign partner relationship to all the couples.
 \item \code{remove_relationship(ids, type = "partner")}\cr
-(\code{integer()}, \code{character()})\cr
-Note: children and parents can't be removed, only partner can be removed.
+(\code{integer()}, \code{'partner'})\cr
+Note that, children and parents can't be removed. Only partner relationship can be removed.
 \item \code{have_relationship(ids = NULL, type)}\cr
 (\code{integer()}, \code{character(1)}) -> \code{logical()}\cr
 Check if individuals in \code{ids} have the relationship of type \code{type}.

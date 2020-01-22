@@ -8,12 +8,6 @@
 \description{
 The base class (first building block) for \link{Agent}, \link{Asset} and \link{Environment}.
 }
-\section{Fields}{
-
-\describe{
-\item{\code{database}}{a list of all \link{DataBackends} of the Entity}
-}}
-
 \section{Construction}{
 \preformatted{x <- Entity$new(databackend, .data, id_col)
 }

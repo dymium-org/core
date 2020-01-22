@@ -76,14 +76,16 @@
 #'  () -> `character(1)`\cr
 #'  Returns household id or `hid` of the individual-object.
 #'
-#'  * `add_relationship(ids, target_ids, type = c('father', 'mother', 'partner'))`\cr
-#'  (`integer()`, `integer()`, `character(1)`)\cr
-#'  Return nothing, but it adds relationship of the type specifies in `type` by
-#'  the user with the id of `target_ids` to individuals with ids in `ids`.
+#'  * `add_relationship(ids, target_ids, type)`\cr
+#'  (`integer()`, `integer()`, `'father'|'mother'|'partner'`)\cr
+#'  Adds `target_ids` to the relationship column in `type` of the individual
+#'  agents in `ids`. Note that, if `type` is 'partner' then both agents with id in
+#'  `ids` and `target_ids` will add each other as 'partner'. Hence, no need for
+#'  you to call this function twice to assign partner relationship to all the couples.
 #'
 #'  * `remove_relationship(ids, type = "partner")`\cr
-#'  (`integer()`, `character()`)\cr
-#'  Note: children and parents can't be removed, only partner can be removed.
+#'  (`integer()`, `'partner'`)\cr
+#'  Note that, children and parents can't be removed. Only partner relationship can be removed.
 #'
 #'  * `have_relationship(ids = NULL, type)`\cr
 #'  (`integer()`, `character(1)`) -> `logical()`\cr
