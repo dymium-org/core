@@ -26,15 +26,84 @@ This vignette introduces the basic building blocks for microsimulation in `dymiu
 
 Microsimulation models, regardless of their study contexts, generally share the same basic components which are entities and rules. The rest of the article focuses on the main building blocks of microsimulation in term of implementation. 
 
-## Entities
+## Entities and Containers
 
-Entities can be persons, firms, buildings, zones, transport network etc. They
-can be conviniently defined as a class, based on the concept of 'objects' in 
-object-oriented programming. Each entity is known by its fields and methods, 
-what it represents and what it can do. A person may contains fields such as age, 
-gender, marital status. A person give birth, leave parental home, etc.  While 
-a household may have household size, household id, number of vehicles owned as
-its fields. A household can relocate, have new members and etc.
+The main focus of `dymiumCore` is to be used for urban modelling hence we provide the entity classes that often found in the context of urban modelling. The main entity classes are `Agent`, `Asset` and `Environment`. They are inheritances of the `Entity` class. Extended from the main entity classes are `Individual`, `Household`, `Building`, `Firm` (coming soon), `Network`, `Zone` and many more to come. All the inheritances of `Entity` have the same constructor function which requires attribute data of the entities to be created and name of the id column. 
+
+Let's try to create an instance of `Individual` using the `toy_individuals` dataset, microdata, that comes with `dymiumCore`. Note that, the `pid` column is its id column.
+
+```{r}
+toy_individuals
+```
+
+All entity classes are R6 class. Hence to create an object from an R6 class we need to call its constructor method which is `$new()`.
+
+```{r}
+Ind <- Individual$new(.data = toy_individuals, id_col = "pid")
+Ind
+```
+
+Individual agents are usually grouped into households, since household is often a more meaningful unit of analysis than individual. `Population` can be used to create `Individual` and `Household` that are linked together. `Population` is an inheritance of the `Container` class but has methods that can help you to modify, update, and inspect `Individual` and `Household` jointly.
+
+Here is how you create an instance of `Population`.
+
+```{r}
+Pop <- Population$new(ind_data = toy_individuals,
+                      hh_data = toy_households, 
+                      pid_col = "pid", 
+                      hid_col = "hid")
+```
+
+You can use `$plot_relatioship` method to visualise the relationship network within a household. Note that, the nodes are labelled by their id and age (id:age). 
+
+```{r, fig.asp=1, fig.width=7, fig.cap="Click on the nodes to see their attributes"}
+Pop$plot_relatioship(hid = 4)
+```
+
+`World` is also a `Container` class. The main purpose of a `Container` class is to store some objects that can be easily accessed using their keys. In dymium, we use `World` to contain entities, other containers, and models that we setup for simulation. We also give `World` some other responsibilities such as having the control over the simulation clock. 
+
+Here is how you can create a `World` object and add entities into it.
+
+```{r}
+world <- World$new()
+# add Population
+world$add(x = Pop)
+world
+```
+
+Now, let's add a glm model into our world. Note that, when a model object is added it will be warped inside `Model` so that it has a reference semantic like all other entities and containers.
+
+```{r}
+my_logit_model <-
+  glm(I(as.factor(sex)) ~ age + marital_status,
+      data = toy_individuals,
+      family = binomial(link = "logit"))
+world$add(x = my_logit_model, name = "my_logit_model")
+```
+
+To access the objects that we have just added we can either use one of these methods
+
+Use `$get(name)` to get any added object using its name. If you add an Entity object to World you do not need to name it as it will be named as its class name. But for a model object, you will need to give it a name. 
+
+```{r}
+world$get("Individual")
+world$get("my_logit_model")
+```
+
+Or you can access them using these fields of `World`. As the names suggest, all objects added are categorised into differnt fields by their class for easy access.
+
+```{r}
+world$entities
+world$entities$Individual
+world$models
+world$containers
+```
+
+The `$Cont` field holds all objects that `World` contains. 
+
+```{r}
+world$Cont
+```
 
 ## Transition
 

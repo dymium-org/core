@@ -33,7 +33,6 @@ set.seed(728)
 
 Residential mobility or household relocation plays an important role in determining the urban traffic and the real estate market condition. In this example, we create a simple residential mobility model which comprises of two stages. The first stage is for households to decide whether to move from their current residence. If they decide to move then they will go onto the second stage otherwise they will remain where they are. The second stage is for the moving households to decide where they will relocate to. 
 
-
 ```{r, echo=FALSE, fig.cap="Flowchart of the residential mobility event", out.width = '100%'}
 knitr::include_graphics("residential-mobility-flowchart.png")
 ```
@@ -52,12 +51,6 @@ To make this model simple, the following assumptions were made.
 
 
 Here is the map of all the zones in this example. 
-
-<!-- ```{r,  fig.align = "center", fig.asp = 1, fig.width = 7} -->
-<!-- ggplot(toy_zones) + -->
-<!--   geom_sf(aes(fill = albers_sqm)) + -->
-<!--   geom_sf_label(aes(label = rownames(toy_zones))) -->
-<!-- ``` -->
 
 
 ```{r,  fig.align = "center", echo = FALSE, fig.cap="Melbourne CBD, Australia", warning=FALSE, fig.height=3}
