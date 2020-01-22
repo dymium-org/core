@@ -83,6 +83,13 @@ test_that("datatable - choices", {
     choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive', 'not applicable'))
   )
 
+  # some prob doesn't sum up to 1
+  bad_choice3 <- data.table(
+    sex = c('male', 'female'),
+    probs = list(c(0.1,0.8), c(0.9,0.1)),
+    choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
+  )
+
   # duplicated choice
   bad_choice <- data.table(
     sex = c('male', 'female', 'male'),
@@ -101,6 +108,7 @@ test_that("datatable - choices", {
   TransitionCandrive <- R6::R6Class(classname = "TransitionCandrive",
                                     inherit = TransitionClassification)
 
+  checkmate::expect_data_table(TransitionCandrive$new(Ind, good_choice2)$get_result())
   expect_message(print(TransitionCandrive$new(Ind, good_choice)),
                  regexp = "agents with 2 unique responses of type character")
   expect_message(print(TransitionCandrive$new(Ind, good_choice2)),
