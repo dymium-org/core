@@ -83,18 +83,18 @@ test_that("datatable - choices", {
     choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive', 'not applicable'))
   )
 
+  # some prob doesn't sum up to 1
+  bad_choice3 <- data.table(
+    sex = c('male', 'female'),
+    probs = list(c(0.1,0.8), c(0.9,0.1)),
+    choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
+  )
+
   # duplicated choice
   bad_choice <- data.table(
     sex = c('male', 'female', 'male'),
     probs = list(c(0.1,0.9), c(0.9,0.1), c(0.9,0.1)),
     choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
-  )
-
-  # some prob doesn't sum up to 1
-  bad_choice2 <- data.table(
-    sex = c('male', 'female'),
-    probs = list(c(0.1,0.8), c(0.9,0.1)),
-    choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
   )
 
   # contain an extra column
@@ -108,14 +108,13 @@ test_that("datatable - choices", {
   TransitionCandrive <- R6::R6Class(classname = "TransitionCandrive",
                                     inherit = TransitionClassification)
 
+  checkmate::expect_data_table(TransitionCandrive$new(Ind, good_choice2)$get_result())
   expect_message(print(TransitionCandrive$new(Ind, good_choice)),
                  regexp = "agents with 2 unique responses of type character")
   expect_message(print(TransitionCandrive$new(Ind, good_choice2)),
                  regexp = "unique responses of type character")
   expect_error(TransitionCandrive$new(Ind, bad_choice),
                regexp = "`model` contains duplicated rows")
-  expect_error(TransitionCandrive$new(Ind, bad_choice2),
-               regexp = "probability and choice columns failed to pass the sanity checks of")
   expect_error(TransitionCandrive$new(Ind, bad_choice3),
                regexp = "failed: Must be a subset of set \\{pid")
 })
