@@ -139,9 +139,11 @@ get_log.Generic <- function(x) {
 #' @rdname get_log
 #' @export
 get_log.Container <- function(x) {
+  x_log <- get_log.Generic(x)
+  all_logs <- purrr::map(x$Cont, get_log.Generic)
+  all_logs[[length(all_logs) + 1L]] <- x_log
   return(
-    purrr::map(x$Cont, ~ .x$.__enclos_env__$private$.log) %>%
-      purrr::keep(., ~ !is.null(.x)) %>%
+    purrr::keep(all_logs, ~ !is.null(.x)) %>%
       rbindlist(.) %>%
       data.table::setorder(., time, created_timestamp)
   )

@@ -110,8 +110,8 @@ test_that("is_alive", {
   data <- copy(dymiumCore::toy_individuals)
   MyAgent <- Agent$new()
   MyAgent$initialise_data(.data = data, id_col = "pid")
-  expect_error(MyAgent$is_alive(ids = NA))
-  expect_error(MyAgent$is_alive(ids = MyAgent$get_attr(x = "partner_id")))
+  expect_error(MyAgent$is_alive(ids = NA), "Contains missing values \\(element 1\\)")
+  expect_error(MyAgent$is_alive(ids = MyAgent$get_attr(x = "partner_id")), "Contains missing values")
 })
 
 test_that("$subset_ids", {
@@ -181,16 +181,11 @@ test_that("Agent$get_attr", {
 test_that("ids_exist", {
   create_toy_population()
   Ind <- pop$get("Individual")
-  some_ids <- Ind$get_ids()
-
-  expect_true(Ind$ids_exist(some_ids, by_element = FALSE, include_removed_data = FALSE))
-  expect_equal(Ind$ids_exist(some_ids, by_element = TRUE), rep(TRUE, length(some_ids)))
-  expect_length(Ind$ids_exist(some_ids, by_element = TRUE), length(some_ids))
-
-  Ind$remove(some_ids[1:5])
-  expect_false(Ind$ids_exist(some_ids, by_element = FALSE, include_removed_data = FALSE))
-  expect_true(Ind$ids_exist(some_ids, by_element = FALSE, include_removed_data = TRUE))
-
+  all_ids <- Ind$get_ids()
+  expect_true(Ind$ids_exist(ids = all_ids, include_removed_data = FALSE))
+  Ind$remove(all_ids[1:5])
+  expect_false(Ind$ids_exist(all_ids, include_removed_data = FALSE))
+  expect_true(Ind$ids_exist(all_ids, include_removed_data = TRUE))
 })
 
 # Agent data model --------------------------------------------------------
@@ -250,7 +245,7 @@ test_that("hatch", {
   pop$ind$hatch(1)
   count_after <- pop$ind$n()
   expect_gt(count_after, count_before)
-  expect_error(pop$ind$hatch(9999999), "These ids do not exists \\{9999999\\}")
+  expect_error(pop$ind$hatch(9999999), "These ids don't exist in Individual: 9999999")
 })
 
 test_that("add", {

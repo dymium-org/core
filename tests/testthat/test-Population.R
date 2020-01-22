@@ -38,57 +38,6 @@ test_that("$initialise_data", {
 
 })
 
-# Leave and join household repeatedly -------------------------------------
-test_that("Leave and join household repeatedly.", {
-  create_toy_population()
-
-  n_times <- 10
-  for (i in seq_len(n_times)) {
-    ids_of_households_to_join <- sample(pop$get("Household")$get_ids(), 50)
-    ids_of_individuals_to_leave <- sample(pop$get("Individual")$get_ids(), 50)
-    dt_leavers <-
-      data.table(
-        hid = ids_of_households_to_join,
-        pid = ids_of_individuals_to_leave)
-    number_of_individuals <- pop$get('Individual')$n()
-
-    # leave household
-    pop$leave_household(ind_ids = ids_of_individuals_to_leave)
-    total_number_individuals_in_households <-
-      sum(pop$get('Household')$get_attr(x = "hhsize"), na.rm = T)
-
-    # check that the totals are as expected
-    expect_equal(
-      object = total_number_individuals_in_households,
-      expected = number_of_individuals - length(ids_of_individuals_to_leave))
-
-    # check if the agents whom left their households are not members of any households
-    expect_true(all(is.na(pop$get('Individual')$get_attr(x = "hid", ids = ids_of_individuals_to_leave))))
-
-    # join household
-    pop$join_household(
-      ind_ids = ids_of_individuals_to_leave,
-      hh_ids = ids_of_households_to_join)
-
-    # check that the totals are as expected
-    total_number_individuals_in_households <-
-      sum(pop$get('Household')$get_attr(x = "hhsize"), na.rm = T)
-    expect_equal(
-      object = total_number_individuals_in_households,
-      expected = number_of_individuals)
-
-    # check if the current hid of ids_of_individuals_to_leave matches
-    # their ids_of_households_to_join
-    current_hid_of_leavers <-
-      pop$get('Individual')$get_household_ids(ids = ids_of_individuals_to_leave)
-    expect_identical(
-      object = current_hid_of_leavers,
-      expected = dt_leavers$hid)
-  }
-})
-
-
-
 # add_population -----------------------------------------------------------
 test_that("add_population", {
   create_toy_population()
@@ -193,6 +142,8 @@ test_that("check_unique_id_cols", {
       )
   )
 
+  pop$check_unique_id_cols(ind_data = copy(dymiumCore::toy_individuals)[, `:=`(pid = 9999, hid = NA_integer_)])
+
   expect_error(
     pop$check_unique_id_cols(
       ind_data = copy(dymiumCore::toy_individuals)[, `:=`(pid = 9999)],
@@ -208,3 +159,22 @@ test_that("check_unique_id_cols", {
   )
 })
 
+test_that("remove_emptied_households", {
+  create_toy_population()
+
+  Hh <- pop$get("Household")
+  Ind <- pop$get("Individual")
+
+  n_hh_before <- Hh$n()
+  n_ind_before <- Ind$n()
+
+  Ind$remove(ids = 1:100)
+
+  pop$remove_emptied_households(update_hhsize = TRUE)
+
+  n_hh_after <- Hh$n()
+  n_ind_after <- Ind$n()
+
+  expect_gt(n_hh_before, n_hh_after)
+  expect_gt(n_ind_before, n_ind_after)
+})

@@ -59,11 +59,14 @@
 #'
 #' * `leave_household(ind_ids)`\cr
 #'  (`integer()`)\cr
-#'  Remove the individuals' household ids in ind_ids and update the households'
-#'  affected attributes, from members leaving the household.
+#'  Remove the household ids of the individuals in ind_ids and update the households'
+#'  affected attributes, from their members leaving. Note that, if the
+#'  household has no individuals then it will be removed. This will only cause
+#'  a problem if all members of two or more households are to swap their households.
+#'  There are no good reasons why that case should be allowed anyway.
 #'
 #' * `remove_emptied_households()`\cr
-#'  Remove emptied households.
+#'  Remove all emptied households.
 #'
 #' * `remove_population(pid = NULL, hid = NULL)`\cr
 #'  (`integer()`, `integer()`)\cr
@@ -72,18 +75,16 @@
 #'  To remove only individuals leave `hid` to NULL and specify individuals by their ids
 #'  in `pid`.
 #'
-#' * `count_all(verbose = TRUE)`\cr
-#'  Print out the number of individuals and households to console.
-#'
-#' * `get_hhsize(hids)`\cr
-#'  (`integer()`)\cr
-#'  Get hhsize from individual's data and merge it to household data.
+#' * `get_hhsize(hids = NULL)`\cr
+#'  (`integer()` | `NULL`) -> (`integer()`)\cr
+#'  Get household size of the households in `hids` if `NULL` then household size
+#'  of all households will be returned.
 #'
 #' * `update_hhsize()`\cr
-#'  Update household size.
+#'  Update household size of all household agents.
 #'
 #' * `update()`\cr
-#'  mask all the household update functions that need to be adjust after changes
+#'  Masks all the household update functions that need to be adjust after changes
 #'  in household members or in their attributes; such as change in partnership status,
 #'  change of income, birth.
 #'
@@ -181,26 +182,37 @@ Population <- R6Class(
         if (!is.data.table(hh_data)) {
           hh_data <- data.table::copy(hh_data)
         }
-        # create household size column is missing
-        if (!'hhsize' %in% names(hh_data)) {
-          hh_data[, hhsize := NA_integer_]
-        }
         # check that all individuals belong to households in hh_data
         stopifnot(all(unique(ind_data[[hid_col]]) %in% hh_data[[hid_col]]))
+        # create household size column is missing
+        if (!'hhsize' %in% names(hh_data)) {
+          hh_data <-
+            merge(hh_data, ind_data[, .(hhsize = .N), by = hid_col],
+                  by = hid_col, all.x = TRUE)
+          data.table::setkey(hh_data, NULL)
+          if (any(is.na(hh_data[["hhsize"]]))) {
+            stop("There are some households in `hh_data` that have hhsize equal to NA.")
+          }
+        } else {
+          if (sum(hh_data[["hhsize"]]) != nrow(ind_data)) {
+            stop(glue::glue("The sum of hhsize in `hh_data` does not match with \\
+                            the number of records in `ind_data`."))
+          }
+        }
         # add new household agents
+
         self$get("Household")$add_new_agents(.data = hh_data)
       }
       # add ind_data to the population object
       self$get("Individual")$add_new_agents(.data = ind_data)
-      self$update()
       invisible()
     },
 
     join_household = function(ind_ids, hh_ids) {
       Ind <- self$get(Individual)
       Hh <- self$get(Household)
-      stopifnot(Ind$ids_exist(ids = ind_ids))
-      stopifnot(Hh$ids_exist(ids = hh_ids))
+      assert_entity_ids(Ind, ind_ids)
+      assert_entity_ids(Hh, hh_ids)
       # make sure all individuals in ind_ids don't have hid
       all_hids_are_na <-
         all(is.na(Ind$get_attr(x = Ind$get_hid_col(), ids = ind_ids)))
@@ -224,14 +236,22 @@ Population <- R6Class(
       add_history(entity = self$get("Individual"),
                   ids = ind_ids, event = EVENT$LEFT_HOUSEHOLD)
       # households update themselves
-      self$update_hhsize()
+      self$update()
       invisible()
     },
 
-    remove_emptied_households = function() {
-      hhsize_dt <- self$get_hhsize()
-      hids_hhsize_0 <- hhsize_dt[is.na(hhsize), get(self$get("Household")$get_id_col())]
-      self$get("Household")$remove(ids = hids_hhsize_0)
+    remove_emptied_households = function(update_hhsize = TRUE) {
+      checkmate::assert_flag(update_hhsize, na.ok = FALSE)
+      if (update_hhsize) {
+        self$update_hhsize()
+      }
+      Hh <- self$get("Household")
+      hh_with_hhsize_0 <- Hh$get_data()[hhsize == 0, get(Hh$get_id_col())]
+      if (length(hh_with_hhsize_0) != 0) {
+        self$log(desc = "n_emptied_households_removed", value = length(hh_with_hhsize_0))
+        Hh$remove(ids = hh_with_hhsize_0)
+      }
+      invisible()
     },
 
     remove_population = function(pid = NULL, hid = NULL) {
@@ -247,33 +267,13 @@ Population <- R6Class(
       }
       if (!is.null(pid)) {
         self$get("Individual")$remove(ids = pid)
+        self$remove_emptied_households(update_hhsize = TRUE)
       }
-    },
-
-    count_all = function(verbose = TRUE) {
-      n_individuals <- self$get("Individual")$n()
-      n_individuals_in_households <- self$get_sum_hhsize()
-      n_households <- self$get("Household")$n()
-      n_non_emptied_households <- sum(self$get_hhsize() != 0)
-
-      if (verbose) {
-        cat("Total no. individuals: ", n_individuals, "\n")
-        cat("Total no. members in a household: ", n_individuals_in_households, "\n")
-        cat("Total no. households: ", n_households, "\n")
-        cat("Total no. non-emptied households: ", n_non_emptied_households, "\n")
-      }
-
-      return(invisible(list(
-        n_individuals = n_individuals,
-        n_individuals_in_households = n_individuals_in_households,
-        n_households = n_households,
-        n_non_emptied_households = n_non_emptied_households
-        )))
     },
 
     check_hhsize = function() {
       n_individuals <- self$get("Individual")$n()
-      n_members_in_households <- self$get_sum_hhsize()
+      n_members_in_households <- sum(self$get_hhsize())
       n_households <- self$get("Household")$n()
       n_non_emptied_households <- sum(self$get_hhsize() != 0)
       n_emptied_households <- n_non_emptied_households - n_non_emptied_households
@@ -301,7 +301,7 @@ Population <- R6Class(
         unique() %>%
         .[!is.na(.)]
       # check uniqueness
-      if (self$get("Individual")$ids_exist(ind_data_pids, by_element = FALSE)) {
+      if (self$get("Individual")$ids_exist(ind_data_pids)) {
         stop("There are ids that exist in data already.")
       }
       # if no hh_data is given then all household id should be NA
@@ -335,18 +335,17 @@ Population <- R6Class(
       return(TRUE)
     },
 
-    get_hhsize = function(hids) {
+    get_hhsize = function(hids = NULL) {
       hid_col <- self$get("Individual")$get_hid_col()
-      if (missing(hids)) {
+      if (is.null(hids)) {
         hhsize_dt <-
           self$get("Individual")$get_data()[, .(hhsize = .N), by = c(hid_col)]
         hids <- self$get("Household")$get_ids()
       } else {
         stopifnot(self$get("Household")$ids_exist(hids))
         hhsize_dt <-
-          self$get("Individual")$get_data()[get(hid_col) %in% hids,
-                              .(hhsize = .N),
-                              by = c(hid_col)]
+          self$get("Individual")$get_data() %>%
+          .[get(hid_col) %in% hids, .(hhsize = .N), by = c(hid_col)]
       }
 
       # make sure all hids in the household object are get returned
@@ -366,17 +365,20 @@ Population <- R6Class(
       return(hhsize_dt[["hhsize"]])
     },
 
-    get_sum_hhsize = function(hids) {
-      sum(self$get_hhsize(hids))
-    },
-
     update_hhsize = function() {
       hid_col <- self$get("Household")$get_id_col()
-      self$get("Household")$get_data(copy = FALSE)[, hhsize := self$get_hhsize(get(hid_col))]
+      self$get("Household")$get_data(copy = FALSE)[, hhsize := self$get_hhsize()]
     },
 
     update = function() {
       self$update_hhsize()
+    },
+
+    print = function() {
+      super$print()
+      for (e in self$Cont) {
+        e$print()
+      }
     }
   )
 )

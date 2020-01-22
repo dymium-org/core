@@ -216,7 +216,9 @@ World <- R6::R6Class(
       # Go through all `containers` stored in World and remove the object which
       # its name matches `name`
       for (c in self$containers) {
-        c$remove(name)
+        if (x %in% c$names()) {
+          c$remove(name)
+        }
       }
 
       invisible()
