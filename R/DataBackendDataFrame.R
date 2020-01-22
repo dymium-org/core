@@ -32,18 +32,19 @@
 #'  (`integer(1)`, `character()`, `logical(1)`) -> `data.frame()`\cr
 #'  Add data.
 #'
-#'  * `remove(.data, fill = FALSE)`\cr
-#'  ([data.table::data.table]) -> `NULL`\cr
+#'  * `remove(rows, cols)`\cr
+#'  (`integer()`, `integer()`) -> `NULL`\cr
 #'  (abstract) Remove the data. (Developer's note: Those records that get removed
 #'  should be stored in `private$.removed_data` see the source code of [DataBackendDataTable]
 #'  for example.)
 #'
 #'  * `view(interactive = FALSE)`\cr
 #'  (`logical(1)`)\cr
-#'  View the data.
+#'  View the data. If `interactive` is TRUE, the data will be shown in your
+#'  data tab if you are using RStudio.
 #'
 #'  * `head(n = 5)`\cr
-#'  () -> `data.frame()`\cr
+#'  (`integer(1)`) -> `data.frame()`\cr
 #'  Get the head of the data.
 #'
 #'  * `ncol()`\cr
