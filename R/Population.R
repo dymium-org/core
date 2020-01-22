@@ -379,6 +379,63 @@ Population <- R6Class(
       for (e in self$Cont) {
         e$print()
       }
-    }
-  )
+    },
+
+    plot_relatioship = function(hid) {
+      if (!requireNamespace("visNetwork", quietly = TRUE)) {
+        .choice <-
+          utils::menu(choices = c("Yes", "No"),
+                      title = glue::glue("plot_relationship needs the `visNetwork` package. \\
+                                Would you like to download the sf package now?"))
+        if (.choice == 1) {
+          install.packages("visNetwork", repos = "https://cloud.r-project.org")
+        } else {
+          stop("The `visNetwork` package is not installed.")
+        }
+      }
+
+      Ind <- self$get("Individual")
+      Hh <- self$get("Household")
+
+      members <- inspect(Hh, hid, Ind, verbose = FALSE)$related_entity
+
+      nodes <- members[, .(
+        id = pid,
+        label = paste0(pid, ":", age),
+        group = sex,
+        title = paste0("<p>pid:<b>", pid, "</b><br>",
+                       "Age:<b>", age, "</b><br>",
+                       "MS:<b>", marital_status, "</b></p>"))]
+
+      edges <-
+        rbindlist(list(members[, .(from = pid, to = father_id, label = "father")],
+                       members[, .(from = pid, to = mother_id, label = "mother")],
+                       members[, .(from = pid, to = partner_id, label = "partner")]))
+
+      visNetwork::visNetwork(nodes, edges) %>%
+        visNetwork::visEdges(
+          shadow = TRUE,
+          arrows = list(to = list(
+            enabled = TRUE, scaleFactor = 1
+          )),
+          color = list(color = "lightblue", highlight = "red")
+        ) %>%
+        visNetwork::visGroups(
+          groupname = "female",
+          color = "salmon",
+          shape = "circle",
+          shadow = list(enabled = TRUE)
+        ) %>%
+        visNetwork::visGroups(
+          groupname = "male",
+          color = "#97C2FC",
+          shape = "circle",
+          shadow = list(enabled = TRUE)
+        ) %>%
+        visNetwork::visLegend(width = 0.2,
+                  position = "right",
+                  main = "Group") %>%
+        visNetwork::visEdges(smooth = FALSE)
+
+    })
 )
