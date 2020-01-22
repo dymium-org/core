@@ -224,6 +224,11 @@ World <- R6::R6Class(
       invisible()
     },
 
+    replace = function(x, name) {
+      self$remove(name)
+      self$add(x, name)
+    },
+
     get_entity = function(x) {
       if (missing(x)) {
         stop(glue::glue("`x` is missing, with no default. These entities are available: {.entities}.",
