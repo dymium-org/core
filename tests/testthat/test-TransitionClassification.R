@@ -90,13 +90,6 @@ test_that("datatable - choices", {
     choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
   )
 
-  # some prob doesn't sum up to 1
-  bad_choice2 <- data.table(
-    sex = c('male', 'female'),
-    probs = list(c(0.1,0.8), c(0.9,0.1)),
-    choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
-  )
-
   # contain an extra column
   bad_choice3 <- data.table(
     sex = c('male', 'female'),
@@ -114,8 +107,6 @@ test_that("datatable - choices", {
                  regexp = "unique responses of type character")
   expect_error(TransitionCandrive$new(Ind, bad_choice),
                regexp = "`model` contains duplicated rows")
-  expect_error(TransitionCandrive$new(Ind, bad_choice2),
-               regexp = "probability and choice columns failed to pass the sanity checks of")
   expect_error(TransitionCandrive$new(Ind, bad_choice3),
                regexp = "failed: Must be a subset of set \\{pid")
 })
