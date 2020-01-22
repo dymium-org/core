@@ -62,7 +62,7 @@ Model <-
         private$.model
       },
       set = function(x) {
-        stopifnot(private$.check_model(x))
+        assert_transition_supported_model(x)
         private$.model <- x
         return(self)
       },
@@ -80,18 +80,6 @@ Model <-
       }
     ),
     private = list(
-      .model = NULL,
-      .check_model = function(x) {
-        checkmate::assert_subset(class(x)[[1]], choices = c("train", "data.table", "list"), empty.ok = FALSE)
-        if (inherits(x, "list")) {
-          checkmate::assert_names(names(x), type = "unique")
-          # NOTE: this is
-          # checkmate::assert_numeric(unlist(x), lower = 0, finite = TRUE, any.missing = FALSE, null.ok = FALSE)
-        }
-        if (inherits(x, "data.table")) {
-          checkmate::assert_data_table(x, col.names = "strict", null.ok = FALSE, min.rows = 1)
-        }
-        return(TRUE)
-      }
+      .model = NULL
     )
   )
