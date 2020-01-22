@@ -1,8 +1,8 @@
 ---
-title: "Residential mobility"
+title: "Residential mobility2"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Residential mobility}
+  %\VignetteIndexEntry{Residential mobility2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -26,7 +26,7 @@ library(data.table)
 library(sf)
 library(ggplot2)
 library(patchwork)
-library(DiagrammeR)
+# library(DiagrammeR)
 
 set.seed(728)
 ```
@@ -35,17 +35,17 @@ set.seed(728)
 
 Residential mobility or household relocation plays an important role in determining the urban traffic and the real estate market condition. In this example, we create a simple residential mobility model which comprises of two stages. The first stage is for households to decide whether to move from their current residence. If they decide to move then they will go onto the second stage otherwise they will remain where they are. The second stage is for the moving households to decide where they will relocate to. 
 
-```{r , echo = FALSE, fig.cap="Flowchart of the processes in the simple residential mobility model", fig.width = 4, fig.height = 4, fig.asp=0.3}
-mermaid("
-graph LR
-  Start((start))-->FirstStage{Relocate?}
-  FirstStage--Yes-->SecondStage{Where to?}
-  FirstStage--No-->NotMove[Remain in the residence]
-  SecondStage-->Move[Move to the new zone]
-  Move-->Stop((Stop))
-  NotMove-->Stop((Stop))
-  ")
-```
+# ```{r , echo = FALSE, fig.cap="Flowchart of the processes in the simple residential mobility model", fig.width = 4, fig.height = 4, fig.asp=0.3}
+# mermaid("
+# graph LR
+#   Start((start))-->FirstStage{Relocate?}
+#   FirstStage--Yes-->SecondStage{Where to?}
+#   FirstStage--No-->NotMove[Remain in the residence]
+#   SecondStage-->Move[Move to the new zone]
+#   Move-->Stop((Stop))
+#   NotMove-->Stop((Stop))
+#   ")
+# ```
 
 
 ## Required knowledge

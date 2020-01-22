@@ -1,0 +1,75 @@
+---
+title: "dymiumCore for modellers"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{dymiumCore for modellers}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo = FALSE, message=FALSE}
+library(dymiumCore)
+```
+
+# Introduction
+
+This manual is for people who would like to put together a microsimulation model using ready-to-use modules from [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules). The most the you are willing to change are entity data and model parameters that go into your microsimulation model. If this is you then read on! :) otherwise please see the manual section and select the appropriate manual for you.
+
+# Requirements
+
+It is recommended that you setup a new RStudio project for your microsimulation project. See this [page](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) if you are using RStudio but new to using Projects. If you don't have RStudio please go ahead and download it at (rstudio.com).
+
+Every module in [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules) repository rely on the [modules](https://cran.r-project.org/web/packages/modules/index.html) package to work properly. Hence, make sure your have the package installed.
+
+# Download and use existing modules
+
+I recommend that before you download any module you should first see its README page inside the repository. For example, if you want to know about the `demography` module or the events it has you should visit https://github.com/dymium-org/dymiumModules/tree/master/modules/demography.
+
+Once you are certain which module you want then use `download_module()`. This function allows modules to be downloaded into your active RStudio project. For example, if you would like to download the `matsim` module:
+
+```{r, eval=FALSE}
+download_module("demography")
+```
+
+By default, this downloads the latest version of the `demography` module from [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules) into a newly created folder called `modules` at the root of your active RStudio project. See `?download_module` for more download options.
+
+# Use an event
+
+Inside the __demography__ module you will find a number of R scripts. `helpers.R`, `constants.R`, `logger.R`, `tests` folder are files and folder that got created when a new module is created using `use_module()`. To learn more about them see the developer manual. The R scripts other than those are event scripts and they are the ones that you should import to your microsimulation model.
+
+For example, if you would like to use the birth event which can be found at `your_project_folder/modules/demography/birth.R` in your microsimulation model do as the following:
+
+```{r, eval = FALSE}
+event_demography_birth <- modules::use('modules/demography/birth.R')
+```
+
+The above chuck imports the birth event into your active R environment by assigning it to a variable called `event_demography_birth`. Any event that is imported using `modules` have the following fields exposed: `run()` and `REQUIRED_MODELS`. 
+
+```{r, eval = FALSE}
+event_demography_birth$run()
+```
+
+The `run()` function of any event takes the same four main arguments which are `x`, `model`, `target`, `time_step`. Some `run()` functions may take more than the four main arguments. Therefore you should always check the README page of the module of the event that you are using.
+
+```{r, eval = FALSE}
+event_demography_birth$REQUIRED_MODELS
+```
+
+`REQUIRED_MODELS` is a field that contains `NULL` if no models are required by the event or a character vector. Anytime `run()` is called it will check if the supplied model argument or the supplied world has all the required models or not. If not then an error will appear.
+
+
+# Let's put together a microsimulation model
+
+
+```{r}
+
+```
+
+

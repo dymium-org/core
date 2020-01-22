@@ -2,7 +2,10 @@
 #'
 #' @description
 #'
-#' DataBackendDataTable class is immutable.
+#' [DataBackendDataTable] uses [data.table::data.table] as back end to exploit
+#' its fast and efficient implementations of many data operations. This includes
+#' the `:=` operator which allows a data.table object to be modified in place,
+#' without making a copy.
 #'
 #' @usage NULL
 #' @format [R6::R6Class] object inheriting from [DataBackendDataFrame]<-[DataBackend].
@@ -25,6 +28,39 @@
 #'  * `add(.data, fill = FALSE)`\cr
 #'  ([data.table::data.table]) -> `NULL`\cr
 #'  Add data.
+#'
+#'  * `remove(rows, cols)`\cr
+#'  (`integer()`, `integer()`) -> `NULL`\cr
+#'  Remove the rows in `rows` and the columns in `cols` in the data.
+#'
+#'  * `get(rows, cols, copy = TRUE)`\cr
+#'  (`integer(1)`, `character()`, `logical(1)`) -> `data.frame()`\cr
+#'  Add data.
+#'
+#'  * `view(interactive = FALSE)`\cr
+#'  (`logical(1)`)\cr
+#'  View the data. If `interactive` is TRUE, the data will be shown in your
+#'  data tab if you are using RStudio.
+#'
+#'  * `head(n = 5)`\cr
+#'  (`integer(1)`) -> `data.frame()`\cr
+#'  Get the head of the data.
+#'
+#'  * `ncol()`\cr
+#'  () -> `integer(1)`\cr
+#'  Get the number of columns.
+#'
+#'  * `nrow()`\cr
+#'  () -> `integer(1)`\cr
+#'  Get the number of rows.
+#'
+#'  * `colnames()`\cr
+#'  () -> `character()`\cr
+#'  Get the column names.
+#'
+#'  * `get_removed()`\cr
+#'  () -> `data.frame()`\cr
+#'  Get the removed data.
 #'
 #' @export
 DataBackendDataTable <- R6::R6Class(
