@@ -134,6 +134,8 @@ navbar:
     articles:
       text: Articles
       menu:
+        - text: "Why another microsimulation package?"
+          href: articles/why-another-microsim.html
         - text: 'Manual'
         - text: 'For developers'
           href: articles/for-developers.html

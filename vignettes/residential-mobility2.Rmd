@@ -1,5 +1,5 @@
 ---
-title: "Residential mobility"
+title: "Residential mobility2"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Residential mobility}
