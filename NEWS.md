@@ -2,6 +2,10 @@
 
 - Removed deprecated Population's methods: `get_sum_hhsize` and `count_all`.
 - Fixed World's remove method in commit c0df66d.
+- Added `plot_relationship` method to `Household`. This uses `visNetwork` for plotting (added to Suggests). See #48 for its implementation detail.
+- `inspect` now has a verbose option.
+- `Transition` no longer removes the `NA` reponses when target is used.
+- Added a `replace` method to `World` which basically `remove` and `add` in one call.
 
 # dymiumCore 0.1.2
 
