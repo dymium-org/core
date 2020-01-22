@@ -380,8 +380,7 @@ Entity <-
         private$.new_ids <- new_ids
         # return the latest set of ids
         invisible(new_ids)
-      }
-    ),
+      }),
 
     active = list(
       database = function() {
