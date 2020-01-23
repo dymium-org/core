@@ -6,6 +6,7 @@
 - `inspect` now has a verbose option.
 - `Transition` no longer removes the `NA` reponses when target is used.
 - Added a `replace` method to `World` which basically `remove` and `add` in one call.
+- Unexported `Firm` as it has not been fully implemented and tested yet.
 
 # dymiumCore 0.1.2
 

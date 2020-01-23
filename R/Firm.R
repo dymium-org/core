@@ -1,10 +1,11 @@
 #' @title Firm class
 #'
 #' @description
+#' (Not done yet.)
 #' A class that contains methods and data of firms in a microsimulation model.
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object.
+#' @format [R6::R6Class] object inheriting from [Agent]<-[Entity].
 #' @include Entity.R
 #'
 #' @section Construction:
@@ -17,29 +18,41 @@
 #' * id_col::`character(1)`\cr
 #'   Name of the id colum in `.data`
 #'
-#'
-#' @note
-#'
-#' Firm Inherits all the methods and fields from [Agent].
-#'
 #' @section Fields:
 #'
 #'  * `NULL`\cr
 #'
-#'
 #' @section Methods:
 #'
-#'  * `has_job_offers(expression)`\cr
+#'  * `has_job_offers(ids)`\cr
+#'  (`integer()`|`NULL`)->(`logit()`)\cr
+#'  Returns a logical vector of the same length as `ids` if it is given. Otherwise,
+#'  return a logical vector of the same length as the total number of firms in `Firm`.
 #'
-#'  * `available_jobs(expression)`\cr
+#'  * `available_jobs(ids)`\cr
+#'  (`integer()`|`NULL`)->(`integer()`)\cr
+#'  Returns number of available jobs by firms in ids
 #'
 #'  * `update_number_of_workers(expression)`\cr
 #'
-#' @export
 Firm <- R6::R6Class(
   classname = "Firm",
   inherit = Agent,
   public = list(
+
+    initialize = function(.data, id_col) {
+      if (!missing(.data)) {
+        if (!missing(id_col)) {
+          super$initialize(databackend = DataBackendDataTable,
+                           .data = .data,
+                           id_col = id_col)
+        } else {
+          stop(glue::glue("To initialise the attribute data of {self$class()} \\
+                            the `id_col` argument must be given."))
+        }
+      }
+      invisible()
+    },
 
     data_template = function() {
       data.table(
@@ -72,7 +85,7 @@ Firm <- R6::R6Class(
     },
 
     # returns number of available jobs by firms in ids_
-    available_jobs = function(ids_) {
+    available_jobs = function(ids) {
       self$data$get(copy = FALSE)[, employment_size - number_of_workers]
     },
 

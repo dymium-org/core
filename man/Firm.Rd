@@ -3,12 +3,9 @@
 \name{Firm}
 \alias{Firm}
 \title{Firm class}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Agent}<-\link{Entity}.}
 \description{
 A class that contains methods and data of firms in a microsimulation model.
-}
-\note{
-Firm Inherits all the methods and fields from \link{Agent}.
 }
 \section{Construction}{
 \preformatted{Frm <- Firm$new(.data, id_col = "fid")
