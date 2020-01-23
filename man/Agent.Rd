@@ -2,11 +2,11 @@
 % Please edit documentation in R/Agent.R
 \name{Agent}
 \alias{Agent}
-\title{Agent}
+\title{Agent class}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Entity}.}
 \description{
-Agent class is the generic class for creating urban agents such
-as individuals, households, firms, dwelling and more.
+Agent class is the generic class for creating urban actors such
+as \link{Individual}, \link{Household}, firms, \link{Building} and more.
 }
 \section{Construction}{
 \preformatted{Agt <- Agent$new(...)
@@ -46,9 +46,6 @@ or not.
 \item \code{generate_new_ids(n)}\cr
 (\code{integer(1)}) -> \code{integer()}\cr
 Generates \code{n} number of new ids.
-\item \code{subset_ids(expression)}\cr
-(\code{expression}) -> \verb{[data.table::data.table()]}\cr
-Return ids of rows matches the expression.
 \item \code{hatch(ids)}\cr
 (\code{integer()})\cr
 Clone existing agents in \code{ids} and inherit all attributes from their parents

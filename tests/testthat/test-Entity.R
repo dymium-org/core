@@ -107,3 +107,26 @@ test_that("database", {
   checkmate::expect_list(MyObj$database, types = c("DataBackend"), len = 1, any.missing = FALSE, names = "strict")
 })
 
+test_that("$subset_ids", {
+  Ent <-
+    Entity$new(
+      databackend = DataBackendDataTable,
+      .data = dymiumCore::toy_individuals,
+      id_col = "pid"
+    )
+
+  Ent$subset_ids(sex == "female")
+
+  # filter non-existed column
+  expect_error(Ent$subset_ids(sexp == "FEMALE"),
+               regexp = "object 'sexp' not found")
+
+  # return a vector of ids
+  checkmate::expect_integerish(
+    Ent$subset_ids(sex == "female"),
+    lower = 1,
+    any.missing = FALSE,
+    unique = TRUE
+  )
+
+})

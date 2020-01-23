@@ -114,20 +114,6 @@ test_that("is_alive", {
   expect_error(MyAgent$is_alive(ids = MyAgent$get_attr(x = "partner_id")), "Contains missing values")
 })
 
-test_that("$subset_ids", {
-  MyAgent <- Agent$new()
-  MyAgent$initialise_data(.data = dymiumCore::toy_individuals, id_col = "pid")
-
-  # filter non-existed column
-  expect_error(MyAgent$subset_ids(sexp == "FEMALE"),
-               regexp = "object 'sexp' not found")
-
-  # return a vector of ids
-  expect_true(all(is.numeric(MyAgent$subset_ids(tolower(sex) == IND$SEX$FEMALE))))
-
-})
-
-
 # $get_col ----------
 test_that("Agent$get_attr", {
   MyAgent <- Agent$new()

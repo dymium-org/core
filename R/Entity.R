@@ -103,6 +103,10 @@
 #'  Print to console the number of datasets and their dimensions. `n` is the number of rows
 #'  that will be output to console by `head()`, if 0 nothing will be printed.
 #'
+#'  * `subset_ids(expr)`\cr
+#'  (`expr`) -> `[data.table::data.table()]`\cr
+#'  Return ids of rows matches the expression.
+#'
 #' @aliases Entities
 #' @export
 Entity <-
@@ -380,6 +384,13 @@ Entity <-
         private$.new_ids <- new_ids
         # return the latest set of ids
         invisible(new_ids)
+      },
+
+      subset_ids = function(expr) {
+        j_expr <- substitute(expr)
+        subset(x = self$get_data(copy = FALSE),
+               subset = eval(j_expr),
+               select = self$get_id_col())[[1]]
       }),
 
     active = list(

@@ -91,6 +91,9 @@ Returns the number of entities represented by this object.
 (\code{logical(1)}) -> \code{self}\cr
 Print to console the number of datasets and their dimensions. \code{n} is the number of rows
 that will be output to console by \code{head()}, if 0 nothing will be printed.
+\item \code{subset_ids(expr)}\cr
+(\code{expr}) -> \verb{[data.table::data.table()]}\cr
+Return ids of rows matches the expression.
 }
 }
 

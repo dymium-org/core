@@ -1,12 +1,12 @@
-#' @title Agent
+#' @title Agent class
 #'
 #' @usage NULL
 #' @format [R6::R6Class] object inheriting from [Entity].
 #' @include Entity.R
 #'
 #' @description
-#' Agent class is the generic class for creating urban agents such
-#' as individuals, households, firms, dwelling and more.
+#' Agent class is the generic class for creating urban actors such
+#' as [Individual], [Household], firms, [Building] and more.
 #'
 #'
 #' @section Construction:
@@ -48,10 +48,6 @@
 #'  * `generate_new_ids(n)`\cr
 #'  (`integer(1)`) -> `integer()`\cr
 #'  Generates `n` number of new ids.
-#'
-#'  * `subset_ids(expression)`\cr
-#'  (`expression`) -> `[data.table::data.table()]`\cr
-#'  Return ids of rows matches the expression.
 #'
 #'  * `hatch(ids)`\cr
 #'  (`integer()`)\cr
