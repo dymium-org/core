@@ -11,14 +11,6 @@ home:
   title: A toolbox for building a dynamic microsimulation model in R.
 
 reference:
-- title: Base classes
-  contents:
-    - Generic
-    - Entity
-    - Transition
-    - DataBackend
-    - ContainerGeneric
-    - is_dymium_class
 - title: Entities
   desc:
   contents:
@@ -48,23 +40,18 @@ reference:
     - get_log
 - title: Transitions
   contents:
-    - trans
     - matches("^Transition.")
+    - trans
     - SupportedTransitionModels
-- title: Markets
+    - alignment
+- title: Extra classes
   contents:
     - starts_with("Match")
+    - Model
+    - Pipeline
 - title: Data backends
   contents:
     - matches("DataBackend.")
-- title: Model
-  contents:
-    - Model
-- title: "Pipeline"
-  desc: Functions to be used inside a microsimulation pipeline
-  contents:
-    - Pipeline
-    - starts_with("dm_")
 - title: "Module"
   desc: "Manage,create and download modules."
   contents:
@@ -82,7 +69,6 @@ reference:
   contents:
     - use_event
     - assign_reference
-    - alignment
     - get_models
     - pick_models
     - is_scheduled
@@ -97,24 +83,34 @@ reference:
   contents:
     - starts_with("toy_")
     - starts_with("create_toy")
-- title: "Miscellaneous"
-  contents:
-  - .get_sim_time
-  - omit_derived_vars
-  - normalise_derived_vars
-  - sample_choice
-  - lookup_and_replace
-  - condense_rows
-  - element_wise_expand_lists
-  - unnest_datatable
-  - dt_group_and_sort
-  - validate_linkages
 - title: Checkmate functions
   contents:
-  - starts_with("check_")
-  - starts_with("assert_")
-  - starts_with("test_")
-  - starts_with("expect_")
+    - starts_with("check_")
+    - starts_with("assert_")
+    - starts_with("test_")
+    - starts_with("expect_")
+- title: "Miscellaneous"
+  contents:
+    - starts_with("dm_")
+    - .get_sim_time
+    - omit_derived_vars
+    - normalise_derived_vars
+    - sample_choice
+    - lookup_and_replace
+    - condense_rows
+    - element_wise_expand_lists
+    - unnest_datatable
+    - dt_group_and_sort
+    - validate_linkages
+
+- title: Base classes
+  contents:
+    - Generic
+    - Entity
+    - Transition
+    - DataBackend
+    - ContainerGeneric
+    - is_dymium_class
 
 toc:
   depth: 2
