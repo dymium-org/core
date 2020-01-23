@@ -13,6 +13,9 @@ dymiumModulesRepo <- "dymium-org/dymiumModules"
 #' be downloaded.
 #' @param force A logical value. force download even though the module already exists locally.
 #' @param remove_download a logical value whether to delete the downloaded zip file or not.
+#' @param .basedir :: `character(1)`\cr
+#' The base directory that the downloaded module will be saved at. [here::here()] is
+#' used to provide the default value which is is the root folder of the active RStudio project.
 #' @template repo-arg
 #'
 #' @return path to the module.
@@ -26,8 +29,8 @@ dymiumModulesRepo <- "dymium-org/dymiumModules"
 #'   download_modules('test', version = '0.0.1')
 #' }
 #'
-download_module <- function(name, repo = dymiumModulesRepo, version, force = FALSE, remove_download = FALSE) {
-  modules_path <- fs::path("modules")
+download_module <- function(name, repo = dymiumModulesRepo, version, force = FALSE, remove_download = FALSE, .basedir = here::here()) {
+  modules_path <- fs::path(.basedir, "modules")
   usethis::use_directory('modules')
   all_module_files <- get_all_module_files()
   all_versions <- extract_module_versions(name = name, filenames = all_module_files)
@@ -50,9 +53,9 @@ download_module <- function(name, repo = dymiumModulesRepo, version, force = FAL
   }
   module_download_url <-
     paste0("https://github.com/", repo, "/raw/master/modules/", name, "/", module_filename, ".zip")
-  tmp_module_path <- fs::path("modules", "temp-module.zip")
+  tmp_module_path <- fs::path(modules_path, "temp-module.zip")
   utils::download.file(url = module_download_url, destfile = tmp_module_path, overwrite = FALSE, cacheOK = FALSE)
-  utils::unzip(zipfile = tmp_module_path, exdir = modules_path, overwrite = FALSE)
+  utils::unzip(zipfile = tmp_module_path, exdir = fs::path(modules_path, name), overwrite = FALSE)
   if (remove_download) {
     fs::file_delete(path = tmp_module_path)
   }

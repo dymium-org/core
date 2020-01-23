@@ -4,10 +4,14 @@
 \alias{set_active_scenario}
 \title{Set an active scenario directory.}
 \usage{
-set_active_scenario(name)
+set_active_scenario(name, .basedir = here::here())
 }
 \arguments{
 \item{name}{name of the scenario folder to become active.}
+
+\item{.basedir}{:: \code{character(1)}\cr
+The base directory that the downloaded module will be saved at. \code{\link[here:here]{here::here()}} is
+used to provide the default value which is is the root folder of the active RStudio project.}
 }
 \value{
 a list contains scenario directories.

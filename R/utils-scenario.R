@@ -4,6 +4,9 @@
 #' This is useful for event functions to access the current active scenario directory.
 #'
 #' @param name name of the scenario folder to become active.
+#' @param .basedir :: `character(1)`\cr
+#' The base directory that the downloaded module will be saved at. [here::here()] is
+#' used to provide the default value which is is the root folder of the active RStudio project.
 #'
 #' @return a list contains scenario directories.
 #' @export
@@ -14,9 +17,9 @@
 #'  use_module("test")
 #'  set_active_scenario("test")
 #' }
-set_active_scenario <- function(name) {
+set_active_scenario <- function(name, .basedir = here::here()) {
 
-  scenario_path <- fs::path_wd("scenarios", name)
+  scenario_path <- fs::path(.basedir, "scenarios", name)
   input_path <- fs::path(scenario_path, "inputs")
   output_path <- fs::path(scenario_path,  "outputs")
 
