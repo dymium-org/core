@@ -32,9 +32,9 @@ knitr::opts_chunk$set(
 - written in R
 - easy to setup
 - ready-to-use events see [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
-- modular and sharable
+- microsimulation events are modular, sharable and scalable
 - equipped with the basic building blocks for building a microsimulation model that is flexible and extensible.
-- can use parameters from various model objects (i.e. [stats::lm], [stats::glm], [caret::train]).
+- can use parameters from various model objects (e.g. `stats::lm`, `stats::glm`, `caret::train`).
 
 ## Installation
 
