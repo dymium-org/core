@@ -92,6 +92,10 @@
 #'  ([data.table::data.table()], [data.table::data.table()]) -> `logical(1)`\cr
 #'  Check that all id cols of the input data are unique from the existing ids in
 #'  their respective objects.
+#'
+#' * `plot_relationship(hid)`\cr
+#'  (`integer(1)`)\cr
+#'  Plot the relationship network within the household of `hid`.
 #' @export
 Population <- R6Class(
   "Population",

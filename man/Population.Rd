@@ -81,6 +81,9 @@ change of income, birth.
 (\code{\link[data.table:data.table]{data.table::data.table()}}, \code{\link[data.table:data.table]{data.table::data.table()}}) -> \code{logical(1)}\cr
 Check that all id cols of the input data are unique from the existing ids in
 their respective objects.
+\item \code{plot_relationship(hid)}\cr
+(\code{integer(1)})\cr
+Plot the relationship network within the household of \code{hid}.
 }
 }
 
