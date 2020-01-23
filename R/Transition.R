@@ -108,11 +108,11 @@ Transition <- R6Class(
       # TODO: how to allow decision_filter for other logical operators
       # (eg: <=, =>, !=)?
       if (is.null(response_filter)) {
-        return(private$.sim_result[, (id)])
+        return(private$.sim_result[["id"]])
       }
       private$.sim_result %>%
         # filter
-        .[response %in% response_filter, (id)]
+        .[response %in% response_filter, id]
     },
 
     get_data = function() {
