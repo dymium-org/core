@@ -56,3 +56,60 @@ test_that("transition fn", {
   checkmate::expect_data_table(trans(Ind, model_glm))
 
 })
+
+test_that("transition 0 agents", {
+  create_toy_population()
+  Ind <- pop$get("Individual")
+
+  # create model
+  model_ls <- list(choice_a = 10, choice_b = 20)
+
+  TestTransition <- R6::R6Class(
+    classname = "TestTransition",
+    inherit = TransitionClassification,
+    public = list(
+      filter = function(.data) {
+        .data %>%
+          .[age > 100, ]
+      }
+    )
+  )
+
+  TestTransitionMutateFirst <- R6::R6Class(
+    classname = "TestTransitionMutateFirst",
+    inherit = TransitionClassification,
+    public = list(
+      filter = function(.data) {
+        .data %>%
+          .[age > 100, ]
+      },
+      mutate = function(.data) {
+        .data %>%
+          .[, test_col := 100]
+      }
+    )
+  )
+
+  TestTran <- TestTransition$new(Ind, model = model_ls)
+  checkmate::expect_names(names(TestTran$get_result()), identical.to = c("id", "response"))
+  checkmate::expect_data_table(x = TestTran$get_result(), ncols = 2, nrows = 0)
+  expect_null(TestTran$get_data())
+
+  TestMutateFirstTran <- TestTransitionMutateFirst$new(Ind, model = model_ls)
+  checkmate::expect_names(names(TestMutateFirstTran$get_result()), identical.to = c("id", "response"))
+  checkmate::expect_data_table(x = TestMutateFirstTran$get_result(), ncols = 2, nrows = 0)
+  expect_null(TestMutateFirstTran$get_data())
+
+  TestMutateFirstTranTargetedAgents <-
+    TestTransitionMutateFirst$new(Ind, model = model_ls, targeted_agents = 1)
+  checkmate::expect_names(names(TestMutateFirstTranTargetedAgents$get_result()), identical.to = c("id", "response"))
+  checkmate::expect_data_table(x = TestMutateFirstTranTargetedAgents$get_result(), ncols = 2, nrows = 0)
+  expect_null(TestMutateFirstTranTargetedAgents$get_data())
+
+  TestMutateFirstTranEmptiedTargetedAgents <-
+    TestTransitionMutateFirst$new(Ind, model = model_ls, targeted_agents = integer())
+  checkmate::expect_names(names(TestMutateFirstTranEmptiedTargetedAgents$get_result()), identical.to = c("id", "response"))
+  checkmate::expect_data_table(x = TestMutateFirstTranEmptiedTargetedAgents$get_result(), ncols = 2, nrows = 0)
+  expect_null(TestMutateFirstTranEmptiedTargetedAgents$get_data())
+
+})

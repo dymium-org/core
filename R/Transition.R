@@ -4,13 +4,8 @@
 #'
 #' A class that perform Monte Carlo simulation on agents using a probabilistic model.
 #' Work flow: `initialise()` -> `filter()` -> `mutate()` -> `simulate()` -> `postprocess()`.
-#' Note that, the order of filter and mutate can be swap by overwriting the `preprocess()` method.
-#' The default order as speficied in the `preprocess` method is:
-#'
-#' ```r
-#' filter(.data) %>%
-#'  mutate(.)
-#' ```
+#' Note that, to swap the run order of `filter()` and `mutate()` you need to change the
+#' `mutate_first` public field to `TRUE`.
 #'
 #' @section Construction:
 #'
@@ -35,7 +30,10 @@
 #'
 #' @section Fields:
 #'
-#'  * `NULL`\cr
+#'  * `mutate_first`:: `logical(1)`\cr
+#'  Default as FALSE, this flag is used to indicate whether the attribute data from
+#'  the Agent in `x` should be mutated (`$mutate(.data)`) before filtered (`$filter(.data)`).
+#'  See the description section for more details about the processing steps of [Transition].
 #'
 #' @section Methods:
 #'
@@ -53,11 +51,6 @@
 #'  to give the user the flexibility to 'mutate' the data prior to making prediction
 #'  by the given model. Adding derived variables and historical life course of the agents
 #'  can be done in this step.
-#'
-#' * `preprocess(.data)`\cr
-#' ([data.table::data.table()]) -> `[data.table::data.table()]`\cr
-#' By default, preprocess runs `filter()` then `mutate()` as described in the description section.
-#' This can be overwritten to change the order and add extra steps.
 #'
 #' * `update_agents(attr)`\cr
 #' (`character(1)`)\cr
@@ -82,6 +75,8 @@ Transition <- R6Class(
   inherit = Generic,
   public = list(
     # Public ----------------------------------------------------------
+    mutate_first = FALSE,
+
     # load data, filter, and other settings
     initialize = function(x, model, target = NULL, targeted_agents = NULL) {
       # checks
@@ -96,8 +91,14 @@ Transition <- R6Class(
       private$.target <- target
       private$.targeted_agents <- targeted_agents
 
-      # run the steps
-      private$run_preprocessing_steps()
+      # run the steps ------
+      # catch the case when an empited `targeted_agents` is given.
+      if (is.null(targeted_agents) | length(targeted_agents) != 0) {
+        private$run_preprocessing_steps()
+      } else {
+        private$.sim_data <- NULL
+      }
+
       private$run_simulation()
       private$run_postprocessing_steps()
 
@@ -144,11 +145,6 @@ Transition <- R6Class(
 
     mutate = function(.data) {
       .data
-    },
-
-    preprocess = function(.data) {
-      self$filter(.data) %>%
-        self$mutate(.)
     },
 
     postprocess = function(.sim_result) {
@@ -210,15 +206,32 @@ Transition <- R6Class(
 
       checkmate::assert_data_table(raw_data, min.rows = 1, null.ok = FALSE, .var.name = "Agent's data")
 
-      preprocessed_data <- self$preprocess(raw_data)
-
-      if (!is.data.table(preprocessed_data)) {
-        data.table::setDT(preprocessed_data)
+      # preprocess data
+      if (self$mutate_first) {
+        preprocessed_data <-
+          self$mutate(raw_data) %>%
+          self$filter(raw_data)
+      } else {
+        preprocessed_data <-
+          self$filter(raw_data)
       }
 
-      # sanity checks
-      checkmate::assert_data_table(preprocessed_data, min.rows = 1, null.ok = FALSE)
-      checkmate::assert_names(names(preprocessed_data), must.include = AgtObj$get_id_col())
+      # check if after `filter` there are still data
+      if (nrow(preprocessed_data) > 0) {
+        if (self$mutate_first) {
+          preprocessed_data <-
+            self$mutate(raw_data)
+        }
+        # sanity checks
+        checkmate::assert_data_frame(preprocessed_data, min.rows = 1, null.ok = FALSE)
+        checkmate::assert_names(names(preprocessed_data), must.include = AgtObj$get_id_col())
+        if (!is.data.table(preprocessed_data)) {
+          data.table::setDT(preprocessed_data)
+        }
+      } else {
+        # simulation won't be run if this is NULL
+        preprocessed_data <- NULL
+      }
 
       private$.sim_data <- preprocessed_data
 
@@ -253,34 +266,38 @@ Transition <- R6Class(
     },
 
     run_simulation = function() {
-      response <- private$simulate()
+      if (!is.null(private$.sim_data)) {
+        response <- private$simulate()
 
-      # validity checks
-      if (length(response) != nrow(private$.sim_data)) {
-        stop(glue::glue("The number of predictions from the model doesn't \\
+        # validity checks
+        if (length(response) != nrow(private$.sim_data)) {
+          stop(glue::glue("The number of predictions from the model doesn't \\
                                     equal to the number of row of the data used \\
                                     to simulate it."))
-      }
+        }
 
-      # construct simulation result
-      sim_result <-
-        data.table::data.table(id = private$.sim_data[[private$.AgtObj$get_id_col()]],
-                               response = response)
+        # construct simulation result
+        sim_result <-
+          data.table::data.table(id = private$.sim_data[[private$.AgtObj$get_id_col()]],
+                                 response = response)
 
-      if (is.null(private$.target)) {
-        checkmate::assert(
-          checkmate::check_integerish(sim_result[['id']], unique = TRUE),
-          checkmate::check_data_table(sim_result, any.missing = FALSE, null.ok = FALSE),
-          checkmate::check_names(names(sim_result), identical.to = c("id", "response")),
-          combine = 'and'
-        )
+        if (is.null(private$.target)) {
+          checkmate::assert(
+            checkmate::check_integerish(sim_result[['id']], unique = TRUE),
+            checkmate::check_data_table(sim_result, any.missing = FALSE, null.ok = FALSE),
+            checkmate::check_names(names(sim_result), identical.to = c("id", "response")),
+            combine = 'and'
+          )
+        } else {
+          checkmate::assert(
+            checkmate::check_integerish(sim_result[['id']], any.missing = FALSE, unique = TRUE),
+            checkmate::check_data_table(sim_result, any.missing = TRUE, null.ok = FALSE),
+            checkmate::check_names(names(sim_result), identical.to = c("id", "response")),
+            combine = 'and'
+          )
+        }
       } else {
-        checkmate::assert(
-          checkmate::check_integerish(sim_result[['id']], any.missing = FALSE, unique = TRUE),
-          checkmate::check_data_table(sim_result, any.missing = TRUE, null.ok = FALSE),
-          checkmate::check_names(names(sim_result), identical.to = c("id", "response")),
-          combine = 'and'
-        )
+        sim_result <- data.table(id = integer(), response = character())
       }
 
       private$.sim_result <- sim_result

@@ -6,16 +6,20 @@
 #' model. In a simpler term, a psuedo random number generator is used to simulate
 #' the outcome based on the probability from the model.
 #'
-#' This has the following work flow:
+#' By calling the constructor method of [TransitionClassification] this will
+#' initiate the following steps:
+#'
 #' 1. `initialise(x, model, target, targeted_agents)` ->
 #' 2. `filter(.data)`: filter agents to apply the transition to.
 #' 3. `mutate(.data)`: add variables to the data of the filtered agents.
 #' 4. `simulate()`: simulate the transition outcome using the probabilistic model
 #' 5. `postprocess(.sim_result)`: post-processing the simulation result.
 #'
-#' Note that, the order of filter and mutate can be swap by overwriting the `preprocess()` method.
-#' This may be useful in cases where agent selection for the transition depends
-#' on one or more derived variables.
+#' Note that, the order of filter and mutate can be swap by overwriting the `mutate_first`
+#' public field to `TRUE`. This may be useful in cases where agent selection for
+#' the transition depends on one or more derived variables.
+#'
+#' To get the simulation result use `$get_result()`.
 #'
 #' @section Construction:
 #'
@@ -61,6 +65,10 @@
 #'  * `model_by_id` :: (`logical(1)`)\cr
 #'  See argument in the construction section.
 #'
+#'  * `mutate_first`:: `logical(1)`\cr
+#'  Default as FALSE, this flag is used to indicate whether the attribute data from
+#'  the Agent in `x` should be mutated (`$mutate(.data)`) before filtered (`$filter(.data)`).
+#'
 #' @section Methods:
 #'
 #'  * `filter(.data)`\cr
@@ -77,11 +85,6 @@
 #'  to give the user the flexibility to 'mutate' the data prior to making prediction
 #'  by the given model. Adding derived variables and historical life course of the agents
 #'  can be done in this step.
-#'
-#' * `preprocess(.data)`\cr
-#' ([data.table::data.table()]) -> `[data.table::data.table()]`\cr
-#' By default, preprocess runs `filter()` then `mutate()` as described in the description section.
-#' This can be overwritten to change the order and add extra steps.
 #'
 #' * `update_agents(attr)`\cr
 #' (`character(1)`)\cr

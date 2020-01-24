@@ -7,6 +7,22 @@
 \description{
 This is particularly useful for updating agents' attributes that can be modelled
 using a regression model.
+
+By calling the constructor method of \link{TransitionClassification} this will
+initiate the following steps:
+\enumerate{
+\item \code{initialise(x, model, target, targeted_agents)} ->
+\item \code{filter(.data)}: filter agents to apply the transition to.
+\item \code{mutate(.data)}: add variables to the data of the filtered agents.
+\item \code{simulate()}: simulate the transition outcome using the probabilistic model
+\item \code{postprocess(.sim_result)}: post-processing the simulation result.
+}
+
+Note that, the order of filter and mutate can be swap by overwriting the \code{mutate_first}
+public field to \code{TRUE}. This may be useful in cases where agent selection for
+the transition depends on one or more derived variables.
+
+To get the simulation result use \verb{$get_result()}.
 }
 \note{
 TransitionRegression only returns a raw output of the simulation result.
@@ -14,7 +30,7 @@ In a future update, there will be an option which allows the prediction result
 to be drawn from a distribution to add randomness to the result.
 }
 \section{Construction}{
-\preformatted{Transition$new(x, model, target = NULL, targeted_agents = NULL)
+\preformatted{TransitionRegression$new(x, model, targeted_agents = NULL)
 }
 \itemize{
 \item \code{x} :: \link[R6:R6Class]{R6::R6Class}\cr
@@ -30,7 +46,9 @@ A integer vectors that contains ids of agents in \code{x} to undergo the event.
 \section{Fields}{
 
 \itemize{
-\item \code{NULL}\cr
+\item \code{mutate_first}:: \code{logical(1)}\cr
+Default as FALSE, this flag is used to indicate whether the attribute data from
+the Agent in \code{x} should be mutated (\verb{$mutate(.data)}) before filtered (\verb{$filter(.data)}).
 }
 }
 

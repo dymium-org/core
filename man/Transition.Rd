@@ -6,10 +6,8 @@
 \description{
 A class that perform Monte Carlo simulation on agents using a probabilistic model.
 Work flow: \code{initialise()} -> \code{filter()} -> \code{mutate()} -> \code{simulate()} -> \code{postprocess()}.
-Note that, the order of filter and mutate can be swap by overwriting the \code{preprocess()} method.
-The default order as speficied in the \code{preprocess} method is:\if{html}{\out{<div class="r">}}\preformatted{filter(.data) \%>\%
- mutate(.)
-}\if{html}{\out{</div>}}
+Note that, to swap the run order of \code{filter()} and \code{mutate()} you need to change the
+\code{mutate_first} public field to \code{TRUE}.
 }
 \section{Construction}{
 \preformatted{Transition$new(x, model, target = NULL, targeted_agents = NULL)
@@ -32,7 +30,10 @@ This only works for classification models.
 \section{Fields}{
 
 \itemize{
-\item \code{NULL}\cr
+\item \code{mutate_first}:: \code{logical(1)}\cr
+Default as FALSE, this flag is used to indicate whether the attribute data from
+the Agent in \code{x} should be mutated (\verb{$mutate(.data)}) before filtered (\verb{$filter(.data)}).
+See the description section for more details about the processing steps of \link{Transition}.
 }
 }
 
@@ -52,10 +53,6 @@ By default this method returns the input \code{.data}. This method can be overwr
 to give the user the flexibility to 'mutate' the data prior to making prediction
 by the given model. Adding derived variables and historical life course of the agents
 can be done in this step.
-\item \code{preprocess(.data)}\cr
-(\code{\link[data.table:data.table]{data.table::data.table()}}) -> \verb{[data.table::data.table()]}\cr
-By default, preprocess runs \code{filter()} then \code{mutate()} as described in the description section.
-This can be overwritten to change the order and add extra steps.
 \item \code{update_agents(attr)}\cr
 (\code{character(1)})\cr
 Update the attribute data of the agents that undergo the transition event.

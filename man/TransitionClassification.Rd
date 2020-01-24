@@ -25,7 +25,8 @@ an \link[R6:R6Class]{R6::R6Class} object
 model. In a simpler term, a psuedo random number generator is used to simulate
 the outcome based on the probability from the model.
 
-This has the following work flow:
+By calling the constructor method of \link{TransitionClassification} this will
+initiate the following steps:
 \enumerate{
 \item \code{initialise(x, model, target, targeted_agents)} ->
 \item \code{filter(.data)}: filter agents to apply the transition to.
@@ -34,9 +35,11 @@ This has the following work flow:
 \item \code{postprocess(.sim_result)}: post-processing the simulation result.
 }
 
-Note that, the order of filter and mutate can be swap by overwriting the \code{preprocess()} method.
-This may be useful in cases where agent selection for the transition depends
-on one or more derived variables.
+Note that, the order of filter and mutate can be swap by overwriting the \code{mutate_first}
+public field to \code{TRUE}. This may be useful in cases where agent selection for
+the transition depends on one or more derived variables.
+
+To get the simulation result use \verb{$get_result()}.
 
 Create a \link{TransitionClassification} object.
 }
@@ -80,6 +83,9 @@ a column which its name matches with the id column of the entity object in \code
 \itemize{
 \item \code{model_by_id} :: (\code{logical(1)})\cr
 See argument in the construction section.
+\item \code{mutate_first}:: \code{logical(1)}\cr
+Default as FALSE, this flag is used to indicate whether the attribute data from
+the Agent in \code{x} should be mutated (\verb{$mutate(.data)}) before filtered (\verb{$filter(.data)}).
 }
 }
 
