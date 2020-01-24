@@ -58,6 +58,13 @@ Please visit
 [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
 to see the available modules.
 
+## An example project
+
+We have recently setup an example project so that you can see our
+package in action\! Please visit
+[dymium-org/dymiumExampleProject](https://github.com/dymium-org/dymiumExampleProject)
+to learn more about it.
+
 ## Collaboration
 
 We are open to collaboration on this project. If you are interested,
