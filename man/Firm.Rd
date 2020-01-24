@@ -5,6 +5,7 @@
 \title{Firm class}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Agent}<-\link{Entity}.}
 \description{
+(Not done yet.)
 A class that contains methods and data of firms in a microsimulation model.
 }
 \section{Construction}{
@@ -28,8 +29,13 @@ Name of the id colum in \code{.data}
 \section{Methods}{
 
 \itemize{
-\item \code{has_job_offers(expression)}\cr
-\item \code{available_jobs(expression)}\cr
+\item \code{has_job_offers(ids)}\cr
+(\code{integer()}|\code{NULL})->(\code{logit()})\cr
+Returns a logical vector of the same length as \code{ids} if it is given. Otherwise,
+return a logical vector of the same length as the total number of firms in \code{Firm}.
+\item \code{available_jobs(ids)}\cr
+(\code{integer()}|\code{NULL})->(\code{integer()})\cr
+Returns number of available jobs by firms in ids
 \item \code{update_number_of_workers(expression)}\cr
 }
 }
