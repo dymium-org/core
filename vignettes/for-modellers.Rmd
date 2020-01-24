@@ -28,19 +28,29 @@ It is recommended that you setup a new RStudio project for your microsimulation 
 
 Every module in [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules) repository rely on the [modules](https://cran.r-project.org/web/packages/modules/index.html) package to work properly. Hence, make sure your have the package installed.
 
-# Download and use existing modules
+# Modules
 
-I recommend that before you download any module you should first see its README page inside the repository. For example, if you want to know about the `demography` module or the events it has you should visit https://github.com/dymium-org/dymiumModules/tree/master/modules/demography.
+It is important for a microsimulation model to be modular for greater maintainability and extendability. Your can read more about this discussion from [R Cassells, A Harding, S Kelly, 2006](https://www.researchgate.net/profile/Ann_Harding/publication/239806013_Problems_and_Prospects_for_Dynamic_Microsimulation_A_review_and_lessons_for_APPSIM/links/53e080520cf2aede4b4cca72/Problems-and-Prospects-for-Dynamic-Microsimulation-A-review-and-lessons-for-APPSIM.pdf) and [Eric Miller, 2019](http://www.academia.edu/download/44911022/Integrated_Urban_Water_Modelling_-_Past_20160420-25966-stkce3.pdf). 
 
-Once you are certain which module you want then use `download_module()`. This function allows modules to be downloaded into your active RStudio project. For example, if you would like to download the `demography` module:
+In dymium, a module is basically a group of related events (i.e. ageing, giving birth and dying belong to the `demography` module). In fact, when we say dymium is modular we actually refer to the events that are being modular. This will be explained more in the next section.
+
+## Download and use existing modules
+
+I recommend that before you download any module you should first see its README page inside the repository. For example, if you want to know about the `demography` module or the events it has please see the [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules/tree/master/modules/demography) repository.
+
+Once you are certain which module you want then use `download_module()` to download that module into your project. This function allows modules to be downloaded into your project. For example, if you would like to download the `demography` module:
 
 ```{r, eval=FALSE}
 download_module("demography")
 ```
 
-By default, this downloads the latest version of the `demography` module from [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules) into a newly created folder called `modules` at the root of your active RStudio project. See `?download_module` for more download options.
+By default, this downloads the latest version of the `demography` module from [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules) into a newly created folder called `modules` at the root of project. See `?download_module` for more download options.
 
-# Use an event
+# Events
+
+The term `event` is used to refer to a process that is set to occur within a microsimulation model. For example, if your microsimulation model is for simulating the dynamic of population then you would have an ageing event, a birth event, a death event, and (optionally) a migration event. All events should be self-contained, meaning it doesn't need other events to work. However, there could be some events which are related. As an example, the `divorce` event from the `demography` module needs the `separate` event to work. This is because only people that can be divorced must first be in separation, which is simulated by the `separate` event. 
+
+## Use an event
 
 Inside the __demography__ module you will find a number of R scripts. `helpers.R`, `constants.R`, `logger.R`, `tests` folder are files and folder that got created when a new module is created using `use_module()`. To learn more about them see the developer manual. The R scripts other than those are event scripts and they are the ones that you should import to your microsimulation model.
 
