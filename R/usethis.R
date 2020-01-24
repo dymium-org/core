@@ -168,36 +168,6 @@ check_pkg_installed <- function(pkg) {
   }
 }
 
-#' Create a dymium scenario folder
-#'
-#' @description
-#' Creates a scenario folder using a standard format which contains an 'inputs' folder,
-#' an 'outputs' folder inside.
-#'
-#'
-#' @param name Name of the scenario
-#' @param active a logical value with defauly being FALSE. This determines whether
-#' to set the current active scenario to this newly created scenario or not.
-#' @export
-#'
-#' @examples
-#'
-#' \dontrun{
-#'   use_scenario(name = "demography")
-#' }
-use_scenario <- function(name, active = TRUE) {
-  .check_file_name(name)
-  path <- fs::path("scenarios", name)
-  usethis::use_directory("scenarios", ignore = TRUE)
-  usethis::use_directory(path)
-  usethis::use_directory(fs::path(path, "inputs"))
-  usethis::use_directory(fs::path(path, "outputs"))
-  if (active) {
-    set_active_scenario(name)
-  }
-  invisible(path)
-}
-
 has_module <- function(name) {
   path <- fs::path("modules", name)
   fs::file_exists(path)
