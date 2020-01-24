@@ -48,7 +48,7 @@ By default, this downloads the latest version of the `demography` module from [d
 
 # Events
 
-The term `event` is used to refer to a process that is set to occur within a microsimulation model. For example, if your microsimulation model is for simulating the dynamic of population then you would have an ageing event, a birth event, a death event, and (optionally) a migration event. All events should be self-contained, meaning it doesn't need other events to work. However, there could be some events which are related. As an example, the `divorce` event from the `demography` module needs the `separate` event to work. This is because only people that can be divorced must first be in separation, which is simulated by the `separate` event. 
+The term `event` is used to refer to a process that is set to occur within a microsimulation model. For example, if your microsimulation model is for simulating the dynamic of population then you would have an ageing event, a birth event, a death event, and (optionally) a migration event. All events should be self-contained, meaning they do not need other events to be present to work. However, some events require other events. As an example, the `divorce` event from the `demography` module needs the `separate` event to work. This is because only people that can be divorced must first be in separation, which is simulated by the `separate` event. 
 
 ## Use an event
 
@@ -74,6 +74,9 @@ event_demography_birth$REQUIRED_MODELS
 
 `REQUIRED_MODELS` is a field that contains `NULL` if no models are required by the event or a character vector. Anytime `run()` is called it will check if the supplied model argument or the supplied world has all the required models or not. If not then an error will appear.
 
+## Modify an event
+
+TODO
 
 # Let's put together a microsimulation model
 
