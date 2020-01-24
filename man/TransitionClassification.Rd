@@ -105,10 +105,6 @@ By default this method returns the input \code{.data}. This method can be overwr
 to give the user the flexibility to 'mutate' the data prior to making prediction
 by the given model. Adding derived variables and historical life course of the agents
 can be done in this step.
-\item \code{preprocess(.data)}\cr
-(\code{\link[data.table:data.table]{data.table::data.table()}}) -> \verb{[data.table::data.table()]}\cr
-By default, preprocess runs \code{filter()} then \code{mutate()} as described in the description section.
-This can be overwritten to change the order and add extra steps.
 \item \code{update_agents(attr)}\cr
 (\code{character(1)})\cr
 Update the attribute data of the agents that undergo the transition event.
