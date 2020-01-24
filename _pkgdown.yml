@@ -72,12 +72,12 @@ reference:
     - get_models
     - pick_models
     - is_scheduled
-- title: "Scenerio"
-  desc: Creates and manages scenarios.
+- title: "Scenario"
+  desc: Scenario is a recommended way to organise the scripts, the data, and the models that are belong to a microsimulation implementation.
   contents:
-    - active_scenario
+    - create_scenario
+    - get_active_scenario
     - set_active_scenario
-    - use_scenario
 - title: "Toy data"
   desc: "Data for testing purposes."
   contents:
