@@ -439,7 +439,8 @@ Population <- R6Class(
         visNetwork::visLegend(width = 0.2,
                   position = "right",
                   main = "Group") %>%
-        visNetwork::visEdges(smooth = FALSE)
+        visNetwork::visEdges(smooth = FALSE) %>%
+        visNetwork::visInteraction(navigationButtons = TRUE)
 
     })
 )
