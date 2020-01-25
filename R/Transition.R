@@ -209,18 +209,17 @@ Transition <- R6Class(
       # preprocess data
       if (self$mutate_first) {
         preprocessed_data <-
-          self$mutate(raw_data) %>%
-          self$filter(raw_data)
+          raw_data %>%
+          self$mutate(.) %>%
+          self$filter(.)
       } else {
-        preprocessed_data <-
-          self$filter(raw_data)
+        preprocessed_data <- self$filter(raw_data)
       }
 
       # check if after `filter` there are still data
       if (nrow(preprocessed_data) > 0) {
-        if (self$mutate_first) {
-          preprocessed_data <-
-            self$mutate(raw_data)
+        if (!self$mutate_first) {
+          preprocessed_data <- self$mutate(preprocessed_data)
         }
         # sanity checks
         checkmate::assert_data_frame(preprocessed_data, min.rows = 1, null.ok = FALSE)

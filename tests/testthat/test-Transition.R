@@ -86,9 +86,54 @@ test_that("transition 0 agents", {
       mutate = function(.data) {
         .data %>%
           .[, test_col := 100]
-      }
+      },
+      mutate_first = TRUE
     )
   )
+
+  ValidMutateFirstTrans <- R6::R6Class(
+    classname = "ValidMutateFirstTrans",
+    inherit = TransitionClassification,
+    public = list(
+      filter = function(.data) {
+        .data %>%
+          .[age < 100, ]
+      },
+      mutate = function(.data) {
+        .data %>%
+          .[, test_col := 100]
+      },
+      mutate_first = TRUE
+    )
+  )
+
+  ValidNotMutateFirstTrans <- R6::R6Class(
+    classname = "ValidNotMutateFirstTrans",
+    inherit = TransitionClassification,
+    public = list(
+      filter = function(.data) {
+        .data %>%
+          .[age < 100, ]
+      },
+      mutate = function(.data) {
+        .data %>%
+          .[, test_col := 100]
+      },
+      mutate_first = FALSE
+    )
+  )
+
+  Trans <- ValidMutateFirstTrans$new(Ind, model = model_ls)
+  checkmate::expect_integerish(Trans$get_data()[["test_col"]], null.ok = FALSE, lower = 100, upper = 100)
+  checkmate::expect_names(names(Trans$get_result()), identical.to = c("id", "response"))
+  checkmate::expect_data_table(x = Trans$get_result(), ncols = 2, min.rows = 1)
+  checkmate::expect_data_table(Trans$get_data())
+
+  Trans <- ValidNotMutateFirstTrans$new(Ind, model = model_ls)
+  checkmate::expect_integerish(Trans$get_data()[["test_col"]], null.ok = FALSE, lower = 100, upper = 100)
+  checkmate::expect_names(names(Trans$get_result()), identical.to = c("id", "response"))
+  checkmate::expect_data_table(x = Trans$get_result(), ncols = 2, min.rows = 1)
+  checkmate::expect_data_table(Trans$get_data())
 
   TestTran <- TestTransition$new(Ind, model = model_ls)
   checkmate::expect_names(names(TestTran$get_result()), identical.to = c("id", "response"))
