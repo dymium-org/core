@@ -26,7 +26,7 @@ This manual is for people who would like to put together a microsimulation model
 
 It is recommended that you setup a new RStudio project for your microsimulation project. See this [page](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) if you are using RStudio but new to using Projects. If you don't have RStudio please go ahead and download it at (rstudio.com).
 
-Every module in [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules) repository rely on the [modules](https://cran.r-project.org/web/packages/modules/index.html) package to work properly. Hence, make sure your have the package installed.
+Every module in [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules) repository relies on the [modules](https://cran.r-project.org/web/packages/modules/index.html) package to work properly. Hence, make sure your have the package installed before using any module.
 
 # Modules
 
