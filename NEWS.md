@@ -7,7 +7,7 @@
 3. `Transition` no longer removes the `NA` reponses when target is used.
 4. Added a `replace` method to `World` which basically `remove` and `add` in one call.
 5. Moved `$subset_ids()` from `Agent`  to `Entity`.
-6. `download_module()` and `set_active_scenario()` now have a `.basedir` argument which sets the base directory where their files will be created at. By default this is the root folder of the currently active R project (if you are using RStudio) which determines by `here::here()`.
+6. `download_module()` and `set_active_scenario()` now have a `.basedir` argument which sets the base directory where their files will be created at. By default this is the root folder of the currently active R project (if you are using RStudio) which is determined by `here::here()`.
 7. Renamed `use_scenario` to `create_scenario` and `active_scenario` to `get_active_scenario`. 
 
 ## BUG FIXES
