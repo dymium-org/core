@@ -74,7 +74,7 @@ event_{{{module}}}_eventname1 <- modules::use(here::here("{{{module_path}}}/even
 create_toy_world() 
 
 world %>%
-  event_{{{module}}}_eventname1$run(x = ., model = model)
+  event_{{{module}}}_eventname1$run(world = ., model = model)
 ```
 
 ## Event name 2
@@ -122,7 +122,7 @@ event_{{{module}}}_eventname2 <- modules::use(here::here("{{{module_path}}}/even
 create_toy_world() 
 
 world %>%
-  event_{{{module}}}_eventname2$run(x = ., model = model)
+  event_{{{module}}}_eventname2$run(world = ., model = model)
 ```
 
 # Known issues
