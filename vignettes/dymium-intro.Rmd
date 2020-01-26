@@ -24,7 +24,7 @@ This vignette introduces the basic building blocks for microsimulation in `dymiu
 
 # Overview of the building blocks 
 
-Microsimulation models, regardless of their study contexts, generally share the same basic components which are entities and rules. The rest of the article focuses on the main building blocks of microsimulation in term of implementation. 
+Microsimulation models, regardless of their study contexts, generally share the same basic components which are entities and their behaviour. The rest of the article focuses on the main building blocks of microsimulation in term of implementation. 
 
 ## Entities and Containers
 
@@ -212,22 +212,11 @@ use with this convention.
 
 ## Market
 
-In microsimulation, a market is where entities are directly interact with one another.
-A market can be an abstraction of a real-estate bidding market, a mate matching market,
-a labour market, etc. The entire market are separated into two sides (i.e. proposers 
-and proprosees, buyers and sellers, labours and firms). Interactions maybe one-sided 
-or two-sided depends on the matching mechanism that is used. When it is
-one-sided only agents from one side of the market make the decision about what they 
-get based on their preference. When it is the matching problem is two-sided one 
-then both sides of the market evaluate evaluate options available to them and interact 
-in a way that mimic bidding.
+The market component of dymium may be regarded as its first step to incorporating an aspect of agent-based simulation to its microsimulation component. In short, market is where entities can interact with one another to achieve a pre-defined goal. For example, mate matching is an important part in a closed population simulation where individual agents are partnered through some matching rules that are given to them. The rules can be as simple as minimising the age difference between two individual agents of opposite sex or differences in other socioeconomic characteristics. 
 
-Note that, the number of alternatives available to each agent is customisable to realistically 
-represent a matching situation that is being simulated. For example, in a housing
-search situation, it might be inappropiate to assume that all relocating households 
-have perfect knowledge about all the available dwelling units that are on the market
-at any moment in time. Hence, the modeller might want to limit the number of alternatives
-available in the choiceset of each household or the number of zones that the households
+Market can be an abstraction of a real-estate bidding market, a mate matching market, a labour market, etc. The entire market are separated into two sides (i.e. proposers and proprosees, buyers and sellers, labours and firms). Interaction between agents can be one-sided or two-sided depends on the matching mechanism that is used. When it is one-sided only agents from one side of the market make the decision about what they get based on their preference. When it is the matching problem is two-sided one then both sides of the market evaluate evaluate options available to them and interact in a way that mimic bidding.
+
+Note that, the number of alternatives available to each agent is customisable to realistically represent a matching situation that is being simulated. For example, in a housing search situation, it might be inappropiate to assume that all relocating households have perfect knowledge about all the available dwelling units that are on the market at any moment in time. Hence, the modeller might want to limit the number of alternatives available in the choiceset of each household or the number of zones that the households
 look for their options. 
 
 Currently, there are two implementations of market matching algorithms which are
@@ -235,16 +224,7 @@ Currently, there are two implementations of market matching algorithms which are
 - Stochastic matching (`MatchingMarketStochastic`) and
 - Optimal matching (`MatchingMarketOptimal`)
 
-In `MatchingMarketStochastic`, only one-sided matching problems can be solved. All
-agents that are seeking a match are randomly ordered into a virtual queue.
-The first agent in the queue gets to select an alternative among all the alternatives
-that available to it. While in `MatchingMarketOptimal`, both one-sided and two-sided 
-problems can be solved. All agents are aware of all the available alternatives 
-(e.g. houses, partners, etc.) in the market. This generally a very strong assumption.
-Hence, to mitigate such strong assumption the whole market can be further segmented 
-into sub markets where agents that are more alike or geographically near one others
-are stratified into the same sub market and only aware of each others and not those
-that are their unlikely matches.
+In `MatchingMarketStochastic`, only one-sided matching problems can be solved. All agents that are seeking a match are randomly ordered into a virtual queue. The first agent in the queue gets to select an alternative among all the alternatives that available to it. While in `MatchingMarketOptimal`, both one-sided and two-sided problems can be solved. All agents are aware of all the available alternatives (e.g. houses, partners, etc.) in the market. This generally a very strong assumption. Hence, to mitigate such strong assumption the whole market can be further segmented  into sub markets where agents that are more alike or geographically near one others are stratified into the same sub market and only aware of each others and not those that are their unlikely matches.
 
 ## Logging
 
