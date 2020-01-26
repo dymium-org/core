@@ -6,7 +6,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # {{{module}}} module documentation
@@ -31,11 +31,24 @@ This module requires the following packages ... and external dependecies such as
 
 ## Event name 1
 
+### Description
+
+This event does...
+
+<details>
+
+Some technical details of the inner working, assumptions, and settings of the event function that shouldn't bother the user at their first glance.
+
+</details>
+
 ### Usage
 
 ```{r}
-event_{{{module}}}_eventname <- modules::use("{{{module_path}}}/eventname.R")
-event_{{{module}}}_eventname$run(world, model = NULL, target = NULL, time_steps = NULL)
+event_{{{module}}}_eventname1 <- modules::use(here::here("{{{module_path}}}/eventname.R"))
+```
+
+```{r, echo = FALSE}
+event_{{{module}}}_eventname1
 ```
 
 ### Params
@@ -53,27 +66,37 @@ model <- list(x1 = list(yes = 0.5, no = 0.5),
 * time_steps: a numeric vector that indicates the time steps in the simulation clock
 that this event should be run.
 
-### Description
-
-This event does..
-
-### Note
-
-Here are some assumptions and settings that you should know about this event..
-
 ### Example
 
-```{r}
-1 + 1
+```{r, eval = FALSE}
+event_{{{module}}}_eventname1 <- modules::use(here::here("{{{module_path}}}/eventname.R"))
+
+create_toy_world() 
+
+world %>%
+  event_{{{module}}}_eventname1$run(x = ., model = model)
 ```
 
 ## Event name 2
 
+### Description
+
+This event does...
+
+<details>
+
+Some technical details of the inner working, assumptions, and settings of the event function that shouldn't bother the user at their first glance.
+
+</details>
+
 ### Usage
 
 ```{r}
-event_{{{module}}}_eventname <- modules::use("{{{module_path}}}/eventname.R")
-event_{{{module}}}_eventname$run(world, model = NULL, target = NULL, time_steps = NULL)
+event_{{{module}}}_eventname2 <- modules::use(here::here("{{{module_path}}}/eventname.R"))
+```
+
+```{r, echo = FALSE}
+event_{{{module}}}_eventname2
 ```
 
 ### Params
@@ -91,18 +114,15 @@ model <- list(x1 = list(yes = 0.5, no = 0.5),
 * time_steps: a numeric vector that indicates the time steps in the simulation clock
 that this event should be run.
 
-### Description
-
-This event does..
-
-### Note
-
-Here are some assumptions and settings that you should know about this event..
-
 ### Example
 
-```{r}
-1 + 1
+```{r, eval = FALSE}
+event_{{{module}}}_eventname2 <- modules::use(here::here("{{{module_path}}}/eventname.R"))
+
+create_toy_world() 
+
+world %>%
+  event_{{{module}}}_eventname2$run(x = ., model = model)
 ```
 
 # Known issues
