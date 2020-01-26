@@ -10,17 +10,17 @@ test_that("check_target", {
 
   expect_true(check_target(list(yes = 1)))
 
-  expect_error(check_target(data.table(1)))
+  expect_error(check_target(data.frame(1)))
 
-  expect_error(check_target(data.table(time = 1:10)))
+  expect_error(check_target(data.frame(time = 1:10)))
 
-  expect_error(check_target(data.table(time = 1:10)))
+  expect_error(check_target(data.frame(time = 1:10)))
 
-  expect_error(check_target(data.table(time = rep(1, 10))),
-               regexp = "Contains duplicated values")
+  expect_error(check_target(data.frame(time = rep(1, 10))),
+               regexp = "Must have at least 2 cols, but has 1 cols")
 
-  expect_error(check_target(data.table(time = paste(1:10))))
+  expect_error(check_target(data.frame(time = paste(1:10))))
 
-  expect_true(check_target(data.table(time = 1:10, yes = 1:10)))
+  expect_true(check_target(data.frame(time = 1:10, yes = 1:10)))
 
 })
