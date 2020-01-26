@@ -81,6 +81,7 @@ Collate:
     'Network.R'
     'Population.R'
     'Pipeline.R'
+    'Target.R'
     'Transition.R'
     'TransitionClassification.R'
     'TransitionRegression.R'

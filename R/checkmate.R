@@ -171,3 +171,84 @@ test_required_models <- checkmate::makeTestFunction(check_required_models)
 #' @inheritParams checkmate::makeExpectation
 #' @rdname check_required_models
 expect_required_models <- checkmate::makeExpectationFunction(check_required_models)
+
+#' Check if argument is a valid target object
+#'
+#' A target object is either a named list that contains integer values (static target) or a
+#' data.frame that contains a 'time' column and other response columns (dynamic target). The type of
+#' of the target depends on its usage.
+#'
+#' Here is an example of a static target `list(yes=10, no=20)`. Here is an example
+#' of a dynamic target `data.frame(time = c(1,2,3), yes = c(10,11,12), no = c(20,21,22)`.
+#'
+#' @param x any object to check
+#' @param null.ok default as TRUE
+#'
+#' @return TRUE if `x` is a valid target object else throws an error.
+#'
+#' @export
+check_target <- function(x, null.ok = TRUE) {
+
+  if (is.null(x)) {
+    if (null.ok) {
+      return(TRUE)
+    } else {
+      msg = "`x` cannot be NULL."
+      return(msg)
+    }
+  }
+
+  checkmate::assert(
+    checkmate::check_list(
+      x = x,
+      any.missing = FALSE,
+      types = c('integerish'),
+      names = 'strict',
+      null.ok = FALSE
+    ),
+    checkmate::check_data_frame(
+      x = x,
+      any.missing = FALSE,
+      min.cols = 2,
+      col.names = "strict",
+      null.ok = null.ok
+    )
+  )
+
+  if (is.data.frame(x)) {
+    checkmate::assert_names(
+      x = names(x),
+      type = "strict",
+      must.include = "time"
+    )
+
+    checkmate::assert_integerish(
+      x$time,
+      lower = 1,
+      any.missing = FALSE,
+      min.len = 1,
+      null.ok = FALSE,
+      unique = TRUE,
+      .var.name = "`time` column"
+    )
+
+  }
+
+  return(TRUE)
+}
+
+#' @export
+#' @param add [checkmate::AssertCollection]\cr
+#'  Collection to store assertions. See [checkmate::AssertCollection].
+#' @inheritParams checkmate::makeAssertion
+#' @rdname check_target
+assert_target <- checkmate::makeAssertionFunction(check_target)
+
+#' @export
+#' @rdname check_target
+test_target <- checkmate::makeTestFunction(check_target)
+
+#' @export
+#' @inheritParams checkmate::makeExpectation
+#' @rdname check_target
+expect_target <- checkmate::makeExpectationFunction(check_target)

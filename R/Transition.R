@@ -7,6 +7,12 @@
 #' Note that, to swap the run order of `filter()` and `mutate()` you need to change the
 #' `mutate_first` public field to `TRUE`.
 #'
+#' @note
+#'
+#' `target` can be static or dynamic depending on the data structure of it. A static
+#' target can be a named list or an integer value depending its usage in each
+#' event function.
+#'
 #' @section Construction:
 #'
 #' ```
@@ -82,13 +88,13 @@ Transition <- R6Class(
       # checks
       checkmate::assert_class(x, c("Agent"))
       checkmate::assert_subset(class(model)[[1]], choices = SupportedTransitionModels())
-      checkmate::assert_list(target, any.missing = FALSE, types = 'integerish', names = 'strict', null.ok = TRUE)
+      dymiumCore::assert_target(target, null.ok = TRUE)
       checkmate::assert_integerish(targeted_agents, lower = 1, any.missing = FALSE, null.ok = TRUE)
 
       # store inputs
       private$.AgtObj <- x
       private$.model <- model
-      private$.target <- target
+      private$.target <- .pick_target(target)
       private$.targeted_agents <- targeted_agents
 
       # run the steps ------
@@ -245,21 +251,10 @@ Transition <- R6Class(
     simulate = function() {
 
       # expect a vector
+      lg$warn("Transition is not meant not be used directly! It only gives an incorrect \\
+               simulation result for internal testing purposes! Please use \\
+               TransitionClassification or TransitonRegression instead.")
       response <- rep(1, nrow(private$.sim_data)) # dummy
-
-      # response <- switch(
-      #   EXPR = class(private$.model)[[1]],
-      #   "train" = simulate_train(self, private),
-      #   "data.table" = simulate_datatable(self, private),
-      #   "list" = simulate_list(self, private),
-      #   "NULL" = simulate_numeric(self, private),
-      #   stop(
-      #     glue::glue(
-      #       "{class(self)[[1]]} class doesn't have an implementation of {class(private$.model)} \\
-      #       class. Please kindly request this in dymiumCore's Github issue or send in a PR! :)"
-      #     )
-      #   )
-      # )
 
       response
     },
@@ -337,9 +332,21 @@ Transition <- R6Class(
  )
 )
 
-
 # Functions ---------------------------------------------------------------
 
+.pick_target <- function(target) {
+  if (!is.data.frame(target)) {
+    return(target)
+  }
+  if (!is.data.table(target)) {
+    target <- as.data.table(target)
+  }
+  current_sim_time <- .get_sim_time()
+
+  index_closest_time <- which.min(abs(target[['time']] - current_sim_time))
+
+  return(as.list(target[index_closest_time, -c("time")]))
+}
 
 #' Get all object classes that are supported by Transition
 #'

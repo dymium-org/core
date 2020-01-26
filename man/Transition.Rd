@@ -9,6 +9,11 @@ Work flow: \code{initialise()} -> \code{filter()} -> \code{mutate()} -> \code{si
 Note that, to swap the run order of \code{filter()} and \code{mutate()} you need to change the
 \code{mutate_first} public field to \code{TRUE}.
 }
+\note{
+\code{target} can be static or dynamic depending on the data structure of it. A static
+target can be a named list or an integer value depending its usage in each
+event function.
+}
 \section{Construction}{
 \preformatted{Transition$new(x, model, target = NULL, targeted_agents = NULL)
 }
