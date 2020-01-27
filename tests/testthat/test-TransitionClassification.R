@@ -255,6 +255,14 @@ test_that("dynamic target", {
       no = sample(1:20, 10, replace = TRUE)
     )
 
+  TargetDynamic <-
+    data.table(
+      time = c(1:10),
+      yes = sample(1:20, 10, replace = TRUE),
+      no = sample(1:20, 10, replace = TRUE)
+    ) %>%
+    Target$new(.)
+
   event_dynamic_target <- function(world, model, target) {
 
     Ind <- world$get("Individual")
