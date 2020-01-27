@@ -212,6 +212,11 @@ check_target <- function(x, null.ok = TRUE) {
       min.cols = 2,
       col.names = "strict",
       null.ok = null.ok
+    ),
+    checkmate::check_r6(
+      x = x,
+      classes = c("Target", "Generic"),
+      null.ok = null.ok
     )
   )
 
