@@ -17,7 +17,7 @@
 #' ```
 #'
 #' * `x` :: any object that passes `check_target()`\cr
-#' A target object.
+#' A target object or `NULL`.
 #'
 #' @section Active Field (read-only):
 #'
@@ -59,7 +59,7 @@ Target <- R6::R6Class(
   inherit = dymiumCore::Generic,
   public = list(
     initialize = function(x) {
-      assert_target(x, null.ok = FALSE)
+      assert_target(x, null.ok = TRUE)
       if (is.data.frame(x)) {
         if (!is.data.table(x)) {
           private$.data <- as.data.table(x)
