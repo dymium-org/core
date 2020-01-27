@@ -40,15 +40,20 @@ Get a alignment target as a named list.
 
 \examples{
 
+# static target
 TrgtStatic <- Target$new(list(yes = 10))
 TrgtStatic$data
 TrgtStatic$dynamic
 TrgtStatic$get()
 
+# dynamic target
 target_dynamic <- data.table(time = 1:10, yes = 1:10)
 TrgtDynamic <- Target$new(list(yes = 10))
 TrgtDynamic$data
 TrgtDynamic$dynamic
+
+# if the `time` argument in `get()` is not specified then it will rely on
+# the time step from the simulation clock from `.get_sim_time()`.
 TrgtDynamic$get()
 TrgtDynamic$get(1)
 TrgtDynamic$get(10)

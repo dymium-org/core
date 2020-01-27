@@ -37,15 +37,20 @@
 #'
 #' @examples
 #'
+#' # static target
 #' TrgtStatic <- Target$new(list(yes = 10))
 #' TrgtStatic$data
 #' TrgtStatic$dynamic
 #' TrgtStatic$get()
 #'
+#' # dynamic target
 #' target_dynamic <- data.table(time = 1:10, yes = 1:10)
 #' TrgtDynamic <- Target$new(list(yes = 10))
 #' TrgtDynamic$data
 #' TrgtDynamic$dynamic
+#'
+#' # if the `time` argument in `get()` is not specified then it will rely on
+#' # the time step from the simulation clock from `.get_sim_time()`.
 #' TrgtDynamic$get()
 #' TrgtDynamic$get(1)
 #' TrgtDynamic$get(10)
@@ -55,22 +60,17 @@ Target <- R6::R6Class(
   public = list(
     initialize = function(x) {
       assert_target(x, null.ok = FALSE)
-
       if (is.data.frame(x)) {
-
         if (!is.data.table(x)) {
           private$.data <- as.data.table(x)
         } else {
           private$.data <- data.table::copy(x)
         }
-
         if ("time" %in% names(x)) {
           private$.dynamic <- TRUE
         }
       }
-
       private$.data <- x
-
       return(invisible(self))
     },
 
@@ -79,12 +79,21 @@ Target <- R6::R6Class(
         closest_time_index <- which.min(abs(private$.data[['time']] - time))
         return(as.list(private$.data[closest_time_index, -c("time")]))
       }
-
       if (is.data.table(private$.data)) {
         return(copy(private$.data))
       }
-
       return(private$.data)
+    },
+
+    print = function() {
+      msg <- glue::glue("dynamic: {private$.dynamic}")
+      if (private$.dynamic) {
+        period <- c(min(private$.data[["time"]]),
+                    max(private$.data[["time"]]))
+        msg <- glue::glue(msg,
+                          "period: {period[1]} to {period[2]}", .sep = "\n- ")
+      }
+      super$print(msg)
     }
   ),
 
