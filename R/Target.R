@@ -34,6 +34,7 @@
 #'  Get a alignment target as a named list.
 #'
 #' @aliases Models
+#' @export
 #'
 #' @examples
 #'
