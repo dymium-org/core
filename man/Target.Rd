@@ -15,7 +15,7 @@ value at the current time or its closest time to the current time.
 }
 \itemize{
 \item \code{x} :: any object that passes \code{check_target()}\cr
-A target object.
+A target object or \code{NULL}.
 }
 }
 
