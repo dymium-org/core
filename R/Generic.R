@@ -99,6 +99,19 @@ Generic <- R6Class(
 
     class = function() {
       class(self)[[1]]
+    },
+
+    print = function(...) {
+      dots <- list(...)
+      .class_inheritance <- glue::glue_collapse(class(self), sep = " <- ")
+      message(
+        glue::glue(
+        "Class: {class(self)[[1]]}",
+        "Inheritance: {.class_inheritance}",
+        "{dots[[1]]}",
+        .sep = "\n- "
+        )
+      )
     }
   ),
 
