@@ -94,7 +94,7 @@ Transition <- R6Class(
       # store inputs
       private$.AgtObj <- x
       private$.model <- model
-      private$.target <- .pick_target(target)
+      private$.target <- Target$new(target)$get()
       private$.targeted_agents <- targeted_agents
 
       # run the steps ------
