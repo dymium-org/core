@@ -75,11 +75,13 @@ Asset <- R6::R6Class(
   public = list(
 
     initialize = function(.data, id_col, owner = NULL) {
-      checkmate::assert_r6(owner, classes = c("Agent", "Entity"))
+      checkmate::assert_r6(owner, classes = c("Agent", "Entity"), null.ok = TRUE)
       super$initialize(databackend = DataBackendDataTable,
                        .data = .data,
                        id_col = id_col)
-      self$set_owner_object(owner)
+      if (!is.null(owner)) {
+        self$set_owner_object(owner)
+      }
       return(invisible(self))
     },
 
