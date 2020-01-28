@@ -241,3 +241,66 @@ test_that("update", {
   checkmate::assert_character(names(table(Ind$get_attr("test"))), min.len = 1, unique = TRUE, null.ok = FALSE)
 })
 
+
+test_that("dynamic target", {
+
+  create_toy_world()
+
+  model <- list(yes = 0.10, no = 0.90)
+
+  dynamic_target <-
+    data.table(
+      time = c(1:10),
+      yes = sample(1:20, 10, replace = TRUE),
+      no = sample(1:20, 10, replace = TRUE)
+    )
+
+  TargetDynamic <-
+    data.table::data.table(
+      time = c(1:10),
+      yes = sample(1:20, 10, replace = TRUE),
+      no = sample(1:20, 10, replace = TRUE)
+    ) %>%
+    Target$new(.)
+
+  event_dynamic_target <- function(world, model, target) {
+
+    Ind <- world$get("Individual")
+
+    DynamicTrans <- TransitionClassification$new(Ind, model, target)
+
+    remove_ids <- DynamicTrans$get_result()[response == "yes", id]
+
+    if (length(remove_ids) > 0) {
+      Ind$remove(ids = remove_ids)
+    }
+
+    return(world)
+  }
+
+  Ind <- world$get("Individual")
+
+  n_ind_before <- Ind$n()
+
+  for (i in 1:10) {
+    world$start_iter(time_step = i, unit = "year") %>%
+      event_dynamic_target(., model, target = dynamic_target)
+  }
+
+  n_ind_after <- Ind$n()
+
+  expect_true(n_ind_after + sum(dynamic_target$yes) == n_ind_before)
+
+  # bad target, `nooo` is not a valid response
+  dynamic_target <-
+    data.table(
+      time = c(1:10),
+      yes = sample(1:20, 10, replace = TRUE),
+      no = sample(1:20, 10, replace = TRUE),
+      nooo = sample(1:20, 10, replace = TRUE)
+    )
+
+  expect_error(TransitionClassification$new(world$entities$Individual, model, dynamic_target),
+               regexp = "Must be a subset of set \\{yes,no\\}.")
+
+})

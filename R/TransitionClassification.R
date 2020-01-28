@@ -21,6 +21,19 @@
 #'
 #' To get the simulation result use `$get_result()`.
 #'
+#' @note
+#'
+#' `target` is used ensures that the aggregate outcome of the transition matches
+#'  a macro-level outcome as defined in `target`. This is known as 'alignment' see,
+#'  Li, J., & O'Donoghue, C. (2012). Evaluating binary alignment
+#'  methods in microsimulation models. For example, in a transition where the probabilistic
+#'  model predicts only two outcomes, a binary model, "yes" and "no". If the target
+#'  is a list of yes = 10 and no = 20 (i.e. `r list(yes = 10, no = 20)`), this will
+#'  ensure that there will be 10 decision makers whom select 'yes' and 20 decision makers
+#'  that select 'no'. However, this doesn't mean that all decision makers have
+#'  an equal odd of select 'yes' or 'no', the odd is still to be determined by the given
+#'  probalistic model. See [alignment] for more detail.
+#'
 #' @section Construction:
 #'
 #' ```
@@ -35,17 +48,9 @@
 #'
 #' * `target` :: a named `list()`\cr
 #'  (Default as NULL).
-#'  A named list where the names of its elements correspond to the choices and
-#'  the values are the number of agents to choose those choices. This ensure that
-#'  the aggregate outcome of the transition matches a macro target. This is known
-#'  as 'alignment' see, Li, J., & O'Donoghue, C. (2012). Evaluating binary alignment
-#'  methods in microsimulation models. For example, in a transition where the probabilistic
-#'  model predicts only two outcomes, a binary model, "yes" and "no". If the target
-#'  is a list of yes = 10 and no = 20 (i.e. `r list(yes = 10, no = 20)`), this will
-#'  ensure that there will be 10 decision makers whom select 'yes' and 20 decision makers
-#'  that select 'no'. However, this doesn't mean that all decision makers have
-#'  an equal odd of select 'yes' or 'no', the odd is still to be determined by the given
-#'  probalistic model. See [alignment] for more detail.
+#'  `Target` or A named list where its names is a subset of to the choices in `model`
+#'  to be selected and its values are the number of agents to choose those choices.
+#'  See the note section for more details.
 #'
 #' * `targeted_agent` :: `integer()`\cr
 #'  (Default as NULL)
