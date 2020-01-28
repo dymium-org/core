@@ -30,6 +30,13 @@ reference:
     - Population
     - pop_register
     - household_formation
+- title: Transitions & Alignment
+  contents:
+    - matches("^Transition.")
+    - trans
+    - SupportedTransitionModels
+    - Target
+    - alignment
 - title: Logging
   contents:
     - add_history
@@ -38,12 +45,6 @@ reference:
     - plot_history
     - inspect
     - get_log
-- title: Transitions
-  contents:
-    - matches("^Transition.")
-    - trans
-    - SupportedTransitionModels
-    - alignment
 - title: Extra classes
   contents:
     - starts_with("Match")
