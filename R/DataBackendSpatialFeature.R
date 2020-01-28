@@ -46,7 +46,7 @@ DataBackendSpatialFeature <- R6::R6Class(
   classname = "DataBackendSpatialFeature",
   inherit = DataBackendDataTable,
   public = list(
-    initialize = function(.data, key) {
+    initialize = function(.data, key = NULL) {
       if (!requireNamespace("sf", quietly = TRUE)) {
         .choice <- utils::menu(choices = c("Yes", "No"), title = "DataBackendSpatialFeature needs the sf package to work. Would you like to download the sf package?")
         if (.choice == 1) {
