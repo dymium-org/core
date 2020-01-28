@@ -235,8 +235,12 @@ lookup_and_replace2 <- function(x, cols, mapping) {
   # preserve the original column order
   data.table::setcolorder(x, x_col_order)
 
+  # don't check keys
+  data.table::setkey(x_str, NULL)
+  data.table::setkey(x, NULL)
+
   # final checking of column types and data dimiensions
-  res <- all.equal(x_str, x[0, ])
+  res <- all.equal(x_str, x[0, ], check.attributes = FALSE)
   if (!isTRUE(res)) {
     stop(res)
   }

@@ -276,7 +276,8 @@ Entity <-
 
         res <-
           all.equal(target = omit_derived_vars(self$database$attrs$data[0, ]),
-                    current = omit_derived_vars(NewData$data[0, ]))
+                    current = omit_derived_vars(NewData$data[0, ]),
+                    check.attributes = FALSE)
 
         if (!isTRUE(res)) {
           cli::cli_alert_info("New data (.data)")

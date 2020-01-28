@@ -100,7 +100,7 @@ DataBackendDataTable <- R6::R6Class(
       common_names <- Reduce(intersect, list(names(.data), names(self$get())))
       typeof_new <- sapply(.data, typeof)[common_names]
       typeof_existing <- sapply(self$get(), typeof)[common_names]
-      check_equality <- all.equal(typeof_existing, typeof_new)
+      check_equality <- all.equal(typeof_existing, typeof_new, check.attributes = FALSE)
       if (!isTRUE(check_equality)){
         cli::cli_alert_danger("Type mismatches found")
         cli::cli_alert_danger("Types of existing data:")
