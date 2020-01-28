@@ -261,15 +261,10 @@ expect_target <- checkmate::makeExpectationFunction(check_target)
 
 #' Check subset2
 #'
-#' @param x [Entity]\cr
-#' an R6 [Entity] object
-#' @param ids (`logical(1)`)\cr
-#' Ids of Entity to check.
-#' @param include_removed_data (`any`)\cr
-#' Should the removed data of `x` be checked.
-#' @param informative (`logical(1)`)\cr
-#' Whether to return the missing ids in error message.
+#' The only different from `checkmate::checkSubset` is that this only print
+#' mismatches in `x`.
 #'
+#' @inheritParams checkmate::checkSubset
 #' @return (`logical(1)`).
 #' @export
 check_subset2 <- function(x, choices, empty.ok = TRUE, fmatch = FALSE) {
