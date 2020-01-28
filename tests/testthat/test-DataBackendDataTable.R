@@ -1,14 +1,30 @@
 test_that("initialise", {
-  expect_error(DataBackendDataTable$new(data.frame(x1 = c(1,2,3), x2 = c(1,2,3))))
-  expect_error(DataBackendDataTable$new(1))
+  expect_error(DataBackendDataTable$new(data.frame(x1 = c(1,2,3), x2 = c(1,2,3))),
+               regexp = "Must be a data.table, not data.frame")
+  expect_error(DataBackendDataTable$new(1),
+               "Must be a data.table, not double")
 })
 
 test_that("get", {
-  x <- DataBackendDataTable$new(data.table(x1 = c(1, 2, 3), x2 = c(1, 2, 3)))
+  x <- DataBackendDataTable$new(data.table(x1 = c(1, 2, 3), x2 = c(1, 2, 3)), key = "x1")
   expect_is(x$get(), "data.table")
   expect_true(nrow(x$get(rows = 1)) == 1)
   expect_equal(names(x$get(cols = c("x1", "x2"))), c("x1", "x2"))
   expect_true(nrow(x$get()) == 3)
+})
+
+test_that("data and key", {
+  x <- DataBackendDataTable$new(data.table(x1 = c(1, 2, 3), x2 = c(1, 2, 3)), key = "x1")
+  expect_equal(x$key, "x1")
+  expect_equal(x$get(), x$data)
+})
+
+test_that("setkey", {
+  x <- DataBackendDataTable$new(data.table(x1 = c(1, 2, 3), x2 = c(1, 2, 3)))
+  expect_null(x$key)
+  x$setkey("x1")
+  expect_equal(x$key, "x1")
+  expect_equal(x$get(), x$data)
 })
 
 test_that("remove", {

@@ -13,15 +13,25 @@
 #'
 #' @section Construction:
 #' ```
-#' x <- DataBackendDataTable$new(.data)
+#' x <- DataBackendDataTable$new(.data, key = NULL)
 #' ```
 #'
-#' * `data` :: [data.table::data.table()]\cr
-#'   The input [data.table::data.table()].
+#' * `.data` :: [data.table::data.table()]\cr
+#'  The input [data.table::data.table()].
+#'
+#' * `key` :: `NULL`|`character(1)`\cr
+#'  The key of `.data`.
 #'
 #' @section Fields:
 #'
-#'  * `NULL`\cr
+#'  * `key` :: `NULL`|`character(1)`\cr
+#'  The key of `.data`.
+#'
+#'  * `data` :: [data.table::data.table()]\cr
+#'  A copy of the data. To get its reference semantic, use `$get(copy = FALSE)`.
+#'
+#'  * `removed_data` :: [data.table::data.table()]\cr
+#'  A copy of the removed data.
 #'
 #' @section Methods:
 #'
@@ -67,9 +77,19 @@ DataBackendDataTable <- R6::R6Class(
   classname = "DataBackendDataTable",
   inherit = DataBackendDataFrame,
   public = list(
-    initialize = function(.data) {
+    initialize = function(.data, key = NULL) {
       checkmate::assert_data_table(.data, min.rows = 1, null.ok = FALSE, col.names = "strict")
-      super$initialize(data.table::copy(.data))
+      .data <- data.table::copy(.data)
+      if (!is.null(key)) {
+        if (!key %in% names(.data)) {
+          stop(paste0("'", key, "' key column doesn't exist in `.data`."))
+        }
+        if (!isTRUE(data.table::key(.data) == key)) {
+          message("Setting `.data`'s key as '", key, "' column.")
+          data.table::setkeyv(x = .data, key)
+        }
+      }
+      super$initialize(.data)
     },
 
     add = function(.data, fill = FALSE) {
@@ -112,6 +132,24 @@ DataBackendDataTable <- R6::R6Class(
         private$.removed_data <- rbind(private$.removed_data, private$.data[rows], fill = TRUE)
         private$.data <- private$.data[-rows]
       }
+    },
+
+    setkey = function(key) {
+      data.table::setkeyv(x = private$.data, cols = key)
+    }
+  ),
+
+  active = list(
+    key = function() {
+      return(data.table::key(private$.data))
+    },
+
+    data = function() {
+      return(data.table::copy(base::get(".data", envir = private)))
+    },
+
+    removed_data = function() {
+      return(data.table::copy(base::get(".removed_data", envir = private)))
     }
   )
 )
