@@ -134,7 +134,7 @@ Entity <-
 
       initialize = function(databackend, .data, id_col) {
         # browser()
-        checkmate::assert_character(id_col, null.ok = FALSE, min.len = 1, unique = T, any.missing = FALSE)
+        checkmate::assert_character(id_col, null.ok = FALSE, min.len = 1, unique = T, any.missing = FALSE, names = "unnamed")
         checkmate::assert_names(names(.data), must.include = id_col, type = 'strict')
         checkmate::assert_integerish(.data[[id_col[1]]], unique = TRUE, any.missing = FALSE, null.ok = FALSE, min.len = 1)
         private$.data[[1]] <- databackend$new(.data, key = id_col[1])
@@ -146,7 +146,7 @@ Entity <-
       },
 
       add_data = function(databackend = DataBackendDataTable, .data, name) {
-        checkmate::assert_names(names(.data), must.include = private$.id_col, type = 'strict')
+        checkmate::assert_names(names(.data), must.include = private$.id_col[[1]], type = 'strict')
         checkmate::assert_string(name, null.ok = FALSE, na.ok = FALSE)
         checkmate::assert_names(name, type = "strict")
         checkmate::assert_names(names(private$.data), disjunct.from = name)
@@ -337,19 +337,15 @@ Entity <-
         }
       },
 
-      get_ids = function(idx) {
-        if (missing(idx)) {
-          return(self$data()$get(col = private$.id_col)[[1]])
-        } else {
-          return(self$data()$get(col = private$.id_col)[[1]][idx])
-        }
+      get_ids = function() {
+        return(self$get_attr(self$id_col[[1]]))
       },
 
       get_idx = function(ids, expect_na = FALSE) {
         if (missing(ids)) {
           return(seq_len(self$data()$nrow()))
         }
-        all_ids <- self$data()$get(col = private$.id_col)[[1]]
+        all_ids <- self$get_ids()
         if (expect_na == FALSE) {
           assert_entity_ids(self, ids)
         }
@@ -366,7 +362,7 @@ Entity <-
         if (all) {
           return(private$.id_col)
         } else {
-          return(private$.id_col[1])
+          return(private$.id_col[[1]])
         }
       },
 
@@ -377,7 +373,7 @@ Entity <-
           return(invisible())
         }
         for (DataObj in private$.data) {
-          idx <- which(DataObj$get(copy = FALSE)[[private$.id_col]] %in% ids)
+          idx <- which(DataObj$get(copy = FALSE)[[private$.id_col[[1]]]] %in% ids)
           DataObj$remove(rows = idx)
         }
         invisible()
