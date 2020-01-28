@@ -164,7 +164,11 @@ Population <- R6Class(
         checkmate::assert_character(hid_col, any.missing = FALSE, min.len = 1, unique = T)
         checkmate::assert_names(names(hh_data), must.include = hid_col)
         checkmate::assert_integerish(hh_data[[hid_col[1]]], lower = 1, unique = T, all.missing = FALSE)
-        checkmate::assert_integerish(hh_data[[hid_col[1]]], lower = 1, unique = T, all.missing = FALSE)
+
+        if (!checkmate::test_set_equal(ind_data[[hid_col[1]]], hh_data[[hid_col[1]]], fmatch = TRUE)) {
+          stop("Not all household ids exist in both `ind_data` and `hh_data`.")
+        }
+
         # add household size
         if (!"hhsize" %in% names(hh_data)) {
           lg$warn("Creating `hhsize` as it is not provided with `hh_data`.")
