@@ -33,7 +33,7 @@
 #'  (`integer(1)`) -> a named `list()`\cr
 #'  Get a alignment target as a named list.
 #'
-#' @aliases Models
+#' @aliases Targets
 #' @export
 #'
 #' @examples

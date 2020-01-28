@@ -2,7 +2,7 @@
 % Please edit documentation in R/Target.R
 \name{Target}
 \alias{Target}
-\alias{Models}
+\alias{Targets}
 \title{Target}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting \link{Generic}.}
 \description{
