@@ -140,6 +140,8 @@ DataBackendDataTable <- R6::R6Class(
 
     setkey = function(key = private$.key) {
       data.table::setkeyv(x = private$.data, cols = key)
+      private$.key <- key
+      invisible(self)
     }
   ),
 
