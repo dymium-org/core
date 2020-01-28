@@ -124,7 +124,7 @@ Individual <- R6::R6Class(
   public = list(
 
     initialize = function(.data, id_col = "pid", hid_col = NULL) {
-      super$initialise_data(.data = .data, id_col = id_col)
+      super$initialize(.data = .data, id_col = id_col)
       if (!is.null(hid_col)) {
         checkmate::assert_names(names(.data), must.include = hid_col)
         private$.hid_col <- hid_col

@@ -21,13 +21,6 @@
 #'
 #' @section Methods:
 #'
-#'  * **DEPRECATING** `initialise_data(data, id_col)`\cr
-#'   ([data.table::data.table()], `character(1)`) -> `NULL`\cr
-#'   Store data to data while making sure that `data` meets all the
-#'   requirements. `data`, which is also the first set of data for the agent object,
-#'   will be stored at the first index in `private$.data`, a named list of data objects, and named
-#'   as `attrs`.
-#'
 #'  * `add_new_agents(parent_ids = NULL, data = NULL)`\cr
 #'  (`integer()`|`character()`, [data.table::data.table()]) -> `NULL`\cr
 #'  Adds new agent records to data.
@@ -68,23 +61,6 @@ Agent <- R6Class(
   public = list(
     # public ------------------------------------------------------------------
     initialize = function(.data, id_col) {
-      if (!missing(.data)) {
-        if (!missing(id_col)) {
-          super$initialize(databackend = DataBackendDataTable,
-                           .data = .data,
-                           id_col = id_col)
-        } else {
-          stop(glue::glue("To initialise the attribute data of {self$class()} \\
-                            the `id_col` argument must be given."))
-        }
-      }
-      invisible()
-    },
-
-    initialise_data = function(.data, id_col) {
-      if (length(private$.data) != 0) {
-        stop("Agent's `attrs` data has already been initialised.")
-      }
       super$initialize(databackend = DataBackendDataTable,
                        .data = .data,
                        id_col = id_col)

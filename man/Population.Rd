@@ -36,9 +36,6 @@ Shorthand to the \link{Household} object.
 \section{Public Methods}{
 
 \itemize{
-\item \code{initialise_data(ind_data, hh_data, pid_col, hid_col)}\cr
-Load the microdata of individuals and households to construct \link{Individual} and
-\link{Household} objects.
 \item \code{add_population(ind_data, hh_data)}\cr
 (\code{\link[data.table:data.table]{data.table::data.table()}}, \code{\link[data.table:data.table]{data.table::data.table()}})\cr
 add a new population. This requires that all individuals \code{ind_data} belong

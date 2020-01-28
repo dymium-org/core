@@ -38,10 +38,6 @@
 #'
 #' @section Public Methods:
 #'
-#' * `initialise_data(ind_data, hh_data, pid_col, hid_col)`\cr
-#'  Load the microdata of individuals and households to construct [Individual] and
-#'  [Household] objects.
-#'
 #' * `add_population(ind_data, hh_data)`\cr
 #'  ([data.table::data.table()], [data.table::data.table()])\cr
 #'  add a new population. This requires that all individuals `ind_data` belong

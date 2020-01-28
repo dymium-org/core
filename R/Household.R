@@ -55,8 +55,8 @@ Household <- R6Class(
       invisible()
     },
 
-    initialise_data = function(.data, id_col = "hid") {
-      super$initialise_data(.data = .data, id_col = id_col)
+      super$add_entities(.data = .data)
+      invisible()
     }
   )
 )
