@@ -21,16 +21,22 @@ BuildingCommercial <- R6Class(
   inherit = Building,
   public = list(
 
+  ),
+
+  active = list(
     # minimum required data structure
     data_template = function() {
-      data.table(
-        # the first column should always be the unique id column of the class
-        did = integer(), # dwelling id
-        zid = integer(), # zone id
-        occupied_by = integer(),
-        price = double() # price of dwelling
+      return(
+        data.table(
+          # the first column should always be the unique id column of the class
+          did = integer(), # dwelling id
+          zid = integer(), # zone id
+          occupied_by = integer(),
+          price = double() # price of dwelling
+        )
       )
     }
   ),
+
   private = list()
 )

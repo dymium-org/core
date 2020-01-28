@@ -30,6 +30,9 @@
 #'
 #'  * `database`: a list of [DataBackend] objects that [Entity] possess.
 #'
+#'  * `data_template`: a data.table object that contains the minimum data requirement apart
+#'   from the `id_col`.
+#'
 #' @section Methods:
 #'
 #'  * `add_data(databackend = DataBackendDataTable, .data, name)`\cr
@@ -433,6 +436,8 @@ Entity <-
     active = list(
       database = function() {
         get(".data", envir = private)
+      data_template = function() {
+        return(data.table())
       }
     ),
 

@@ -54,17 +54,6 @@ Firm <- R6::R6Class(
       invisible()
     },
 
-    data_template = function() {
-      data.table(
-        fid = integer(),
-        zid = integer(),
-        industry = character(),
-        type = character(), # industrial or commercial
-        employment_size = integer(),
-        number_of_workers = integer()
-      )
-    },
-
     initialise_data = function(data, id_col = "fid") {
       super$initialise_data(data, id_col)
     },
@@ -94,5 +83,18 @@ Firm <- R6::R6Class(
       stop()
     }
 
+  ),
+
+  active = list(
+    data_template = function() {
+      data.table(
+        fid = integer(),
+        zid = integer(),
+        industry = character(),
+        type = character(), # industrial or commercial
+        employment_size = integer(),
+        number_of_workers = integer()
+      )
+    }
   )
 )

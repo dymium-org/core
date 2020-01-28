@@ -133,20 +133,6 @@ Individual <- R6::R6Class(
       invisible()
     },
 
-    data_template = function() {
-      data.table(
-        pid = integer(),
-        hid = integer(),
-        # fid = integer(), # firm/work id
-        age = integer(),
-        sex = character(),
-        marital_status = character(),
-        partner_id = integer(),
-        father_id = integer(),
-        mother_id = integer()
-      )
-    },
-
     get_household_ids = function(ids) {
       if (missing(ids)) {
         return(self$get_attr(x = private$.hid_col))
@@ -505,5 +491,19 @@ Individual <- R6::R6Class(
              "mother" = {return(self$get_data(copy = FALSE)[idx, mother_id])},
              "partner" = {return(self$get_data(copy = FALSE)[idx, partner_id])},
              "children" = {return(.get_children(ids))})
+    }),
+
+  active = list(
+    data_template = function() {
+      data.table(
+        age = integer(),
+        sex = character(),
+        marital_status = character(),
+        partner_id = integer(),
+        father_id = integer(),
+        mother_id = integer()
+      )
     }
-))
+  )
+
+  )
