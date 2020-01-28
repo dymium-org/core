@@ -11,18 +11,25 @@ the \verb{:=} operator which allows a data.table object to be modified in place,
 without making a copy.
 }
 \section{Construction}{
-\preformatted{x <- DataBackendDataTable$new(.data)
+\preformatted{x <- DataBackendDataTable$new(.data, key = NULL)
 }
 \itemize{
-\item \code{data} :: \code{\link[data.table:data.table]{data.table::data.table()}}\cr
+\item \code{.data} :: \code{\link[data.table:data.table]{data.table::data.table()}}\cr
 The input \code{\link[data.table:data.table]{data.table::data.table()}}.
+\item \code{key} :: \code{NULL}|\code{character(1)}\cr
+The key of \code{.data}.
 }
 }
 
 \section{Fields}{
 
 \itemize{
-\item \code{NULL}\cr
+\item \code{key} :: \code{NULL}|\code{character(1)}\cr
+The key of \code{.data}.
+\item \code{data} :: \code{\link[data.table:data.table]{data.table::data.table()}}\cr
+A copy of the data. To get its reference semantic, use \verb{$get(copy = FALSE)}.
+\item \code{removed_data} :: \code{\link[data.table:data.table]{data.table::data.table()}}\cr
+A copy of the removed data.
 }
 }
 
