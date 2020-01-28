@@ -198,7 +198,7 @@ Population <- R6Class(
 
       # add new data
       IndNewData <- DataBackendDataTable$new(ind_data, key = Ind$id_col[[1]])
-      Ind$add_entities(.data = IndNewData$data)
+      Ind$add_entities(.data = IndNewData$data, add_population = TRUE)
       if (!is.null(hh_data)) {
         HhNewData <- DataBackendDataTable$new(hh_data, key = Hh$id_col[[1]])
         Hh$add_entities(.data = HhNewData$data)
