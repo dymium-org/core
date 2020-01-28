@@ -22,7 +22,8 @@ test_that("data and key", {
 test_that("setkey", {
   x <- DataBackendDataTable$new(data.table(x1 = c(1, 2, 3), x2 = c(1, 2, 3)))
   expect_null(x$key)
-  x$setkey("x1")
+  x$setkey(key = "x1")
+  x$key
   expect_equal(x$key, "x1")
   expect_equal(x$get(), x$data)
 })

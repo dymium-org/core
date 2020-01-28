@@ -9,6 +9,7 @@ test_that("data", {
   expect_is(MyObj$data(), class = "DataBackendDataTable")
 })
 
+# get_data -----------
 test_that("get_data", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   expect_is(MyObj$get_data(), "data.table")
@@ -20,6 +21,7 @@ test_that("get_data", {
   checkmate::expect_data_frame(MyObj$get_data(ids = c(1,1)), nrows = 2, null.ok = FALSE)
 })
 
+# add_data -----------
 test_that("add_data", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
 
@@ -28,8 +30,37 @@ test_that("add_data", {
 
   MyObj$add_data(databackend = DataBackendDataTable, .data = toy_individuals, name = "attrs2")
   expect_true(all.equal(MyObj$get_data(name = "attrs2"), toy_individuals))
+
+  Enty <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
 })
 
+# add_entities -----------
+test_that("add_entities", {
+  Enty <-
+    Entity$new(
+      databackend = DataBackendDataTable,
+      .data = toy_individuals,
+      id_col = c("pid", "partner_id", "mother_id", "father_id")
+    )
+
+  n_entities_before <- Enty$n()
+  new_ent_dt <- data.table::copy(toy_individuals)[, .derived_col := 1]
+  expect_error(Enty$add_entities(.data = new_ent_dt, check_existing = TRUE),
+               regexp = "One or more of the main unique `ids` in `.data` already exist in the existing attribute data of this Entity.")
+
+  data_lst <- register(x = Enty, new_ent_dt)
+  Enty$add_entities(data_lst$new_ent_dt, check_existing = FALSE)
+  expect_error(Enty$add_entities(.data = new_ent_dt, check_existing = TRUE),
+               regexp = "One or more of the main unique `ids` in `.data` already exist in the existing attribute data of this Entity.")
+
+  data_lst <- register(x = Enty, new_ent_dt)
+  Enty$add_entities(data_lst$new_ent_dt, check_existing = FALSE)
+  expect_equal(Enty$n(), expected = nrow(toy_individuals) * 3)
+
+
+})
+
+# summary ----------
 test_that("summary", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   expect_is(MyObj$summary(verbose = FALSE), "data.frame")
@@ -46,8 +77,14 @@ test_that("remove", {
 
 test_that("get_ids", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
-  expect_true(length(MyObj$get_ids()) != 0)
-  expect_true(length(MyObj$get_ids(idx = c(1:10))) == 10)
+  checkmate::expect_integerish(
+    MyObj$get_ids(),
+    lower = 1,
+    any.missing = FALSE,
+    unique = T,
+    null.ok = FALSE,
+    min.len = nrow(toy_individuals)
+  )
 })
 
 test_that("get_idx", {
