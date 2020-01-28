@@ -45,7 +45,7 @@
 #' TrgtStatic$get()
 #'
 #' # dynamic target
-#' target_dynamic <- data.table(time = 1:10, yes = 1:10)
+#' target_dynamic <- data.frame(time = 1:10, yes = 1:10)
 #' TrgtDynamic <- Target$new(list(yes = 10))
 #' TrgtDynamic$data
 #' TrgtDynamic$dynamic
