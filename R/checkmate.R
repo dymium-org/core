@@ -257,3 +257,47 @@ test_target <- checkmate::makeTestFunction(check_target)
 #' @inheritParams checkmate::makeExpectation
 #' @rdname check_target
 expect_target <- checkmate::makeExpectationFunction(check_target)
+
+
+#' Check subset2
+#'
+#' @param x [Entity]\cr
+#' an R6 [Entity] object
+#' @param ids (`logical(1)`)\cr
+#' Ids of Entity to check.
+#' @param include_removed_data (`any`)\cr
+#' Should the removed data of `x` be checked.
+#' @param informative (`logical(1)`)\cr
+#' Whether to return the missing ids in error message.
+#'
+#' @return (`logical(1)`).
+#' @export
+check_subset2 <- function(x, choices, empty.ok = TRUE, fmatch = FALSE) {
+  res <- checkmate::test_subset(x = x, choices = choices, empty.ok = empty.ok, fmatch = fmatch)
+  if (!isTRUE(res)) {
+    x_not_in_choices <- x[!x %in% choices]
+    if (length(x_not_in_choices) != 0) {
+      return(glue::glue("These element in `x` don't exist in : {.x_not_in_choices}",
+                        .x_not_in_choices = glue::glue_collapse(x_not_in_choices,
+                                                 sep = ", ",
+                                                 width = 200)))
+    }
+  }
+  return(res)
+}
+
+#' @export
+#' @param add [checkmate::AssertCollection]\cr
+#'  Collection to store assertions. See [checkmate::AssertCollection].
+#' @inheritParams checkmate::makeAssertion
+#' @rdname check_subset2
+assert_subset2 <- checkmate::makeAssertionFunction(check_subset2)
+
+#' @export
+#' @rdname check_subset2
+test_subset2 <- checkmate::makeTestFunction(check_subset2)
+
+#' @export
+#' @inheritParams checkmate::makeExpectation
+#' @rdname check_subset2
+expect_subset2 <- checkmate::makeExpectationFunction(check_subset2)
