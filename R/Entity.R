@@ -199,6 +199,44 @@ Entity <-
 
       },
 
+      get_data2 = function(name = "attrs", ids, copy = TRUE) {
+
+        DataObj <- self$data(name)
+
+        if (is.null(DataObj)) {
+          return(NULL)
+        }
+
+        if (copy == FALSE) {
+          if (!missing(ids)) {
+            stop("It is not possible to return a reference semetic to the specific rows in `ids`.")
+          }
+          return(DataObj$get(copy = FALSE))
+        }
+
+        if (missing(ids)) {
+          return(DataObj$get())
+        } else {
+          checkmate::check_integerish(x = ids, unique = TRUE, lower = 1, min.len = 1, null.ok = FALSE, any.missing = FALSE)
+          if (name == "attrs") {
+            if (is.null(DataObj$key)) {
+              DataObj$setkey(self$get_id_col())
+            }
+            return(
+              data.table:::na.omit.data.table(
+                DataObj$get(copy = FALSE)[J(ids)],
+                cols = DataObj$colnames()[2]
+              )
+            )
+          } else {
+            lg$warn("The order of the returned data is not garantee to be the same \\
+                    with the input `ids`. Also not all ids are garantee to have \\
+                    valid records.")
+            return(DataObj$get()[get(self$get_id_col()) %in% ids,])
+          }
+        }
+      },
+
       get_data_names = function() {
         names(private$.data)
       },
