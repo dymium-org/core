@@ -19,8 +19,12 @@ and registers the \code{id_col} (\code{private$.id_col}).
 An \link[R6:R6Class]{R6::R6Class} generator that inherits from \code{DataBackend}.
 \item \code{.data} :: \code{data.frame()}\cr
 A object that inherits from \code{data.frame}.
-\item \code{id_col} :: \code{character(1)}\cr
-The id column of \code{.data}.
+\item \code{id_col} :: \code{character()}\cr
+The name of the id column of \code{.data} and all relation columns. The first
+element will be checked as the main id column of the entity data, which
+must be unique integers. The rest of the vector will be consider as relation
+columns. For example, if \code{c("pid", "partner_id")} is given \code{pid} must contain
+unique integers, while \code{partner_id} can be \code{NA} or non-unique integers.
 }
 }
 
@@ -28,6 +32,10 @@ The id column of \code{.data}.
 
 \itemize{
 \item \code{database}: a list of \link{DataBackend} objects that \link{Entity} possess.
+\item \code{id_col}: a character vector of all id columns with the first element being
+the main id column and the other elements, if any, are relation columns.
+\item \code{data_template}: a data.table object that contains the minimum data requirement apart
+from the \code{id_col}.
 }
 }
 

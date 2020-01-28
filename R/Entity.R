@@ -23,12 +23,19 @@
 #' * `.data` :: `data.frame()`\cr
 #'   A object that inherits from `data.frame`.
 #'
-#' * `id_col` :: `character(1)`\cr
-#'   The id column of `.data`.
+#' * `id_col` :: `character()`\cr
+#'   The name of the id column of `.data` and all relation columns. The first
+#'   element will be checked as the main id column of the entity data, which
+#'   must be unique integers. The rest of the vector will be consider as relation
+#'   columns. For example, if `c("pid", "partner_id")` is given `pid` must contain
+#'   unique integers, while `partner_id` can be `NA` or non-unique integers.
 #'
 #' @section Active Fields (read-only):
 #'
 #'  * `database`: a list of [DataBackend] objects that [Entity] possess.
+#'
+#'  * `id_col`: a character vector of all id columns with the first element being
+#'   the main id column and the other elements, if any, are relation columns.
 #'
 #'  * `data_template`: a data.table object that contains the minimum data requirement apart
 #'   from the `id_col`.
@@ -119,13 +126,14 @@ Entity <-
     public = list(
 
       initialize = function(databackend, .data, id_col) {
-        checkmate::assert_string(id_col, na.ok = FALSE, null.ok = FALSE)
+        # browser()
+        checkmate::assert_character(id_col, null.ok = FALSE, min.len = 1, unique = T, any.missing = FALSE)
         checkmate::assert_names(names(.data), must.include = id_col, type = 'strict')
-        checkmate::assert_integerish(.data[[id_col]], unique = TRUE, any.missing = FALSE, null.ok = FALSE, min.len = 1)
-        private$.data[[1]] <- databackend$new(.data, key = id_col)
+        checkmate::assert_integerish(.data[[id_col[1]]], unique = TRUE, any.missing = FALSE, null.ok = FALSE, min.len = 1)
+        private$.data[[1]] <- databackend$new(.data, key = id_col[1])
         checkmate::assert_r6(private$.data[[1]], classes = "DataBackend", .var.name = "databackend")
         names(private$.data)[1] <- "attrs"
-        private$.last_id <- max(.data[[id_col]])
+        private$.last_id <- max(.data[[id_col[1]]])
         private$.id_col <- id_col
         invisible()
       },
@@ -290,8 +298,12 @@ Entity <-
         tab[match(ids, id)][["idx"]]
       },
 
-      get_id_col = function() {
-        private$.id_col
+      get_id_col = function(all = FALSE) {
+        if (all) {
+          return(private$.id_col)
+        } else {
+          return(private$.id_col[1])
+        }
       },
 
       remove = function(ids) {
@@ -436,6 +448,12 @@ Entity <-
     active = list(
       database = function() {
         get(".data", envir = private)
+      },
+
+      id_col = function() {
+        get(".id_col", envir = private)
+      },
+
       data_template = function() {
         return(data.table())
       }
