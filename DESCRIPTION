@@ -90,6 +90,7 @@ Collate:
     'alignment.R'
     'checkmate.R'
     'checks.R'
+    'clock.R'
     'constants.R'
     'create-world.R'
     'data.R'

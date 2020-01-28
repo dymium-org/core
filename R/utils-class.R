@@ -35,7 +35,7 @@ is_dymium_class <- function(x) {
 #'
 #' .get_sim_time()
 .get_sim_time <- function() {
-  get("sim_time", envir = .DMevn)
+  getOption("dymium.simulation_clock")
 }
 
 

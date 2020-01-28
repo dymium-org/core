@@ -1,10 +1,8 @@
-# for storing variables that accessible and modifiable by all functions and objects
-.DMevn <- new.env(parent = emptyenv())
-
 .dymium_tempdir <- file.path(tempdir(), "scenario")
 
 .dymium_options <- function() {
   return(list(
+    simulation_clock = getOption('dymium.simulation_clock'),
     scenario_dir = getOption('dymium.scenario_dir'),
     output_dir = getOption('dymium.output_dir'),
     input_dir = getOption('dymium.input_dir')
@@ -12,14 +10,13 @@
 }
 
 .dymium_options_msg = function() {
-  # cli::cli_text(cli::rule(left = " {cli::symbol$info} dymium's options {cli::symbol$info} "))
   cli::cli_text(cli::rule(left = " * dymium's options * "))
   cli::cli_li(items = c(
-    "dymiun.scenario_dir: {getOption('dymium.scenario_dir')}",
-    "dymiun.input_dir: {getOption('dymium.input_dir')}",
-    "dymiun.output_dir: {getOption('dymium.output_dir')}"
+    "dymium.simulation_clock: {getOption('dymium.simulation_clock')}",
+    "dymium.scenario_dir: {getOption('dymium.scenario_dir')}",
+    "dymium.input_dir: {getOption('dymium.input_dir')}",
+    "dymium.output_dir: {getOption('dymium.output_dir')}"
   ))
-  # print("hello")
 }
 
 .onLoad <- function(libname, pkgname) {
@@ -32,19 +29,13 @@
   # set global options
   opts <- options()
   opts.dymium <- list(
+    dymium.simulation_clock = 0L,
     dymium.scenario_dir = file.path(.dymium_tempdir),
     dymium.input_dir = file.path(.dymium_tempdir, "inputs"),
     dymium.output_dir = file.path(.dymium_tempdir, "outputs")
   )
   toset <- !(names(opts.dymium) %in% names(opts))
   if (any(toset)) options(opts.dymium[toset])
-
-  # setup package global variables
-  .DMevn[["sim_time"]] <- 0L
-
-  # create log file
-  # _dir.create(_dirname(opts.dymium$dymium.logFile), recursive = T, showWarnings = FALSE)
-  # file.create(opts.dymium$dymium.logFile)
 
   # setup logger
   assign("lg", lgr::get_logger_glue(name = pkgname), envir = parent.env(environment()))
@@ -72,7 +63,6 @@
 
   # print to console
   .dymium_options_msg()
-
 
   invisible()
 }
