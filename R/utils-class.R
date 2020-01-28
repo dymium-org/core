@@ -148,3 +148,57 @@ get_log.Container <- function(x) {
       data.table::setorder(., time, created_timestamp)
   )
 }
+
+#' Assign new ids to data
+#'
+#' @param x an `Entity` class object
+#' @param ... a list of data.frame objects to
+#' @param only_primary_id_col :: `logical(1)`\cr
+#'  Default as `FALSE`. Only reassign ids for the primary id column of `...`.
+#'
+#' @return a data.frame object with new id values.
+#' @export
+register = function(x, ..., only_primary_id_col = FALSE) {
+  checkmate::assert_r6(x, classes = "Entity")
+
+  dots_variable_names <-
+    deparse(substitute(expr = c(...))) %>%
+    strsplit(., ",|\\s+") %>%
+    unlist() %>%
+    gsub("c\\(|\\)|.*\\$", "", .) %>%
+    trimws(., which = "both") %>%
+    .[. != ""]
+
+  dots <- list(...)
+
+  .data_lst <-
+    lapply(dots, function(.x) {
+      checkmate::assert_data_frame(.x)
+      checkmate::assert_names(names(.x), must.include = x$id_col)
+      if (!is.data.table(.x)) {
+        return(data.table::setDT(.x))
+      } else {
+        return(data.table::copy(.x))
+      }
+    })
+
+  x_primary_id_col <- x$id_col[[1]]
+  keys = unique(.data_lst[[1]][[x_primary_id_col]])
+  values = x$generate_new_ids(n = length(keys))
+  mapping_dt <- data.table(.key = keys, .value = values)
+
+  if (only_primary_id_col) {
+    cols_to_be_replaced <- x_primary_id_col
+  } else {
+    cols_to_be_replaced <- x$id_col
+  }
+
+  .data_lst2 <-
+    lapply(.data_lst, function(.x) {
+      lookup_and_replace2(x = .x, cols = cols_to_be_replaced, mapping = mapping_dt)
+    })
+
+  names(.data_lst2) <- dots_variable_names
+
+  return(.data_lst2)
+}
