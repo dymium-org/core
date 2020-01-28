@@ -256,7 +256,7 @@ test_that("dynamic target", {
     )
 
   TargetDynamic <-
-    data.table(
+    data.table::data.table(
       time = c(1:10),
       yes = sample(1:20, 10, replace = TRUE),
       no = sample(1:20, 10, replace = TRUE)
