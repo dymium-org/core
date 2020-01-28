@@ -107,40 +107,15 @@ Population <- R6Class(
     hh = NULL,
 
     initialize = function(ind_data, hh_data, pid_col = NULL, hid_col = NULL){
-      self$add(Individual$new(), name = "Individual")
-      self$add(Household$new(), name = "Household")
+      checkmate::assert_data_table(ind_data, min.rows = 1)
+      checkmate::assert_data_table(hh_data, min.rows = 1)
+      checkmate::assert_character(pid_col, any.missing = FALSE, min.len = 1, unique = T)
+      checkmate::assert_character(hid_col, any.missing = FALSE, min.len = 1, unique = T)
+      checkmate::assert_names(names(ind_data), must.include = c(pid_col, hid_col))
+      checkmate::assert_names(names(hh_data), must.include = hid_col)
+      checkmate::assert_integerish(ind_data[[pid_col[1]]], lower = 1, unique = T, all.missing = FALSE)
+      checkmate::assert_integerish(hh_data[[hid_col[1]]], lower = 1, unique = T, all.missing = FALSE)
 
-      # make it compatible with old modules
-      self$ind <- self$get("Individual")
-      self$hh <- self$get("Household")
-
-      if (!missing(ind_data) & !missing(hh_data)) {
-        self$initialise_data(ind_data, hh_data, pid_col, hid_col)
-      }
-
-      invisible()
-    },
-
-    initialise_data = function(ind_data, hh_data, pid_col = NULL, hid_col = NULL) {
-      # automatically figure out pid col
-      if (is.null(pid_col)) {
-        if ("pid" %in% names(ind_data)) {
-          lg$info("`pid_col` is not given. Use 'pid' as id col of ind_data")
-          pid_col <- "pid"
-        } else {
-          stop("`pid_col` is not given.")
-        }
-      }
-      # automatically figure out hid col
-      if (is.null(hid_col)) {
-        if ("hid" %in% names(hh_data)) {
-          lg$info("`hid_col` is not given. Use 'hid' as id col of hh_data")
-          hid_col <- "hid"
-        } else {
-          stop("`hid_col` is not given.")
-        }
-      }
-      checkmate::assert_names(names(ind_data), must.include = hid_col)
       if (!checkmate::test_set_equal(unique(ind_data[[hid_col]]), hh_data[[hid_col]])) {
         stop(
           glue::glue(
@@ -149,16 +124,17 @@ Population <- R6Class(
           )
         )
       }
+
       if (!"hhsize" %in% names(hh_data)) {
         lg$warn("Creating `hhsize` as it is not provided with `hh_data`.")
         hhsize_dt <- ind_data[, .(hhsize = .N), by = c(hid_col)]
         hh_data <- hh_data[hhsize_dt, , on = c(hid_col)]
+      } else {
+        checkmate::assert_integerish(hh_data[["hhsize"]],
+                                     lower = 1,
+                                     any.missing = FALSE,
+                                     null.ok = FALSE)
       }
-      stopifnot(nrow(ind_data) == hh_data[, sum(hhsize)])
-      self$get("Individual")$initialise_data(ind_data, id_col = pid_col, hid_col = hid_col)
-      self$get("Household")$initialise_data(hh_data, id_col = hid_col)
-      invisible()
-    },
 
     add_population = function(ind_data, hh_data) {
       # only add if there the population object is not empty.
