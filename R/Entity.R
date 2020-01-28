@@ -119,7 +119,7 @@ Entity <-
         checkmate::assert_string(id_col, na.ok = FALSE, null.ok = FALSE)
         checkmate::assert_names(names(.data), must.include = id_col, type = 'strict')
         checkmate::assert_integerish(.data[[id_col]], unique = TRUE, any.missing = FALSE, null.ok = FALSE, min.len = 1)
-        private$.data[[1]] <- databackend$new(.data)
+        private$.data[[1]] <- databackend$new(.data, key = id_col)
         checkmate::assert_r6(private$.data[[1]], classes = "DataBackend", .var.name = "databackend")
         names(private$.data)[1] <- "attrs"
         private$.last_id <- max(.data[[id_col]])
@@ -177,8 +177,7 @@ Entity <-
 
         if (copy == FALSE) {
           if (!missing(ids)) {
-            lg$warn("ignored given `ids`, data.table can't returns a reference semetic \\
-                    to a subset of its rows.")
+            stop("It is not possible to return a reference semetic to the specific rows in `ids`.")
           }
           return(DataObj$get(copy = FALSE))
         }
