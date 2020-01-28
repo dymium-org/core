@@ -88,6 +88,7 @@ DataBackendDataTable <- R6::R6Class(
           message("Setting `.data`'s key as '", key, "' column.")
           data.table::setkeyv(x = .data, key)
         }
+        private$.key = key
       }
       super$initialize(.data)
     },
@@ -109,6 +110,9 @@ DataBackendDataTable <- R6::R6Class(
         stop(check_equality)
       }
       private$.data <- rbind(private$.data, .data, fill = fill)
+      if (!is.null(self$key)) {
+        self$setkey()
+      }
       invisible()
     },
 
@@ -134,14 +138,14 @@ DataBackendDataTable <- R6::R6Class(
       }
     },
 
-    setkey = function(key) {
+    setkey = function(key = private$.key) {
       data.table::setkeyv(x = private$.data, cols = key)
     }
   ),
 
   active = list(
     key = function() {
-      return(data.table::key(private$.data))
+      return(base::get(".key", envir = private))
     },
 
     data = function() {
@@ -151,5 +155,9 @@ DataBackendDataTable <- R6::R6Class(
     removed_data = function() {
       return(data.table::copy(base::get(".removed_data", envir = private)))
     }
+  ),
+
+  private = list(
+    .key = NULL
   )
 )
