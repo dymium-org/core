@@ -179,13 +179,13 @@ Individual <- R6::R6Class(
       res
     },
 
-    add_entities = function(.data, check_existing = FALSE, ...) {
+    add = function(.data, check_existing = FALSE, ...) {
       dots <- list(...)
       if (!is.null(self$get_hid_col()) & is.null(dots$add_population)) {
         checkmate::assert_names(names(.data), must.include = self$get_hid_col())
         assert_subset2(.data[[self$get_hid_col()]], self$get_attr(self$get_hid_col()))
       }
-      super$add_entities(.data, check_existing)
+      super$add(.data, check_existing)
     },
 
     add_relationship = function(ids, target_ids, type = c('father', 'mother', 'partner')) {

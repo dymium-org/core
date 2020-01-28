@@ -54,7 +54,7 @@
 #'  If `attrs` is not present or no `DataBackEnd` objects have been loaded it will
 #'  return `NULL`.
 #'
-#'  * `add_entities(.data, check_existing = FALSE)`\cr
+#'  * `add(.data, check_existing = FALSE)`\cr
 #'  ([data.table::data.table()], `logical(1)`)\cr
 #'  Add new attribute data of new entities. This makes sure that none of the ids
 #'  of the new entities are the same as the existing ones. However, other id columns,
@@ -269,7 +269,7 @@ Entity <-
       #  of an existing individual agent. But if you are adding new individual agents
       #  to the existing individual data then you wouldn't expect that there should
       #  be existing ids
-      add_entities = function(.data, check_existing = FALSE) {
+      add = function(.data, check_existing = FALSE) {
 
         # check data structure -----------
         NewData <- DataBackendDataTable$new(.data, key = self$id_col[[1]])

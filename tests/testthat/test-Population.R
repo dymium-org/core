@@ -57,7 +57,7 @@ test_that("add_population", {
     .[, `:=`(pid = sample(10000:20000, .N, replace = FALSE),
              age = 0)]
 
-  Ind$add_entities(newborns, check_existing = TRUE)
+  Ind$add(newborns, check_existing = TRUE)
 
   # add new individuals with non-existed household id
   newborns <-
@@ -66,7 +66,7 @@ test_that("add_population", {
              age = 0)] %>%
     .[1, hid := 999999999]
 
-  expect_error(Ind$add_entities(newborns, check_existing = TRUE),
+  expect_error(Ind$add(newborns, check_existing = TRUE),
                "These element in `x` don't exist in : 999999999")
 })
 

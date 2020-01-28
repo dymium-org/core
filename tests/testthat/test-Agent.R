@@ -59,7 +59,7 @@ test_that("using Test data", {
 
 })
 
-test_that("hatch and add_entities", {
+test_that("hatch and add", {
   # add by inheritance
   MyAgent <- Agent$new(.data = toy_individuals, id_col = "pid")
   MyAgent$get_data()
@@ -69,7 +69,7 @@ test_that("hatch and add_entities", {
   MyAgent <- Agent$new(.data = toy_individuals, id_col = "pid")
   new_agent_data <- register(MyAgent, toy_individuals)
   new_agent_data$toy_individuals
-  MyAgent$add_entities(.data = new_agent_data$toy_individuals, check_existing = FALSE)
+  MyAgent$add(.data = new_agent_data$toy_individuals, check_existing = FALSE)
   expect_true(MyAgent$n() == nrow(dymiumCore::toy_individuals) * 2)
   pid_cols <- c('pid', 'partner_id', 'father_id', 'mother_id')
   unique_pid <- MyAgent$get_data()[, unlist(.SD), .SDcol = pid_cols] %>%

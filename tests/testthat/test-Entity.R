@@ -34,8 +34,8 @@ test_that("add_data", {
   Enty <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
 })
 
-# add_entities -----------
-test_that("add_entities", {
+# add -----------
+test_that("add", {
   Enty <-
     Entity$new(
       databackend = DataBackendDataTable,
@@ -45,16 +45,16 @@ test_that("add_entities", {
 
   n_entities_before <- Enty$n()
   new_ent_dt <- data.table::copy(toy_individuals)[, .derived_col := 1]
-  expect_error(Enty$add_entities(.data = new_ent_dt, check_existing = TRUE),
+  expect_error(Enty$add(.data = new_ent_dt, check_existing = TRUE),
                regexp = "One or more of the main unique `ids` in `.data` already exist in the existing attribute data of this Entity.")
 
   data_lst <- register(x = Enty, new_ent_dt)
-  Enty$add_entities(data_lst$new_ent_dt, check_existing = FALSE)
-  expect_error(Enty$add_entities(.data = new_ent_dt, check_existing = TRUE),
+  Enty$add(data_lst$new_ent_dt, check_existing = FALSE)
+  expect_error(Enty$add(.data = new_ent_dt, check_existing = TRUE),
                regexp = "One or more of the main unique `ids` in `.data` already exist in the existing attribute data of this Entity.")
 
   data_lst <- register(x = Enty, new_ent_dt)
-  Enty$add_entities(data_lst$new_ent_dt, check_existing = FALSE)
+  Enty$add(data_lst$new_ent_dt, check_existing = FALSE)
   expect_equal(Enty$n(), expected = nrow(toy_individuals) * 3)
 
 
