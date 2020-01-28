@@ -9,13 +9,16 @@
 #' @section Construction:
 #'
 #' ```
-#' Ind <- Individual$new(.data, id_col)
+#' Ind <- Individual$new(.data, id_col, hid_col)
 #' ```
 #'
-#' * .data::[data.table::data.table]\cr
+#' * `.data`::[data.table::data.table]\cr
 #'   Microdata of Individuals.
 #'
-#' * id_col::`character(1)`\cr
+#' * `id_col`::`character()`\cr
+#'   Names of the primary id colum and relation id colunns in `.data`
+#'
+#' * `hid_col`::`character(1)`\cr
 #'   Name of the id colum in `.data`
 #'
 #' @section Public Fields:
@@ -24,11 +27,7 @@
 #'
 #' @section Public Methods:
 #'
-#'  Inherits all methods from [Agent] and the following..
-#'
-#'  * `initialise_data(data, id_col = "pid", hid_col)`\cr
-#'  ([data.table::data.table()], `character(1)`, `character(1)`) -> `NULL`\cr
-#'  Add data.
+#'  Inherits all fields and methods of [Agent].
 #'
 #'  * `get_father(ids)`\cr
 #'  (`integer()`) -> `integer()`\cr
@@ -123,14 +122,15 @@ Individual <- R6::R6Class(
   "Individual",
   inherit = Agent,
   public = list(
-    initialise_data = function(.data, id_col = "pid", hid_col) {
+
+    initialize = function(.data, id_col = "pid", hid_col = NULL) {
       super$initialise_data(.data = .data, id_col = id_col)
-      if (!missing(hid_col)) {
+      if (!is.null(hid_col)) {
         checkmate::assert_names(names(.data), must.include = hid_col)
         private$.hid_col <- hid_col
         lg$info("sets hid_col to: '{private$.hid_col}'")
       }
-      invisible()
+      return(invisible(self))
     },
 
     get_household_ids = function(ids) {
