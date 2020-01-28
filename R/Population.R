@@ -136,56 +136,75 @@ Population <- R6Class(
                                      null.ok = FALSE)
       }
 
-    add_population = function(ind_data, hh_data) {
-      # only add if there the population object is not empty.
-      if (self$get("Individual")$n() == 0) {
-        stop("New population data cannot be added to an empty \\
-              population object. Please use `Pop$initialise_data()` \\
-              method to populate the data fields first.")
+      if (nrow(ind_data) != hh_data[, sum(hhsize)]) {
+        stop(glue::glue("The total number of individuals in `ind_data` does not \\
+                        equal to the sum of household size (hhsize) of `hh_data`."))
       }
-      checkmate::assert_data_frame(ind_data, null.ok = FALSE)
-      if (!is.data.table(ind_data)) {
-        ind_data <- data.table::copy(ind_data)
-      }
-      hid_col <- self$get("Individual")$get_hid_col()
-      # check that all individuals belong to valid households
-      if (missing(hh_data)) {
-        # check that all individuals belong to existing households
-        stopifnot(hid_col %in% names(ind_data))
-        newdata_hids <- ind_data[[hid_col]]
-        if (!self$get("Household")$ids_exist(newdata_hids)) {
-          stop("Not all household ids of the new individual data exist")
-        }
-      } else {
-        # add both household and individual data
-        checkmate::assert_data_frame(hh_data, null.ok = FALSE)
-        if (!is.data.table(hh_data)) {
-          hh_data <- data.table::copy(hh_data)
-        }
-        # check that all individuals belong to households in hh_data
-        stopifnot(all(unique(ind_data[[hid_col]]) %in% hh_data[[hid_col]]))
-        # create household size column is missing
-        if (!'hhsize' %in% names(hh_data)) {
-          hh_data <-
-            merge(hh_data, ind_data[, .(hhsize = .N), by = hid_col],
-                  by = hid_col, all.x = TRUE)
-          data.table::setkey(hh_data, NULL)
-          if (any(is.na(hh_data[["hhsize"]]))) {
-            stop("There are some households in `hh_data` that have hhsize equal to NA.")
-          }
-        } else {
-          if (sum(hh_data[["hhsize"]]) != nrow(ind_data)) {
-            stop(glue::glue("The sum of hhsize in `hh_data` does not match with \\
-                            the number of records in `ind_data`."))
-          }
-        }
-        # add new household agents
 
-        self$get("Household")$add_new_agents(.data = hh_data)
+      self$add(Individual$new(ind_data, id_col = pid_col, hid_col = hid_col[1]), name = "Individual")
+      self$add(Household$new(hh_data, id_col = hid_col), name = "Household")
+
+      # make it compatible with old modules
+      self$ind <- self$get("Individual")
+      self$hh <- self$get("Household")
+
+      return(invisible(self))
+    },
+
+    add_population = function(ind_data, hh_data = NULL) {
+
+      Ind <- self$get("Individual")
+      Hh <- self$get("Household")
+      pid_col <- Ind$id_col
+      hid_col <- Hh$id_col
+
+      checkmate::assert_data_table(ind_data, min.rows = 1)
+      checkmate::assert_character(pid_col, any.missing = FALSE, min.len = 1, unique = T)
+      checkmate::assert_names(names(ind_data), must.include = c(pid_col, hid_col))
+      checkmate::assert_integerish(ind_data[[pid_col[1]]], lower = 1, unique = T, all.missing = FALSE)
+
+      if (!is.null(hh_data)) {
+        checkmate::assert_data_table(hh_data, min.rows = 1)
+        checkmate::assert_character(hid_col, any.missing = FALSE, min.len = 1, unique = T)
+        checkmate::assert_names(names(hh_data), must.include = hid_col)
+        checkmate::assert_integerish(hh_data[[hid_col[1]]], lower = 1, unique = T, all.missing = FALSE)
+        checkmate::assert_integerish(hh_data[[hid_col[1]]], lower = 1, unique = T, all.missing = FALSE)
+        # add household size
+        if (!"hhsize" %in% names(hh_data)) {
+          lg$warn("Creating `hhsize` as it is not provided with `hh_data`.")
+          hhsize_dt <- ind_data[, .(hhsize = .N), by = c(hid_col)]
+          hh_data <- hh_data[hhsize_dt, , on = c(hid_col)]
+        } else {
+          checkmate::assert_integerish(hh_data[["hhsize"]],
+                                       lower = 1,
+                                       any.missing = FALSE,
+                                       null.ok = FALSE)
+        }
+        # check hhsize
+        if (nrow(ind_data) != hh_data[, sum(hhsize)]) {
+          stop(glue::glue("The total number of individuals in `ind_data` does not \\
+                        equal to the sum of household size (hhsize) of `hh_data`."))
+        }
       }
-      # add ind_data to the population object
-      self$get("Individual")$add_new_agents(.data = ind_data)
-      invisible()
+
+      # assign new ids
+      ind_data <- register(Ind, ind_data)[[1]]
+      if (!is.null(hh_data)) {
+        pop_data_ls <- register(Hh, ind_data, hh_data)
+        ind_data <- pop_data_ls$ind_data
+        hh_data <- pop_data_ls$hh_data
+      }
+      rm(pop_data_ls)
+
+      # add new data
+      IndNewData <- DataBackendDataTable$new(ind_data, key = Ind$id_col[[1]])
+      Ind$add_entities(.data = IndNewData$data)
+      if (!is.null(hh_data)) {
+        HhNewData <- DataBackendDataTable$new(hh_data, key = Hh$id_col[[1]])
+        Hh$add_entities(.data = HhNewData$data)
+      }
+
+      return(invisible(self))
     },
 
     join_household = function(ind_ids, hh_ids) {
