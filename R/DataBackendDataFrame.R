@@ -115,7 +115,7 @@ DataBackendDataFrame <-
         }
       },
 
-      head = function(n) {
+      head = function(n = 5) {
         head(private$.data, n)
       },
 
