@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{lookup_and_replace}
 \alias{lookup_and_replace}
-\title{lookup_and_replace}
+\title{Look up and replace values in columns, including list columns.}
 \usage{
 lookup_and_replace(data, lookup_table, cols, id_col = NULL)
 }
