@@ -52,6 +52,12 @@ Returns a \link{DataBackend} with the name that matches \code{name}.
 If \code{name} is not given, the function will try to return the \link{DataBackend} with name \code{attrs}.
 If \code{attrs} is not present or no \code{DataBackEnd} objects have been loaded it will
 return \code{NULL}.
+\item \code{add_entities(.data, check_existing = FALSE)}\cr
+(\code{\link[data.table:data.table]{data.table::data.table()}}, \code{logical(1)})\cr
+Add new attribute data of new entities. This makes sure that none of the ids
+of the new entities are the same as the existing ones. However, other id columns,
+relation columns can be exempted from the check by setting \code{check_existing} as \code{FALSE}.
+Meaning, the other id columns can contain ids of the existing entities.
 \item \code{get_id_col}\cr
 () -> \code{character(1)}\cr
 Returns the column id field of data.

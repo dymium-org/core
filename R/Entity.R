@@ -53,7 +53,14 @@
 #'  If `name` is not given, the function will try to return the [DataBackend] with name `attrs`.
 #'  If `attrs` is not present or no `DataBackEnd` objects have been loaded it will
 #'  return `NULL`.
-#
+#'
+#'  * `add_entities(.data, check_existing = FALSE)`\cr
+#'  ([data.table::data.table()], `logical(1)`)\cr
+#'  Add new attribute data of new entities. This makes sure that none of the ids
+#'  of the new entities are the same as the existing ones. However, other id columns,
+#'  relation columns can be exempted from the check by setting `check_existing` as `FALSE`.
+#'  Meaning, the other id columns can contain ids of the existing entities.
+#'
 #'  * `get_id_col`\cr
 #'  () -> `character(1)`\cr
 #'  Returns the column id field of data.
@@ -250,6 +257,63 @@ Entity <-
 
       get_data_names = function() {
         names(private$.data)
+      },
+
+      # @param .data a data.frame or data.table object that contains data of new
+      #  entities to be added. The new data must comply with the existing data fields
+      #  of the existing entities' attribute data (`attrs`).
+      # @check_existing :: `logical(1)`\cr
+      #  Whether to check that all ids in id cols exist in the existing entity ids.
+      #  If this function is to be called in a birth event, you probably want to
+      #  set this to `TRUE` since a newborn individual agent would have its mother id
+      #  of an existing individual agent. But if you are adding new individual agents
+      #  to the existing individual data then you wouldn't expect that there should
+      #  be existing ids
+      add_entities = function(.data, check_existing = FALSE) {
+
+        # check data structure -----------
+        NewData <- DataBackendDataTable$new(.data, key = self$id_col[[1]])
+
+        res <-
+          all.equal(target = omit_derived_vars(self$database$attrs$data[0, ]),
+                    current = omit_derived_vars(NewData$data[0, ]))
+
+        if (!isTRUE(res)) {
+          cli::cli_alert_info("New data (.data)")
+          print(NewData$head())
+          cli::cli_alert_info("Existing data")
+          print(self$database$attrs$head())
+          stop(res)
+        }
+
+        # check id columns ----------
+        new_ids <- .data[[self$id_col[[1]]]]
+
+        if (test_entity_ids(self, new_ids, include_removed_data = T, informative = TRUE)) {
+          stop(glue::glue("One or more of the main unique `ids` in `.data` already exist \\
+                          in the existing attribute data of this Entity."))
+        }
+
+        # check relation columns
+        if (length(self$id_col) > 1) {
+          ids_in_relation_cols <- c()
+          relation_cols <-
+            self$id_col[!self$id_col %in% self$id_col[[1]]]
+          for (relation_col in relation_cols) {
+            ids_in_relation_cols <-
+              c(ids_in_relation_cols, na.omit(.data[[relation_col]]))
+          }
+          ids_in_relation_cols <- unique(ids_in_relation_cols)
+
+          if (check_existing) {
+            checkmate::assert_subset(ids_in_relation_cols, choices = c(self$get_ids(), new_ids))
+          } else {
+            checkmate::assert_subset(ids_in_relation_cols, choices = new_ids)
+          }
+        }
+
+        self$database$attrs$add(.data = .data, fill = TRUE)
+        return(invisible())
       },
 
       has_attr = function(x) {
