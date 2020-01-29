@@ -9,7 +9,7 @@ A \link{Container} specifically made for a \link{Individual} object and a \link{
 It also contains methods that modify both if its contained objects simutaneously.
 }
 \section{Construction}{
-\preformatted{Pop <- Population$new()
+\preformatted{Population$new(ind_data, hh_data, pid_col, hid_col)
 }
 \itemize{
 \item ind_data::\link[data.table:data.table]{data.table::data.table}\cr
@@ -19,7 +19,7 @@ Microdata of Households.
 \item pid_col::\code{character(1)}\cr
 Individual/Person id column in \code{ind_data}.
 \item hid_col::\code{character(1)}\cr
-Hoysehold id column in \code{hh_data}
+Household id column in \code{hh_data}
 }
 }
 

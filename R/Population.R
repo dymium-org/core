@@ -13,7 +13,7 @@
 #' @section Construction:
 #'
 #' ```
-#' Pop <- Population$new()
+#' Population$new(ind_data, hh_data, pid_col, hid_col)
 #' ```
 #'
 #' * ind_data::[data.table::data.table]\cr
@@ -26,7 +26,7 @@
 #'   Individual/Person id column in `ind_data`.
 #'
 #' * hid_col::`character(1)`\cr
-#'   Hoysehold id column in `hh_data`
+#'   Household id column in `hh_data`
 #'
 #' @section Public Fields:
 #'
