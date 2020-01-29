@@ -15,8 +15,27 @@ register(x, ..., only_primary_id_col = FALSE)
 Default as \code{FALSE}. Only reassign ids for the primary id column of \code{...}.}
 }
 \value{
-a data.frame object with new id values.
+a named list of data.frame objects provided in \code{...} but with new ids assigned
+to them.
 }
 \description{
-Assign new ids to data
+This function reassign ids to new entities by make sure that none of the existing
+entities' ids in \code{x} are duplicated with the new entities' ids.
+}
+\note{
+The output of this function is a named list of the data.frame objects provided in \code{...}. Where
+the names of the data.frames are the variable names that were given in \code{...}. For
+example, if you call \verb{data_lst <- (Ind, new_ind_data)} then the output would be a named
+list of length 1 where the first element is named \code{new_ind_data}. To be safe,
+you may want to refer to that data using the index (e.g. \code{data_lst[[1]]}).
+}
+\examples{
+
+create_toy_world()
+
+Ind <- world$get("Individual")
+
+new_ind_data <- data.table::copy(toy_individuals)
+
+data_lst <- register(Ind, new_ind_data)
 }

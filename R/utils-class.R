@@ -154,13 +154,37 @@ get_log.Container <- function(x) {
 
 #' Assign new ids to data
 #'
+#' @description
+#'
+#' This function reassign ids to new entities by make sure that none of the existing
+#' entities' ids in `x` are duplicated with the new entities' ids.
+#'
 #' @param x an `Entity` class object
 #' @param ... a list of data.frame objects to
 #' @param only_primary_id_col :: `logical(1)`\cr
 #'  Default as `FALSE`. Only reassign ids for the primary id column of `...`.
 #'
-#' @return a data.frame object with new id values.
+#' @note
+#' The output of this function is a named list of the data.frame objects provided in `...`. Where
+#' the names of the data.frames are the variable names that were given in `...`. For
+#' example, if you call `data_lst <- (Ind, new_ind_data)` then the output would be a named
+#' list of length 1 where the first element is named `new_ind_data`. To be safe,
+#' you may want to refer to that data using the index (e.g. `data_lst[[1]]`).
+#'
+#' @return a named list of data.frame objects provided in `...` but with new ids assigned
+#'  to them.
+#'
 #' @export
+#'
+#' @examples
+#'
+#' create_toy_world()
+#'
+#' Ind <- world$get("Individual")
+#'
+#' new_ind_data <- data.table::copy(toy_individuals)
+#'
+#' data_lst <- register(Ind, new_ind_data)
 register = function(x, ..., only_primary_id_col = FALSE) {
   checkmate::assert_r6(x, classes = "Entity")
 
@@ -201,7 +225,12 @@ register = function(x, ..., only_primary_id_col = FALSE) {
       lookup_and_replace2(x = .x, cols = cols_to_be_replaced, mapping = mapping_dt)
     })
 
-  names(.data_lst2) <- dots_variable_names
+  if (length(dots_variable_names) != length(.data_lst2)) {
+    lg$warn("Do not know how to extract data names in `...`. Returning a unnamed list. \\
+            Please refer to elements in the output list by their index")
+  } else {
+    names(.data_lst2) <- dots_variable_names
+  }
 
   return(.data_lst2)
 }
