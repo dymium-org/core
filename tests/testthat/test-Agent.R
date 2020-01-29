@@ -37,7 +37,7 @@ test_that("using Test data", {
                expected = MyAgent$get_data()[, max(get(MyAgent$get_id_col()))])
   expect_is(MyAgent$get_data(), "data.table")
 
-  # get_id() ---------
+  # get_ids() ---------
   expect_length(MyAgent$get_ids(), n_agents)
 
   # remove_agent() ---------
@@ -48,8 +48,8 @@ test_that("using Test data", {
   expect_equal(MyAgent$n(), n_rows_before_remove - n_agents_to_remove)
 
   # idx_exist() ---------
-  expect_true(MyAgent$idx_exist(idx = sample(1L:n_agents, size = 3)))
-  expect_false(MyAgent$idx_exist(idx = n_agents + (n_agents + 1) * 100))
+  expect_true(MyAgent$idx_exist(idx = sample(1L:MyAgent$n(), size = 3)))
+  expect_false(MyAgent$idx_exist(idx = MyAgent$n() + 1))
 
   # get_match_ids() ---------
   obj_dt <- MyAgent$get_data()
