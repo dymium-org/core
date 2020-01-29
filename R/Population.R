@@ -43,8 +43,9 @@
 #'  add a new population. This requires that all individuals `ind_data` belong
 #'  to valid households. In the case, that `hh_data` is not provided, household ids of
 #'  `ind_data` will be checked against household ids of the existing households inside
-#'  the Population object being added to. One may use `pop_register()` to replace
-#'  the id columns of the new population with ids that don't exist in the Population object.
+#'  the Population object being added to. All records in `ind_data` and `hh_data` will
+#'  be assigned new unique ids to make sure that their ids are not a duplicate of
+#'  the ids of existing entities of their respective entity type.
 #'
 #' * `join_household(ind_ids, hh_ids)`\cr
 #'  (`integer()`, `integer()`)\cr
