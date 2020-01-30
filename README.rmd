@@ -23,7 +23,9 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.svg)](https://codecov.io/gh/dymium-org/dymiumCore?branch=master)
 <!-- badges: end -->
 
-# dymiumCore <img src="man/figures/logo.png" align="right" alt="" width="120" />
+# dymiumCore
+
+<img src="man/figures/dymium-banner.png" align="centre" />
 
 **dymiumCore** is an R package which provides a toolbox for developing a microsimulation model. While the core focus of the package is for modelling urban systems, dymium can be easily extended to apply in other contexts as well.
 
@@ -35,6 +37,8 @@ knitr::opts_chunk$set(
 - microsimulation events are modular, sharable and scalable
 - equipped with the basic building blocks for building a microsimulation model that is flexible and extensible.
 - can use parameters from various model objects (e.g. `stats::lm`, `stats::glm`, `caret::train`).
+
+
 
 ## Installation
 

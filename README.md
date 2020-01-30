@@ -18,7 +18,9 @@ status](https://ci.appveyor.com/api/projects/status/github/dymium-org/dymiumCore
 coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.svg)](https://codecov.io/gh/dymium-org/dymiumCore?branch=master)
 <!-- badges: end -->
 
-# dymiumCore <img src="man/figures/logo.png" align="right" alt="" width="120" />
+# dymiumCore
+
+<img src="man/figures/dymium-banner.png" align="centre" />
 
 **dymiumCore** is an R package which provides a toolbox for developing a
 microsimulation model. While the core focus of the package is for
