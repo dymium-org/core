@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![CRAN status](https://www.r-pkg.org/badges/version/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore)
-[![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore)
+<!-- [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore) -->
 [![Build Status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://travis-ci.org/dymium-org/dymiumCore)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dymium-org/dymiumCore?branch=master&svg=true)](https://ci.appveyor.com/project/dymium-org/dymiumCore)
 [![Codecov test coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.svg)](https://codecov.io/gh/dymium-org/dymiumCore?branch=master)
@@ -37,8 +37,6 @@ knitr::opts_chunk$set(
 - microsimulation events are modular, sharable and scalable
 - equipped with the basic building blocks for building a microsimulation model that is flexible and extensible.
 - can use parameters from various model objects (e.g. `stats::lm`, `stats::glm`, `caret::train`).
-
-
 
 ## Installation
 
