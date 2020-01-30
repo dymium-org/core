@@ -255,20 +255,18 @@ Population <- R6Class(
     },
 
     remove_population = function(pid = NULL, hid = NULL) {
-      checkmate::assert(
-        checkmate::check_integerish(pid, lower = 1, any.missing = FALSE),
-        checkmate::check_integerish(hid, lower = 1, any.missing = FALSE),
-        combine = "or"
-      )
       if (!is.null(hid)) {
+        checkmate::check_integerish(hid, lower = 1, any.missing = FALSE)
         member_ids <- self$get("Individual")$get_ids_in_hids(hids = hid)
         self$get("Individual")$remove(ids = member_ids)
         self$get("Household")$remove(ids = hid)
       }
       if (!is.null(pid)) {
+        checkmate::check_integerish(pid, lower = 1, any.missing = FALSE)
         self$get("Individual")$remove(ids = pid)
         self$remove_emptied_households(update_hhsize = TRUE)
       }
+      invisible()
     },
 
     check_hhsize = function() {
