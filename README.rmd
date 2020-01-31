@@ -17,13 +17,15 @@ knitr::opts_chunk$set(
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![CRAN status](https://www.r-pkg.org/badges/version/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore)
-[![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore)
 [![Build Status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://travis-ci.org/dymium-org/dymiumCore)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dymium-org/dymiumCore?branch=master&svg=true)](https://ci.appveyor.com/project/dymium-org/dymiumCore)
 [![Codecov test coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.svg)](https://codecov.io/gh/dymium-org/dymiumCore?branch=master)
+<!-- [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore) -->
 <!-- badges: end -->
 
-# dymiumCore <img src="man/figures/logo.png" align="right" alt="" width="120" />
+# dymiumCore
+
+<img src="man/figures/dymium-banner.png" align="centre" />
 
 **dymiumCore** is an R package which provides a toolbox for developing a microsimulation model. While the core focus of the package is for modelling urban systems, dymium can be easily extended to apply in other contexts as well.
 
