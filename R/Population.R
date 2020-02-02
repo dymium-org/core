@@ -65,7 +65,7 @@
 #' * `remove_emptied_households()`\cr
 #'  Remove all emptied households.
 #'
-#' * `remove_population(pid = NULL, hid = NULL)`\cr
+#' * `remove_population(pid, hid)`\cr
 #'  (`integer()`, `integer()`)\cr
 #'  Remove population from `$ind` and `$hh` of this `Pop` object. If only `hid`
 #'  is given all household members of households in `hid` arg will be removed.
@@ -254,14 +254,19 @@ Population <- R6Class(
       invisible()
     },
 
-    remove_population = function(pid = NULL, hid = NULL) {
-      if (!is.null(hid)) {
+    remove_population = function(pid, hid) {
+
+      if (missing(pid) & missing(hid)) {
+        stop("`pid` or `hid` or both must be specified.")
+      }
+
+      if (!missing(hid)) {
         checkmate::check_integerish(hid, lower = 1, any.missing = FALSE)
         member_ids <- self$get("Individual")$get_ids_in_hids(hids = hid)
         self$get("Individual")$remove(ids = member_ids)
         self$get("Household")$remove(ids = hid)
       }
-      if (!is.null(pid)) {
+      if (!missing(pid)) {
         checkmate::check_integerish(pid, lower = 1, any.missing = FALSE)
         self$get("Individual")$remove(ids = pid)
         self$remove_emptied_households(update_hhsize = TRUE)

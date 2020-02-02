@@ -59,7 +59,7 @@ a problem if all members of two or more households are to swap their households.
 There are no good reasons why that case should be allowed anyway.
 \item \code{remove_emptied_households()}\cr
 Remove all emptied households.
-\item \code{remove_population(pid = NULL, hid = NULL)}\cr
+\item \code{remove_population(pid, hid)}\cr
 (\code{integer()}, \code{integer()})\cr
 Remove population from \verb{$ind} and \verb{$hh} of this \code{Pop} object. If only \code{hid}
 is given all household members of households in \code{hid} arg will be removed.
