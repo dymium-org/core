@@ -240,10 +240,8 @@ lookup_and_replace2 <- function(x, cols, mapping) {
   data.table::setkey(x, NULL)
 
   # final checking of column types and data dimiensions
-  res <- all.equal(x_str, x[0, ], check.attributes = FALSE)
-  if (!isTRUE(res)) {
-    stop(res)
-  }
+  checkmate::assert_data_table(x)
+  checkmate::assert_names(names(x), identical.to = names(x_str))
 
   return(x)
 }
