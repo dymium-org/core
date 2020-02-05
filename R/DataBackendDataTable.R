@@ -85,7 +85,7 @@ DataBackendDataTable <- R6::R6Class(
           stop(paste0("'", key, "' key column doesn't exist in `.data`."))
         }
         if (!isTRUE(data.table::key(.data) == key)) {
-          message("Setting `.data`'s key as '", key, "' column.")
+          lg$trace("Setting `.data`'s key as '{key}' column.")
           data.table::setkeyv(x = .data, key)
         }
         private$.key = key
