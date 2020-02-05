@@ -57,7 +57,14 @@ test_that("add", {
   Enty$add(data_lst$new_ent_dt, check_existing = FALSE)
   expect_equal(Enty$n(), expected = nrow(toy_individuals) * 3)
 
+  # shuffle column order
+  data_lst <- register(x = Enty, new_ent_dt)
+  data.table::setcolorder(data_lst$new_ent_dt, sample(names(data_lst$new_ent_dt)))
+  expect_null(Enty$add(.data = data_lst$new_ent_dt, check_existing = FALSE))
 
+  # create newborns
+  new_ent_dt <- data.table::copy(toy_individuals)[1:20, pid := 2001:2020]
+  expect_null(Enty$add(new_ent_dt, check_existing = TRUE))
 })
 
 # summary ----------
