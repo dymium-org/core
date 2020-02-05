@@ -26,10 +26,12 @@ Household id column in \code{hh_data}
 \section{Public Fields}{
 
 \itemize{
-\item \code{ind}:: \code{NULL} | an \link[R6:R6Class]{R6::R6Class} object\cr
-Shorthand to the \link{Individual} object.
-\item \code{hh}:: \code{NULL} | an \link[R6:R6Class]{R6::R6Class} object\cr
-Shorthand to the \link{Household} object.
+\item \code{ind}:: an \link{Individual} object\cr
+Shorthand to the \link{Individual} object. This will be deprecated in a future release.
+Please use \verb{$get()} to get a reference of object instead of this.
+\item \code{hh}:: an \link{Household} object\cr
+Shorthand to the \link{Household} object. This will be deprecated in a future release.
+Please use \verb{$get()} to get a reference of object instead of this.
 }
 }
 
@@ -38,12 +40,12 @@ Shorthand to the \link{Household} object.
 \itemize{
 \item \code{add_population(ind_data, hh_data)}\cr
 (\code{\link[data.table:data.table]{data.table::data.table()}}, \code{\link[data.table:data.table]{data.table::data.table()}})\cr
-add a new population. This requires that all individuals \code{ind_data} belong
-to valid households. In the case, that \code{hh_data} is not provided, household ids of
-\code{ind_data} will be checked against household ids of the existing households inside
-the Population object being added to. All records in \code{ind_data} and \code{hh_data} will
-be assigned new unique ids to make sure that their ids are not a duplicate of
-the ids of existing entities of their respective entity type.
+Add a new population. This requires that all individuals \code{ind_data} belong
+to valid households. In the case that \code{hh_data} is not provided, household ids of
+\code{ind_data} will be checked against the household ids of the existing households.
+All records in \code{ind_data} and \code{hh_data} will be assigned new unique ids to
+make sure that their ids are not a duplicate of the ids of existing entities
+of their respective entity type.
 \item \code{join_household(ind_ids, hh_ids)}\cr
 (\code{integer()}, \code{integer()})\cr
 Individuals join their new households and the households' affected attributes,

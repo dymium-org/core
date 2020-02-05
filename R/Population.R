@@ -30,22 +30,24 @@
 #'
 #' @section Public Fields:
 #'
-#' * `ind`:: `NULL` | an [R6::R6Class] object\cr
-#'  Shorthand to the [Individual] object.
+#' * `ind`:: an [Individual] object\cr
+#'  Shorthand to the [Individual] object. This will be deprecated in a future release.
+#'  Please use `$get()` to get a reference of object instead of this.
 #'
-#' * `hh`:: `NULL` | an [R6::R6Class] object\cr
-#'  Shorthand to the [Household] object.
+#' * `hh`:: an [Household] object\cr
+#'  Shorthand to the [Household] object. This will be deprecated in a future release.
+#'  Please use `$get()` to get a reference of object instead of this.
 #'
 #' @section Public Methods:
 #'
 #' * `add_population(ind_data, hh_data)`\cr
 #'  ([data.table::data.table()], [data.table::data.table()])\cr
-#'  add a new population. This requires that all individuals `ind_data` belong
-#'  to valid households. In the case, that `hh_data` is not provided, household ids of
-#'  `ind_data` will be checked against household ids of the existing households inside
-#'  the Population object being added to. All records in `ind_data` and `hh_data` will
-#'  be assigned new unique ids to make sure that their ids are not a duplicate of
-#'  the ids of existing entities of their respective entity type.
+#'  Add a new population. This requires that all individuals `ind_data` belong
+#'  to valid households. In the case that `hh_data` is not provided, household ids of
+#'  `ind_data` will be checked against the household ids of the existing households.
+#'  All records in `ind_data` and `hh_data` will be assigned new unique ids to
+#'  make sure that their ids are not a duplicate of the ids of existing entities
+#'  of their respective entity type.
 #'
 #' * `join_household(ind_ids, hh_ids)`\cr
 #'  (`integer()`, `integer()`)\cr
