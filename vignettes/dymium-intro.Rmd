@@ -138,6 +138,91 @@ Currently, `dymiumCore` only supports the model objects fitted using `caret` and
 |    mlr3 |    `Learner` | classification, survival, and regression models |        planned |
 
 
+The example below shows how one can use `caret` to fit a multinomial model and use the model to simulate marital status of individual agents with `TransitionClassification`. 
+
+First we create a world object for testing using the `create_toy_world()` function. This function creates a world object named `world` in the global environment.
+
+```{r}
+# create a toy world named `world` in the global environment
+create_toy_world()
+```
+
+To create a shorthand access to the `Individual` object inside `world` we use the `$get()` method. 
+
+```{r}
+# get the reference of Individual
+Ind <- world$get("Individual")
+```
+
+Let's create a table that shows the counts of marital status of the individual agents in `Individual`.
+
+```{r}
+table(Ind$get_attr("marital_status"))
+```
+
+Now we want to fit a multinomial model (predicts multiple choices) using the `caret` package. `caret` may asks you to install `nnet` which provides an implementation of a multinomial model through its `multinom` function.
+
+```{r}
+# fit a multinomial model where `y` is marital status and `x`s are age, age squared and sex.
+marital_status_model <-
+  caret::train(marital_status ~ age + I(age ^ 2) + sex, 
+               data = toy_individuals, 
+               method = "multinom", 
+               trControl = caret::trainControl(method = "none"))
+```
+
+`TransitionClassification` and `TransitionRegression` are R6 classes and to use them we need to call its constructor function. The first argument in the constructor function can be any object that inherits `Entity` and follows by the model argument which must be one of the supported models or special cases that will be discussed in the next section. There are additional arguments that can be set such as `target`, `targeted_agents` and `model_by_id` that can be used. Please see its documentation for more information about those extra arguments. 
+
+```{r}
+TransMaritalStatus <- TransitionClassification$new(x = Ind, model = marital_status_model)
+```
+
+Creating a `Transition` object will trigger a series of processes under the hood, including stochastically simulating decisions using the given model. Which in this case, TransitionClassification stochastically simulate marital status of the individual agents using the multinomial model. 
+
+```{r}
+TransMaritalStatus
+```
+
+To see the simulation result use the `$get_result()` method.
+
+```{r}
+# get the result in a data.table
+TransMaritalStatus$get_result()
+```
+
+We can update marital status of all individual agents with new values from the simulation using the `$update_agents` method and set `attr` to `marital_status`. Notice that we passed a reference to `Individual` when we constructed `TransMaritalStatus` so `update_agents` knows which one to update. 
+
+```{r}
+# update the marital status of all individual agents using the simulated result
+TransMaritalStatus$update_agents(attr = "marital_status")
+```
+
+or we can update marital status of the individual agents explicitly using `data.table` operations as the follow:
+
+```{r, eval = FALSE}
+# first we must get the indexes of all the ids. Note that the order of the indexes
+# must correspond to their ids. You can use the `$get_idx()` method to get ordered indexes.
+idx <- Ind$get_idx(ids = TransMaritalStatus$get_result()[["id"]])
+
+# there are two ways that you can update marital status that is in the attribute data (`attrs`)
+# of the individual agents
+# (1) using data.table syntax.
+Ind$get_data(name = "attrs", copy = FALSE)[idx, marital_status := TransMaritalStatus$get_result()[["response"]]]
+
+# (2) using the data.table's `set` function.
+data.table::set(x = Ind$get_data(name = "attrs", copy = FALSE), 
+                i = idx, 
+                j = "marital_status", 
+                value = TransMaritalStatus$get_result()[["response"]])
+```
+
+Now let's see the total count of each marital status again.
+
+```{r}
+# count marital status of all individuals
+table(Ind$get_attr("marital_status"))
+```
+
 ### Using transition probabilities
 
 In microsimulation, modellers often use transition probabilities that they obtained 
@@ -225,6 +310,8 @@ Currently, there are two implementations of market matching algorithms which are
 - Optimal matching (`MatchingMarketOptimal`)
 
 In `MatchingMarketStochastic`, only one-sided matching problems can be solved. All agents that are seeking a match are randomly ordered into a virtual queue. The first agent in the queue gets to select an alternative among all the alternatives that available to it. While in `MatchingMarketOptimal`, both one-sided and two-sided problems can be solved. All agents are aware of all the available alternatives (e.g. houses, partners, etc.) in the market. This generally a very strong assumption. Hence, to mitigate such strong assumption the whole market can be further segmented  into sub markets where agents that are more alike or geographically near one others are stratified into the same sub market and only aware of each others and not those that are their unlikely matches.
+
+To learn more about `Market` see the 'mate matching' use case under Articles.
 
 ## Logging
 
