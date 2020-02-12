@@ -28,7 +28,8 @@
 #'  The key of `.data`.
 #'
 #'  * `data` :: [data.table::data.table()]\cr
-#'  A copy of the data. To get its reference semantic, use `$get(copy = FALSE)`.
+#'  A copy of the data.table that was used to create the backend object.
+#'  To get the reference of the data.table, use `$get(copy = FALSE)`.
 #'
 #'  * `removed_data` :: [data.table::data.table()]\cr
 #'  A copy of the removed data.
@@ -45,7 +46,11 @@
 #'
 #'  * `get(rows, cols, copy = TRUE)`\cr
 #'  (`integer(1)`, `character()`, `logical(1)`) -> `data.frame()`\cr
-#'  Add data.
+#'  Get data. If copy is `TRUE`, the returned data.table is a copy of the actual data.table
+#'  object used to create this backend object. Otherwise, the reference to the
+#'  data.table is returned which allows it to be modified with [data.table::set] and
+#'  `:=`. Note that, `rows` should be indexes of the data.table and `cols` are
+#'  a character vector that contains column names to be returned.
 #'
 #'  * `view(interactive = FALSE)`\cr
 #'  (`logical(1)`)\cr
@@ -138,10 +143,30 @@ DataBackendDataTable <- R6::R6Class(
       }
     },
 
+    get = function(rows, cols, copy = TRUE) {
+      if (!copy) {
+        return(private$.data)
+      }
+      if (!missing(rows)) {
+        checkmate::assert_integerish(rows, any.missing = FALSE, lower = 1)
+        if (max(rows) > nrow(private$.data)) {
+          stop("max of 'rows' exceeds the number of rows of the data.")
+        }
+      }
+      if (!missing(cols)) {
+        checkmate::assert_names(cols, subset.of = names(private$.data))
+      }
+      data.table::copy(private$.data)[rows, .SD, .SDcols = cols]
+    },
+
     setkey = function(key = private$.key) {
       data.table::setkeyv(x = private$.data, cols = key)
       private$.key <- key
       invisible(self)
+    },
+
+    get_removed_data  = function() {
+      self$removed_data
     }
   ),
 
