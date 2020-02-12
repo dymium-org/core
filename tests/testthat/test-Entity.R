@@ -19,6 +19,11 @@ test_that("get_data", {
   rand_ids <- sample(toy_individuals$pid, 10)
   expect_equal(MyObj$get_data(ids = rand_ids, copy = TRUE)[[MyObj$get_id_col()]], rand_ids)
   checkmate::expect_data_frame(MyObj$get_data(ids = c(1,1)), nrows = 2, null.ok = FALSE)
+
+  # test modify
+  MyObj$get_data()[, sex := "none"]
+  checkmate::assert_subset(MyObj$get_data()[, sex], choices = c("male", "female"))
+
 })
 
 # add_data -----------
@@ -135,7 +140,7 @@ test_that("has_attr", {
 test_that("get_attr", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   checkmate::expect_integerish(MyObj$get_attr(MyObj$get_id_col()), any.missing = FALSE, min.len = 1, null.ok = FALSE, unique = TRUE)
-  expect_error(MyObj$get_attr("abcd"), "failed: Must include the elements \\{abcd\\}")
+  expect_error(MyObj$get_attr("abcd"), "Must be a subset of set")
   expect_error(MyObj$get_attr('age', ids = c(99999999)), regexp = "These ids don't exist in Entity: 99999999")
   checkmate::expect_integerish(MyObj$get_attr('age', ids = c(1,2,3)), lower = 0, any.missing = FALSE, len = 3, null.ok = FALSE)
 })
@@ -143,7 +148,7 @@ test_that("get_attr", {
 test_that("generate_new_ids", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   checkmate::expect_integerish(MyObj$get_attr(MyObj$get_id_col()), any.missing = FALSE, min.len = 1, null.ok = FALSE, unique = TRUE)
-  expect_error(MyObj$get_attr("abcd"), "failed: Must include the elements \\{abcd\\}")
+  expect_error(MyObj$get_attr("abcd"), "Must be a subset of set")
 })
 
 test_that("database", {
