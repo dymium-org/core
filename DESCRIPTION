@@ -53,6 +53,7 @@ Suggests:
     visNetwork (>= 2.0.0)
 Roxygen: list(markdown = TRUE, r6 = FALSE)
 RoxygenNote: 7.0.2
+StagedInstall: no
 VignetteBuilder: knitr
 Collate: 
     'Generic.R'
