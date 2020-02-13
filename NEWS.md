@@ -8,6 +8,7 @@
 4. Add `Entity$get_data2(ids)` which uses key(s) for subsetting of ids. This suppose to be a faster implementation of `get_data()` which is likely to supersede the original implementation in the next version.
 5. `add_population(ind_data, hh_data)` now also assigns new ids to all the records of new entities of `ind_data` and `hh_data` to make sure no duplications of ids exist. 
 6. `DataBackend` has new active fields which are `data` amd `removed_data` these functions return a copy of the data and not a reference to the data (only applicable in `DataBackendDataTable` and `DataBackendSpatialFeature`). 
+7. `extract_data` returns all the data objects in the DataBackend objects that each Entity possess as a named list of data.table. This is useful for saving simulation data for furthur analysis. It works on World too! 
 
 ## BUG FIXES
 

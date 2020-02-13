@@ -92,6 +92,7 @@ reference:
     - starts_with("expect_")
 - title: "Miscellaneous"
   contents:
+    - extract_data
     - starts_with("dm_")
     - .get_sim_time
     - omit_derived_vars
