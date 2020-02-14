@@ -71,7 +71,7 @@
   lg$appenders$buff$appenders$sim_output$set_filters(list(filter_sim_output))
 
   # print to console
-  .dymium_options_msg()
+  # .dymium_options_msg()
 
 
   invisible()
