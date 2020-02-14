@@ -9,6 +9,7 @@ test_that("data", {
   expect_is(MyObj$data(), class = "DataBackendDataTable")
 })
 
+# get_data -----------
 test_that("get_data", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   expect_is(MyObj$get_data(), "data.table")
@@ -18,8 +19,14 @@ test_that("get_data", {
   rand_ids <- sample(toy_individuals$pid, 10)
   expect_equal(MyObj$get_data(ids = rand_ids, copy = TRUE)[[MyObj$get_id_col()]], rand_ids)
   checkmate::expect_data_frame(MyObj$get_data(ids = c(1,1)), nrows = 2, null.ok = FALSE)
+
+  # test modify
+  MyObj$get_data()[, sex := "none"]
+  checkmate::assert_subset(MyObj$get_data()[, sex], choices = c("male", "female"))
+
 })
 
+# add_data -----------
 test_that("add_data", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
 
@@ -28,8 +35,44 @@ test_that("add_data", {
 
   MyObj$add_data(databackend = DataBackendDataTable, .data = toy_individuals, name = "attrs2")
   expect_true(all.equal(MyObj$get_data(name = "attrs2"), toy_individuals))
+
+  Enty <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
 })
 
+# add -----------
+test_that("add", {
+  Enty <-
+    Entity$new(
+      databackend = DataBackendDataTable,
+      .data = toy_individuals,
+      id_col = c("pid", "partner_id", "mother_id", "father_id")
+    )
+
+  n_entities_before <- Enty$n()
+  new_ent_dt <- data.table::copy(toy_individuals)[, .derived_col := 1]
+  expect_error(Enty$add(.data = new_ent_dt, check_existing = TRUE),
+               regexp = "One or more of the main unique `ids` in `.data` already exist in the existing attribute data of this Entity.")
+
+  data_lst <- register(x = Enty, new_ent_dt)
+  Enty$add(data_lst$new_ent_dt, check_existing = FALSE)
+  expect_error(Enty$add(.data = new_ent_dt, check_existing = TRUE),
+               regexp = "One or more of the main unique `ids` in `.data` already exist in the existing attribute data of this Entity.")
+
+  data_lst <- register(x = Enty, new_ent_dt)
+  Enty$add(data_lst$new_ent_dt, check_existing = FALSE)
+  expect_equal(Enty$n(), expected = nrow(toy_individuals) * 3)
+
+  # shuffle column order
+  data_lst <- register(x = Enty, new_ent_dt)
+  data.table::setcolorder(data_lst$new_ent_dt, sample(names(data_lst$new_ent_dt)))
+  expect_null(Enty$add(.data = data_lst$new_ent_dt, check_existing = FALSE))
+
+  # create newborns
+  new_ent_dt <- data.table::copy(toy_individuals)[1:20, pid := 2001:2020]
+  expect_null(Enty$add(new_ent_dt, check_existing = TRUE))
+})
+
+# summary ----------
 test_that("summary", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   expect_is(MyObj$summary(verbose = FALSE), "data.frame")
@@ -46,8 +89,14 @@ test_that("remove", {
 
 test_that("get_ids", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
-  expect_true(length(MyObj$get_ids()) != 0)
-  expect_true(length(MyObj$get_ids(idx = c(1:10))) == 10)
+  checkmate::expect_integerish(
+    MyObj$get_ids(),
+    lower = 1,
+    any.missing = FALSE,
+    unique = T,
+    null.ok = FALSE,
+    min.len = nrow(toy_individuals)
+  )
 })
 
 test_that("get_idx", {
@@ -91,7 +140,7 @@ test_that("has_attr", {
 test_that("get_attr", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   checkmate::expect_integerish(MyObj$get_attr(MyObj$get_id_col()), any.missing = FALSE, min.len = 1, null.ok = FALSE, unique = TRUE)
-  expect_error(MyObj$get_attr("abcd"), "failed: Must include the elements \\{abcd\\}")
+  expect_error(MyObj$get_attr("abcd"), "Must be a subset of set")
   expect_error(MyObj$get_attr('age', ids = c(99999999)), regexp = "These ids don't exist in Entity: 99999999")
   checkmate::expect_integerish(MyObj$get_attr('age', ids = c(1,2,3)), lower = 0, any.missing = FALSE, len = 3, null.ok = FALSE)
 })
@@ -99,7 +148,7 @@ test_that("get_attr", {
 test_that("generate_new_ids", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   checkmate::expect_integerish(MyObj$get_attr(MyObj$get_id_col()), any.missing = FALSE, min.len = 1, null.ok = FALSE, unique = TRUE)
-  expect_error(MyObj$get_attr("abcd"), "failed: Must include the elements \\{abcd\\}")
+  expect_error(MyObj$get_attr("abcd"), "Must be a subset of set")
 })
 
 test_that("database", {

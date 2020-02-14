@@ -31,9 +31,10 @@ A \link{data.frame} object.
 \item \code{add(.data, fill = FALSE)}\cr
 (\code{data.frame()}) -> \code{NULL}\cr
 Add data.
-\item \code{get(rows, cols, copy = TRUE)}\cr
-(\code{integer(1)}, \code{character()}, \code{logical(1)}) -> \code{data.frame()}\cr
-Add data.
+\item \code{get(rows, cols)}\cr
+(\code{integer()}, \code{character()}) -> \code{data.frame()}\cr
+Get data. \code{rows} must be an integer vector, while \code{cols} can be either a character
+vector or an integer vector.
 \item \code{remove(rows, cols)}\cr
 (\code{integer()}, \code{integer()}) -> \code{NULL}\cr
 (abstract) Remove the data. (Developer's note: Those records that get removed

@@ -47,10 +47,8 @@ created with, its built date, creator info, R version, etc.
 
 \examples{
 
-Pop <- Population$new()
-
-# load toy data into Population
-Pop$initialise_data(toy_individuals, toy_households)
+# create Population
+Pop <- Population$new(toy_individuals, toy_households, pid_col = "pid", hid_col = "hid")
 
 # create 3 dummy events
 event1 <- function(object) {

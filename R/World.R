@@ -99,7 +99,7 @@ World <- R6::R6Class(
     info = list(
       built.datetime = Sys.time(),
       dymiumCore.version = utils::packageVersion("dymiumCore"),
-      R.version = base::version
+      sessionInfo = utils::sessionInfo()
     ),
 
     initialize = function() {

@@ -1,3 +1,24 @@
+# dymiumCore 0.1.4
+
+## NEW FEATURES
+
+1. Add `add(.data, ...)` method to Entity. This allows new entities to be added to the attribute database of existing entities. Note that, `add_data(.data)` is for adding new databases and `add(.data, ...)` is for adding new records to **the attribute database** (`Entity$database$attrs`) which are not the same.
+2. Add `check_subset2` which basically the same check as `checkmate::check_subset` but it returns a short error message. The error message it returns only include those missing elements in `x` from `choices`. See `checkmate::check_subset` for more details.
+3. `DataBackendDataTable` again on option to use key(s) for row indexing. 
+4. Add `Entity$get_data2(ids)` which uses key(s) for subsetting of ids. This suppose to be a faster implementation of `get_data()` which is likely to supersede the original implementation in the next version.
+5. `add_population(ind_data, hh_data)` now also assigns new ids to all the records of new entities of `ind_data` and `hh_data` to make sure no duplications of ids exist. 
+6. `DataBackend` has new active fields which are `data` amd `removed_data` these functions return a copy of the data and not a reference to the data (only applicable in `DataBackendDataTable` and `DataBackendSpatialFeature`). 
+7. `extract_data` returns all the data objects in the DataBackend objects that each Entity possess as a named list of data.table. This is useful for saving simulation data for furthur analysis. It works on World too! 
+8. `World` saves session info on its creation instead of just the R version it was created on. 
+
+## BUG FIXES
+
+1. Ignore checking of attributes in all `data.table::all.equal(...)` calls.
+
+## DEPRECATIONS
+
+1. Remove `Entity$initialise_data()`, the attribute data of Entity must be provided in its constructor method. This change affected many of the testthat tests. 
+
 # dymiumCore 0.1.3
 
 ## NEW FEATURES

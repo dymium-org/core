@@ -19,8 +19,12 @@ and registers the \code{id_col} (\code{private$.id_col}).
 An \link[R6:R6Class]{R6::R6Class} generator that inherits from \code{DataBackend}.
 \item \code{.data} :: \code{data.frame()}\cr
 A object that inherits from \code{data.frame}.
-\item \code{id_col} :: \code{character(1)}\cr
-The id column of \code{.data}.
+\item \code{id_col} :: \code{character()}\cr
+The name of the id column of \code{.data} and all relation columns. The first
+element will be checked as the main id column of the entity data, which
+must be unique integers. The rest of the vector will be consider as relation
+columns. For example, if \code{c("pid", "partner_id")} is given \code{pid} must contain
+unique integers, while \code{partner_id} can be \code{NA} or non-unique integers.
 }
 }
 
@@ -28,6 +32,10 @@ The id column of \code{.data}.
 
 \itemize{
 \item \code{database}: a list of \link{DataBackend} objects that \link{Entity} possess.
+\item \code{id_col}: a character vector of all id columns with the first element being
+the main id column and the other elements, if any, are relation columns.
+\item \code{data_template}: a data.table object that contains the minimum data requirement apart
+from the \code{id_col}.
 }
 }
 
@@ -44,6 +52,12 @@ Returns a \link{DataBackend} with the name that matches \code{name}.
 If \code{name} is not given, the function will try to return the \link{DataBackend} with name \code{attrs}.
 If \code{attrs} is not present or no \code{DataBackEnd} objects have been loaded it will
 return \code{NULL}.
+\item \code{add(.data, check_existing = FALSE)}\cr
+(\code{\link[data.table:data.table]{data.table::data.table()}}, \code{logical(1)})\cr
+Add new attribute data of new entities. This makes sure that none of the ids
+of the new entities are the same as the existing ones. However, other id columns,
+relation columns can be exempted from the check by setting \code{check_existing} as \code{FALSE}.
+Meaning, the other id columns can contain ids of the existing entities.
 \item \code{get_id_col}\cr
 () -> \code{character(1)}\cr
 Returns the column id field of data.

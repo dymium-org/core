@@ -97,6 +97,17 @@ DataBackend <- R6::R6Class(
     }
   ),
 
+  active = list(
+    data = function() {
+      return(base::get(".data", envir = private))
+    },
+
+    removed_data = function() {
+      return(base::get(".removed_data", envir = private))
+    }
+  ),
+
+
   private = list(
     .data = NULL,
     .removed_data = NULL
