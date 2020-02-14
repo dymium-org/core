@@ -308,9 +308,9 @@ Entity <-
           ids_in_relation_cols <- unique(ids_in_relation_cols)
 
           if (check_existing) {
-            checkmate::assert_subset(ids_in_relation_cols, choices = c(self$get_ids(), new_ids))
+            checkmate::assert_subset2(ids_in_relation_cols, choices = c(self$get_ids(), new_ids))
           } else {
-            checkmate::assert_subset(ids_in_relation_cols, choices = new_ids)
+            checkmate::assert_subset2(ids_in_relation_cols, choices = new_ids)
           }
         }
 
