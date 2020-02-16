@@ -11,16 +11,6 @@ think of it as a container that is to be passed into event functions and let
 each event function accesses the instances it needs that are being stored inside
 World.
 }
-\section{Fields}{
-
-\describe{
-\item{\code{containers}}{a list of all \link{Containers} stored in World.}
-
-\item{\code{containers}}{a list of all \link{Entities} stored in World.}
-
-\item{\code{containers}}{a list of all \link{Models} stored in World.}
-}}
-
 \section{Construction}{
 \preformatted{x <- World$new()
 }
