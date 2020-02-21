@@ -1,3 +1,9 @@
+# dymiumCore (development version)
+
+## BUG FIXES
+
+1. Fix `Target`'s constructor method which failed to convert data.frame to data.table when storing the target data.
+
 # dymiumCore 0.1.3
 
 ## NEW FEATURES
