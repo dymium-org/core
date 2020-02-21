@@ -14,6 +14,7 @@
 ## BUG FIXES
 
 1. Ignore checking of attributes in all `data.table::all.equal(...)` calls.
+2. Fix `Target`'s constructor method which failed to convert data.frame to data.table when storing the target data.
 
 ## DEPRECATIONS
 
