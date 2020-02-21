@@ -70,8 +70,9 @@ Target <- R6::R6Class(
         if ("time" %in% names(x)) {
           private$.dynamic <- TRUE
         }
+      } else {
+        private$.data <- x
       }
-      private$.data <- x
       return(invisible(self))
     },
 
