@@ -10,6 +10,7 @@
 6. `DataBackend` has new active fields which are `data` amd `removed_data` these functions return a copy of the data and not a reference to the data (only applicable in `DataBackendDataTable` and `DataBackendSpatialFeature`). 
 7. `extract_data` returns all the data objects in the DataBackend objects that each Entity possess as a named list of data.table. This is useful for saving simulation data for furthur analysis. It works on World too! 
 8. `World` saves session info on its creation instead of just the R version it was created on. 
+9. Add `dymium.simulation_scale` global option that can be set with `World$set_scale(x)` and access with `World$scale` or getOption("dymium.simulation_scale"). This simulation scale will be used by all `Target` objects created when they are called by their `get` method. 
 
 ## BUG FIXES
 

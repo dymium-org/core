@@ -62,29 +62,33 @@ Target <- R6::R6Class(
     initialize = function(x) {
       assert_target(x, null.ok = TRUE)
       if (is.data.frame(x)) {
+        if (!"time" %in% names(x)) {
+          stop(
+            paste("A column named `time` is missing in `x`. Note that,",
+                  "data.frame should be used when creating a dynamic target",
+                  "only. If you want to create a static target use `list` instead.")
+          )
+        }
+        private$.dynamic <- TRUE
         if (!is.data.table(x)) {
           private$.data <- as.data.table(x)
         } else {
           private$.data <- data.table::copy(x)
         }
-        if ("time" %in% names(x)) {
-          private$.dynamic <- TRUE
-        }
       } else {
         private$.data <- x
       }
-      return(invisible(self))
+      invisible(self)
     },
 
     get = function(time = .get_sim_time()) {
       if (private$.dynamic) {
         closest_time_index <- which.min(abs(private$.data[['time']] - time))
-        return(as.list(private$.data[closest_time_index, -c("time")]))
+        return(lapply(private$.data[closest_time_index, -c("time")], function(x) x * getOption("dymium.simulation_scale")))
       }
-      if (is.data.table(private$.data)) {
-        return(copy(private$.data))
+      if (is(object = private$.data, class2 = "list")) {
+        return(lapply(private$.data, function(x) x * getOption("dymium.simulation_scale")))
       }
-      return(private$.data)
     },
 
     print = function() {

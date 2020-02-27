@@ -78,6 +78,13 @@ Dymium's version, dependencies, R version etc.
 \item \code{set_time(x)}\cr
 (\code{integer(1)}) -> \code{NULL}\cr
 Set the time on the World's simulation clock (.DMevn$sim_time).
+\item \code{set_scale(x)}\cr
+(\code{numeric(1)})\cr
+Set the simulation scale which is stored as a global option (\code{dymium.simulation_scale}).
+The scale parameter can also be accessd using \code{optionGet("dymium.simulation_scale")}.
+The simulation scale parameter is useful for running a downsized version of your
+world without manually going through all the data to scale them down. This scale
+automatically applies to all \link{Targets} created.
 \item \code{reset_time()}\cr
 Reset the value of .DMevn$sim_time to 0L (L is for forcing type integer
 otherwise 0 is of numeric type).

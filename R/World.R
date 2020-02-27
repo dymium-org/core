@@ -82,6 +82,14 @@
 #'  (`integer(1)`) -> `NULL`\cr
 #'  Set the time on the World's simulation clock (.DMevn$sim_time).
 #'
+#' * `set_scale(x)`\cr
+#'  (`numeric(1)`)\cr
+#'  Set the simulation scale which is stored as a global option (`dymium.simulation_scale`).
+#'  The scale parameter can also be accessd using `optionGet("dymium.simulation_scale")`.
+#'  The simulation scale parameter is useful for running a downsized version of your
+#'  world without manually going through all the data to scale them down. This scale
+#'  automatically applies to all [Targets] created.
+#'
 #' * `reset_time()`\cr
 #'  Reset the value of .DMevn$sim_time to 0L (L is for forcing type integer
 #'  otherwise 0 is of numeric type).
@@ -314,6 +322,15 @@ World <- R6::R6Class(
       invisible()
     },
 
+    set_scale = function(x) {
+      checkmate::assert_number(x, lower = 0, finite = TRUE, null.ok = FALSE)
+      if (x == 0) {
+        stop("scale cannot be equal to 0!")
+      }
+      options(dymium.simulation_scale = x)
+      invisible()
+    },
+
     # @description Print self
     print = function() {
       super$print()
@@ -357,6 +374,9 @@ World <- R6::R6Class(
     # @field containers a list of all [Models] stored in World.
     models = function() {
       get(".models", envir = private)
+    },
+    scale = function() {
+      options("dymium.simulation_scale")[[1]]
     }
   ),
 
