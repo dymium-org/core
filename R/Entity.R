@@ -56,7 +56,7 @@
 #'
 #'  * `add(.data, check_existing = FALSE)`\cr
 #'  ([data.table::data.table()], `logical(1)`)\cr
-#'  Add new attribute data of new entities. This makes sure that none of the ids
+#'  Add attribute data of new entities. This makes sure that none of the ids
 #'  of the new entities are the same as the existing ones. However, other id columns,
 #'  relation columns can be exempted from the check by setting `check_existing` as `FALSE`.
 #'  Meaning, the other id columns can contain ids of the existing entities.

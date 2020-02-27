@@ -21,8 +21,8 @@ Inherits all methods in \link{Agent}.
 \section{Overwritten methods}{
 
 \itemize{
-\item \code{add(n)}\cr
-(\code{integer(1)}) -> \code{NULL}\cr
+\item \code{add(.data, n)}\cr
+(\link[data.table:data.table]{data.table::data.table}, \code{integer(1)}) -> \code{NULL}\cr
 Add new households using data or generate \code{n} emptied households. If \code{data}
 is given \code{n} will be ignored.
 }

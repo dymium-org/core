@@ -17,8 +17,8 @@
 #'
 #' @section Overwritten methods:
 #'
-#'  * `add(n)`\cr
-#'   (`integer(1)`) -> `NULL`\cr
+#'  * `add(.data, n)`\cr
+#'   ([data.table::data.table], `integer(1)`) -> `NULL`\cr
 #'   Add new households using data or generate `n` emptied households. If `data`
 #'   is given `n` will be ignored.
 #'
