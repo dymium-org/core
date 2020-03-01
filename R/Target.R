@@ -31,7 +31,9 @@
 #'
 #'  * `get(time = .get_sim_time())`\cr
 #'  (`integer(1)`) -> a named `list()`\cr
-#'  Get a alignment target as a named list.
+#'  Get an alignment target as a named list. Note that, all the elements in the list
+#'  will be scaled by multiplying with the value stored in getOption("dymium.simulation_scale")
+#'  and all the values in the output are rounded to their nearest integers.
 #'
 #' @aliases Targets
 #' @export
@@ -84,10 +86,10 @@ Target <- R6::R6Class(
     get = function(time = .get_sim_time()) {
       if (private$.dynamic) {
         closest_time_index <- which.min(abs(private$.data[['time']] - time))
-        return(lapply(private$.data[closest_time_index, -c("time")], function(x) x * getOption("dymium.simulation_scale")))
+        return(lapply(private$.data[closest_time_index, -c("time")], function(x) round(x * getOption("dymium.simulation_scale"))))
       }
       if (is(object = private$.data, class2 = "list")) {
-        return(lapply(private$.data, function(x) x * getOption("dymium.simulation_scale")))
+        return(lapply(private$.data, function(x) round(x * getOption("dymium.simulation_scale"))))
       }
     },
 
