@@ -60,23 +60,24 @@ Please visit
 [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
 to see the available modules.
 
-## An example project
+## Try `dymiumCore` with an example project
 
-We have recently setup an example project so that you can see our
-package in action\! Please visit
+Please visit
 [dymium-org/dymiumExampleProject](https://github.com/dymium-org/dymiumExampleProject)
-to learn more about it.
+to learn more about this.
 
 ## Collaboration
 
 We are open to collaboration on this project. If you are interested,
 please email us at amarin at dymium.org.
 
-## Development plan (as of 11th Jan 2020)
+## Development plan (as of 14th March 2020)
 
-  - [x] **Version 0.1.0**: (21 Jan 2020) Releases all the basic building
+  - [x] **Version 0.1.0**: (21 Jan 2020) Release all the basic building
     blocks for microsimulation modelling.
-  - [ ] **Version 0.2.0**: Implements model-based calibration.
+      - [ ] Support `mlr3` and `mlogit` model objects in the Transition
+        classes.
+  - [ ] **Version 0.2.0**: Implement model-based calibration.
   - [ ] **Version 0.3.0**: Visualisation functions for life-courses,
     spatial data, etc.
   - [ ] **Version 0.4.0**: Integration with dymiumGUI.
