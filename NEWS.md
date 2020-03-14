@@ -19,6 +19,7 @@
 ## DEPRECATIONS
 
 1. Remove `Entity$initialise_data()`, the attribute data of Entity must be provided in its constructor method. This change affected many of the testthat tests. 
+2. Remove `household_formation()` to encourage more explicit approaches (e.g. use `Population$leave_household()` and `Population$join_household()`). 
 
 # dymiumCore 0.1.3
 
