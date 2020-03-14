@@ -39,14 +39,14 @@
 #' @examples
 #'
 #' # static target
-#' TrgtStatic <- Target$new(list(yes = 10))
+#' TrgtStatic <- Target$new(x = list(yes = 10))
 #' TrgtStatic$data
 #' TrgtStatic$dynamic
 #' TrgtStatic$get()
 #'
 #' # dynamic target
 #' target_dynamic <- data.frame(time = 1:10, yes = 1:10)
-#' TrgtDynamic <- Target$new(list(yes = 10))
+#' TrgtDynamic <- Target$new(x = target_dynamic)
 #' TrgtDynamic$data
 #' TrgtDynamic$dynamic
 #'
@@ -70,8 +70,9 @@ Target <- R6::R6Class(
         if ("time" %in% names(x)) {
           private$.dynamic <- TRUE
         }
+      } else {
+        private$.data <- x
       }
-      private$.data <- x
       return(invisible(self))
     },
 

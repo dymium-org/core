@@ -76,19 +76,118 @@ event_demography_birth$REQUIRED_MODELS
 
 ## Modify an event
 
-TODO
+At some point, you may find yourself wanting to include some additional variables to a model but those variables don't exist in the attribute data of your agents. Those additional variables maybe variables that get generated during the simulation (such as the length of the current marriage, the age of the youngest child, the number of divorces) or derive from an existing attribute (such as age in 5-year age group etc.). These can be easily included in the `Transition` object of your model.
 
-# Let's put together a microsimulation model
+For example, in the birth event of the demography module there is a `TransitionBirth` class that is extended from `TransitionClassification`. 
 
-Each module may requires some specific entity classes. For example, the demography module requires a population of individuals that group into households. Hence, it needs `Individual` and `Household`.
+```{r, eval = FALSE}
+# See https://github.com/dymium-org/dymiumModules/blob/d53fdb47680efc9a05e56f0c420c85907e73794e/modules/demography/birth.R#L147-L167
+TransitionBirth <- R6Class(
+  classname = "TransitionBirth",
+  inherit = dymiumCore::TransitionClassification,
+  public = list(
+    filter = function(.data) {
+      .data %>%
+        helpers$FilterAgent$Ind$can_give_birth(.)# %>%
+        # helpers$FilterAgent$Ind$is_in_relationship(.)
+    },
+    mutate = function(.data) {
+      Ind <- private$.AgtObj
+      .data %>%
+        helpers$DeriveVar$IND$has_resident_children(x = ., Ind) %>%
+        helpers$DeriveVar$IND$n_resident_children(x = ., Ind) %>%
+        helpers$DeriveVar$IND$age_youngest_resident_child(x = ., Ind) %>%
+        helpers$DeriveVar$IND$age5(x = ., Ind) %>%
+        helpers$DeriveVar$IND$n_children(x = ., Ind) %>%
+        helpers$DeriveVar$IND$mrs(x = ., Ind)
+    }
+  )
+)
+```
 
-```{r}
+`TransitionBirth` has two implemented methods that `TransitionClassification` doesn't have which are `filter(.data)` and `mutate(.data)`. 
 
+The `filter` method defines the criteria which the agents must meet to undergo this `TransitionBirth` transition, which is to give birth. `helpers$FilterAgent$Ind$can_give_birth(x)`, a function defined in `helpers.R`, filters only those agents that are women with age between `RULES$GIVE_BIRTH$AGE_LOWER_BOUND` and `RULES$GIVE_BIRTH$AGE_UPPER_BOUND`. The age rules can be found in `constants.R` and they can be changed to suit your assumption.
+
+```{r, eval = FALSE}
+helpers$FilterAgent$Ind$can_give_birth = function(x) {
+  get_individual_data(x) %>%
+    .[sex == IND$SEX$FEMALE &
+        age %between% c(RULES$GIVE_BIRTH$AGE_LOWER_BOUND,
+                        RULES$GIVE_BIRTH$AGE_UPPER_BOUND)]
+}
+```
+
+While the `mutate(.data)` method allows you to add additional variables to be used as predictors in your model. As you can see, there are quite a few additional variables that get added to the agent data from the number of children, the age of the youngest residential child, etc.
+
+By default the filter data from `filter()` will be passed to the `mutate(.data)` function then to the `simulate` function of `Transition`. However, this order can be changed in case you need to filter agents based on a derived variable by setting the `mutate_first` field equal to `TRUE`.
+
+```{r, eval = FALSE}
+TransitionBirth <- R6Class(
+  classname = "TransitionBirth",
+  inherit = dymiumCore::TransitionClassification,
+  public = list(
+    filter = function(.data) {
+      .data %>%
+        helpers$FilterAgent$Ind$can_give_birth(.)# %>%
+        # helpers$FilterAgent$Ind$is_in_relationship(.)
+    },
+    mutate = function(.data) {
+      Ind <- private$.AgtObj
+      .data %>%
+        helpers$DeriveVar$IND$has_resident_children(x = ., Ind) %>%
+        helpers$DeriveVar$IND$n_resident_children(x = ., Ind) %>%
+        helpers$DeriveVar$IND$age_youngest_resident_child(x = ., Ind) %>%
+        helpers$DeriveVar$IND$age5(x = ., Ind) %>%
+        helpers$DeriveVar$IND$n_children(x = ., Ind) %>%
+        helpers$DeriveVar$IND$mrs(x = ., Ind)
+    },
+    mutate_first = TRUE # mutate before filter !!!
+  )
+)
 ```
 
 
-```{r}
+# Let's put together a microsimulation model
 
+## Single run
+
+Putting together a microsimulation model using `dymium` is very simple. Once you have your `world` object constructed with all the necessary entities and models for your incluced event functions you just need to create a flow-control statement such as a for-loop which exits at some point. 
+
+In the example below, the simulation will be stopped after the 10th iteration. Note that, `world` has a `$start_iter()` method which sets the simulation clock to the time_step in `i` before returning itself down the pipeline. The time from the simulation clock is used by many functions such as `add_history`, `Generic$log()` and `is_scheduled`. Therefore, we recommend that you use the `$start_iter()` method to pass the world object down the pipeline in your microsimulation model setup. 
+
+```{r, eval = FALSE}
+for (i in 1:10) {
+  world$start_iter(time_step = i, unit = "year") %>%
+    event_1$run(.) %>%
+    event_2$run(.)
+}
+```
+
+## Parallel runs
+
+Microsimulation models rely randomly number generators to produce their simulation results, the results between different runs are very unlikely to be identical. Hence, to validate the model or to conduct a sensitivity analysis it is a good idea to run the same simulation setup multiple times and analyse the variance of the results.
+
+To do that here is a simple example using the `future` and `furrr` packages.
+
+```{r, eval = FALSE}
+library(future)
+library(furrr)
+
+cl <- makeClusterPSOCK(workers = 2)
+future::plan(cluster, workers = cl)
+
+res <- furrr::future_map(1:4, ~ {
+  world <- readRDS("path/to/world.rds")
+  for (i in 1:10) {
+    world$start_iter(time_step = i, unit = "year") %>%
+      event_1$run(.) %>%
+      event_2$run(.)
+  }
+  return(world)
+})
+
+parallel::stopCluster(cl)
 ```
 
 

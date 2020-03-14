@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 # Why another microsimulation package?
 
-As an R user, I feel that there are so many great packages that can makes R a complete platform for microsimulation and yet, to my knowledge, no one has taken advantage of this fact. The stages of microsimulation modelling is no different from the stages of any other modelling excerises in general, at least at the high-level. They can be broken down as the following:
+As an R user, I feel that there are so many great packages that can make R a complete platform for microsimulation and yet, to my knowledge, no one has taken advantage of this. The stages of microsimulation modelling is no different from the stages of any other modelling excerises in general, at least at the high-level. They can be broken down as the following:
 
 1. __Data preparation__: synthesise microdata and estimate models. 
 2. __Microsimulation__: microsimulate agents in the microdata using the estimated models.

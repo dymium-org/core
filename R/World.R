@@ -346,15 +346,15 @@ World <- R6::R6Class(
   ),
 
   active = list(
-    #' @field containers a list of all [Containers] stored in World.
+    # @field containers a list of all [Containers] stored in World.
     containers = function() {
       get(".containers", envir = private)
     },
-    #' @field containers a list of all [Entities] stored in World.
+    # @field containers a list of all [Entities] stored in World.
     entities = function() {
       get(".entities", envir = private)
     },
-    #' @field containers a list of all [Models] stored in World.
+    # @field containers a list of all [Models] stored in World.
     models = function() {
       get(".models", envir = private)
     }

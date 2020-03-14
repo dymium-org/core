@@ -125,7 +125,7 @@ Population <- R6Class(
       }
 
       if (!"hhsize" %in% names(hh_data)) {
-        lg$warn("Creating `hhsize` as it is not provided with `hh_data`.")
+        lg$warn("Creating a `hhsize` column in `hh_data` as it is not provided.")
         hhsize_dt <- ind_data[, .(hhsize = .N), by = c(hid_col)]
         hh_data <- hh_data[hhsize_dt, , on = c(hid_col)]
       } else {
