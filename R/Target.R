@@ -107,6 +107,9 @@ Target <- R6::R6Class(
 
   active = list(
     data = function() {
+      if (is.data.table(private$.data)) {
+        return(data.table::copy(private$.data))
+      }
       base::get(".data", envir = private)
     },
     dynamic = function() {
