@@ -5,8 +5,8 @@ test_that("initialise", {
 test_that("add", {
   MyCont <- ContainerGeneric$new()
 
-  MyCont$add(Agent$new())
-  MyCont$add(Agent$new())
+  MyCont$add(Agent$new(toy_individuals, "pid"))
+  MyCont$add(Agent$new(toy_individuals, "pid"))
 
   expect_length(MyCont$Cont, 2)
 
@@ -16,7 +16,7 @@ test_that("add", {
 test_that("get", {
   MyCont <- ContainerGeneric$new()
 
-  MyCont$add(Agent$new())
+  MyCont$add(Agent$new(toy_individuals, "pid"))
 
   checkmate::expect_r6(MyCont$get(pos = 1), classes = "Agent", null.ok = FALSE)
 
@@ -31,9 +31,9 @@ test_that("get", {
 test_that("remove", {
   MyCont <- ContainerGeneric$new()
 
-  MyCont$add(Agent$new())
-  MyCont$add(Agent$new())
-  MyCont$add(Agent$new())
+  MyCont$add(Agent$new(toy_individuals, "pid"))
+  MyCont$add(Agent$new(toy_individuals, "pid"))
+  MyCont$add(Agent$new(toy_individuals, "pid"))
 
   expect_error(MyCont$remove(pos = 0), regexp = "pos can not be less than or equal to 0")
   expect_error(MyCont$remove(pos = 4), regexp = "pos is greater than the number of available objecst in the container")

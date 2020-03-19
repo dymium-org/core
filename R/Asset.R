@@ -75,32 +75,14 @@ Asset <- R6::R6Class(
   public = list(
 
     initialize = function(.data, id_col, owner = NULL) {
-      if (!missing(.data)) {
-        if (!missing(id_col)) {
-          super$initialize(databackend = DataBackendDataTable,
-                           .data = .data,
-                           id_col = id_col)
-        } else {
-          stop(glue::glue("To initialise the attribute data of {self$class()} \\
-                            the `id_col` argument must be given."))
-        }
-      }
+      checkmate::assert_r6(owner, classes = c("Agent", "Entity"), null.ok = TRUE)
+      super$initialize(databackend = DataBackendDataTable,
+                       .data = .data,
+                       id_col = id_col)
       if (!is.null(owner)) {
         self$set_owner_object(owner)
       }
-      invisible()
-    },
-
-    initialise_data = function(.data, id_col, owner = NULL) {
-      if (length(private$.data) != 0) {
-        stop("Agent's `attrs` data has already been initialised.")
-      }
-      self$initialize(.data = .data,
-                      id_col = id_col,
-                      owner = owner)
-      # keep track of latest agent id
-      self$generate_new_ids(n = max(.data[[private$.id_col]]))
-      invisible()
+      return(invisible(self))
     },
 
     set_owner_object = function(x) {

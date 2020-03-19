@@ -23,12 +23,22 @@
 #' * `.data` :: `data.frame()`\cr
 #'   A object that inherits from `data.frame`.
 #'
-#' * `id_col` :: `character(1)`\cr
-#'   The id column of `.data`.
+#' * `id_col` :: `character()`\cr
+#'   The name of the id column of `.data` and all relation columns. The first
+#'   element will be checked as the main id column of the entity data, which
+#'   must be unique integers. The rest of the vector will be consider as relation
+#'   columns. For example, if `c("pid", "partner_id")` is given `pid` must contain
+#'   unique integers, while `partner_id` can be `NA` or non-unique integers.
 #'
 #' @section Active Fields (read-only):
 #'
 #'  * `database`: a list of [DataBackend] objects that [Entity] possess.
+#'
+#'  * `id_col`: a character vector of all id columns with the first element being
+#'   the main id column and the other elements, if any, are relation columns.
+#'
+#'  * `data_template`: a data.table object that contains the minimum data requirement apart
+#'   from the `id_col`.
 #'
 #' @section Methods:
 #'
@@ -43,7 +53,14 @@
 #'  If `name` is not given, the function will try to return the [DataBackend] with name `attrs`.
 #'  If `attrs` is not present or no `DataBackEnd` objects have been loaded it will
 #'  return `NULL`.
-#
+#'
+#'  * `add(.data, check_existing = FALSE)`\cr
+#'  ([data.table::data.table()], `logical(1)`)\cr
+#'  Add new attribute data of new entities. This makes sure that none of the ids
+#'  of the new entities are the same as the existing ones. However, other id columns,
+#'  relation columns can be exempted from the check by setting `check_existing` as `FALSE`.
+#'  Meaning, the other id columns can contain ids of the existing entities.
+#'
 #'  * `get_id_col`\cr
 #'  () -> `character(1)`\cr
 #'  Returns the column id field of data.
@@ -116,19 +133,20 @@ Entity <-
     public = list(
 
       initialize = function(databackend, .data, id_col) {
-        checkmate::assert_string(id_col, na.ok = FALSE, null.ok = FALSE)
+        # browser()
+        checkmate::assert_character(id_col, null.ok = FALSE, min.len = 1, unique = T, any.missing = FALSE, names = "unnamed")
         checkmate::assert_names(names(.data), must.include = id_col, type = 'strict')
-        checkmate::assert_integerish(.data[[id_col]], unique = TRUE, any.missing = FALSE, null.ok = FALSE, min.len = 1)
-        private$.data[[1]] <- databackend$new(.data)
+        checkmate::assert_integerish(.data[[id_col[1]]], unique = TRUE, any.missing = FALSE, null.ok = FALSE, min.len = 1)
+        private$.data[[1]] <- databackend$new(.data, key = id_col[1])
         checkmate::assert_r6(private$.data[[1]], classes = "DataBackend", .var.name = "databackend")
         names(private$.data)[1] <- "attrs"
-        private$.last_id <- max(.data[[id_col]])
+        private$.last_id <- max(.data[[id_col[1]]])
         private$.id_col <- id_col
         invisible()
       },
 
       add_data = function(databackend = DataBackendDataTable, .data, name) {
-        checkmate::assert_names(names(.data), must.include = private$.id_col, type = 'strict')
+        checkmate::assert_names(names(.data), must.include = private$.id_col[[1]], type = 'strict')
         checkmate::assert_string(name, null.ok = FALSE, na.ok = FALSE)
         checkmate::assert_names(name, type = "strict")
         checkmate::assert_names(names(private$.data), disjunct.from = name)
@@ -177,8 +195,7 @@ Entity <-
 
         if (copy == FALSE) {
           if (!missing(ids)) {
-            lg$warn("ignored given `ids`, data.table can't returns a reference semetic \\
-                    to a subset of its rows.")
+            stop("It is not possible to return a reference semetic to the specific rows in `ids`.")
           }
           return(DataObj$get(copy = FALSE))
         }
@@ -200,8 +217,105 @@ Entity <-
 
       },
 
+      get_data2 = function(name = "attrs", ids, copy = TRUE) {
+
+        DataObj <- self$data(name)
+
+        if (is.null(DataObj)) {
+          return(NULL)
+        }
+
+        if (copy == FALSE) {
+          if (!missing(ids)) {
+            stop("It is not possible to return a reference semetic to the specific rows in `ids`.")
+          }
+          return(DataObj$get(copy = FALSE))
+        }
+
+        if (missing(ids)) {
+          return(DataObj$get())
+        } else {
+          checkmate::check_integerish(x = ids, unique = TRUE, lower = 1, min.len = 1, null.ok = FALSE, any.missing = FALSE)
+          if (name == "attrs") {
+            if (is.null(DataObj$key)) {
+              DataObj$setkey(self$get_id_col())
+            }
+            return(
+              data.table:::na.omit.data.table(
+                DataObj$get(copy = FALSE)[J(ids)],
+                cols = DataObj$colnames()[2]
+              )
+            )
+          } else {
+            lg$warn("The order of the returned data is not garantee to be the same \\
+                    with the input `ids`. Also not all ids are garantee to have \\
+                    valid records.")
+            return(DataObj$get()[get(self$get_id_col()) %in% ids,])
+          }
+        }
+      },
+
       get_data_names = function() {
         names(private$.data)
+      },
+
+      # @param .data a data.frame or data.table object that contains data of new
+      #  entities to be added. The new data must comply with the existing data fields
+      #  of the existing entities' attribute data (`attrs`).
+      # @check_existing :: `logical(1)`\cr
+      #  Whether to check that all ids in id cols exist in the existing entity ids.
+      #  If this function is to be called in a birth event, you probably want to
+      #  set this to `TRUE` since a newborn individual agent would have its mother id
+      #  of an existing individual agent. But if you are adding new individual agents
+      #  to the existing individual data then you wouldn't expect that there should
+      #  be existing ids
+      add = function(.data, check_existing = FALSE) {
+
+        # check data structure -----------
+        NewData <- DataBackendDataTable$new(.data, key = self$id_col[[1]])
+
+        res <-
+          all.equal(target = omit_derived_vars(self$database$attrs$data[0, ]),
+                    current = omit_derived_vars(NewData$data[0, ]),
+                    check.attributes = FALSE,
+                    ignore.col.order = TRUE)
+
+        if (!isTRUE(res)) {
+          cli::cli_alert_info("New data (.data)")
+          print(NewData$head())
+          cli::cli_alert_info("Existing data")
+          print(self$database$attrs$head())
+          stop(res)
+        }
+
+        # check id columns ----------
+        new_ids <- .data[[self$id_col[[1]]]]
+
+        if (test_entity_ids(self, new_ids, include_removed_data = T, informative = TRUE)) {
+          stop(glue::glue("One or more of the main unique `ids` in `.data` already exist \\
+                          in the existing attribute data of this Entity."))
+        }
+
+        # check relation columns
+        if (length(self$id_col) > 1) {
+          ids_in_relation_cols <- c()
+          relation_cols <-
+            self$id_col[!self$id_col %in% self$id_col[[1]]]
+          for (relation_col in relation_cols) {
+            ids_in_relation_cols <-
+              c(ids_in_relation_cols, na.omit(.data[[relation_col]]))
+          }
+          ids_in_relation_cols <- unique(ids_in_relation_cols)
+
+          if (check_existing) {
+            assert_subset2(ids_in_relation_cols, choices = c(self$get_ids(), new_ids))
+          } else {
+            assert_subset2(ids_in_relation_cols, choices = new_ids)
+          }
+        }
+
+        self$database$attrs$add(.data = .data, fill = TRUE)
+        return(invisible())
       },
 
       has_attr = function(x) {
@@ -225,19 +339,15 @@ Entity <-
         }
       },
 
-      get_ids = function(idx) {
-        if (missing(idx)) {
-          return(self$data()$get(col = private$.id_col)[[1]])
-        } else {
-          return(self$data()$get(col = private$.id_col)[[1]][idx])
-        }
+      get_ids = function() {
+        return(self$get_attr(self$id_col[[1]]))
       },
 
       get_idx = function(ids, expect_na = FALSE) {
         if (missing(ids)) {
           return(seq_len(self$data()$nrow()))
         }
-        all_ids <- self$data()$get(col = private$.id_col)[[1]]
+        all_ids <- self$get_ids()
         if (expect_na == FALSE) {
           assert_entity_ids(self, ids)
         }
@@ -250,8 +360,12 @@ Entity <-
         tab[match(ids, id)][["idx"]]
       },
 
-      get_id_col = function() {
-        private$.id_col
+      get_id_col = function(all = FALSE) {
+        if (all) {
+          return(private$.id_col)
+        } else {
+          return(private$.id_col[[1]])
+        }
       },
 
       remove = function(ids) {
@@ -261,7 +375,7 @@ Entity <-
           return(invisible())
         }
         for (DataObj in private$.data) {
-          idx <- which(DataObj$get(copy = FALSE)[[private$.id_col]] %in% ids)
+          idx <- which(DataObj$get(copy = FALSE)[[private$.id_col[[1]]]] %in% ids)
           DataObj$remove(rows = idx)
         }
         invisible()
@@ -396,6 +510,14 @@ Entity <-
     active = list(
       database = function() {
         get(".data", envir = private)
+      },
+
+      id_col = function() {
+        get(".id_col", envir = private)
+      },
+
+      data_template = function() {
+        return(data.table())
       }
     ),
 

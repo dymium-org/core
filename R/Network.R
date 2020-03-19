@@ -53,10 +53,10 @@ Network <- R6::R6Class(
   inherit = Environment,
   public = list(
     initialize = function(.data, id_col, from_node, to_node, dist) {
-      super$initialise_data(.data, id_col)
+      super$initialize(.data, id_col)
       self$add_data(.data = private$generate_dodgr_graph(from_node, to_node, dist),
                     name = "dodgr_graph")
-      invisible()
+      return(invisible(self))
     },
 
     get_dodgr_graph = function() {

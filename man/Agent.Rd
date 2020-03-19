@@ -24,12 +24,6 @@ Contain the attributes of agents. One of the attributes must be a unique id fiel
 \section{Methods}{
 
 \itemize{
-\item \strong{DEPRECATING} \code{initialise_data(data, id_col)}\cr
-(\code{\link[data.table:data.table]{data.table::data.table()}}, \code{character(1)}) -> \code{NULL}\cr
-Store data to data while making sure that \code{data} meets all the
-requirements. \code{data}, which is also the first set of data for the agent object,
-will be stored at the first index in \code{private$.data}, a named list of data objects, and named
-as \code{attrs}.
 \item \code{add_new_agents(parent_ids = NULL, data = NULL)}\cr
 (\code{integer()}|\code{character()}, \code{\link[data.table:data.table]{data.table::data.table()}}) -> \code{NULL}\cr
 Add new agent records to data.

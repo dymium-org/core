@@ -8,12 +8,14 @@
 Create Individual class, extended Agent class.
 }
 \section{Construction}{
-\preformatted{Ind <- Individual$new(.data, id_col)
+\preformatted{Ind <- Individual$new(.data, id_col, hid_col)
 }
 \itemize{
-\item .data::\link[data.table:data.table]{data.table::data.table}\cr
+\item \code{.data}::\link[data.table:data.table]{data.table::data.table}\cr
 Microdata of Individuals.
-\item id_col::\code{character(1)}\cr
+\item \code{id_col}::\code{character()}\cr
+Names of the primary id colum and relation id colunns in \code{.data}
+\item \code{hid_col}::\code{character(1)}\cr
 Name of the id colum in \code{.data}
 }
 }
@@ -28,11 +30,8 @@ Name of the id colum in \code{.data}
 \section{Public Methods}{
 
 
-Inherits all methods from \link{Agent} and the following..
+Inherits all fields and methods of \link{Agent}.
 \itemize{
-\item \code{initialise_data(data, id_col = "pid", hid_col)}\cr
-(\code{\link[data.table:data.table]{data.table::data.table()}}, \code{character(1)}, \code{character(1)}) -> \code{NULL}\cr
-Add data.
 \item \code{get_father(ids)}\cr
 (\code{integer()}) -> \code{integer()}\cr
 Get father ids of the corresponding individual ids.

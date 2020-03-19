@@ -5,10 +5,13 @@
 #' @return assign `pop` to global env.
 #' @export
 create_toy_population <- function() {
-  assign(x = "pop", value = Population$new(), envir = .GlobalEnv)
-  pop$initialise_data(ind_data = dymiumCore::toy_individuals,
-                      hh_data = dymiumCore::toy_households)
-  invisible()
+  pop <<- Population$new(
+    ind_data = toy_individuals,
+    hh_data = toy_households,
+    pid_col = c("pid", "partner_id", "mother_id", "father_id"),
+    hid_col = c("hid")
+  )
+  invisible(pop)
 }
 
 create_pop_sample <- function(){
@@ -21,7 +24,14 @@ create_pop_sample <- function(){
 #' @export
 create_toy_world <- function() {
   world <<- World$new()
-  world$add(Population$new(ind_data = toy_individuals, hh_data = toy_households))
+  world$add(
+    Population$new(
+      ind_data = toy_individuals,
+      hh_data = toy_households,
+      pid_col = c("pid", "partner_id", "mother_id", "father_id"),
+      hid_col = c("hid")
+      )
+    )
   world$add(BuildingResidential$new(toy_dwellings, "did"))
   world$get(BuildingResidential)$set_owner_object(world$get(Household))
   world$add(Zone$new(toy_zones, "zid"))

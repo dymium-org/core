@@ -1,39 +1,34 @@
 context("population class")
 
-# initialise_data2 tests ---------------------------------------------------
-test_that("$initialise_data", {
-  create_toy_population()
-
+test_that("initialize", {
   # missing household by removing
-  pop <- Population$new()
-  toy_households2 <-
-    copy(dymiumCore::toy_households)[-1,]
+  create_toy_population()
+  toy_households2 <- copy(dymiumCore::toy_households)[-1,]
+
   expect_error(
-    pop$initialise_data(
-      ind_data = dymiumCore::toy_individuals,
-      hh_data = toy_households2
-    ), regexp = "Some ids in `hid_col` are not linkable between `ind_data` or `hh_data`. Please check for missing ids."
+    pop$add_population(ind_data = dymiumCore::toy_individuals,
+                       hh_data = toy_households2),
+    regexp = "Not all household ids exist in both `ind_data` and `hh_data`."
   )
 
   # missing household by altering ids
-  pop <- Population$new()
+  create_toy_population()
   toy_households2 <-
     copy(dymiumCore::toy_households)[1, hid := 99999]
+
   expect_error(
-    pop$initialise_data(
-      ind_data = dymiumCore::toy_individuals,
-      hh_data = toy_households2
-    ), regexp = "Some ids in `hid_col` are not linkable between `ind_data` or `hh_data`. Please check for missing ids."
+    pop$add_population(ind_data = dymiumCore::toy_individuals,
+                       hh_data = toy_households2),
+    regexp = "Not all household ids exist in both `ind_data` and `hh_data`."
   )
 
   # missing individual in ind_data by removing
-  pop <- Population$new()
+  create_toy_population()
   toy_individuals2 <- copy(dymiumCore::toy_individuals)[-1, ]
   expect_error(
-    pop$initialise_data(
-      ind_data = toy_individuals2,
-      hh_data = dymiumCore::toy_households
-    ), regexp = "Some ids in `hid_col` are not linkable between `ind_data` or `hh_data`. Please check for missing ids."
+    pop$add_population(ind_data = toy_individuals2,
+                       hh_data = dymiumCore::toy_households),
+    regexp = "Not all household ids exist in both `ind_data` and `hh_data`."
   )
 
 })
@@ -41,39 +36,38 @@ test_that("$initialise_data", {
 # add_population -----------------------------------------------------------
 test_that("add_population", {
   create_toy_population()
-
-  toy_individuals_new_ids <- pop_register(
-    x = pop,
-    ind_data = dymiumCore::toy_individuals,
-    hh_data = dymiumCore::toy_households
-  )
-
-  pop$add_population(
-    ind_data = toy_individuals_new_ids$ind_data,
-    hh_data = toy_individuals_new_ids$hh_data
-  )
-
-  # check unique
-  expect_true(
-    all(
-      unique(pop$get('Individual')$get_data()[, get(pop$get('Individual')$get_hid_col())]) %in%
-        pop$get('Household')$get_attr(x = pop$get('Household')$get_id_col())
-    ), info = "Not all hh ids exist across hh and ind data")
+  Ind <- pop$get("Individual")
+  Hh <- pop$get("Household")
+  pop$add_population(ind_data = toy_individuals, hh_data = toy_households)
+  checkmate::expect_integerish(Ind$get_attr("pid"), any.missing = FALSE, lower = 1, unique = T)
+  checkmate::expect_integerish(Ind$get_attr("partner_id"), lower = 1, any.missing = TRUE)
+  checkmate::expect_integerish(Ind$get_attr("mother_id"), lower = 1, any.missing = TRUE)
+  checkmate::expect_integerish(Ind$get_attr("father_id"), lower = 1, any.missing = TRUE)
+  checkmate::expect_subset(na.omit(Ind$get_attr("partner_id")), Ind$get_attr("pid"))
+  checkmate::expect_subset(na.omit(Ind$get_attr("mother_id")), Ind$get_attr("pid"))
+  checkmate::expect_subset(na.omit(Ind$get_attr("father_id")), Ind$get_attr("pid"))
+  checkmate::expect_integerish(Hh$get_attr("hid"), any.missing = FALSE, lower = 1, unique = T)
+  checkmate::expect_subset(Ind$get_attr("hid"), Hh$get_attr("hid"))
+  checkmate::expect_subset(Ind$get_attr("hid"), Hh$get_attr("hid"))
+  checkmate::expect_subset(Ind$get_attr("hid"), Hh$get_attr("hid"))
 
   # add new individuals with no hh_data
   newborns <-
-    data.table::copy(toy_individuals_new_ids$ind_data) %>%
-    .[, `:=`(pid = sample(10000:100000, .N, replace = FALSE),
+    data.table::copy(toy_individuals) %>%
+    .[, `:=`(pid = sample(10000:20000, .N, replace = FALSE),
              age = 0)]
 
-  nrow_before <- nrow(pop$get('Individual')$get_data())
-  pop$add_population(ind_data = newborns)
-  nrow_after <- nrow(pop$get('Individual')$get_data())
-  expect_true(nrow_after > nrow_before)
+  Ind$add(newborns, check_existing = TRUE)
 
   # add new individuals with non-existed household id
-  newborns[1, c(pop$get('Individual')$get_hid_col()) := -1L]
-  expect_error(pop$add_population(ind_data = newborns), regexp = "Assertion on 'ids' failed")
+  newborns <-
+    data.table::copy(toy_individuals) %>%
+    .[, `:=`(pid = sample(30000:40000, .N, replace = FALSE),
+             age = 0)] %>%
+    .[1, hid := 999999999]
+
+  expect_error(Ind$add(newborns, check_existing = TRUE),
+               "These element in `x` don't exist in : 999999999")
 })
 
 # remove_population -------------------------------------------------------
