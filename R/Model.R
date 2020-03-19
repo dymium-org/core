@@ -99,6 +99,6 @@ Model <-
 
 #' @export
 #' @rdname Model
-summary.Model <- function(x) {
+summary.Model <- function(x, ...) {
   summary(x$model)
 }
