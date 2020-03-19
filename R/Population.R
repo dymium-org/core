@@ -95,6 +95,16 @@
 #' * `plot_relationship(hid)`\cr
 #'  (`integer(1)`)\cr
 #'  Plot the relationship network within the household of `hid`.
+#'
+#' * `household_type(hid)`\cr
+#'  (`integer()`) -> (`character()`)\cr
+#'  Return the household type classification result of the households in `hid`.
+#'  The result has be one of the following: 'couple_hh', 'couple_hh_with_children',
+#'  'lone_parent_hh' and 'non_family_hh'. Note that, the classification doesn't
+#'  take into account of the reference family of the household as we have yet to
+#'  implement explicit distinction between single family household and multi-family
+#'  household. Hence, if there are a couple and a lone parent residing in the same
+#'  household it would be classified as a `couple_hh`.
 #' @export
 Population <- R6Class(
   "Population",
@@ -254,6 +264,55 @@ Population <- R6Class(
         Hh$remove(ids = hh_with_hhsize_0)
       }
       invisible()
+    },
+
+    household_type = function(hids, .debug = FALSE) {
+      Ind <- self$get("Individual")
+      Hh <- self$get("Household")
+      if (!missing(hids)) {
+        assert_entity_ids(x = Hh, ids = hids, informative = T)
+        idx <- which(Ind$get_attr(x = Ind$get_hid_col()) %in% hids)
+      } else {
+        hids <- unique(Ind$get_attr(Ind$get_hid_col()))
+        idx <- seq_len(Ind$n())
+      }
+      household_type <-
+        Ind$get_data()[idx, ] %>%
+        # group ids
+        .[, .(
+          members = list(pid),
+          parents = list(as.vector(na.omit(mother_id, father_id))),
+          partners = list(as.vector(na.omit(partner_id)))
+        ), by = c(Ind$get_hid_col())] %>%
+        # identify relationships
+        .[, `:=`(
+          couple_hh = purrr::map2_lgl(members, partners, ~ {any(.y %in% .x)}),
+          with_children = purrr::map2_lgl(members, parents, ~ {any(.y %in% .x)})
+        )] %>%
+        # household type classification
+        .[, household_type := lest::case_when(
+          couple_hh & !with_children ~ "couple_hh",
+          couple_hh & with_children ~ "couple_hh_with_children",
+          !couple_hh & with_children ~ "lone_parent_hh",
+          TRUE ~ "non_family_hh"
+        )] %>%
+        # merge to sort in the original order of `hid`
+        merge(
+          data.table(id = hids),
+          .,
+          by.x = "id",
+          by.y = Ind$get_hid_col(),
+          sort = FALSE,
+          allow.cartesian = FALSE
+        )
+
+      checkmate::assert_character(household_type[["household_type"]], any.missing = FALSE)
+
+      if (.debug) {
+        return(household_type)
+      } else {
+        return(household_type[["household_type"]])
+      }
     },
 
     remove_population = function(pid, hid) {

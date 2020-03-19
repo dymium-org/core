@@ -1,3 +1,9 @@
+# Development
+
+## NEW FEATURES
+
+1. Add `Population$household_type` method for classifying household types of household agents. There are four types: 'non_family_hh', 'couple_hh', 'couple_hh_with_children' and 'lone_parent_hh'. See its documentation for detail.
+
 # dymiumCore 0.1.4
 
 ## NEW FEATURES
