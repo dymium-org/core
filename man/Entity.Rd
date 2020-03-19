@@ -54,8 +54,8 @@ If \code{attrs} is not present or no \code{DataBackEnd} objects have been loaded
 return \code{NULL}.
 \item \code{add(.data, check_existing = FALSE)}\cr
 (\code{\link[data.table:data.table]{data.table::data.table()}}, \code{logical(1)})\cr
-Add attribute data of new entities. This makes sure that none of the ids
-of the new entities are the same as the existing ones. However, other id columns,
+Add attribute data of new entities. This makes sure none of the ids
+of the new entities are the same as the existing entity records. However, other id columns,
 relation columns can be exempted from the check by setting \code{check_existing} as \code{FALSE}.
 Meaning, the other id columns can contain ids of the existing entities.
 \item \code{get_id_col}\cr
