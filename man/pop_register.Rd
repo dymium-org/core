@@ -4,7 +4,7 @@
 \alias{pop_register}
 \title{Population register}
 \usage{
-pop_register(x, ind_data, hh_data)
+pop_register(x, ind_data, hh_data = NULL)
 }
 \arguments{
 \item{x}{an R6 \link{Population} object.}

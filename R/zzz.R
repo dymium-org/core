@@ -12,14 +12,10 @@
 }
 
 .dymium_options_msg = function() {
-  # cli::cli_text(cli::rule(left = " {cli::symbol$info} dymium's options {cli::symbol$info} "))
+  opts <- grep("^dymium",  names(options()), ignore.case = T, value = T)
+  optsval <- sapply(opts, function(x) {getOption(x)})
   cli::cli_text(cli::rule(left = " * dymium's options * "))
-  cli::cli_li(items = c(
-    "dymiun.scenario_dir: {getOption('dymium.scenario_dir')}",
-    "dymiun.input_dir: {getOption('dymium.input_dir')}",
-    "dymiun.output_dir: {getOption('dymium.output_dir')}"
-  ))
-  # print("hello")
+  cli::cli_li(items = paste(names(optsval), optsval, sep = ": "))
 }
 
 .onLoad <- function(libname, pkgname) {
@@ -34,17 +30,14 @@
   opts.dymium <- list(
     dymium.scenario_dir = file.path(.dymium_tempdir),
     dymium.input_dir = file.path(.dymium_tempdir, "inputs"),
-    dymium.output_dir = file.path(.dymium_tempdir, "outputs")
+    dymium.output_dir = file.path(.dymium_tempdir, "outputs"),
+    dymium.simulation_scale = 1
   )
   toset <- !(names(opts.dymium) %in% names(opts))
   if (any(toset)) options(opts.dymium[toset])
 
   # setup package global variables
   .DMevn[["sim_time"]] <- 0L
-
-  # create log file
-  # _dir.create(_dirname(opts.dymium$dymium.logFile), recursive = T, showWarnings = FALSE)
-  # file.create(opts.dymium$dymium.logFile)
 
   # setup logger
   assign("lg", lgr::get_logger_glue(name = pkgname), envir = parent.env(environment()))

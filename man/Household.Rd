@@ -21,14 +21,10 @@ Inherits all methods in \link{Agent}.
 \section{Overwritten methods}{
 
 \itemize{
-\item \code{add_new_agents(data, n)}\cr
-(\code{\link[data.table:data.table]{data.table::data.table()}}, \code{integer(1)}) -> \code{NULL}\cr
+\item \code{add(.data, n)}\cr
+(\link[data.table:data.table]{data.table::data.table}, \code{integer(1)}) -> \code{NULL}\cr
 Add new households using data or generate \code{n} emptied households. If \code{data}
 is given \code{n} will be ignored.
-\item \code{initialise_data(data, id_col)}\cr
-(\code{\link[data.table:data.table]{data.table::data.table()}}, \code{character(1)}) -> \code{NULL}\cr
-Store data to data while making sure that \code{data} meets all the
-requirements.
 }
 }
 

@@ -34,7 +34,9 @@ A logical flag which indicates whether the target object is dynamic or not.
 \itemize{
 \item \code{get(time = .get_sim_time())}\cr
 (\code{integer(1)}) -> a named \code{list()}\cr
-Get a alignment target as a named list.
+Get an alignment target as a named list. Note that, all the elements in the list
+will be scaled by multiplying with the value stored in getOption("dymium.simulation_scale")
+and all the values in the output are rounded to their nearest integers.
 }
 }
 

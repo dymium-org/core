@@ -27,9 +27,9 @@
 #' pop$get("Individual")$get_data("history")
 add_history <- function(entity, ids, event, time = .get_sim_time(), id_col_as_list = FALSE) {
   checkmate::assert_r6(entity, classes = "Entity")
-  checkmate::assert_integerish(ids, lower = 0)
+  checkmate::assert_integerish(ids, lower = 0, min.len = 1)
   checkmate::assert_string(event)
-  checkmate::assert_integerish(time, lower = 0, len = 1)
+  checkmate::assert_count(time)
   if (id_col_as_list) {
     history_data <- .create_history_data(entity$get_id_col(),
                                          id = ids,

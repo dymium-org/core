@@ -7,3 +7,16 @@ test_that("get_log", {
   checkmate::expect_data_table(get_log(world), nrows = 4, ncols = 6)
   checkmate::expect_data_table(get_log(world$entities$Individual), nrows = 1, ncols = 6)
 })
+
+test_that("register", {
+  create_toy_world()
+  world$entities$Individual$get_data()
+  res <- register(world$entities$Household, toy_households, toy_individuals)
+  checkmate::assert_data_table(res[[1]], nrows = nrow(toy_households))
+  checkmate::assert_data_table(res[[2]], nrows = nrow(toy_individuals))
+  # register2(list(world$entities$Household,
+  #               world$entities$Individual),
+  #          list(toy_households, toy_individuals))
+    # {register(x = world$entities$Individual, .)}
+  # world$entities$Individual$add(.data = new_ind_data)
+})

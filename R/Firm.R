@@ -40,35 +40,6 @@ Firm <- R6::R6Class(
   inherit = Agent,
   public = list(
 
-    initialize = function(.data, id_col) {
-      if (!missing(.data)) {
-        if (!missing(id_col)) {
-          super$initialize(databackend = DataBackendDataTable,
-                           .data = .data,
-                           id_col = id_col)
-        } else {
-          stop(glue::glue("To initialise the attribute data of {self$class()} \\
-                            the `id_col` argument must be given."))
-        }
-      }
-      invisible()
-    },
-
-    data_template = function() {
-      data.table(
-        fid = integer(),
-        zid = integer(),
-        industry = character(),
-        type = character(), # industrial or commercial
-        employment_size = integer(),
-        number_of_workers = integer()
-      )
-    },
-
-    initialise_data = function(data, id_col = "fid") {
-      super$initialise_data(data, id_col)
-    },
-
     # returns ids of firms with available jobs
     has_job_offers = function(ids) {
 
@@ -94,5 +65,18 @@ Firm <- R6::R6Class(
       stop()
     }
 
+  ),
+
+  active = list(
+    data_template = function() {
+      data.table(
+        fid = integer(),
+        zid = integer(),
+        industry = character(),
+        type = character(), # industrial or commercial
+        employment_size = integer(),
+        number_of_workers = integer()
+      )
+    }
   )
 )

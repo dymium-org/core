@@ -21,6 +21,8 @@ the user or its methods try to access private$.data.
 \itemize{
 \item \code{data} :: \link[sf:sf]{sf::sf}\cr
 The input must be an object of class \link[sf:sf]{sf::sf} (Simple feature) from the sf package.
+\item \code{key} :: \code{NULL}|\code{character(1)}\cr
+The key of \code{.data}.
 }
 }
 

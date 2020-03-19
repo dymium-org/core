@@ -17,6 +17,9 @@
 #' * `data` :: [sf::sf]\cr
 #'   The input must be an object of class [sf::sf] (Simple feature) from the sf package.
 #'
+#' * `key` :: `NULL`|`character(1)`\cr
+#'  The key of `.data`.
+#'
 #' @section Fields:
 #'
 #'  * `NULL`\cr
@@ -43,7 +46,7 @@ DataBackendSpatialFeature <- R6::R6Class(
   classname = "DataBackendSpatialFeature",
   inherit = DataBackendDataTable,
   public = list(
-    initialize = function(.data) {
+    initialize = function(.data, key = NULL) {
       if (!requireNamespace("sf", quietly = TRUE)) {
         .choice <- utils::menu(choices = c("Yes", "No"), title = "DataBackendSpatialFeature needs the sf package to work. Would you like to download the sf package?")
         if (.choice == 1) {
@@ -54,7 +57,7 @@ DataBackendSpatialFeature <- R6::R6Class(
       }
       stopifnot(is(.data, "sf"))
       private$.sf_attrs <- .data[0, ]
-      super$initialize(as.data.table(.data))
+      super$initialize(as.data.table(.data), key)
     },
 
     get_sf = function() {
