@@ -400,58 +400,6 @@ monte_carlo_sim <- function(prediction, target) {
   }
 }
 
-#' Simulate a transition of entities
-#'
-#' @description
-#'
-#' This function warps [TransitionClassification] and [TransitionRegression]. It
-#' figures out what is the type of the given model.
-#'
-#' @param entity an [Entity] object
-#' @param model a model object that belongs to the classes in [SupportedTransitionModels].
-#' @param target a named list that is the target for alignment.
-#' @param targeted_agents a integer vector that contains ids of `entity` to undergo
-#' the transition.
-#' @param update_attr default as NULL. This indicates whether `entity` should be updated
-#' using the outcomes from the transtion. To update an attribute of `entity` the name
-#' of the attribute to be updated must be specified as a character value.
-#'
-#' @return a data.table with two columns: id and response.
-#' @export
-#'
-#' @seealso [TransitionClassification] and [TransitionRegression].
-#'
-#' @examples
-#'
-#' # load data
-#' create_toy_population()
-#' Ind <- pop$get("Individual")
-#'
-#' # fit a OLS regression model
-#' model_lm <- glm(age ~ sex + marital_status,
-#'                 data = Ind$get_data(),
-#'                 family = "gaussian")
-#'
-#' # fit a logit model
-#' model_glm <- glm(I(sex == "male") ~ age + marital_status,
-#'                  data = Ind$get_data(),
-#'                  family = "binomial")
-#'
-#' # simulation transitions
-#' trans(Ind, model_lm)
-#' trans(Ind, model_glm)
-trans <- function(entity, model, target = NULL, targeted_agents = NULL, update_attr = NULL) {
-  if (is_regression(model)) {
-    trans <- TransitionRegression$new(x = entity, model = model, targeted_agents = targeted_agents)
-  } else {
-    trans <- TransitionClassification$new(x = entity, model = model, target = target, targeted_agents = targeted_agents)
-  }
-  if (!is.null(update_attr)) {
-    trans$update_agents(update_attr)
-  }
-  trans$get_result()
-}
-
 is_regression <- function(x) {
   if (inherits(x, "train")) {
     if (x$modelType == "Regression")
