@@ -139,7 +139,7 @@
 #' )
 TransitionClassification <- R6Class(
   classname = "TransitionClassification",
-  inherit = Transition,
+  inherit = Trans,
 
 # Public ------------------------------------------------------------------
 
@@ -245,7 +245,7 @@ simulate_classification_datatable <- function(self, private) {
     checkmate::assert_names(names(model), subset.of = c(names(private$.sim_data), .reserved_colnames))
   }
 
-  # two ways that data.table can be used in Transition
+  # two ways that data.table can be used in Trans
   # 1) as an enumerated table of a binary model
   # 2) as a classification model
 

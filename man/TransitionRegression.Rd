@@ -3,7 +3,7 @@
 \name{TransitionRegression}
 \alias{TransitionRegression}
 \title{Transition for regression model}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Transition}}
+\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Trans}}
 \description{
 This is particularly useful for updating agents' attributes that can be modelled
 using a regression model.

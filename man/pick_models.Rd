@@ -8,7 +8,7 @@ pick_models(model, world, required_models)
 }
 \arguments{
 \item{model}{\code{logical(1)}\cr
-A named list that contains models that \link{Transition} supports.}
+A named list that contains models that \link{Trans} supports.}
 
 \item{world}{a \link{World} object.}
 

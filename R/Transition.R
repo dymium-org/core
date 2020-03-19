@@ -16,7 +16,7 @@
 #' @section Construction:
 #'
 #' ```
-#' Transition$new(x, model, target = NULL, targeted_agents = NULL)
+#' Trans$new(x, model, target = NULL, targeted_agents = NULL)
 #' ```
 #'
 #' * `x` :: [`R6`]\cr
@@ -39,7 +39,7 @@
 #'  * `mutate_first`:: `logical(1)`\cr
 #'  Default as FALSE, this flag is used to indicate whether the attribute data from
 #'  the Agent in `x` should be mutated (`$mutate(.data)`) before filtered (`$filter(.data)`).
-#'  See the description section for more details about the processing steps of [Transition].
+#'  See the description section for more details about the processing steps of [Trans].
 #'
 #' @section Methods:
 #'
@@ -76,8 +76,8 @@
 #'
 #' @export
 # TransitionClass ---------------------------------------------------------
-Transition <- R6Class(
-  classname = "Transition",
+Trans <- R6Class(
+  classname = "Trans",
   inherit = Generic,
   public = list(
     # Public ----------------------------------------------------------

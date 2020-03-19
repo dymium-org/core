@@ -36,7 +36,7 @@ get_models <- function(x, model_names) {
 #' go over both objects to find all models with names in `required_models`.
 #'
 #' @param model `logical(1)`\cr
-#' A named list that contains models that [Transition] supports.
+#' A named list that contains models that [Trans] supports.
 #' @param world a [World] object.
 #' @param required_models `character()`\cr
 #' A character vector contains names of required models.
