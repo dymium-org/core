@@ -99,6 +99,7 @@ Collate:
     'module.R'
     'population-register.R'
     'scenario.R'
+    'transition-fnc.R'
     'usethis.R'
     'utils-class.R'
     'utils-event.R'
