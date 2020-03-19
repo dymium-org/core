@@ -95,6 +95,7 @@ Collate:
     'create-world.R'
     'data.R'
     'dymiumCore-package.R'
+    'microsimulate.R'
     'module.R'
     'population-register.R'
     'scenario.R'

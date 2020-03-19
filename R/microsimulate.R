@@ -1,58 +1,78 @@
-#' Microsimulate
+#' Microsimulate a choice situation
 #'
-#' @param x
-#' @param ...
+#' @description
+#' This function simulates a choice situation using a model object and data to
+#' predict the probability.
+#'
+#' @param model a [Model] object or an object in [SupportedTransitionModels()].
+#' @param newdata a data.frame object to use for making prediction.
+#' @param target a [Target] object or a named list.
+#' @param ... dots
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#'
+#' TODO
 "microsimulate" <-
-  function(x, ...){
+  function(model, ...){
     UseMethod("microsimulate")
   }
 
+#' @rdname microsimulate
+#' @export
 microsimulate.train <- function(model, newdata, target) {
-  predicted_probs <- predict(model, newdata, type = "prob")
-
-  predicted_probs
+  checkmate::assert_true(model$modelType == "Classification")
+  if (missing(target)) target <- NULL
+  probs <- predict(model, newdata, type = "prob")
+  simulate_choice(probs, target)
 }
 
+#' @rdname microsimulate
+#' @export
 microsimulate.glm <- function(model, newdata, target) {
-  predicted_probs <- predict(model, newdata, type = "response")
-
-  predicted_probs
+  if (model$family$family != "binomial") {
+    stop("Only `glm` objects of the binomial family can be used in `microsimulate()`.")
+  }
+  if (missing(target)) target <- NULL
+  choices <- levels(model$model[[1]])
+  probs <-
+    predict(model, newdata, type = "response") %>%
+    {data.table::data.table(x1 = .,
+                           x2 = 1 - .)} %>%
+    data.table::setnames(choices)
+  simulate_choice(probs, target)
 }
-
-microsimulate.data.table <- function(model, newdata, target) {
-  browser()
-}
-
 
 #' Simulate a choice situation
 #'
-#' @param prediction a data.table where the column names are choices and their values
+#' @param probs a data.table where the column names are choices and their values
 #'  are probabilities correspoding fors the choices. Each row represent the choice
 #'  probabilities of an agent.
 #'
 #' @return a character vector of the same length as `prediction`.
 #' @export
-simulate_choice <- function(prediction, target) {
+#' @examples
+#' TODO
+simulate_choice <- function(probs, target) {
   checkmate::assert_data_frame(
-    prediction,
+    probs,
     types = 'double',
     min.cols = 2,
     any.missing = FALSE,
     null.ok = FALSE,
     col.names = 'unique'
   )
-
-  if (!is.data.table(prediction)) {
-    setDT(prediction)
+  if (!is.data.table(probs)) {
+    setDT(probs)
   }
-
-  choices <- names(prediction)
-
+  if (missing(target)) target <- NULL
+  choices <- names(probs)
   # random draw choices
-  purrr::pmap_chr(prediction, ~ sample_choice(choices, 1, prob = (list(...))))
+  if (!is.null(target)) {
+    alignment(probs, target)
+  } else {
+    purrr::pmap_chr(probs, ~ sample_choice(choices, 1, prob = (list(...))))
+  }
 }
