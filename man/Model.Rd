@@ -7,10 +7,19 @@
 \title{Model class}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting \link{Generic}.}
 \usage{
-\method{summary}{Model}(x)
+\method{summary}{Model}(object, ...)
+}
+\arguments{
+\item{object}{a \link{Model} object}
+
+\item{...}{dots}
 }
 \description{
 A container for the supported model objects (see \link{SupportedTransitionModels}).
+When a model object is stored inside Model it can be assess using reference semantics.
+This is particularly useful when you want to store model objects inside \link{World}.
+By doing so, you can assess those models from \link{World} as it is flowing down a
+microsimulation pipeline just like \link{Entities}.
 }
 \section{Construction}{
 \preformatted{x <- Model$new(x)
@@ -48,14 +57,26 @@ An abstract method.
 
 \examples{
 
+simple_prob_model <- Model$new(x = list(yes = 0.95, no = 0.05))
+
+simple_glm_model <- Model$new(x = stats::glm(factor(sex) ~ age, data = toy_individuals, family = "binomial"))
+
+# return the original model object
+simple_prob_model$model
+
+# add to world
 world <- World$new()
 
-prob_model <- list(yes = 0.95, no = 0.05)
+world$add(simple_prob_model, name = "simple_prob_model")
+world$add(simple_glm_model, name = "simple_glm_model")
 
-world$add(x = prob_model, name = "prob_model")
+# to access
+world$get("simple_prob_model")
+world$get("simple_glm_model")
 
-world$get(x = "prob_model")
-
-world$get_model(x = "prob_model")
+# or alternatively you can use `get_model` which makes sure that it only looks
+# through the named list of stored Model objects inside [World].
+world$get_model("simple_prob_model")
+world$get_model("simple_glm_model")
 
 }
