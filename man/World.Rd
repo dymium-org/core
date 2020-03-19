@@ -39,6 +39,9 @@ Contains \link{Containers} those were added using \code{self$add(...)}.
 Contains \link{Entities} those were added using \code{self$add(...)}.
 \item \code{models}\cr
 Contains \link{Models} those were added using \code{self$add(...)}.
+\item \code{scale}\cr
+A positive numeric value indicating the scale of Targets use by World. Note that,
+this cannot be 0.
 }
 }
 

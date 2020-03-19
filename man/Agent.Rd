@@ -24,9 +24,6 @@ Contain the attributes of agents. One of the attributes must be a unique id fiel
 \section{Methods}{
 
 \itemize{
-\item \code{add_new_agents(parent_ids = NULL, data = NULL)}\cr
-(\code{integer()}|\code{character()}, \code{\link[data.table:data.table]{data.table::data.table()}}) -> \code{NULL}\cr
-Add new agent records to data.
 \item \code{get_latest_agent_id(ids)}\cr
 (\code{integer()}) -> \code{integer()}\cr
 Return the id of the last agent that was created.

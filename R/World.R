@@ -39,6 +39,10 @@
 #' * `models`\cr
 #'  Contains [Models] those were added using `self$add(...)`.
 #'
+#' * `scale`\cr
+#'  A positive numeric value indicating the scale of Targets use by World. Note that,
+#'  this cannot be 0.
+#'
 #' @section Public Methods:
 #'
 #' * `add(x, name)`\cr
