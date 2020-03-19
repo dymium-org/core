@@ -47,7 +47,7 @@ except for the id attribute.
 \item \code{add(.data)}\cr
 Add new agents in \code{.data} to the existing pool of agents. It should be noted,
 that all new agents must have all the columns that the existing agents possess
-with the exception of derived variables which are denoted by the \code{.} prefix.
+with the exception of derived variables which are denoted by a \code{.} prefix.
 For example, \code{.past_partner_id} is a derived variable which is allowed to be
 missing in the new agents' data.
 }

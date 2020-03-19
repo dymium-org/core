@@ -232,8 +232,8 @@ and __a enumerated choice model__ can be provided in a data.table format. When a
 data.table is provided as the model argument to `Transition`, `Transition`  will 
 figure out which of the three models the provided data.table matches based on the following criteria. 
 
-It is __a static rate model__, if the data.table contains a column called `prob` which is
-of type numeric with the value between 0 to 1.
+It is __a static rate model__, if the provided data.table contains a numeric `prob` 
+column with values between 0 to 1.
 
 ```{r}
 library(data.table) # use install.packages("data.table") to install
@@ -261,9 +261,8 @@ must be within 0 to 1.
 ))
 ```
 
-It is __a choice model__, of the provided data.table contains columns that called
-`probs` and `choices` of the type list that contains numeric vectors and character
-vectors, respectively.  
+It is __a choice model__, if the provided data.table has list columns with names
+`probs` and `choices` containing numeric vectors and character vectors, respectively.  
 
 ```{r}
 (choice_model <-
@@ -274,7 +273,7 @@ vectors, respectively.
 ))
 ```
 
-__Note that__, if more the provided data.table matches more than one of the three formats
+__Note that__, if the the provided data.table matches more than one of the three formats
 then `Transition` will raise an error. 
 
 __Suggestion:__  you can import transition probability tables that are in a `csv` format

@@ -20,6 +20,7 @@
 ## DEPRECATIONS
 
 1. Remove `Entity$initialise_data()`, the attribute data of Entity must be provided in its constructor method. This change affected many of the testthat tests. 
+2. Remove `household_formation()` to encourage more explicit approaches (e.g. use `Population$leave_household()` and `Population$join_household()`). 
 
 # dymiumCore 0.1.3
 
@@ -39,6 +40,7 @@
 
 - Fixed World's remove method in commit c0df66d.
 - Removed the `preprocess` method in `Transition`. Whether the mutate step or the filter step should be run first is now determine by the `mutate_fisrt` public field which has `FALSE` as default.
+- `create_scenario` did not pass `.basedir` to `set_active_scenario` so when creating a new scenario that isn't within a RStudio project will raise an incorrect directory error.
 
 ## DEPRECATIONS
 
