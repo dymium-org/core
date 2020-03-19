@@ -14,39 +14,39 @@
 
 ## NEW FEATURES
 
-1. Add `add(.data, ...)` method to Entity. This allows new entities to be added to the attribute database of existing entities. Note that, `add_data(.data)` is for adding new databases and `add(.data, ...)` is for adding new records to **the attribute database** (`Entity$database$attrs`) which are not the same.
-2. Add `check_subset2` which basically the same check as `checkmate::check_subset` but it returns a short error message. The error message it returns only include those missing elements in `x` from `choices`. See `checkmate::check_subset` for more details.
+1. Added `add(.data, ...)` method to Entity. This allows new entities to be added to the attribute database of existing entities. Note that, `add_data(.data)` is for adding new databases and `add(.data, ...)` is for adding new records to **the attribute database** (`Entity$database$attrs`) which are not the same.
+2. Added `check_subset2` which basically the same check as `checkmate::check_subset` but it returns a short error message. The error message it returns only include those missing elements in `x` from `choices`. See `checkmate::check_subset` for more details.
 3. `DataBackendDataTable` again on option to use key(s) for row indexing. 
-4. Add `Entity$get_data2(ids)` which uses key(s) for subsetting of ids. This suppose to be a faster implementation of `get_data()` which is likely to supersede the original implementation in the next version.
+4. Added `Entity$get_data2(ids)` which uses key(s) for subsetting of ids. This suppose to be a faster implementation of `get_data()` which is likely to supersede the original implementation in the next version.
 5. `add_population(ind_data, hh_data)` now also assigns new ids to all the records of new entities of `ind_data` and `hh_data` to make sure no duplications of ids exist. 
 6. `DataBackend` has new active fields which are `data` amd `removed_data` these functions return a copy of the data and not a reference to the data (only applicable in `DataBackendDataTable` and `DataBackendSpatialFeature`). 
 7. `extract_data` returns all the data objects in the DataBackend objects that each Entity possess as a named list of data.table. This is useful for saving simulation data for furthur analysis. It works on World too! 
 8. `World` saves session info on its creation instead of just the R version it was created on. 
-9. Add `dymium.simulation_scale` global option that can be set with `World$set_scale(x)` and access with `World$scale` or getOption("dymium.simulation_scale"). This simulation scale will be used by all `Target` objects created when they are called by their `get` method. 
+9. Added `dymium.simulation_scale` global option that can be set with `World$set_scale(x)` and access with `World$scale` or getOption("dymium.simulation_scale"). This simulation scale will be used by all `Target` objects created when they are called by their `get` method. 
 
 ## BUG FIXES
 
 1. Ignore checking of attributes in all `data.table::all.equal(...)` calls.
-2. Fix `Target`'s constructor method which failed to convert data.frame to data.table when storing the target data.
+2. Fixed `Target`'s constructor method which failed to convert data.frame to data.table when storing the target data.
 
 ## DEPRECATIONS
 
-1. Remove `Entity$initialise_data()`, the attribute data of Entity must be provided in its constructor method. This change affected many of the testthat tests. 
-2. Remove `household_formation()` to encourage more explicit approaches (e.g. use `Population$leave_household()` and `Population$join_household()`). 
+1. Removed `Entity$initialise_data()`, the attribute data of Entity must be provided in its constructor method. This change affected many of the testthat tests. 
+2. Removed `household_formation()` to encourage more explicit approaches (e.g. use `Population$leave_household()` and `Population$join_household()`). 
 
 # dymiumCore 0.1.3
 
 ## NEW FEATURES
 
-1. Add a `plot_relationship` method to `Household`. This uses `visNetwork` for plotting (added to Suggests). See #48 for its implementation detail.
+1. Added a `plot_relationship` method to `Household`. This uses `visNetwork` for plotting (added to Suggests). See #48 for its implementation detail.
 2. `inspect` now has a verbose option.
 3. `Transition` no longer removes the `NA` reponses when target is used.
-4. Add a `replace` method to `World` which basically `remove` and `add` in one call.
-5. Move `$subset_ids()` from `Agent`  to `Entity`.
+4. Added a `replace` method to `World` which basically `remove` and `add` in one call.
+5. Moved `$subset_ids()` from `Agent`  to `Entity`.
 6. `download_module()` and `set_active_scenario()` now have a `.basedir` argument which sets the base directory where their files will be created at. By default this is the root folder of the currently active R project (if you are using RStudio) which is determined by `here::here()`.
-7. Rename `use_scenario` to `create_scenario` and `active_scenario` to `get_active_scenario`.
+7. Renamed `use_scenario` to `create_scenario` and `active_scenario` to `get_active_scenario`.
 8. `TransitionClassification`'s target argument now accepts a dynamic target, see issue [#52] https://github.com/dymium-org/dymiumCore/issues/52. 
-9. Add a `Target` R6 class which acts as a wrapper for different types of target and make them work consistently in the `Transition` classes.
+9. Added a `Target` R6 class which acts as a wrapper for different types of target and make them work consistently in the `Transition` classes.
 
 ## BUG FIXES
 
