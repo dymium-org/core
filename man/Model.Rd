@@ -3,8 +3,12 @@
 \name{Model}
 \alias{Model}
 \alias{Models}
+\alias{summary.Model}
 \title{Model class}
 \format{\link[R6:R6Class]{R6::R6Class} object inheriting \link{Generic}.}
+\usage{
+\method{summary}{Model}(x)
+}
 \description{
 A container for the supported model objects (see \link{SupportedTransitionModels}).
 }

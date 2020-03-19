@@ -102,9 +102,3 @@ Model <-
 summary.Model <- function(x) {
   summary(x$model)
 }
-
-#' @export
-#' @rdname Model
-predict.Model <- function(x, newdata) {
-  predict(x$model, newdata)
-}
