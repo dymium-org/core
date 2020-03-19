@@ -21,10 +21,6 @@
 #'
 #' @section Methods:
 #'
-#'  * `add_new_agents(parent_ids = NULL, data = NULL)`\cr
-#'  (`integer()`|`character()`, [data.table::data.table()]) -> `NULL`\cr
-#'  Add new agent records to data.
-#'
 #'  * `get_latest_agent_id(ids)`\cr
 #'  (`integer()`) -> `integer()`\cr
 #'  Return the id of the last agent that was created.
