@@ -17,8 +17,8 @@
 #'
 #' @section Overwritten methods:
 #'
-#'  * `add(n)`\cr
-#'   (`integer(1)`) -> `NULL`\cr
+#'  * `add(.data, n)`\cr
+#'   ([data.table::data.table], `integer(1)`) -> `NULL`\cr
 #'   Add new households using data or generate `n` emptied households. If `data`
 #'   is given `n` will be ignored.
 #'
@@ -29,10 +29,6 @@ Household <- R6Class(
   "Household",
   inherit = Agent,
   public = list(
-
-    add_new_agents = function(.data, n) {
-      self$add(.data, n)
-    },
 
     add = function(.data, n){
       # generate by n

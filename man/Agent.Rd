@@ -24,9 +24,6 @@ Contain the attributes of agents. One of the attributes must be a unique id fiel
 \section{Methods}{
 
 \itemize{
-\item \code{add_new_agents(parent_ids = NULL, data = NULL)}\cr
-(\code{integer()}|\code{character()}, \code{\link[data.table:data.table]{data.table::data.table()}}) -> \code{NULL}\cr
-Add new agent records to data.
 \item \code{get_latest_agent_id(ids)}\cr
 (\code{integer()}) -> \code{integer()}\cr
 Return the id of the last agent that was created.
@@ -47,7 +44,7 @@ except for the id attribute.
 \item \code{add(.data)}\cr
 Add new agents in \code{.data} to the existing pool of agents. It should be noted,
 that all new agents must have all the columns that the existing agents possess
-with the exception of derived variables which are denoted by a \code{.} prefix.
+with exception of derived variables which should be denoted by a \code{.} prefix.
 For example, \code{.past_partner_id} is a derived variable which is allowed to be
 missing in the new agents' data.
 }

@@ -84,6 +84,15 @@ their respective objects.
 \item \code{plot_relationship(hid)}\cr
 (\code{integer(1)})\cr
 Plot the relationship network within the household of \code{hid}.
+\item \code{household_type(hid)}\cr
+(\code{integer()}) -> (\code{character()})\cr
+Return the household type classification result of the households in \code{hid}.
+The result has be one of the following: 'couple_hh', 'couple_hh_with_children',
+'lone_parent_hh' and 'non_family_hh'. Note that, the classification doesn't
+take into account of the reference family of the household as we have yet to
+implement explicit distinction between single family household and multi-family
+household. Hence, if there are a couple and a lone parent residing in the same
+household it would be classified as a \code{couple_hh}.
 }
 }
 

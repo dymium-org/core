@@ -39,6 +39,10 @@
 #' * `models`\cr
 #'  Contains [Models] those were added using `self$add(...)`.
 #'
+#' * `scale`\cr
+#'  A positive numeric value indicating the scale of Targets use by World. Note that,
+#'  this cannot be 0.
+#'
 #' @section Public Methods:
 #'
 #' * `add(x, name)`\cr
@@ -82,6 +86,14 @@
 #'  (`integer(1)`) -> `NULL`\cr
 #'  Set the time on the World's simulation clock (.DMevn$sim_time).
 #'
+#' * `set_scale(x)`\cr
+#'  (`numeric(1)`)\cr
+#'  Set the simulation scale which is stored as a global option (`dymium.simulation_scale`).
+#'  The scale parameter can also be accessd using `optionGet("dymium.simulation_scale")`.
+#'  The simulation scale parameter is useful for running a downsized version of your
+#'  world without manually going through all the data to scale them down. This scale
+#'  automatically applies to all [Targets] created.
+#'
 #' * `reset_time()`\cr
 #'  Reset the value of .DMevn$sim_time to 0L (L is for forcing type integer
 #'  otherwise 0 is of numeric type).
@@ -114,18 +126,19 @@ World <- R6::R6Class(
       checkmate::assert(
         checkmate::check_r6(x, classes = c("Entity", "Generic"), null.ok = FALSE),
         checkmate::check_r6(x, classes = c("Container", "Generic"), null.ok = FALSE),
+        checkmate::check_r6(x, classes = c("Model", "Generic"), null.ok = FALSE),
         checkmate::check_subset(class(x)[[1]],
                                 choices = dymiumCore::SupportedTransitionModels(),
                                 empty.ok = FALSE),
         combine = "or"
       )
 
-      if (inherits(x, "Generic")) {
+      if ((inherits(x, "Entity") | inherits(x, "Container")) & !inherits(x, "Model")) {
         stopifnot(x$is_dymium_class())
         if (!missing(name)) {
           lg$warn("The given `name` will be ignored since the object in x \\
-                  is of a Dymium class object. The classname of the object will be \\
-                  used as its name.")
+                  is of an Entity object or a Container object. The classname \\
+                  of the object will be used as its name.")
         }
         name <- class(x)[[1]]
       }
@@ -150,6 +163,11 @@ World <- R6::R6Class(
       if (class(x)[[1]] %in% dymiumCore::SupportedTransitionModels()) {
         lg$info("Adding a Model object '{name}' to the `models` field.")
         x <- Model$new(x)
+        .listname <- ".models"
+      }
+
+      if (inherits(x, "Model")) {
+        lg$info("Adding a Model object '{name}' to the `models` field.")
         .listname <- ".models"
       }
 
@@ -314,6 +332,15 @@ World <- R6::R6Class(
       invisible()
     },
 
+    set_scale = function(x) {
+      checkmate::assert_number(x, lower = 0, finite = TRUE, null.ok = FALSE)
+      if (x == 0) {
+        stop("scale cannot be equal to 0!")
+      }
+      options(dymium.simulation_scale = x)
+      invisible()
+    },
+
     # @description Print self
     print = function() {
       super$print()
@@ -357,6 +384,9 @@ World <- R6::R6Class(
     # @field containers a list of all [Models] stored in World.
     models = function() {
       get(".models", envir = private)
+    },
+    scale = function() {
+      options("dymium.simulation_scale")[[1]]
     }
   ),
 

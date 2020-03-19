@@ -21,10 +21,6 @@
 #'
 #' @section Methods:
 #'
-#'  * `add_new_agents(parent_ids = NULL, data = NULL)`\cr
-#'  (`integer()`|`character()`, [data.table::data.table()]) -> `NULL`\cr
-#'  Add new agent records to data.
-#'
 #'  * `get_latest_agent_id(ids)`\cr
 #'  (`integer()`) -> `integer()`\cr
 #'  Return the id of the last agent that was created.
@@ -50,7 +46,7 @@
 #'  * `add(.data)`\cr
 #'  Add new agents in `.data` to the existing pool of agents. It should be noted,
 #'  that all new agents must have all the columns that the existing agents possess
-#'  with the exception of derived variables which are denoted by a `.` prefix.
+#'  with exception of derived variables which should be denoted by a `.` prefix.
 #'  For example, `.past_partner_id` is a derived variable which is allowed to be
 #'  missing in the new agents' data.
 #'

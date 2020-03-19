@@ -7,6 +7,10 @@
 #' @description
 #'
 #' A container for the supported model objects (see [SupportedTransitionModels]).
+#' When a model object is stored inside Model it can be assess using reference semantics.
+#' This is particularly useful when you want to store model objects inside [World].
+#' By doing so, you can assess those models from [World] as it is flowing down a
+#' microsimulation pipeline just like [Entities].
 #'
 #' @section Construction:
 #'
@@ -16,6 +20,11 @@
 #'
 #' * `x` :: ([caret::train] | [data.table::data.table] | named `list`)\cr
 #' A model object that compatible.
+#'
+#' @section Active field (read-only):
+#'
+#' * `model`\cr
+#' The stored model object in its original form.
 #'
 #' @section Public Methods:
 #'
@@ -39,15 +48,27 @@
 #'
 #' @examples
 #'
+#' simple_prob_model <- Model$new(x = list(yes = 0.95, no = 0.05))
+#'
+#' simple_glm_model <- Model$new(x = stats::glm(factor(sex) ~ age, data = toy_individuals, family = "binomial"))
+#'
+#' # return the original model object
+#' simple_prob_model$model
+#'
+#' # add to world
 #' world <- World$new()
 #'
-#' prob_model <- list(yes = 0.95, no = 0.05)
+#' world$add(simple_prob_model, name = "simple_prob_model")
+#' world$add(simple_glm_model, name = "simple_glm_model")
 #'
-#' world$add(x = prob_model, name = "prob_model")
+#' # to access
+#' world$get("simple_prob_model")
+#' world$get("simple_glm_model")
 #'
-#' world$get(x = "prob_model")
-#'
-#' world$get_model(x = "prob_model")
+#' # or alternatively you can use `get_model` which makes sure that it only looks
+#' # through the named list of stored Model objects inside [World].
+#' world$get_model("simple_prob_model")
+#' world$get_model("simple_glm_model")
 #'
 #' @export
 Model <-
@@ -79,7 +100,24 @@ Model <-
         print(private$.model)
       }
     ),
+    active = list(
+      model = function() {
+        if (is.data.table(private$.model)) {
+          return(data.table::copy(private$.model))
+        }
+        get(".model", envir = private)
+      }
+    ),
     private = list(
       .model = NULL
     )
   )
+
+#' @param object a [Model] object
+#' @param ... dots
+#'
+#' @export
+#' @rdname Model
+summary.Model <- function(object, ...) {
+  summary(object$model)
+}
