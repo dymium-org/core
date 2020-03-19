@@ -172,3 +172,11 @@ test_that("remove_emptied_households", {
   expect_gt(n_hh_before, n_hh_after)
   expect_gt(n_ind_before, n_ind_after)
 })
+
+test_that("`household_type` of two random hid vectors of the same set be equipvalent.", {
+  create_toy_world()
+  Pop <- world$get("Population")
+  expect_true(
+    all(table(Pop$household_type(hid = sample(1:100))) == table(Pop$household_type(hid = sample(1:100))))
+  )
+})
