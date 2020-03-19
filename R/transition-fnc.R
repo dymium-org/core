@@ -8,23 +8,23 @@
 #' @param world a [World] object
 #' @param entity a character indicating the entity class to apply the transition to.
 #' @param model a [Model] object or an object in [SupportedTransitionModels()].
-#' @param target a [Target] object or a named list.
+#' @param target a [Target] object or a named list or `NULL`.
 #' @param targeted_ids a integer vector containing ids of entities in `entity`
-#'  to undergo the transition.
-#' @param preprocess_fn a function with one argument. This allows preprocessing of
+#'  to undergo the transition or `NULL`.
+#' @param preprocessing_fn a function that accepts one argument or `NULL`. This allows preprocessing of
 #' `entity`'s attribute data, for example, if only records with certain conditions
 #' should undergo the transition or a new variable should be added to the data. See
-#' the Note section below for how to create a preprocess function.
+#' the Note section below for how to create a preprocessing function.
 #' @param attr a character denoting which of the attribute if `entity` should be
-#'  updated as the result of the transition.
-#' @param verbose a logical value.
+#'  updated as the result of the transition or `NULL`.
+#' @param verbose a logical value, default as `FALSE`.
 #'
 #' @note
 #'
-#' To create a preprocess function you can use `dplyr` or `data.table`. You can
+#' To create a preprocessing function you can use `dplyr` or `data.table`. You can
 #' event combine multiple functions with [magrittr::%>%]. As an example, if you only
 #' want to filter just male individual agents then you can choose one of the
-#' following options to create your preprocess function.
+#' following options to create your preprocessing function.
 #'
 #' ```
 #' # as a function using base R
@@ -74,11 +74,13 @@
 #'   dplyr::mutate(., age5 = cut(age, breaks = c(seq(0,80,5), Inf), include.lowest = TRUE, right = FALSE))
 #' ```
 #'
-#' Note that, new variables added inside preprocess_fn won't
+#' Note that, new variables added inside preprocessing_fn won't
 #' change the attribute data of the `entity`. These variables are only appear temporary.
 #' They are only to be used just inside this transition call.
 #'
-#' @return `NULL`
+#' @return [transition] returns the first argument which is the [World] object, while
+#' [get_transition] a data.table objec that contains the transition outcomes with
+#' two columns: id and response.
 #' @export
 #'
 #' @examples
@@ -101,17 +103,17 @@
 #' transition(world,
 #'            entity = "Individual",
 #'            model = mnl,
-#'            preprocess_fn = filter_male,
+#'            preprocessing_fn = filter_male,
 #'            attr = "marital_status")
 #'
 #' # get a transition result
 #' get_transition(world,
 #'                entity = "Individual",
 #'                model = mnl,
-#'                preprocess_fn = filter_male)
+#'                preprocessing_fn = filter_male)
 #'
-transition <- function(world, entity, model, target, targeted_ids, preprocess_fn, attr, verbose = FALSE) {
-  result <- get_transition(world, entity, model, target, targeted_ids, preprocess_fn)
+transition <- function(world, entity, model, target = NULL, targeted_ids = NULL, preprocessing_fn = NULL, attr = NULL, verbose = FALSE) {
+  result <- get_transition(world, entity, model, target, targeted_ids, preprocessing_fn)
   e <- world$get(entity)
   if (verbose) {
     if (nrow(result) == 0) {
@@ -141,7 +143,7 @@ transition <- function(world, entity, model, target, targeted_ids, preprocess_fn
     }
   }
   # update attr using the result
-  if (!missing(attr) & nrow(result) != 0) {
+  if (!is.null(attr) & nrow(result) != 0) {
     checkmate::assert_names(x = attr, subset.of = e$database$attrs$colnames())
     idx <- e$get_idx(result[['id']])
     data.table::set(e$get_data(copy = FALSE),
@@ -153,26 +155,22 @@ transition <- function(world, entity, model, target, targeted_ids, preprocess_fn
   world
 }
 
-get_transition <- function(world, entity, model, target, targeted_ids, preprocess_fn) {
+get_transition <- function(world, entity, model, target = NULL, targeted_ids = NULL, preprocessing_fn = NULL) {
   checkmate::assert_r6(world, classes = "World")
   if (!checkmate::test_choice(entity, names(world$entities))) {
     stop("'", entity, "' not found in the given World object.")
   }
   assert_transition_supported_model(model)
-  if (!missing(target)) {
-    assert_target(target, null.ok = FALSE)
-  } else {
-    target <- NULL
-  }
+  assert_target(target, null.ok = TRUE)
   e <- world$get(entity)
   e_data <- e$get_data()
-  if (!missing(targeted_ids)) {
+  if (!is.null(targeted_ids)) {
     assert_entity_ids(e, ids = targeted_ids, informative = TRUE, .var.name = entity)
     e_data <- e_data[get(e$get_id_col()) %in% targeted_ids, ]
   }
-  if (!missing(preprocess_fn)) {
-    checkmate::assert_function(preprocess_fn, nargs = 1, null.ok = FALSE)
-    e_data <- preprocess_fn(e_data)
+  if (!is.null(preprocessing_fn)) {
+    checkmate::assert_function(preprocessing_fn, nargs = 1)
+    e_data <- preprocessing_fn(e_data)
   }
   if (nrow(e_data) == 0) {
     return(data.table(id = integer(), response = character()))

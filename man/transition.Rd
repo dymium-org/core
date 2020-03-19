@@ -8,10 +8,10 @@ transition(
   world,
   entity,
   model,
-  target,
-  targeted_ids,
-  preprocess_fn,
-  attr,
+  target = NULL,
+  targeted_ids = NULL,
+  preprocessing_fn = NULL,
+  attr = NULL,
   verbose = FALSE
 )
 }
@@ -22,23 +22,25 @@ transition(
 
 \item{model}{a \link{Model} object or an object in \code{\link[=SupportedTransitionModels]{SupportedTransitionModels()}}.}
 
-\item{target}{a \link{Target} object or a named list.}
+\item{target}{a \link{Target} object or a named list or \code{NULL}.}
 
 \item{targeted_ids}{a integer vector containing ids of entities in \code{entity}
-to undergo the transition.}
+to undergo the transition or \code{NULL}.}
 
-\item{preprocess_fn}{a function with one argument. This allows preprocessing of
+\item{preprocessing_fn}{a function that accepts one argument or \code{NULL}. This allows preprocessing of
 \code{entity}'s attribute data, for example, if only records with certain conditions
 should undergo the transition or a new variable should be added to the data. See
-the Note section below for how to create a preprocess function.}
+the Note section below for how to create a preprocessing function.}
 
 \item{attr}{a character denoting which of the attribute if \code{entity} should be
-updated as the result of the transition.}
+updated as the result of the transition or \code{NULL}.}
 
-\item{verbose}{a logical value.}
+\item{verbose}{a logical value, default as \code{FALSE}.}
 }
 \value{
-\code{NULL}
+\link{transition} returns the first argument which is the \link{World} object, while
+\link{get_transition} a data.table objec that contains the transition outcomes with
+two columns: id and response.
 }
 \description{
 This function allows a simple state transition to be simulated. It is meant to
@@ -46,10 +48,10 @@ be used inside a microsimulation pipeline as it returns the \code{World} object 
 it takes as its first input.
 }
 \note{
-To create a preprocess function you can use \code{dplyr} or \code{data.table}. You can
+To create a preprocessing function you can use \code{dplyr} or \code{data.table}. You can
 event combine multiple functions with \link[magrittr:\%>\%]{magrittr::\%>\%}. As an example, if you only
 want to filter just male individual agents then you can choose one of the
-following options to create your preprocess function.\preformatted{# as a function using base R
+following options to create your preprocessing function.\preformatted{# as a function using base R
 filter_male <- function(.data) \{
   .data[.data$sex == "male"]
 \}
@@ -93,7 +95,7 @@ filter_male <-
   dplyr::mutate(., age5 = cut(age, breaks = c(seq(0,80,5), Inf), include.lowest = TRUE, right = FALSE))
 }
 
-Note that, new variables added inside preprocess_fn won't
+Note that, new variables added inside preprocessing_fn won't
 change the attribute data of the \code{entity}. These variables are only appear temporary.
 They are only to be used just inside this transition call.
 }
@@ -117,13 +119,13 @@ create_toy_world()
 transition(world,
            entity = "Individual",
            model = mnl,
-           preprocess_fn = filter_male,
+           preprocessing_fn = filter_male,
            attr = "marital_status")
 
 # get a transition result
 get_transition(world,
                entity = "Individual",
                model = mnl,
-               preprocess_fn = filter_male)
+               preprocessing_fn = filter_male)
 
 }

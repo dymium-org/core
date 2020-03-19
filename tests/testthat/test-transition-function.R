@@ -9,7 +9,7 @@ test_that("transition function works", {
     world,
     entity = "Individual",
     model = glm(factor(sex) ~ age, toy_individuals, family = binomial()),
-    preprocess_fn = filter_male
+    preprocessing_fn = filter_male
   )
 
   if (requireNamespace("caret")) {
@@ -23,7 +23,7 @@ test_that("transition function works", {
         family = binomial()
       ),
       targeted_ids = 99,
-      preprocess_fn = filter_male
+      preprocessing_fn = filter_male
     )
   }
 
@@ -40,7 +40,7 @@ test_that("transition function works", {
       world,
       entity = "Individual",
       model = mnl,
-      preprocess_fn = filter_male
+      preprocessing_fn = filter_male
     ),
     classes = "World"
   )
@@ -48,7 +48,7 @@ test_that("transition function works", {
   transition_result <- get_transition(world,
                                       entity = "Individual",
                                       model = mnl,
-                                      preprocess_fn = filter_male)
+                                      preprocessing_fn = filter_male)
   checkmate::expect_data_table(
     x = transition_result,
     ncols = 2,
