@@ -17,6 +17,11 @@
 #' * `x` :: ([caret::train] | [data.table::data.table] | named `list`)\cr
 #' A model object that compatible.
 #'
+#' @section Active field (read-only):
+#'
+#' * `model`\cr
+#' The stored model object in its original form.
+#'
 #' @section Public Methods:
 #'
 #'  * `get()`\cr
@@ -79,7 +84,27 @@ Model <-
         print(private$.model)
       }
     ),
+    active = list(
+      model = function() {
+        if (is.data.table(private$.model)) {
+          return(data.table::copy(private$.model))
+        }
+        get(".model", envir = private)
+      }
+    ),
     private = list(
       .model = NULL
     )
   )
+
+#' @export
+#' @rdname Model
+summary.Model <- function(x) {
+  summary(x$model)
+}
+
+#' @export
+#' @rdname Model
+predict.Model <- function(x, newdata) {
+  predict(x$model, newdata)
+}

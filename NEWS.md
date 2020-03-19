@@ -3,6 +3,7 @@
 ## NEW FEATURES
 
 1. Add `Population$household_type` method for classifying household types of household agents. There are four types: 'non_family_hh', 'couple_hh', 'couple_hh_with_children' and 'lone_parent_hh'. See its documentation for detail.
+2. Add a `model` active field to `Model`, this returns the original model object stored inside the object.
 
 ## FIXES
 
