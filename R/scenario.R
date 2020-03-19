@@ -49,7 +49,7 @@ create_scenario <- function(name, active = TRUE, .basedir = here::here()) {
   fs::dir_create(fs::path(path, "outputs"))
   message("Created: ", fs::path(path, "outputs"))
   if (active) {
-    set_active_scenario(name)
+    set_active_scenario(name, .basedir = .basedir)
   }
   invisible(path)
 }
