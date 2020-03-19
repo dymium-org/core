@@ -21,6 +21,14 @@ A model object that compatible.
 }
 }
 
+\section{Active field (read-only)}{
+
+\itemize{
+\item \code{model}\cr
+The stored model object in its original form.
+}
+}
+
 \section{Public Methods}{
 
 \itemize{
