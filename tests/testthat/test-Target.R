@@ -10,9 +10,11 @@ test_that("Static target creation", {
 })
 
 test_that("Dynamic target creation", {
-  target_dynamic <- data.table::data.table(time = 1:10, yes = 10, no = 20)
+  target_dynamic <- data.table::data.table(time = 1:10, yes = 1:10, no = 1:10)
   TgtDy <- Target$new(target_dynamic)
-  expect_equal(TgtDy$get(), list(yes = 10, no = 20))
+  expect_equal(TgtDy$get(time = 0), TgtDy$get(time = 1))
+  expect_equal(TgtDy$get(time = 10), TgtDy$get(time = 11))
+  expect_equal(TgtDy$get(), TgtDy$get(time = 1))
   expect_equal(TgtDy$data, target_dynamic)
   expect_true(TgtDy$dynamic)
   expect_target(TgtDy)
