@@ -9,6 +9,7 @@
 ## FIXES
 
 1. `Household$update_hhsize()` now returns NULL invinsibly instead of its attribute data.
+2. `World` now accepts `Model` objects in `add`.
 
 # dymiumCore 0.1.4
 

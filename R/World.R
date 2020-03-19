@@ -126,18 +126,19 @@ World <- R6::R6Class(
       checkmate::assert(
         checkmate::check_r6(x, classes = c("Entity", "Generic"), null.ok = FALSE),
         checkmate::check_r6(x, classes = c("Container", "Generic"), null.ok = FALSE),
+        checkmate::check_r6(x, classes = c("Model", "Generic"), null.ok = FALSE),
         checkmate::check_subset(class(x)[[1]],
                                 choices = dymiumCore::SupportedTransitionModels(),
                                 empty.ok = FALSE),
         combine = "or"
       )
 
-      if (inherits(x, "Generic")) {
+      if ((inherits(x, "Entity") | inherits(x, "Container")) & !inherits(x, "Model")) {
         stopifnot(x$is_dymium_class())
         if (!missing(name)) {
           lg$warn("The given `name` will be ignored since the object in x \\
-                  is of a Dymium class object. The classname of the object will be \\
-                  used as its name.")
+                  is of an Entity object or a Container object. The classname \\
+                  of the object will be used as its name.")
         }
         name <- class(x)[[1]]
       }
@@ -162,6 +163,11 @@ World <- R6::R6Class(
       if (class(x)[[1]] %in% dymiumCore::SupportedTransitionModels()) {
         lg$info("Adding a Model object '{name}' to the `models` field.")
         x <- Model$new(x)
+        .listname <- ".models"
+      }
+
+      if (inherits(x, "Model")) {
+        lg$info("Adding a Model object '{name}' to the `models` field.")
         .listname <- ".models"
       }
 
