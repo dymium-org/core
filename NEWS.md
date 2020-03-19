@@ -1,3 +1,13 @@
+# dymiumCore 0.1.6
+
+## NEW FEATURES
+1) Added `transition()`, this is a function for simulating state transition inside a microsimulation pipeline. It also comes with `get_transition()` which returns state transition outcomes. See its documentation, `?dymiumCore::transition`, for more detail. 
+2) Added `microsimulate`, a function for simulating choice selection from the predicted probability obtained from a model object, currently only supports `train` and `glm` of the binomial family.
+
+## INTERNAL CHANGES
+
+1) Renamed `Transition` to `Trans` to make way for `transtion()`.
+
 # dymiumCore 0.1.5
 
 ## NEW FEATURES
