@@ -31,12 +31,14 @@ reference:
     - Population
     - pop_register
     - household_formation
-- title: Transitions & Alignment
+- title: Simulation tools & Alignment
   contents:
-    - matches("^Transition.")
-    - trans
+    - matches("^Trans.")
+    - transition
     - SupportedTransitionModels
     - Target
+    - microsimulate
+    - simulate_choice
     - alignment
 - title: Logging
   contents:
