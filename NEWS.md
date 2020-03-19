@@ -1,4 +1,4 @@
-# Development
+# dymiumCore 0.1.5
 
 ## NEW FEATURES
 
