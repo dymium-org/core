@@ -30,10 +30,6 @@ Household <- R6Class(
   inherit = Agent,
   public = list(
 
-    add_new_agents = function(.data, n) {
-      self$add(.data, n)
-    },
-
     add = function(.data, n){
       # generate by n
       if (!xor(missing(.data), missing(n))) {
