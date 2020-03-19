@@ -432,6 +432,7 @@ Population <- R6Class(
     update_hhsize = function() {
       hid_col <- self$get("Household")$get_id_col()
       self$get("Household")$get_data(copy = FALSE)[, hhsize := self$get_hhsize()]
+      invisible()
     },
 
     update = function() {
