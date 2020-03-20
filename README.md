@@ -27,6 +27,25 @@ microsimulation model. While the core focus of the package is for
 modelling urban systems, dymium can be easily extended to apply in other
 contexts as well.
 
+# Why another microsimulation framework?
+
+It is true that there is no shortage of open source microsimulation
+frameworks, but many of the existing ones often use a platform that
+doesn’t support data analysis as good as R, or use a programming
+langauge that many modellers may be unfamiliar with. Hence, those
+frameworks would not be the first choice for many modellers who are
+interested in microsimulation modelling but lack the programming skills
+or time to learn a programming langauge that is foreign and has no other
+benefits to them. The main philosophy of `dymiumCore` is to use the
+power of existing R packages to create a set of functions and classes
+that are the basic building blocks of any microsimulation model, in
+general, and to allow an entire workflow from data preparation, model
+estimation, microsimulation, calibration to visualisation within only
+the R environment, where many other frameworks cannot offer. This
+enhances reproducibility and maintainability of your microsimulation
+model and allow others to build on your work more easily. [Read
+more…](https://core.dymium.org/articles/why-another-microsim.html)
+
 # Why `dymiumCore`?
 
   - written in R
@@ -82,15 +101,23 @@ please email us at amarin at dymium.org.
     spatial data, etc.
   - [ ] **Version 0.4.0**: Integration with dymiumGUI.
 
-# Similar frameworks
+# Related open-source frameworks and models
 
-Urban Land-use
+**General-purpose microsimulation frameworks**
 
-  - [UrbanSim](https://github.com/UDST/urbansim)
-  - [SILO](https://github.com/msmobility/silo)
-  - [ILUTE](https://github.com/TravelModellingGroup/ILUTE)
+  - [LIAM2, Python](https://github.com/liam2/liam2)
+  - [JASMINE, Java](http://www.jas-mine.net/)
+  - [MicSim,
+    R](https://cran.r-project.org/web/packages/MicSim/index.html)
+  - [neworder, python](https://github.com/virgesmith/neworder)
+  - [simario, R](https://github.com/compassresearchcentre/simario)
 
-Demography
+**Multi-agent programmable modeling environment**
 
-  - [MicSim](https://cran.r-project.org/web/packages/MicSim/index.html)
-  - [neworder](https://github.com/virgesmith/neworder)
+  - [NetLogo](https://ccl.northwestern.edu/netlogo/)
+
+**Urban microsimulation land-use models**
+
+  - [UrbanSim, Python](https://github.com/UDST/urbansim)
+  - [ILUTE, C\#](https://github.com/TravelModellingGroup/ILUTE)
+  - [SILO, Java](https://github.com/msmobility/silo)
