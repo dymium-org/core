@@ -42,13 +42,13 @@ frameworks would not be the first choice for many modellers who are
 interested in microsimulation modelling but lack the programming skills
 or time to learn a programming langauge that is foreign and has no other
 benefits to them. The main philosophy of `dymiumCore` is to use the
-power of existing R packages to create a set of functions and classes
-that are the basic building blocks of any microsimulation model, in
-general, and to allow an entire workflow from data preparation, model
-estimation, microsimulation, calibration to visualisation within only
-the R environment, where many other frameworks cannot offer. This
-enhances reproducibility and maintainability of your microsimulation
-model and allow others to build on your work more easily. [Read
+power of existing R packages to create functions and classes that are
+the basic building blocks of any microsimulation model, in general, and
+to allow an entire workflow from data preparation, model estimation,
+microsimulation, calibration to visualisation within only the R
+environment, where many other frameworks do not offer. This enhances
+reproducibility and maintainability of your microsimulation model and
+allow others to build on your work more easily. [Read
 more…](https://core.dymium.org/articles/why-another-microsim.html)
 
 # Why `dymiumCore`?
