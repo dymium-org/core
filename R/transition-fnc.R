@@ -152,7 +152,7 @@ transition <- function(world, entity, model, target = NULL, targeted_ids = NULL,
                     value = result[['response']])
   }
   # return world to make this function pipable.
-  world
+  invisible(world)
 }
 
 get_transition <- function(world, entity, model, target = NULL, targeted_ids = NULL, preprocessing_fn = NULL) {

@@ -4,12 +4,14 @@
 \alias{simulate_choice}
 \title{Simulate a choice situation}
 \usage{
-simulate_choice(probs, target)
+simulate_choice(probs, target = NULL)
 }
 \arguments{
 \item{probs}{a data.table where the column names are choices and their values
 are probabilities correspoding fors the choices. Each row represent the choice
 probabilities of an agent.}
+
+\item{target}{a Target object or a named list or \code{NULL}.}
 }
 \value{
 a character vector of the same length as \code{prediction}.
@@ -18,5 +20,6 @@ a character vector of the same length as \code{prediction}.
 Simulate a choice situation
 }
 \examples{
-TODO
+
+# TODO
 }

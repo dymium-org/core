@@ -8,9 +8,9 @@
 \usage{
 microsimulate(model, ...)
 
-\method{microsimulate}{train}(model, newdata, target)
+\method{microsimulate}{train}(model, newdata, target = NULL, ...)
 
-\method{microsimulate}{glm}(model, newdata, target)
+\method{microsimulate}{glm}(model, newdata, target = NULL, ...)
 }
 \arguments{
 \item{model}{a \link{Model} object or an object in \code{\link[=SupportedTransitionModels]{SupportedTransitionModels()}}.}
@@ -30,5 +30,5 @@ predict the probability.
 }
 \examples{
 
-TODO
+# TODO
 }
