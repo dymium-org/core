@@ -121,6 +121,35 @@ normalise_derived_vars <- function(.data) {
   return(.data)
 }
 
+#' Add log to an entity or container object
+#'
+#' @param x
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+add_log <-  function(x, ...) {
+  UseMethod("add_log")
+}
+
+add_log.World <- function(x, entity, desc, value, tag = NA_character_, ...) {
+  e <- x$get(entity)
+  e$log(desc = desc, value = value, tag = tag)
+  x
+}
+
+add_log.Entity <- function(x, desc, value, tag = NA_character_, ...) {
+  x$log(desc = desc, value = value, tag = tag)
+  x
+}
+
+# add_log <- function(world, entity, desc, value, tag = "") {
+#   assert_r6(x, class = "World")
+#   checkmate::assert_choice(entity, choices = )
+# }
+
 #' Get log from Generic
 #'
 #' @param x a [Generic] object.
