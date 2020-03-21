@@ -86,9 +86,9 @@ __General-purpose microsimulation frameworks__
 - [LIAM2, Python](https://github.com/liam2/liam2)
 - [JASMINE, Java](http://www.jas-mine.net/)
 - [MicSim, R](https://cran.r-project.org/web/packages/MicSim/index.html)
-- [neworder, python](https://github.com/virgesmith/neworder)
-- [simario, R](https://github.com/compassresearchcentre/simario)
-
+- [neworder, Python](https://github.com/virgesmith/neworder)
+- [simarioV2, R](https://github.com/kcha193/simarioV2)
+- [JAMSIM, Java](https://github.com/compassresearchcentre/jamsim)
 __Multi-agent programmable modeling environment__
 
 - [NetLogo](https://ccl.northwestern.edu/netlogo/)

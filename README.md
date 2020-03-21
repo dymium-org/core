@@ -111,13 +111,18 @@ please email us at amarin at dymium.org.
 **General-purpose microsimulation frameworks**
 
   - [LIAM2, Python](https://github.com/liam2/liam2)
+
   - [JASMINE, Java](http://www.jas-mine.net/)
+
   - [MicSim,
     R](https://cran.r-project.org/web/packages/MicSim/index.html)
-  - [neworder, python](https://github.com/virgesmith/neworder)
-  - [simario, R](https://github.com/compassresearchcentre/simario)
 
-**Multi-agent programmable modeling environment**
+  - [neworder, Python](https://github.com/virgesmith/neworder)
+
+  - [simarioV2, R](https://github.com/kcha193/simarioV2)
+
+  - [JAMSIM, Java](https://github.com/compassresearchcentre/jamsim)
+    **Multi-agent programmable modeling environment**
 
   - [NetLogo](https://ccl.northwestern.edu/netlogo/)
 
