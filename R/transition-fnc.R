@@ -22,8 +22,8 @@
 #' @note
 #'
 #' To create a preprocessing function you can use `dplyr` or `data.table`. You can
-#' event combine multiple functions with [magrittr::%>%]. As an example, if you only
-#' want to filter just male individual agents then you can choose one of the
+#' even combine multiple functions with [magrittr::%>%]. As an example, if you only
+#' want to filter just the male population then you can choose one of the
 #' following options to create your preprocessing function.
 #'
 #' ```
@@ -75,8 +75,8 @@
 #' ```
 #'
 #' Note that, new variables added inside preprocessing_fn won't
-#' change the attribute data of the `entity`. These variables are only appear temporary.
-#' They are only to be used just inside this transition call.
+#' change the attribute data of the `entity` object that is undergoing a transition.
+#' These variables only appear temporary within the context of the transition.
 #'
 #' @return [transition] returns the first argument which is the [World] object, while
 #' [get_transition] a data.table objec that contains the transition outcomes with

@@ -49,8 +49,8 @@ it takes as its first input.
 }
 \note{
 To create a preprocessing function you can use \code{dplyr} or \code{data.table}. You can
-event combine multiple functions with \link[magrittr:\%>\%]{magrittr::\%>\%}. As an example, if you only
-want to filter just male individual agents then you can choose one of the
+even combine multiple functions with \link[magrittr:\%>\%]{magrittr::\%>\%}. As an example, if you only
+want to filter just the male population then you can choose one of the
 following options to create your preprocessing function.\preformatted{# as a function using base R
 filter_male <- function(.data) \{
   .data[.data$sex == "male"]
@@ -96,8 +96,8 @@ filter_male <-
 }
 
 Note that, new variables added inside preprocessing_fn won't
-change the attribute data of the \code{entity}. These variables are only appear temporary.
-They are only to be used just inside this transition call.
+change the attribute data of the \code{entity} object that is undergoing a transition.
+These variables only appear temporary within the context of the transition.
 }
 \examples{
 
