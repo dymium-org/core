@@ -3,12 +3,11 @@
 
 <!-- badges: start -->
 
+[![](https://img.shields.io/badge/devel%20version-0.1.5-blue.svg)](https://github.com/dymium-org/dymiumCore)
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore)
 [![Build
 Status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://travis-ci.org/dymium-org/dymiumCore)
 [![AppVeyor build
@@ -65,13 +64,15 @@ more…](https://core.dymium.org/articles/why-another-microsim.html)
 
 ## Installation
 
-`dymiumCore` is not available on CRAN. You can install directly from
-GitHub using `remotes`:
+You can install directly from GitHub using `remotes::install_github` or
+`devtools::install_github`:
 
 ``` r
 # install.packages("remotes")
 remotes::install_github("dymium-org/dymiumCore")
 ```
+
+Note that, `dymiumCore` is not yet on CRAN.
 
 ## Documentation and Tutorials
 
@@ -106,23 +107,19 @@ please email us at amarin at dymium.org.
     spatial data, etc.
   - [ ] **Version 0.4.0**: Integration with dymiumGUI.
 
-# Related open-source frameworks and models
+## Related open-source frameworks and models
 
 **General-purpose microsimulation frameworks**
 
   - [LIAM2, Python](https://github.com/liam2/liam2)
-
   - [JASMINE, Java](http://www.jas-mine.net/)
-
   - [MicSim,
     R](https://cran.r-project.org/web/packages/MicSim/index.html)
-
   - [neworder, Python](https://github.com/virgesmith/neworder)
-
   - [simarioV2, R](https://github.com/kcha193/simarioV2)
-
   - [JAMSIM, Java](https://github.com/compassresearchcentre/jamsim)
-    **Multi-agent programmable modeling environment**
+
+**Multi-agent programmable modeling environment**
 
   - [NetLogo](https://ccl.northwestern.edu/netlogo/)
 
@@ -131,3 +128,19 @@ please email us at amarin at dymium.org.
   - [UrbanSim, Python](https://github.com/UDST/urbansim)
   - [ILUTE, C\#](https://github.com/TravelModellingGroup/ILUTE)
   - [SILO, Java](https://github.com/msmobility/silo)
+
+## Recommended scholarly articles
+
+To learn more about dynamic microsimulation modelling and some of its
+use cases please see these articles.
+
+  - O’Donoghue, C. (2001). Dynamic microsimulation: a methodological
+    survey. Brazilian Electronic Journal of Economics, 4(2), 77.
+  - Li, J., & O’Donoghue, C. (2013). A survey of dynamic microsimulation
+    models: uses, model structure and methodology. International Journal
+    of microsimulation, 6(2), 3-55.
+  - Rutter, C. M., Zaslavsky, A. M., & Feuer, E. J. (2011). Dynamic
+    microsimulation models for health outcomes: a review. Medical
+    Decision Making, 31(1), 10-18.
+  - GouuAs, K. G., & Kitamura, R. (1992). Travel demand forecasting with
+    dynamic microsimulation.
