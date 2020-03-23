@@ -1,9 +1,11 @@
 #' Simulate state transition (Markov chain)
 #'
 #' @description
-#' This function allows a simple state transition to be simulated. It is meant to
-#' be used inside a microsimulation pipeline as it returns the `World` object that
-#' it takes as its first input.
+#' The `transition` function can be used to evaluate a model againts the attribute
+#' data of an [Entity] object stored inside the input [World] object and update
+#' an attribute of that [Entity] using random draws from the prediction result.
+#' It allows simple state transitions to be simulated directly inside a
+#' microsimulation pipeline, as it always returns the input `World` object.
 #'
 #' @param world a [World] object
 #' @param entity a character indicating the entity class to apply the transition to.
@@ -158,7 +160,7 @@ transition <- function(world, entity, model, target = NULL, targeted_ids = NULL,
 get_transition <- function(world, entity, model, target = NULL, targeted_ids = NULL, preprocessing_fn = NULL) {
   checkmate::assert_r6(world, classes = "World")
   if (!checkmate::test_choice(entity, names(world$entities))) {
-    stop("'", entity, "' not found in the given World object.")
+    stop("'", entity, "' not found in `world`.")
   }
   assert_transition_supported_model(model)
   assert_target(target, null.ok = TRUE)

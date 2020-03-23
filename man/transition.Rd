@@ -43,9 +43,11 @@ updated as the result of the transition or \code{NULL}.}
 two columns: id and response.
 }
 \description{
-This function allows a simple state transition to be simulated. It is meant to
-be used inside a microsimulation pipeline as it returns the \code{World} object that
-it takes as its first input.
+The \code{transition} function can be used to evaluate a model againts the attribute
+data of an \link{Entity} object stored inside the input \link{World} object and update
+an attribute of that \link{Entity} using random draws from the prediction result.
+It allows simple state transitions to be simulated directly inside a
+microsimulation pipeline, as it always returns the input \code{World} object.
 }
 \note{
 To create a preprocessing function you can use \code{dplyr} or \code{data.table}. You can
