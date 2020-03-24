@@ -355,3 +355,44 @@ get_history(x = world$entities$Individual)
 inspect(entity = world$entities$Individual, ids = 1:3)
 ```
 
+# Time scale
+
+Micosimulation models usually operate in cycle, where a cycle typically consider as 1 year for most discrete-time dynamic microsimulation models. However, this large time-step may not be preferrable to some events that may change more than once per year, such as employment status. Hence, these transitions in the real world may not be replicated in the simulated world. However, it is possible to mix events of different time scales in `dymiumCore` easily, using `Pipeline`. 
+
+First, let's create three dummy microsimulation events. Let's assume that Event 1 and Event 2 happen at the rate of every 3 months, while only Event 3 happens on an annual basis.
+
+```{r}
+# create dummy events
+event_1 <- function(x) {
+  print("Running event 1")
+  invisible(x)
+}
+
+event_2 <- function(x) {
+  print("Running event 2")
+  invisible(x)
+}
+
+event_3 <- function(x) {
+  print("Running event 3")
+  invisible(x)
+}
+
+# Create a Pipeline that has only Event 1 and Event 2.
+quaterly_events <- 
+  Pipeline$new(x = . %>%
+                 event_1(.) %>%
+                 event_2(.))
+
+create_toy_world()
+
+# create a microsimulation pipeline that runs for 2 cycles or 2 years.
+for (i in 1:2) {
+  print(paste0("Year: ", i))
+  world$start_iter(time_step = i, unit = "year") %>%
+    quaterly_events$run(., n_loops = 4) %>% # set to 4 == quaterly
+    event_3()
+}
+```
+
+Notice that, we set `n_loops` equal to 4, which means the events inside `quaterly_events`, the Pipeline object that we have created, will be executed for 4 cycles before `event_3` will be run in each cycle of the for loop.
