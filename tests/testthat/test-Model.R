@@ -22,3 +22,17 @@ test_that("Model - train", {
 })
 
 
+test_that("Model - preprocess", {
+  m <- Model$new(list(x = 1))
+
+  m$preprocessing_fn <- function(.data) {
+    .data %>%
+      .[age %between% c(18, 40) &
+          sex == "female"]
+  }
+
+  checkmate::expect_function(m$preprocessing_fn)
+  checkmate::expect_data_table(m$preprocessing_fn(toy_individuals))
+  expect_true(all(m$preprocessing_fn(toy_individuals)[["sex"]] == "female"))
+  expect_true(all(m$preprocessing_fn(toy_individuals)[["age"]] %between% c(18, 40)))
+})
