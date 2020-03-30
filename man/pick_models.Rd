@@ -4,7 +4,7 @@
 \alias{pick_models}
 \title{Pick models}
 \usage{
-pick_models(model, world, required_models)
+pick_models(model, world, required_models, as_r6model = FALSE)
 }
 \arguments{
 \item{model}{\code{logical(1)}\cr
@@ -14,6 +14,9 @@ A named list that contains models that \link{Trans} supports.}
 
 \item{required_models}{\code{character()}\cr
 A character vector contains names of required models.}
+
+\item{as_r6model}{default as FALSE, if TRUE all \code{required_models} will be returned
+as \link{Model} objects.}
 }
 \value{
 a list of models.

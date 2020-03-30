@@ -100,3 +100,23 @@ test_that("pick_models - deterministic case", {
   REQUIRED_MODELS <- c()
   expect_null(pick_models(my_model, world, REQUIRED_MODELS))
 })
+
+test_that("pick_models with as_r6model is TRUE", {
+  create_toy_world()
+  my_model <- NULL
+  world$add(x = list(yes = 0.5, no = 0.5), "model_one")
+  world$add(x = list(yes = 0.5, no = 0.5), "model_two")
+  REQUIRED_MODELS <- c("model_one")
+  models <- pick_models(my_model, world, REQUIRED_MODELS, as_r6model = TRUE)
+  checkmate::expect_r6(models$model_one, classes = "Model")
+})
+
+test_that("pick_models with as_r6model is FALSE", {
+  create_toy_world()
+  my_model <- NULL
+  world$add(x = list(yes = 0.5, no = 0.5), "model_one")
+  world$add(x = list(yes = 0.5, no = 0.5), "model_two")
+  REQUIRED_MODELS <- c("model_one")
+  models <- pick_models(my_model, world, REQUIRED_MODELS, as_r6model = FALSE)
+  checkmate::expect_list(models$model_one)
+})
