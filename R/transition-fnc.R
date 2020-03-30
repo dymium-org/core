@@ -88,6 +88,10 @@
 #' @examples
 #'
 #' # create a filter function
+#' library(dplyr)
+#' library(caret)
+#' library(magrittr)
+#'
 #' filter_male <-
 #'   . %>%
 #'   dplyr::filter(., sex == "male")
@@ -157,6 +161,8 @@ transition <- function(world, entity, model, target = NULL, targeted_ids = NULL,
   invisible(world)
 }
 
+#' @rdname transition
+#' @export
 get_transition <- function(world, entity, model, target = NULL, targeted_ids = NULL, preprocessing_fn = NULL) {
   checkmate::assert_r6(world, classes = "World")
   if (!checkmate::test_choice(entity, names(world$entities))) {

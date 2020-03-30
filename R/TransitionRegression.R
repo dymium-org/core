@@ -80,7 +80,7 @@
 #'  (`character()`) -> (`integer()`)\cr
 #'  Returns ids of the agents that have their response equal to `response_filter`.
 #'
-#' @seealso [TransitionClassification] and [trans].
+#' @seealso [TransitionClassification] and [Trans].
 #'
 #' @include Transition.R
 #' @export

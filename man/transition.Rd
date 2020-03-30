@@ -2,6 +2,7 @@
 % Please edit documentation in R/transition-fnc.R
 \name{transition}
 \alias{transition}
+\alias{get_transition}
 \title{Simulate state transition (Markov chain)}
 \usage{
 transition(
@@ -13,6 +14,15 @@ transition(
   preprocessing_fn = NULL,
   attr = NULL,
   verbose = FALSE
+)
+
+get_transition(
+  world,
+  entity,
+  model,
+  target = NULL,
+  targeted_ids = NULL,
+  preprocessing_fn = NULL
 )
 }
 \arguments{
@@ -104,6 +114,10 @@ These variables only appear temporary within the context of the transition.
 \examples{
 
 # create a filter function
+library(dplyr)
+library(caret)
+library(magrittr)
+
 filter_male <-
   . \%>\%
   dplyr::filter(., sex == "male")

@@ -108,7 +108,7 @@
 #' Returns ids of the agents that have their response equal to `response_filter`.
 #'
 #'
-#' @seealso [TransitionRegression] and [trans].
+#' @seealso [TransitionRegression] and [Trans].
 #' @include Transition.R
 #' @export
 #'

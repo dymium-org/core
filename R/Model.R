@@ -30,7 +30,7 @@
 #'
 #' * `preprocessing_fn`\cr
 #' Default as NULL, this is to store a preprocessing function which will be
-#' used to evaluate the entity data in [Transition] prior to simulating the
+#' used to evaluate the entity data in [Trans] prior to simulating the
 #' transition. A situation where this is useful could be when you want to limit
 #' the use of a [Model] object to the specific group of agents (e.g: age between
 #' `x` and `y`) that was used to estimate the model.
@@ -59,7 +59,8 @@
 #'
 #' simple_prob_model <- Model$new(x = list(yes = 0.95, no = 0.05))
 #'
-#' simple_glm_model <- Model$new(x = stats::glm(factor(sex) ~ age, data = toy_individuals, family = "binomial"))
+#' simple_glm_model <- Model$new(x = stats::glm(factor(sex) ~ age,
+#'                               data = toy_individuals, family = "binomial"))
 #'
 #' # return the original model object
 #' simple_prob_model$model

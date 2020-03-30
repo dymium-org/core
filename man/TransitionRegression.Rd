@@ -84,5 +84,5 @@ Returns ids of the agents that have their response equal to \code{response_filte
 }
 
 \seealso{
-\link{TransitionClassification} and \link{trans}.
+\link{TransitionClassification} and \link{Trans}.
 }

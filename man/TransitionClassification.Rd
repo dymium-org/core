@@ -151,5 +151,5 @@ barplot(
 )
 }
 \seealso{
-\link{TransitionRegression} and \link{trans}.
+\link{TransitionRegression} and \link{Trans}.
 }
