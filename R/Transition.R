@@ -87,13 +87,23 @@ Trans <- R6Class(
     initialize = function(x, model, target = NULL, targeted_agents = NULL) {
       # checks
       checkmate::assert_class(x, c("Agent"))
-      checkmate::assert_subset(class(model)[[1]], choices = SupportedTransitionModels())
+      checkmate::assert(
+        checkmate::check_subset(class(model)[[1]], choices = SupportedTransitionModels()),
+        checkmate::check_r6(model, classes = "Model"),
+        combine = "or"
+      )
       dymiumCore::assert_target(target, null.ok = TRUE)
       checkmate::assert_integerish(targeted_agents, lower = 1, any.missing = FALSE, null.ok = TRUE)
 
+
       # store inputs
       private$.AgtObj <- x
-      private$.model <- model
+      if (checkmate::test_r6(model, classes = "Model")) {
+        private$.model <- model$model
+        private$.model_preprocessing_fn <- model$preprocessing_fn
+      } else {
+        private$.model <- model
+      }
       private$.target <- Target$new(target)$get()
       private$.targeted_agents <- targeted_agents
 
@@ -192,6 +202,7 @@ Trans <- R6Class(
   private = list(
     # Private ----------------------------------------------------------
     .model = NULL, # model object or data.table
+    .model_preprocessing_fn = NULL,
     .AgtObj = R6::R6Class(), # use as a reference holder
     .sim_data = data.table(), # preprocessed simulation data
     .sim_result = data.table(), # two columns: id, response
@@ -211,6 +222,11 @@ Trans <- R6Class(
       }
 
       checkmate::assert_data_table(raw_data, min.rows = 1, null.ok = FALSE, .var.name = "Agent's data")
+
+      # Model's preprocessing function
+      if (!is.null(private$.model_preprocessing_fn)) {
+        raw_data <- private$.model_preprocessing_fn(raw_data)
+      }
 
       # preprocess data
       if (self$mutate_first) {
