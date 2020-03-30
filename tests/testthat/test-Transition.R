@@ -138,3 +138,23 @@ test_that("transition 0 agents", {
   expect_null(TestMutateFirstTranEmptiedTargetedAgents$get_data())
 
 })
+
+test_that("Transition works with a Model with a preprocessing function", {
+  m <- Model$new(list(yes = 0.5, no = 0.5))
+
+  m$preprocessing_fn <- function(.data) {
+    .data %>%
+      .[age %between% c(18, 40) &
+          sex == "female"]
+  }
+
+  res <-
+    TransitionClassification$new(world$entities$Individual, model = m)$get_result()
+  ind_data <-
+    world$entities$Individual$get_data(ids = res[["id"]])
+
+  expect_true(all(ind_data[["sex"]] == "female"))
+  expect_true(all(ind_data[["age"]] %between% c(18, 40)))
+})
+
+
