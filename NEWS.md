@@ -2,7 +2,7 @@
 
 - [Model] gains `preprocessing_fn` field, this is for storing a preprocessing function which will be used to evaluate the entity data in [Transition] prior to simulating the transition. A situation where this is useful could be when you want to limit the use of a [Model] object to the specific group of agents (e.g: age between `x` and `y`) that was used to estimate the model.
 - [Transition] supports [Model]'s `preprocessing_fn()`.
-
+- Minor fix to error msg in [TransitionClassification].
 
 # dymiumCore 0.1.6
 

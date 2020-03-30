@@ -191,8 +191,8 @@ TransitionClassification <- R6Class(
         "glm" = simulate_classification_glm(self, private),
         stop(
           glue::glue(
-            "{class(self)[[1]]} class doesn't have an implementation of {class(private$.model)} \\
-            class. Please kindly request this in dymiumCore's Github issue or send in a PR! :)"
+            "{class(self)[[1]]} class doesn't know how to deal with a {class(private$.model)} \\
+            object. Please kindly request this in dymiumCore's Github issue or send in a PR! :)"
           )
         )
       )
