@@ -148,6 +148,7 @@ test_that("Transition works with a Model with a preprocessing function", {
           sex == "female"]
   }
 
+  create_toy_world()
   res <-
     TransitionClassification$new(world$entities$Individual, model = m)$get_result()
   ind_data <-
@@ -157,8 +158,27 @@ test_that("Transition works with a Model with a preprocessing function", {
   expect_true(all(ind_data[["age"]] %between% c(18, 40)))
 })
 
+test_that("Transition works on a Model with a preprocessing function that doesn't match anything", {
+  create_toy_world()
+  m <- Model$new(list(yes = 0.5, no = 0.5))
+  m$preprocessing_fn <- function(.data) {
+    .data %>%
+      .[age %between% c(999, 1000) &
+          sex == "female"]
+  }
+  res <-
+    TransitionClassification$new(world$entities$Individual, model = m)$get_result()
+  ind_data <-
+    world$entities$Individual$get_data(ids = res[["id"]])
+
+  checkmate::expect_data_table(res, nrows = 0)
+  checkmate::expect_names(names(res), identical.to = c("id", "response"))
+  checkmate::expect_data_table(ind_data, nrows = 0)
+
+})
 
 test_that("Transition is fair", {
+  create_toy_world()
   m <- Model$new(list(yes = 0.2, no = 0.8))
   responses <- c()
   for (i in 1:100) {
