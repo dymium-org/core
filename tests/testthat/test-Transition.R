@@ -158,3 +158,16 @@ test_that("Transition works with a Model with a preprocessing function", {
 })
 
 
+test_that("Transition is fair", {
+  m <- Model$new(list(yes = 0.2, no = 0.8))
+  responses <- c()
+  for (i in 1:100) {
+    responses <-
+      c(
+        responses,
+        TransitionClassification$new(world$entities$Individual, model = m)$get_result()[, response]
+      )
+  }
+  t_test_res <- t.test(x = responses == "yes", mu = 0.2)
+  expect_gte(object = t_test_res$p.value, expected = 0.05)
+})
