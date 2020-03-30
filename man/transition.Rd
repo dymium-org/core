@@ -114,13 +114,11 @@ These variables only appear temporary within the context of the transition.
 \examples{
 
 # create a filter function
-library(dplyr)
 library(caret)
-library(magrittr)
 
 filter_male <-
   . \%>\%
-  dplyr::filter(., sex == "male")
+  .[sex == "male", ]
 
 # create a multinomial logit model using `caret`
 mnl <- caret::train(marital_status ~ age + sex,
