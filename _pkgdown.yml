@@ -29,6 +29,7 @@ reference:
     - Container
     - World
     - Population
+    - Model
     - pop_register
     - household_formation
 - title: Simulation tools & Alignment
@@ -37,10 +38,11 @@ reference:
     - transition
     - SupportedTransitionModels
     - Target
-    - microsimulate
     - simulate_choice
     - alignment
-- title: Logging
+    - Pipeline
+    - starts_with("Match")
+- title: Logging and inspection
   contents:
     - add_history
     - get_history
@@ -48,11 +50,6 @@ reference:
     - plot_history
     - inspect
     - get_log
-- title: Extra classes
-  contents:
-    - starts_with("Match")
-    - Model
-    - Pipeline
 - title: Data backends
   contents:
     - matches("DataBackend.")
