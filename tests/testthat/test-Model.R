@@ -15,6 +15,7 @@ test_that("Model - train", {
       Model$new(caret::train(
         Species ~ .,
         data = iris,
+        trace = FALSE,
         trControl = caret::trainControl(method = "none")
       ))
     checkmate::expect_class(m$model, "train")
