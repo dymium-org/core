@@ -19,7 +19,7 @@ create_mlr_multinomial_model <- function() {
   if (requireNamespace("mlr") & requireNamespace("nnet")) {
     task_data <- create_mlr_task()
     task <- mlr::makeClassifTask(id = "toy_multi_classes", data = task_data, target = "marital_status")
-    lrn = mlr::makeLearner("classif.multinom", predict.type = "prob")
+    lrn = mlr::makeLearner("classif.multinom", predict.type = "prob", trace = FALSE)
     train_mod <- mlr::train(lrn, task)
     return(train_mod)
   }
