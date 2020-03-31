@@ -6,10 +6,11 @@
 - [Trans] supports [Model]'s `preprocessing_fn()`.
 - Minor fix to error msg in [TransitionClassification].
 - [add_models] gains a as_r6model for returning models as [Model] objects.
+- Classification models fitted using the `mlr` package is now supported by `transition`.
+- Added `simulate_choice`, a function for simulating choice selection from the predicted probability obtained from a model object, currently only supports most of the classification models fitted with `caret` and `mlr`, and `glm` of the binomial family.
 
 ## INTERNAL CHANGES
 - Renamed `Transition` to `Trans` to make way for `transtion()`.
-- Added `microsimulate`, a function for simulating choice selection from the predicted probability obtained from a model object, currently only supports `train` and `glm` of the binomial family. `microsimlate` is an non-exporte function and its name will be changed in a future version. 
 
 # dymiumCore 0.1.5
 
