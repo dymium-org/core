@@ -189,5 +189,5 @@ test_that("Transition is fair", {
       )
   }
   t_test_res <- t.test(x = responses == "yes", mu = 0.2)
-  expect_gte(object = t_test_res$p.value, expected = 0.05)
+  expect_gte(object = t_test_res$p.value, expected = 0.001)
 })
