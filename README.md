@@ -3,9 +3,9 @@
 
 <!-- badges: start -->
 
+![GitHub release (latest by date including
+pre-releases)](https://img.shields.io/github/v/release/dymium-org/dymiumCore?include_prereleases)
 [![](https://img.shields.io/badge/devel%20version-0.1.6.9000-blue.svg)](https://github.com/dymium-org/dymiumCore)
-[![Lifecycle:
-maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Travis build
@@ -14,6 +14,8 @@ status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://
 status](https://ci.appveyor.com/api/projects/status/qhjt91cg08ob7s16/branch/master?svg=true)](https://ci.appveyor.com/project/asiripanich/dymiumcore/branch/master)
 [![Codecov test
 coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.svg)](https://codecov.io/gh/dymium-org/dymiumCore?branch=master)
+[![Lifecycle:
+maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 <!-- [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore) -->
 <!-- badges: end -->
 
@@ -64,11 +66,16 @@ more…](https://core.dymium.org/articles/why-another-microsim.html)
 
 ## Installation
 
-You can install directly from GitHub using `remotes::install_github` or
-`devtools::install_github`:
+You can install the released version of dymiumCore from Github with:
 
 ``` r
-# install.packages("remotes")
+remotes::install_github("dymium-org/dymiumCore", 
+                         ref = remotes::github_release())
+```
+
+The current development version on Github can be installed with:
+
+``` r
 remotes::install_github("dymium-org/dymiumCore")
 ```
 
