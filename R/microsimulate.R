@@ -1,38 +1,35 @@
-#' Microsimulate a choice situation
+#' Simulate a choice situation
 #'
 #' @description
 #' This function simulates a choice situation using a model object and data to
-#' predict the probability.
+#' predict probabilities.
 #'
 #' @param model a [Model] object or an object in [SupportedTransitionModels()].
 #' @param newdata a data.frame object to use for making prediction.
-#' @param target a [Target] object or a named list.
+#' @param target a [Target] object or a named list this is for aligning the simulation
+#' outcome to an external target.
 #' @param ... dots
 #'
-#' @return
+#' @return a character vector
 #' @export
-#'
-#' @examples
-#'
-#' # TODO
-"microsimulate" <-
+"simulate_choice" <-
   function(model, ...){
-    UseMethod("microsimulate")
+    UseMethod("simulate_choice")
   }
 
-#' @rdname microsimulate
+#' @rdname simulate_choice
 #' @export
-microsimulate.train <- function(model, newdata, target = NULL, ...) {
+simulate_choice.train <- function(model, newdata, target = NULL, ...) {
   checkmate::assert_true(model$modelType == "Classification")
   probs <- predict(model, newdata, type = "prob")
   simulate_choice(probs, target)
 }
 
-#' @rdname microsimulate
+#' @rdname simulate_choice
 #' @export
-microsimulate.glm <- function(model, newdata, target = NULL, ...) {
+simulate_choice.glm <- function(model, newdata, target = NULL, ...) {
   if (model$family$family != "binomial") {
-    stop("Only `glm` objects of the binomial family can be used in `microsimulate()`.")
+    stop("Only `glm` objects of the binomial family can be used in `simulate_choice()`.")
   }
   choices <- levels(model$model[[1]])
   probs <-
@@ -55,7 +52,7 @@ microsimulate.glm <- function(model, newdata, target = NULL, ...) {
 #' @examples
 #'
 #' # TODO
-simulate_choice <- function(probs, target = NULL) {
+generic_simulate_choice <- function(probs, target = NULL) {
   checkmate::assert_data_frame(
     probs,
     types = 'double',

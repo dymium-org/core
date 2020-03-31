@@ -2,24 +2,30 @@
 % Please edit documentation in R/microsimulate.R
 \name{simulate_choice}
 \alias{simulate_choice}
+\alias{simulate_choice.train}
+\alias{simulate_choice.glm}
 \title{Simulate a choice situation}
 \usage{
-simulate_choice(probs, target = NULL)
+simulate_choice(model, ...)
+
+\method{simulate_choice}{train}(model, newdata, target = NULL, ...)
+
+\method{simulate_choice}{glm}(model, newdata, target = NULL, ...)
 }
 \arguments{
-\item{probs}{a data.table where the column names are choices and their values
-are probabilities correspoding fors the choices. Each row represent the choice
-probabilities of an agent.}
+\item{model}{a \link{Model} object or an object in \code{\link[=SupportedTransitionModels]{SupportedTransitionModels()}}.}
 
-\item{target}{a Target object or a named list or \code{NULL}.}
+\item{...}{dots}
+
+\item{newdata}{a data.frame object to use for making prediction.}
+
+\item{target}{a \link{Target} object or a named list this is for aligning the simulation
+outcome to an external target.}
 }
 \value{
-a character vector of the same length as \code{prediction}.
+a character vector
 }
 \description{
-Simulate a choice situation
-}
-\examples{
-
-# TODO
+This function simulates a choice situation using a model object and data to
+predict probabilities.
 }

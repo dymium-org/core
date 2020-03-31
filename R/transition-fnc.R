@@ -182,7 +182,7 @@ get_transition <- function(world, entity, model, target = NULL, targeted_ids = N
     return(data.table(id = integer(), response = character()))
   }
   result <-
-    microsimulate(model = model,
+    simulate_choice(model = model,
                   newdata = e_data,
                   target = target) %>%
     data.table::data.table(id = e_data[[e$get_id_col()]],
