@@ -166,7 +166,11 @@ get_transition <- function(world, entity, model, target = NULL, targeted_ids = N
   if (!checkmate::test_choice(entity, names(world$entities))) {
     stop("'", entity, "' not found in `world`.")
   }
-  assert_transition_supported_model(model)
+  checkmate::assert(
+    check_transition_supported_model(model),
+    checkmate::check_r6(model, class = "Model")
+  )
+
   assert_target(target, null.ok = TRUE)
   e <- world$get(entity)
   e_data <- e$get_data()
