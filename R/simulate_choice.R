@@ -5,6 +5,9 @@
 #' predict probabilities.
 #'
 #' @param model a [Model] object or an object in [SupportedTransitionModels()].
+#' @param probs a data.table where the column names are choices and their values
+#'  are probabilities correspoding fors the choices. Each row represent the choice
+#'  probabilities of an agent.
 #' @param newdata a data.frame object to use for making prediction.
 #' @param target a [Target] object or a named list this is for aligning the simulation
 #' outcome to an external target.
@@ -40,19 +43,9 @@ simulate_choice.glm <- function(model, newdata, target = NULL, ...) {
   simulate_choice(probs, target)
 }
 
-#' Simulate a choice situation
-#'
-#' @param probs a data.table where the column names are choices and their values
-#'  are probabilities correspoding fors the choices. Each row represent the choice
-#'  probabilities of an agent.
-#' @param target a Target object or a named list or `NULL`.
-#'
-#' @return a character vector of the same length as `prediction`.
+#' @rdname simulate_choice
 #' @export
-#' @examples
-#'
-#' # TODO
-generic_simulate_choice <- function(probs, target = NULL) {
+simulate_choice.data.frame <- function(probs, target = NULL) {
   checkmate::assert_data_frame(
     probs,
     types = 'double',
