@@ -1,3 +1,5 @@
+# dymiumCore (development version)
+
 # dymiumCore 0.1.6
 
 ## NEW FEATURES
