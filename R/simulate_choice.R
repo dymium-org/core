@@ -5,9 +5,6 @@
 #' predict probabilities.
 #'
 #' @param model a [Model] object or an object in [SupportedTransitionModels()].
-#' @param probs a data.table where the column names are choices and their values
-#'  are probabilities correspoding fors the choices. Each row represent the choice
-#'  probabilities of an agent.
 #' @param newdata a data.frame object to use for making prediction.
 #' @param target a [Target] object or a named list this is for aligning the simulation
 #' outcome to an external target.
@@ -40,6 +37,42 @@ simulate_choice.glm <- function(model, newdata, target = NULL, ...) {
     {data.table::data.table(x1 = .,
                            x2 = 1 - .)} %>%
     data.table::setnames(choices)
+  simulate_choice(probs, target)
+}
+
+simulate_choice.Model <- function(model, newdata, target = NULL, ...) {
+  if (!is.null(model$preprocessing_fn)) {
+    newdata <- model$preprocessing_fn(newdata)
+  }
+  simulate_choice(model$get(), newdata, target = target, ...)
+}
+
+simulate_choice.WrappedModel <- function(model, newdata, target = NULL, ...) {
+  if (model$learner$type != "classif") {
+    stop("Only `mlr` models of type `classif` (Classification) is supported.")
+  }
+  if (model$learner$predict.type != "prob") {
+    stop("`mlr` model object must have predict.type equal to 'prob' to simulate choice.")
+  }
+  if (!requireNamespace("mlr")) {
+    stop("`mlr` is not installed. Please install the `mlr` package first.")
+  }
+  # WrappedModel's predict method doesn't accept data.table in newdata
+  if (is.data.table(newdata)) {
+    newdata <- as.data.frame(newdata)
+  }
+  pred <- predict(model, newdata = newdata)
+  if (length(model$task.desc$class.levels) == 2) {
+    choices <- model$task.desc$class.levels
+    prob_choice_one <- mlr::getPredictionProbabilities(pred)
+    probs <- data.frame(
+      choice_one = prob_choice_one,
+      choice_two = 1 - prob_choice_one
+    )
+    colnames(probs) <- choices
+  } else {
+    probs <- mlr::getPredictionProbabilities(pred)
+  }
   simulate_choice(probs, target)
 }
 

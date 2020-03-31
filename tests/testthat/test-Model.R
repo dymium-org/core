@@ -37,3 +37,20 @@ test_that("Model - preprocess", {
   expect_true(all(m$preprocessing_fn(toy_individuals)[["sex"]] == "female"))
   expect_true(all(m$preprocessing_fn(toy_individuals)[["age"]] %between% c(18, 40)))
 })
+
+test_that("Model works with mlr model object", {
+  if (requireNamespace("mlr") & requireNamespace("nnet")) {
+    task_data <-
+      dymiumCore::toy_individuals[, sex := as.factor(sex)][, marital_status := as.factor(marital_status)] %>%
+      .[, .(age, sex, marital_status)] %>%
+      as.data.frame()
+    task <- mlr::makeClassifTask(id = "toy_multi_classes", data = task_data, target = "marital_status")
+    lrn = mlr::makeLearner("classif.multinom", predict.type = "prob")
+    train_mod <- mlr::train(lrn, task)
+    my_model <- Model$new(train_mod)
+    checkmate::expect_r6(my_model, classes = "Model")
+    checkmate::expect_class(my_model$model, classes = "WrappedModel")
+    expect_equal(summary(my_model),
+                 summary(my_model$model$learner.model))
+  }
+})

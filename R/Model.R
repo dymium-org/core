@@ -131,5 +131,9 @@ Model <-
 #' @export
 #' @rdname Model
 summary.Model <- function(object, ...) {
-  summary(object$model)
+  if (object$class() == "WrappedModel") {
+    summary(object$model$learner.model)
+  } else {
+    summary(object$model)
+  }
 }

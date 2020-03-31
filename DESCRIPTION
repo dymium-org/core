@@ -34,6 +34,7 @@ Suggests:
     testthat (>= 2.1.0),
     fastmatch (>= 1.1.0),
     caret (>= 6.0),
+    mlr (>= 2.17.0),
     pryr (>= 0.1.4),
     sf (>= 0.8),
     dodgr (>= 0.2.5),

@@ -1,8 +1,5 @@
 test_that("simulate_choice.glm works", {
-  glm_mod <-
-    stats::glm(as.factor(sex) ~ age + marital_status,
-        data = toy_individuals,
-        family = binomial("logit"))
+  glm_mod <- create_glm_binary_model()
   checkmate::expect_character(simulate_choice(glm_mod, newdata = toy_individuals),
                               pattern = "male|female",
                               any.missing = FALSE,
@@ -11,12 +8,7 @@ test_that("simulate_choice.glm works", {
 
 
 test_that("simulate_choice.caret works", {
-  train_mod <-
-    caret::train(
-      as.factor(sex) ~ age + marital_status,
-      data = toy_individuals,
-      method = "glm",
-      family = binomial("logit"))
+  train_mod <- create_caret_binary_model()
   checkmate::expect_character(simulate_choice(train_mod, newdata = toy_individuals),
                               pattern = "male|female",
                               any.missing = FALSE,
@@ -25,13 +17,7 @@ test_that("simulate_choice.caret works", {
 
 
 test_that("simulate_choice.train multilabels works", {
-  train_mod <-
-    caret::train(
-      as.factor(marital_status) ~ age + sex,
-      data = toy_individuals,
-      method = "multinom",
-      family = binomial("logit"),
-      trace = FALSE)
+  train_mod <- create_caret_multinomial_model()
   checkmate::expect_character(simulate_choice(train_mod, newdata = toy_individuals),
                               pattern = paste(unique(toy_individuals[["marital_status"]]), collapse = "|"),
                               any.missing = FALSE,
@@ -46,4 +32,38 @@ test_that("simulate_choice.data.frame works", {
                               pattern = "yes|no|maybe",
                               any.missing = FALSE,
                               len = n_rows)
+})
+
+test_that("simulate_choice.WrappedModel from mlr works", {
+
+  # two classes
+  if (requireNamespace("mlr") & requireNamespace("mboost")) {
+    train_mod <- create_mlr_binary_model()
+    checkmate::expect_character(simulate_choice(train_mod, newdata = toy_individuals),
+                                pattern = "male|female",
+                                any.missing = FALSE,
+                                len = nrow(toy_individuals))
+  }
+
+  # multi classes
+  if (requireNamespace("mlr") & requireNamespace("nnet")) {
+    train_mod <- create_mlr_multinomial_model()
+    checkmate::expect_character(simulate_choice(train_mod, newdata = toy_individuals),
+                                pattern = paste(unique(toy_individuals[["marital_status"]]), collapse = "|"),
+                                any.missing = FALSE,
+                                len = nrow(toy_individuals))
+  }
+
+})
+
+test_that("simulate_choice.Model from dymiumCore works", {
+  if (requireNamespace("mlr") & requireNamespace("nnet")) {
+    train_mod <- create_mlr_multinomial_model()
+    my_model <- Model$new(train_mod, preprocessing_fn = . %>% .[sex == "male"])
+    sim_res <- simulate_choice(my_model, newdata = toy_individuals)
+    checkmate::expect_character(simulate_choice(my_model, newdata = toy_individuals),
+                                pattern = paste(unique(toy_individuals[["marital_status"]]), collapse = "|"),
+                                any.missing = FALSE,
+                                len = toy_individuals[sex == "male", .N])
+  }
 })

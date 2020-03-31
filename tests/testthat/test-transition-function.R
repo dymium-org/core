@@ -1,6 +1,7 @@
 test_that("transition function works", {
   create_toy_world()
 
+  # create a preprocessing filter function
   filter_male <-
     . %>%
     .[sex == "male",]
@@ -68,5 +69,10 @@ test_that("transition function works", {
   checkmate::expect_character(transition_result[['response']],
                               any.missing = FALSE,
                               null.ok = FALSE)
+
+})
+
+
+test_that("transition works with mlr models", {
 
 })
