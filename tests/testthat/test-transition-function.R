@@ -64,10 +64,13 @@ test_that("transition function works", {
 
 
 test_that("transition works with mlr models", {
-  create_toy_world()
-  my_model <- Model$new(x = create_mlr_multinomial_model())
-  res <- get_transition(world, entity = "Individual", model = my_model)
-  checkmate::expect_character(res[["response"]],
-                              any.missing = FALSE,
-                              null.ok = FALSE)
+  if (requireNamespace("mlr") & requireNamespace("nnet")) {
+    create_toy_world()
+    my_model <- Model$new(x = create_mlr_multinomial_model())
+    res <-
+      get_transition(world, entity = "Individual", model = my_model)
+    checkmate::expect_character(res[["response"]],
+                                any.missing = FALSE,
+                                null.ok = FALSE)
+  }
 })

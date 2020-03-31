@@ -305,10 +305,16 @@ test_that("dynamic target", {
 })
 
 test_that("TransitionClassifcation works with mlr model", {
-  create_toy_world()
-  mlr_model <- create_mlr_multinomial_model()
-  my_trans <- TransitionClassification$new(world$entities$Individual, model = mlr_model)
-  checkmate::expect_character(my_trans$get_result()[["response"]],
-                              any.missing = FALSE,
-                              len = world$entities$Individual$n())
+  if (requireNamespace("mlr") &
+      requireNamespace("nnet")) {
+    create_toy_world()
+    mlr_model <- create_mlr_multinomial_model()
+    my_trans <-
+      TransitionClassification$new(world$entities$Individual, model = mlr_model)
+    checkmate::expect_character(
+      my_trans$get_result()[["response"]],
+      any.missing = FALSE,
+      len = world$entities$Individual$n()
+    )
+  }
 })
