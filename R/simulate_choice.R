@@ -45,7 +45,8 @@ simulate_choice.glm <- function(model, newdata, target = NULL, ...) {
 
 #' @rdname simulate_choice
 #' @export
-simulate_choice.data.frame <- function(probs, target = NULL) {
+simulate_choice.data.frame <- function(model, target = NULL) {
+  probs <- model
   checkmate::assert_data_frame(
     probs,
     types = 'double',
@@ -65,3 +66,4 @@ simulate_choice.data.frame <- function(probs, target = NULL) {
     purrr::pmap_chr(probs, ~ sample_choice(choices, 1, prob = (list(...))))
   }
 }
+
