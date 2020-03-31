@@ -11,7 +11,7 @@ v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org
 [![Build
 Status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://travis-ci.org/dymium-org/dymiumCore)
 [![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/dymium-org/dymiumCore?branch=master&svg=true)](https://ci.appveyor.com/project/dymium-org/dymiumCore)
+status](https://ci.appveyor.com/api/projects/status/qhjt91cg08ob7s16/branch/master?svg=true)](https://ci.appveyor.com/project/asiripanich/dymiumcore/branch/master)
 [![Codecov test
 coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.svg)](https://codecov.io/gh/dymium-org/dymiumCore?branch=master)
 <!-- [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore) -->
