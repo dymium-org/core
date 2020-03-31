@@ -16,7 +16,7 @@
 #' @section Construction:
 #'
 #' ```
-#' Transition$new(x, model, target = NULL, targeted_agents = NULL)
+#' Trans$new(x, model, target = NULL, targeted_agents = NULL)
 #' ```
 #'
 #' * `x` :: [`R6`]\cr
@@ -39,7 +39,7 @@
 #'  * `mutate_first`:: `logical(1)`\cr
 #'  Default as FALSE, this flag is used to indicate whether the attribute data from
 #'  the Agent in `x` should be mutated (`$mutate(.data)`) before filtered (`$filter(.data)`).
-#'  See the description section for more details about the processing steps of [Transition].
+#'  See the description section for more details about the processing steps of [Trans].
 #'
 #' @section Methods:
 #'
@@ -76,8 +76,8 @@
 #'
 #' @export
 # TransitionClass ---------------------------------------------------------
-Transition <- R6Class(
-  classname = "Transition",
+Trans <- R6Class(
+  classname = "Trans",
   inherit = Generic,
   public = list(
     # Public ----------------------------------------------------------
@@ -87,13 +87,23 @@ Transition <- R6Class(
     initialize = function(x, model, target = NULL, targeted_agents = NULL) {
       # checks
       checkmate::assert_class(x, c("Agent"))
-      checkmate::assert_subset(class(model)[[1]], choices = SupportedTransitionModels())
+      checkmate::assert(
+        checkmate::check_subset(class(model)[[1]], choices = SupportedTransitionModels()),
+        checkmate::check_r6(model, classes = "Model"),
+        combine = "or"
+      )
       dymiumCore::assert_target(target, null.ok = TRUE)
       checkmate::assert_integerish(targeted_agents, lower = 1, any.missing = FALSE, null.ok = TRUE)
 
+
       # store inputs
       private$.AgtObj <- x
-      private$.model <- model
+      if (checkmate::test_r6(model, classes = "Model")) {
+        private$.model <- model$model
+        private$.model_preprocessing_fn <- model$preprocessing_fn
+      } else {
+        private$.model <- model
+      }
       private$.target <- Target$new(target)$get()
       private$.targeted_agents <- targeted_agents
 
@@ -192,6 +202,7 @@ Transition <- R6Class(
   private = list(
     # Private ----------------------------------------------------------
     .model = NULL, # model object or data.table
+    .model_preprocessing_fn = NULL,
     .AgtObj = R6::R6Class(), # use as a reference holder
     .sim_data = data.table(), # preprocessed simulation data
     .sim_result = data.table(), # two columns: id, response
@@ -211,6 +222,11 @@ Transition <- R6Class(
       }
 
       checkmate::assert_data_table(raw_data, min.rows = 1, null.ok = FALSE, .var.name = "Agent's data")
+
+      # Model's preprocessing function
+      if (!is.null(private$.model_preprocessing_fn)) {
+        raw_data <- private$.model_preprocessing_fn(raw_data)
+      }
 
       # preprocess data
       if (self$mutate_first) {
@@ -373,7 +389,7 @@ SupportedTransitionModels <- function() {
 #' @rdname SupportedTransitionModels
 #' @export
 get_supported_models <- function() {
-  return(c("train", "list", "data.table", "numeric", "glm", "lm"))
+  return(c("train", "list", "data.table", "numeric", "glm", "lm", "WrappedModel"))
 }
 
 monte_carlo_sim <- function(prediction, target) {
@@ -398,58 +414,6 @@ monte_carlo_sim <- function(prediction, target) {
     # random draw choices
     return(purrr::pmap_chr(prediction, ~ sample_choice(choices, 1, prob = (list(...)))))
   }
-}
-
-#' Simulate a transition of entities
-#'
-#' @description
-#'
-#' This function warps [TransitionClassification] and [TransitionRegression]. It
-#' figures out what is the type of the given model.
-#'
-#' @param entity an [Entity] object
-#' @param model a model object that belongs to the classes in [SupportedTransitionModels].
-#' @param target a named list that is the target for alignment.
-#' @param targeted_agents a integer vector that contains ids of `entity` to undergo
-#' the transition.
-#' @param update_attr default as NULL. This indicates whether `entity` should be updated
-#' using the outcomes from the transtion. To update an attribute of `entity` the name
-#' of the attribute to be updated must be specified as a character value.
-#'
-#' @return a data.table with two columns: id and response.
-#' @export
-#'
-#' @seealso [TransitionClassification] and [TransitionRegression].
-#'
-#' @examples
-#'
-#' # load data
-#' create_toy_population()
-#' Ind <- pop$get("Individual")
-#'
-#' # fit a OLS regression model
-#' model_lm <- glm(age ~ sex + marital_status,
-#'                 data = Ind$get_data(),
-#'                 family = "gaussian")
-#'
-#' # fit a logit model
-#' model_glm <- glm(I(sex == "male") ~ age + marital_status,
-#'                  data = Ind$get_data(),
-#'                  family = "binomial")
-#'
-#' # simulation transitions
-#' trans(Ind, model_lm)
-#' trans(Ind, model_glm)
-trans <- function(entity, model, target = NULL, targeted_agents = NULL, update_attr = NULL) {
-  if (is_regression(model)) {
-    trans <- TransitionRegression$new(x = entity, model = model, targeted_agents = targeted_agents)
-  } else {
-    trans <- TransitionClassification$new(x = entity, model = model, target = target, targeted_agents = targeted_agents)
-  }
-  if (!is.null(update_attr)) {
-    trans$update_agents(update_attr)
-  }
-  trans$get_result()
 }
 
 is_regression <- function(x) {

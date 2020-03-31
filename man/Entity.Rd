@@ -4,7 +4,9 @@
 \alias{Entity}
 \alias{Entities}
 \title{Entity class}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object.
+}
 \description{
 The base class (first building block) for \link{Agent}, \link{Asset} and \link{Environment}.
 }

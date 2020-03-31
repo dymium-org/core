@@ -3,7 +3,9 @@
 \name{Population}
 \alias{Population}
 \title{Population}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Container}<-\link{ContainerGeneric}<-\link{Generic}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Container}<-\link{ContainerGeneric}<-\link{Generic}.
+}
 \description{
 A \link{Container} specifically made for a \link{Individual} object and a \link{Household} object.
 It also contains methods that modify both if its contained objects simutaneously.

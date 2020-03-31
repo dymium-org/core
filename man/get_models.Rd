@@ -4,12 +4,15 @@
 \alias{get_models}
 \title{Get model objects from \link{World}.}
 \usage{
-get_models(x, model_names)
+get_models(x, model_names, as_r6model = FALSE)
 }
 \arguments{
 \item{x}{a \link{World} object.}
 
 \item{model_names}{a character vector of the named \link{Model} objects to be retrieved.}
+
+\item{as_r6model}{default as FALSE, if TRUE all \code{required_models} will be returned
+as \link{Model} objects.}
 }
 \value{
 a named \code{list} containing \link{Model} objects

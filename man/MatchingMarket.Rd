@@ -3,7 +3,9 @@
 \name{MatchingMarket}
 \alias{MatchingMarket}
 \title{Matching Market Class}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object.
+}
 \description{
 This is a the abstract base class for matching market objects like
 \link{MatchingMarketStochastic} and \link{MatchingMarketOptimal}. This class is usually

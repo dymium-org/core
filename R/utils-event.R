@@ -2,6 +2,8 @@
 #'
 #' @param x a [World] object.
 #' @param model_names a character vector of the named [Model] objects to be retrieved.
+#' @param as_r6model default as FALSE, if TRUE all `required_models` will be returned
+#' as [Model] objects.
 #'
 #' @return a named `list` containing [Model] objects
 #' @export
@@ -12,14 +14,18 @@
 #' testModel <- list(a = 1)
 #' world$add(testModel, "testModel")
 #' get_models(world, "testModel")
-get_models <- function(x, model_names) {
+get_models <- function(x, model_names, as_r6model = FALSE) {
   checkmate::assert_r6(x, classes = "World", public = c("get", "models"))
   checkmate::assert_character(model_names, any.missing = FALSE, null.ok = FALSE)
   checkmate::assert_subset(model_names, choices = names(x$models))
   model <- list()
   for (.model_name in model_names) {
     .pos <- length(model) + 1
-    model[[.pos]] <- x$get(.model_name)$get()
+    if (as_r6model) {
+      model[[.pos]] <- x$get(.model_name)
+    } else {
+      model[[.pos]] <- x$get(.model_name)$get()
+    }
     names(model)[.pos] <- .model_name
   }
   model
@@ -36,10 +42,12 @@ get_models <- function(x, model_names) {
 #' go over both objects to find all models with names in `required_models`.
 #'
 #' @param model `logical(1)`\cr
-#' A named list that contains models that [Transition] supports.
+#' A named list that contains models that [Trans] supports.
 #' @param world a [World] object.
 #' @param required_models `character()`\cr
 #' A character vector contains names of required models.
+#' @param as_r6model default as FALSE, if TRUE all `required_models` will be returned
+#' as [Model] objects.
 #'
 #' @note
 #' This is used by event functions to prioritise which models, from the user argument
@@ -64,7 +72,7 @@ get_models <- function(x, model_names) {
 #' # not the one that was added to world as it gives hihger priority to the object
 #' # in `model`.
 #' final_model
-pick_models <- function(model, world, required_models) {
+pick_models <- function(model, world, required_models, as_r6model = FALSE) {
   checkmate::assert_list(model,
                          types = SupportedTransitionModels(),
                          any.missing = FALSE,
@@ -85,7 +93,7 @@ pick_models <- function(model, world, required_models) {
                          names = models_not_found,
                          check_supported_model = FALSE)
   models_from_world <-
-    get_models(world, model_names = models_not_found)
+    get_models(world, model_names = models_not_found, as_r6model = as_r6model)
 
   # return complete list of models
   append(model, models_from_world)

@@ -1,7 +1,7 @@
 Package: dymiumCore
 Type: Package
 Title: The core functions of a Dynamic Microsimulation framework for Integrated Urban Models
-Version: 0.1.5
+Version: 0.1.6
 Authors@R: c(
     person("Amarin", "Siripanich", email = "amarin@dymium.org", role = c("aut", "cre")),
     person("Taha", "Rashidi", role = c("aut")))
@@ -33,7 +33,9 @@ Imports:
 Suggests:
     testthat (>= 2.1.0),
     fastmatch (>= 1.1.0),
-    caret (>= 6.0),
+    caret (>= 6.0.0),
+    mlr (>= 2.17.0),
+    nnet (>= 7.3.0),
     pryr (>= 0.1.4),
     sf (>= 0.8),
     dodgr (>= 0.2.5),
@@ -43,7 +45,6 @@ Suggests:
     rmarkdown,
     ggplot2 (>= 3.0.0),
     DiagrammeR (>= 1.0.0),
-    caret (>= 6.0.0),
     randomForest,
     reactable,
     patchwork (>= 1.0.0),
@@ -52,7 +53,7 @@ Suggests:
     ggthemes (>= 4.2.0),
     visNetwork (>= 2.0.0)
 Roxygen: list(markdown = TRUE, r6 = FALSE)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 StagedInstall: no
 VignetteBuilder: knitr
 Collate: 
@@ -98,6 +99,8 @@ Collate:
     'module.R'
     'population-register.R'
     'scenario.R'
+    'simulate_choice.R'
+    'transition-fnc.R'
     'usethis.R'
     'utils-class.R'
     'utils-event.R'

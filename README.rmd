@@ -44,7 +44,7 @@ It is true that there is no shortage of open source microsimulation frameworks, 
 - ready-to-use events see [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
 - microsimulation events are modular, sharable and scalable
 - equipped with the basic building blocks for building a microsimulation model that is flexible and extensible.
-- can use parameters from various model objects (e.g. `stats::lm`, `stats::glm`, `caret::train`).
+- can use parameters from various model objects (e.g. `stats::lm`, `stats::glm`, `caret::train`, `mlr::train`).
 
 ## Installation
 
@@ -76,6 +76,8 @@ We are open to collaboration on this project. If you are interested, please emai
 ## Development plan (as of 14th March 2020)
 
 - [x] __Version 0.1.0__: (21 Jan 2020) Release all the basic building blocks for microsimulation modelling.
+  - [x] __Version 0.1.6__: Support `mlr` in `transision()` and `TransitionClassification`.
+  - [ ] Support regression model creation from parameters. 
   - [ ] Support `mlr3` and `mlogit` model objects in the Transition classes.
 - [ ] __Version 0.2.0__: Implement model-based calibration.
 - [ ] __Version 0.3.0__: Visualisation functions for life-courses, spatial data, etc.

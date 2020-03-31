@@ -87,7 +87,7 @@ check_subset2 <- function(x, choices, informative = TRUE) {
   return(res)
 }
 
-#' Check if an argument is an object that is supported by [Transition]
+#' Check if an argument is an object that is supported by [Trans]
 #'
 #' @param x (`any`)\cr
 #' an object to check.
@@ -126,7 +126,7 @@ expect_transition_supported_model <- checkmate::makeExpectationFunction(check_tr
 #' @param x a named list.
 #' @param names a character vector contains names of the required models
 #' @param check_supported_model Whether to check that each element in `x` are
-#' supported by [Transition] using `assert_transition_supported_model()`.
+#' supported by [Trans] using `assert_transition_supported_model()`.
 #'
 #' @return TRUE if all the required models exist else throws an error.
 #' @export

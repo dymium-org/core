@@ -3,7 +3,9 @@
 \name{Building}
 \alias{Building}
 \title{Building class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Asset}<-\link{Entity}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Asset}<-\link{Entity}.
+}
 \description{
 Create a building object.\preformatted{x <- Building$new(.data, id_col, owner)
 }

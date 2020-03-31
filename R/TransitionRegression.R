@@ -24,7 +24,7 @@
 #' In a future update, there will be an option which allows the prediction result
 #' to be drawn from a distribution to add randomness to the result.
 #'
-#' @format [R6::R6Class] object inheriting from [Transition]
+#' @format [R6::R6Class] object inheriting from [Trans]
 #' @section Construction:
 #'
 #' ```
@@ -80,7 +80,7 @@
 #'  (`character()`) -> (`integer()`)\cr
 #'  Returns ids of the agents that have their response equal to `response_filter`.
 #'
-#' @seealso [TransitionClassification] and [trans].
+#' @seealso [TransitionClassification] and [Trans].
 #'
 #' @include Transition.R
 #' @export
@@ -104,7 +104,7 @@
 #' TransAge$update_agents(attr = "age")
 TransitionRegression <- R6Class(
   classname = "TransitionRegression",
-  inherit = Transition,
+  inherit = Trans,
   public = list(
     initialize = function(x, model, targeted_agents = NULL) {
       super$initialize(x, model, target = NULL, targeted_agents = targeted_agents)

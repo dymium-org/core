@@ -4,7 +4,9 @@
 \alias{Container}
 \alias{Containers}
 \title{Container}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:ContainerGeneric]{dymiumCore::ContainerGeneric}}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:ContainerGeneric]{dymiumCore::ContainerGeneric}
+}
 \description{
 Container is the base class for \link{World} and \link{Population}. It has the basic
 functionalities to store and access references of other \link[R6:R6Class]{R6::R6Class} objects.

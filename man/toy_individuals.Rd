@@ -4,7 +4,8 @@
 \name{toy_individuals}
 \alias{toy_individuals}
 \title{Toy individual microdata}
-\format{A data table with 346 rows and 9 variables:
+\format{
+A data table with 346 rows and 9 variables:
 \describe{
 \item{pid}{(\code{integer()}) person id}
 \item{hid}{(\code{integer()}) household id}
@@ -14,7 +15,8 @@
 \item{partner_id}{(\code{integer()})}
 \item{father_id}{(\code{integer()})}
 \item{mother_id}{(\code{integer()})}
-}}
+}
+}
 \usage{
 data(toy_individuals)
 }

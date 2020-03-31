@@ -3,7 +3,9 @@
 \name{BuildingIndustrial}
 \alias{BuildingIndustrial}
 \title{Industrial building class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Building}<-\link{Asset}<-\link{Entity}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Building}<-\link{Asset}<-\link{Entity}.
+}
 \description{
 Create dwelling class, extended Agent class.
 }
