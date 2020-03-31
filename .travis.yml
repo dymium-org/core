@@ -18,6 +18,9 @@ addons:
     sources:
       - sourceline: 'ppa:jonathonf/ffmpeg-4'
 
+before_cache:
+  Rscript -e 'remotes::install_github("r-lib/pkgdown#1276")'
+
 before_install:
   - sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable --yes
   - sudo apt-get --yes --force-yes update -qq
