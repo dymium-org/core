@@ -127,8 +127,6 @@ normalise_derived_vars <- function(.data) {
 #'
 #' @return a log data.table.
 #' @export
-#'
-#' @examples
 get_log <- function(x) {
   UseMethod("get_log", x)
 }

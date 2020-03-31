@@ -38,71 +38,6 @@ sample_choice <- function(x, size = 1, replace = FALSE, prob = NULL) {
   }
 }
 
-#' Condense rows
-#'
-#' @description
-#' Condense two vectors - where the first vector is an id vector and the second
-#' vector is an target (which must be unique) -  into a data.table with two
-#' columns (id and target).
-#'
-#' @param id (`integer()`) a integer vector contains ids.
-#' @param target (`integer()`) a integer vector contains values with the same length as `id`.
-#' @param names (Default as `NULL`)
-#'
-#' @return a data.table with two columns, `id` and `target`.
-condense_rows <- function(id, target, names = NULL){
-
-  checkmate::assert(
-    checkmate::check_integerish(id, any.missing = FALSE, null.ok = FALSE),
-    checkmate::check_integerish(target, any.missing = FALSE, null.ok = FALSE),
-    checkmate::check_true(length(id) == length(target)),
-    combine = "and"
-  )
-
-  if (is.numeric(id)) {
-    id <- as.integer(id)
-  }
-
-  if (is.numeric(target)) {
-    target <- as.integer(target)
-  }
-
-  dt <- data.table(id = id, target = target)
-  dt <- dt[, .(target = list(target)), by = id]
-
-  if (!is.null(names)) {
-    stopifnot(length(names) == ncol(dt))
-    names(dt) <- names
-  }
-
-  return(dt)
-}
-
-
-#' @title element_wise_expand_lists
-#'
-#' @description expand two lists into a dataframe. l1 and l2 can be a nested list.
-#'
-#' @param l1 first list
-#' @param l2 second list
-#'
-#' @return data.frame with two columns, Var1 and Var2.
-#' @export
-#'
-#' @examples
-#'  l1 <- list(1,2,3,4)
-#'  l2 <- list(1,2,3,4)
-#'  element_wise_expand_lists(l1,l2)
-#'
-#'  l1 <- list(1,2,3,4)
-#'  l2 <- list(1,2,3,c(1,3))
-#'  element_wise_expand_lists(l1,l2)
-element_wise_expand_lists = function(l1, l2) {
-  stopifnot(length(l1) == length(l2))
-  as.data.table(do.call(rbind, Map(expand.grid, l1, l2)))
-}
-
-
 #' Look up and replace values in columns, including list columns.
 #'
 #' Replace all values in a data.frame using a lookup table. Maximum of one list
@@ -180,8 +115,6 @@ lookup_and_replace = function(data, lookup_table, cols, id_col = NULL) {
 #'
 #' @return a data.frame
 #' @export
-#'
-#' @examples
 lookup_and_replace2 <- function(x, cols, mapping) {
   checkmate::assert_data_frame(x)
   checkmate::assert_character(cols)

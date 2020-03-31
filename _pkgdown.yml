@@ -19,6 +19,7 @@ reference:
     - Agent
     - Individual
     - Household
+    - Firm
     - Asset
     - starts_with("Building")
     - Environment
@@ -26,12 +27,11 @@ reference:
     - Network
 - title: Containers
   contents:
+    - ContainerGeneric
     - Container
-    - World
     - Population
     - Model
-    - pop_register
-    - household_formation
+    - World
 - title: Simulation tools & Alignment
   contents:
     - matches("^Trans.")
@@ -42,6 +42,8 @@ reference:
     - alignment
     - Pipeline
     - starts_with("Match")
+    - pop_register
+    - register
 - title: Logging and inspection
   contents:
     - add_history
@@ -93,14 +95,14 @@ reference:
 - title: "Miscellaneous"
   contents:
     - extract_data
+    - is_dymium_class
     - starts_with("dm_")
     - .get_sim_time
     - omit_derived_vars
     - normalise_derived_vars
     - sample_choice
     - lookup_and_replace
-    - condense_rows
-    - element_wise_expand_lists
+    - lookup_and_replace2
     - unnest_datatable
     - dt_group_and_sort
     - validate_linkages
@@ -108,11 +110,8 @@ reference:
 - title: Base classes
   contents:
     - Generic
-    - Entity
-    - Transition
-    - DataBackend
-    - ContainerGeneric
-    - is_dymium_class
+    - Trans
+
 
 toc:
   depth: 2

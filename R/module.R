@@ -212,9 +212,8 @@ get_module_files <- function(name, repo = dymiumModulesRepo) {
 #' @examples
 #'
 #' \dontrun{
-#'   get_all_module_files("dymium-org/dymiumModules)
+#'   get_all_module_files("dymium-org/dymiumModules")
 #' }
-#'
 get_all_module_files <- function(repo = dymiumModulesRepo) {
   checkmate::assert_character(repo, len = 1, null.ok = FALSE, any.missing = FALSE)
   apiurl <- paste0("https://api.github.com/repos/", repo, "/git/trees/master?recursive=1")

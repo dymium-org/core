@@ -41,3 +41,14 @@ Returns \code{TRUE}. Use for internal checking.
 }
 }
 
+\section{Private field}{
+
+\itemize{
+\item \code{.log}\cr
+A data.table for storing logs. There are 6 columns: time (integer),
+created_timestamp(integer), class (character), tag (character), desc (character),
+value (list). The \code{value} column is a list column gives it a flexibility to store
+any types of objects.
+}
+}
+

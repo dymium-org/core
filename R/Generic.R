@@ -19,29 +19,29 @@
 #' @section Methods:
 #'
 #' * `debug()`\cr
-#' () -> `self & private`\cr
-#' Makes debugging the object easier by assigning self and private to the
-#' global environment of the current seesion.
+#'  () -> `self & private`\cr
+#'  Makes debugging the object easier by assigning self and private to the
+#'  global environment of the current seesion.
 #'
 #' * `log(desc, value, tag = "", time = .get_sim_time(), .lg = parent.frame()[["lg"]])`\cr
-#' (`character(1)`, any objects, `character(1)`, `integer(1)`, [lgr::Logger])\cr
-#' For logging simulation outcomes to `private$.log`. `get_log(x)` can be used to
-#' extract the log data from any object that inherit `Generic`. Note that, the
-#' logger in `log` can be specified. By default, it tries to look in the `parent.frame`
-#' the calling scope to find a logger named `lg` which is the default name used in
-#' dymium modules. If not found, then it will automatically use dymiumCore's logger.
+#'  (`character(1)`, any objects, `character(1)`, `integer(1)`, [lgr::Logger])\cr
+#'  For logging simulation outcomes to `private$.log`. `get_log(x)` can be used to
+#'  extract the log data from any object that inherit `Generic`. Note that, the
+#'  logger in `log` can be specified. By default, it tries to look in the `parent.frame`
+#'  the calling scope to find a logger named `lg` which is the default name used in
+#'  dymium modules. If not found, then it will automatically use dymiumCore's logger.
 #'
 #'
 #' * `is_dymium_class()`\cr
-#' Returns `TRUE`. Use for internal checking.
+#'  Returns `TRUE`. Use for internal checking.
 #'
-#' @section Private field
+#' @section Private field:
 #'
 #' * `.log`\cr
-#' A data.table for storing logs. There are 6 columns: time (integer),
-#' created_timestamp(integer), class (character), tag (character), desc (character),
-#' value (list). The `value` column is a list column gives it a flexibility to store
-#' any types of objects.
+#'  A data.table for storing logs. There are 6 columns: time (integer),
+#'  created_timestamp(integer), class (character), tag (character), desc (character),
+#'  value (list). The `value` column is a list column gives it a flexibility to store
+#'  any types of objects.
 #'
 #' @export
 Generic <- R6Class(
