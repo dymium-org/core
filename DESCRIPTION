@@ -1,12 +1,12 @@
 Package: dymiumCore
-Type: Package
-Title: A Toolkit for Building a Dynamic Microsimulation Model for Integrated Urban Modelling.
 Version: 0.1.6
+Title: A Toolkit for Building a Dynamic Microsimulation Model for Integrated Urban Modelling
+Description: A modular microsimulation modelling framework for integrated urban modelling.
 Authors@R: c(
     person("Amarin", "Siripanich", email = "amarin@dymium.org", role = c("aut", "cre")),
-    person("Taha", "Rashidi", role = c("aut")))
+    person("Taha", "Rashidi", role = c("aut"))
+    )
 Maintainer: Amarin Siripanich <amarin@dymium.org>
-Description: A modular microsimulation modelling framework for integrated urban modelling.
 License: GPL-3
 URL: https://core.dymium.org, https://github.com/dymium-org/dymiumCore
 BugReports: https://github.com/dymium-org/dymiumCore/issues
