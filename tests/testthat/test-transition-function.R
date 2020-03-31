@@ -9,7 +9,7 @@ test_that("transition function works", {
   transition(
     world,
     entity = "Individual",
-    model = glm(factor(sex) ~ age, toy_individuals, family = binomial()),
+    model = create_glm_binary_model(),
     preprocessing_fn = filter_male
   )
 
@@ -17,24 +17,14 @@ test_that("transition function works", {
     transition(
       world,
       entity = "Individual",
-      model = caret::train(
-        sex ~ age,
-        data = toy_individuals,
-        method = "glm",
-        family = binomial()
-      ),
+      model = create_caret_binary_model(),
       targeted_ids = 99,
       preprocessing_fn = filter_male
     )
   }
 
   # mnl
-  mnl <- caret::train(
-    marital_status ~ age + sex,
-    data = toy_individuals,
-    method = "multinom",
-    trace = FALSE
-  )
+  mnl <- create_caret_multinomial_model()
 
   checkmate::expect_r6(
     x = transition(
