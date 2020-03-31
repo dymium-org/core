@@ -46,7 +46,7 @@ jobs:
     before_deploy: Rscript -e 'remotes::install_cran("pkgdown"); remotes::install_cran("prettydoc"); remotes::install_cran("badger")'
     deploy:
       provider: script
-      script: Rscript -e 'pkgdown::deploy_site_github()'
+      script: Rscript -e 'pkgdown::deploy_site_github(ssh_id = Sys.getenv("TRAVIS_DEPLOY_KEY", ""))'
       skip_cleanup: true
   - r: oldrel
   fast_finish: true
