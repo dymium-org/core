@@ -59,8 +59,8 @@ more…](https://core.dymium.org/articles/why-another-microsim.html)
   - microsimulation events are modular, sharable and scalable
   - equipped with the basic building blocks for building a
     microsimulation model that is flexible and extensible.
-  - can use parameters from various model objects (e.g. `stats::lm`,
-    `stats::glm`, `caret::train`).
+  - can use parameters from various model objects (e.g. `stats::lm`,
+    `stats::glm`, `caret::train`, `mlr::train`).
 
 ## Installation
 
@@ -98,14 +98,17 @@ please email us at amarin at dymium.org.
 
 ## Development plan (as of 14th March 2020)
 
-  - [x] **Version 0.1.0**: (21 Jan 2020) Release all the basic building
-    blocks for microsimulation modelling.
-      - [ ] Support `mlr3` and `mlogit` model objects in the Transition
-        classes.
-  - [ ] **Version 0.2.0**: Implement model-based calibration.
-  - [ ] **Version 0.3.0**: Visualisation functions for life-courses,
+  - \[x\] **Version 0.1.0**: (21 Jan 2020) Release all the basic
+    building blocks for microsimulation modelling.
+      - \[x\] **Version 0.1.6**: Support `mlr` in `transision()` and
+        `TransitionClassification`.
+      - \[ \] Support regression model creation using parameters.
+      - \[ \] Support `mlr3` and `mlogit` model objects in the
+        Transition classes.
+  - \[ \] **Version 0.2.0**: Implement model-based calibration.
+  - \[ \] **Version 0.3.0**: Visualisation functions for life-courses,
     spatial data, etc.
-  - [ ] **Version 0.4.0**: Integration with dymiumGUI.
+  - \[ \] **Version 0.4.0**: Integration with dymiumGUI.
 
 ## Related open-source frameworks and models
 
