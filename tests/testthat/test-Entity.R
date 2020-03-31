@@ -126,7 +126,7 @@ test_that("idx_exist", {
 
 test_that("print_data", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
-  MyObj$print_data(n = 10)
+  checkmate::expect_character(capture.output(MyObj$print_data(n = 10)))
 })
 
 test_that("has_attr", {

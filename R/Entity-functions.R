@@ -181,13 +181,14 @@ merge_entities <- function(entity_x, entity_y, x_dataname, y_dataname) {
 #' )
 inspect <- function(entity, ids, related_entity = NULL, verbose = TRUE) {
   checkmate::assert_r6(entity, classes = c("Entity"))
+  checkmate::assert_flag(verbose, na.ok = FALSE, null.ok = FALSE)
   checkmate::assert_integerish(ids, lower = 0, any.missing = FALSE)
   checkmate::assert_r6(related_entity, classes = c("Entity"), null.ok = TRUE)
-
-  cli::cli_alert_info("Attribute data of {entity$class()}")
   entity_data <- entity$get_data(ids = ids)
-  print(entity_data)
-
+  if (verbose) {
+    cli::cli_alert_info("Attribute data of {entity$class()}")
+    print(entity_data)
+  }
   if (!is.null(related_entity)) {
     if (!entity$get_id_col() %in% related_entity$data()$colnames() &
         !related_entity$get_id_col() %in% entity$data()$colnames()) {
@@ -197,7 +198,6 @@ inspect <- function(entity, ids, related_entity = NULL, verbose = TRUE) {
     if (verbose)  {
       cli::cli_alert_info("Attribute data of {related_entity$class()}")
     }
-
     # entities are 'members' to related entities
     if (related_entity$get_id_col() %in% entity$data()$colnames()) {
       if (verbose)  {

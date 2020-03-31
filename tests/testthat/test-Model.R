@@ -11,13 +11,7 @@ test_that("Model - glm", {
 
 test_that("Model - train", {
   if (requireNamespace("caret")) {
-    m <-
-      Model$new(caret::train(
-        Species ~ .,
-        data = iris,
-        trace = FALSE,
-        trControl = caret::trainControl(method = "none")
-      ))
+    m <- Model$new(create_caret_multinomial_model())
     checkmate::expect_class(m$model, "train")
   }
 })

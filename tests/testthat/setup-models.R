@@ -32,6 +32,7 @@ create_caret_binary_model <- function() {
         as.factor(sex) ~ age + marital_status,
         data = toy_individuals,
         method = "glm",
+        trControl = caret::trainControl(method = "none"),
         family = "binomial"
       )
     )
@@ -46,6 +47,7 @@ create_caret_multinomial_model <- function() {
         marital_status ~ age + sex,
         data = toy_individuals,
         method = "multinom",
+        trControl = caret::trainControl(method = "none"),
         trace = FALSE
       )
     )
@@ -56,6 +58,7 @@ create_glm_binary_model <- function() {
   stats::glm(
     as.factor(sex) ~ age + marital_status,
     data = toy_individuals,
-    family = "binomial"
+    family = "binomial",
+    trace = FALSE
   )
 }

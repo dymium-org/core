@@ -1,15 +1,13 @@
 test_that("initialise", {
-  x <- DataBackendSpatialFeature$new(toy_zones)
+  checkmate::expect_r6(DataBackendSpatialFeature$new(toy_zones), class = "DataBackendSpatialFeature")
 })
 
 test_that("get", {
-  x <- DataBackendSpatialFeature$new(toy_zones)
-  expect_is(x$get(), "data.table")
+  expect_is(DataBackendSpatialFeature$new(toy_zones)$get(), "data.table")
 })
 
 test_that("get_sf", {
-  x <- DataBackendSpatialFeature$new(toy_zones)
-  expect_is(x$get_sf(), "sf")
+  expect_is(DataBackendSpatialFeature$new(toy_zones)$get_sf(), "sf")
 })
 
 test_that("view", {
