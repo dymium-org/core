@@ -43,7 +43,7 @@ jobs:
   - r: devel
   - r: release
     after_success: Rscript -e 'covr::codecov()'
-    before_deploy: Rscript -e 'remotes::install_cran("pkgdown"); remotes::install_cran("prettydoc"); remotes::install_cran("badger")'
+    before_deploy: Rscript -e 'remotes::install_cran("pkgdown"); remotes::install_cran("prettydoc")'
     deploy:
       provider: script
       script: Rscript -e 'pkgdown::deploy_site_github(ssh_id = Sys.getenv("TRAVIS_DEPLOY_KEY", ""))'
