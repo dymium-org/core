@@ -185,7 +185,7 @@ get_log.Container <- function(x) {
 #' new_ind_data <- data.table::copy(toy_individuals)
 #'
 #' data_lst <- register(Ind, new_ind_data)
-register = function(x, ..., only_primary_id_col = FALSE) {
+register <- function(x, ..., only_primary_id_col = FALSE) {
   checkmate::assert_r6(x, classes = "Entity")
 
   dots_variable_names <-
