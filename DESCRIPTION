@@ -33,8 +33,9 @@ Imports:
 Suggests:
     testthat (>= 2.1.0),
     fastmatch (>= 1.1.0),
-    caret (>= 6.0),
+    caret (>= 6.0.0),
     mlr (>= 2.17.0),
+    nnet (>= 7.3.0),
     pryr (>= 0.1.4),
     sf (>= 0.8),
     dodgr (>= 0.2.5),
@@ -44,7 +45,6 @@ Suggests:
     rmarkdown,
     ggplot2 (>= 3.0.0),
     DiagrammeR (>= 1.0.0),
-    caret (>= 6.0.0),
     randomForest,
     reactable,
     patchwork (>= 1.0.0),
