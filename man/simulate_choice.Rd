@@ -4,6 +4,7 @@
 \alias{simulate_choice}
 \alias{simulate_choice.train}
 \alias{simulate_choice.glm}
+\alias{simulate_choice.data.frame}
 \title{Simulate a choice situation}
 \usage{
 simulate_choice(model, ...)
@@ -11,6 +12,8 @@ simulate_choice(model, ...)
 \method{simulate_choice}{train}(model, newdata, target = NULL, ...)
 
 \method{simulate_choice}{glm}(model, newdata, target = NULL, ...)
+
+\method{simulate_choice}{data.frame}(model, target = NULL, ...)
 }
 \arguments{
 \item{model}{a \link{Model} object or an object in \code{\link[=SupportedTransitionModels]{SupportedTransitionModels()}}.}
