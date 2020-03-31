@@ -3,7 +3,9 @@
 \name{Individual}
 \alias{Individual}
 \title{Individual class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Agent}<-\link{Entity}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Agent}<-\link{Entity}.
+}
 \description{
 Create Individual class, extended Agent class.
 }

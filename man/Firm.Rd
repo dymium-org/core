@@ -3,7 +3,9 @@
 \name{Firm}
 \alias{Firm}
 \title{Firm class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Agent}<-\link{Entity}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Agent}<-\link{Entity}.
+}
 \description{
 (Not done yet.)
 A class that contains methods and data of firms in a microsimulation model.

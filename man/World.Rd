@@ -3,7 +3,9 @@
 \name{World}
 \alias{World}
 \title{A representation of World}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Container}<-\link{ContainerGeneric}<-\link{Generic}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Container}<-\link{ContainerGeneric}<-\link{Generic}.
+}
 \description{
 World is to be used for storing \link{Entities}, \link{Models} and \link{Containers}, setting
 the simulation clock, and for keeping a log of your simulation outputs. You may

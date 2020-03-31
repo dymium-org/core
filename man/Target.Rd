@@ -4,7 +4,9 @@
 \alias{Target}
 \alias{Targets}
 \title{Target}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting \link{Generic}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting \link{Generic}.
+}
 \description{
 \code{Target} is to be used within \code{TransitionClassification} or supply to event
 functions. If the target is dynamic then its \code{get} will return its target

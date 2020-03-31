@@ -52,7 +52,7 @@ Suggests:
     ggthemes (>= 4.2.0),
     visNetwork (>= 2.0.0)
 Roxygen: list(markdown = TRUE, r6 = FALSE)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 StagedInstall: no
 VignetteBuilder: knitr
 Collate: 
@@ -95,10 +95,10 @@ Collate:
     'create-world.R'
     'data.R'
     'dymiumCore-package.R'
-    'microsimulate.R'
     'module.R'
     'population-register.R'
     'scenario.R'
+    'simulate_choice.R'
     'transition-fnc.R'
     'usethis.R'
     'utils-class.R'

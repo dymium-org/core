@@ -49,7 +49,8 @@ a macro-level outcome as defined in \code{target}. This is known as 'alignment' 
 Li, J., & O'Donoghue, C. (2012). Evaluating binary alignment
 methods in microsimulation models. For example, in a transition where the probabilistic
 model predicts only two outcomes, a binary model, "yes" and "no". If the target
-is a list of yes = 10 and no = 20 (i.e. \verb{r list(yes = 10, no = 20)}), this will
+is a list of yes = 10 and no = 20 (i.e.10
+20`), this will
 ensure that there will be 10 decision makers whom select 'yes' and 20 decision makers
 that select 'no'. However, this doesn't mean that all decision makers have
 an equal odd of select 'yes' or 'no', the odd is still to be determined by the given

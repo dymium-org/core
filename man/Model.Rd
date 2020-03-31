@@ -5,7 +5,9 @@
 \alias{Models}
 \alias{summary.Model}
 \title{Model class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting \link{Generic}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting \link{Generic}.
+}
 \usage{
 \method{summary}{Model}(object, ...)
 }

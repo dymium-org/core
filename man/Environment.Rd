@@ -3,7 +3,9 @@
 \name{Environment}
 \alias{Environment}
 \title{Environment class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Entity}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Entity}.
+}
 \description{
 The base class for physical environment, infrastructure and boundaries. This
 is different from Asset as Environment has no owner or belongs to the public.

@@ -3,7 +3,9 @@
 \name{MatchingMarketOptimal}
 \alias{MatchingMarketOptimal}
 \title{Optimal Matching Market}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{MatchingMarket}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{MatchingMarket}.
+}
 \description{
 For general detail See \link{MatchingMarket}. This class solves matching
 problems using optimal matching approaches such as one-to-one matching, many-to-one

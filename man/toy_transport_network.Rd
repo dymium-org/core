@@ -4,7 +4,8 @@
 \name{toy_transport_network}
 \alias{toy_transport_network}
 \title{Toy transport network data}
-\format{A \link[sf:sf]{sf::sf} data frame with 11 rows and 14 variables:
+\format{
+A \link[sf:sf]{sf::sf} data frame with 11 rows and 14 variables:
 \describe{
 \item{id}{(\code{integer()}) zone id}
 \item{nb_lanes}{(\code{integer()})}
@@ -15,7 +16,8 @@
 \item{tnode}{(\code{double()})}
 \item{geometry}{(\code{list()})}
 \item{length}{(\code{double()})}
-}}
+}
+}
 \usage{
 toy_transport_network
 }

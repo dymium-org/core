@@ -3,7 +3,9 @@
 \name{Generic}
 \alias{Generic}
 \title{Generic class}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object.
+}
 \description{
 Can be used as a template for other objects. This contains useful utility
 functions for abstraction objects. See the public members (methods).

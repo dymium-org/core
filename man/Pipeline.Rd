@@ -3,7 +3,9 @@
 \name{Pipeline}
 \alias{Pipeline}
 \title{Pipeline class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Generic]{dymiumCore::Generic}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Generic]{dymiumCore::Generic}.
+}
 \description{
 Pipeline is a warper of event functions. It can shuffle the order in which
 the warped event functions get executed or even repeatedly run the event functions.
