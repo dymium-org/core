@@ -1,12 +1,3 @@
-test_that("condense_rows()", {
-  x <- c(1,2,3,4,4)
-  y <- c(3,7,4,2,6)
-  z <- condense_rows(x, y)
-  expect_that(nrow(z), equals(length(unique(x))))
-  expect_true(all(y %in% z[, unlist(target)]))
-})
-
-
 test_that("lookup_and_replace", {
   dt <- data.table(
     pid = c(1L, 2L, 3L, 4L, 5L, 6L),
