@@ -189,6 +189,7 @@ TransitionClassification <- R6Class(
         "list" = simulate_classification_list(self, private),
         "numeric" = simulate_classification_numeric(self, private),
         "glm" = simulate_classification_glm(self, private),
+        "WrappedModel" = simulate_choice(private$.model, private$.sim_data),
         stop(
           glue::glue(
             "{class(self)[[1]]} class doesn't know how to deal with a {class(private$.model)} \\

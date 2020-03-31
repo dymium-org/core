@@ -302,5 +302,13 @@ test_that("dynamic target", {
 
   expect_error(TransitionClassification$new(world$entities$Individual, model, dynamic_target),
                regexp = "Must be a subset of set \\{yes,no\\}.")
+})
 
+test_that("TransitionClassifcation works with mlr model", {
+  create_toy_world()
+  mlr_model <- create_mlr_multinomial_model()
+  my_trans <- TransitionClassification$new(world$entities$Individual, model = mlr_model)
+  checkmate::expect_character(my_trans$get_result()[["response"]],
+                              any.missing = FALSE,
+                              len = world$entities$Individual$n())
 })
