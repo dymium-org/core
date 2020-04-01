@@ -171,6 +171,9 @@ get_log.Container <- function(x) {
 #'  an object to be stored. You can even store an [xtabs] object, if you wish.
 #' @param tag (`character(1)`)\cr
 #'  a tag, default as `NA_character`.
+#' @param time (`integer(1)`)\cr
+#'  a number denoting timestep, not the actual timestamp which is already auto-generated
+#'  for each log entry.
 #' @param ... dots
 #'
 #' @family logging
@@ -198,27 +201,27 @@ add_log <-  function(x, ...) {
 
 #' @rdname add_log
 #' @export
-add_log.World <- function(x, entity = NULL, desc, value, tag = NA_character_, ...) {
+add_log.World <- function(x, entity = NULL, desc, value, tag = NA_character_, time = .get_sim_time(), ...) {
   if (is.null(entity)) {
-    x$log(desc = desc, value = value, tag = tag)
+    x$log(desc = desc, value = value, tag = tag, time = time)
   } else {
     e <- x$get(entity)
-    e$log(desc = desc, value = value, tag = tag)
+    e$log(desc = desc, value = value, tag = tag, time = time)
   }
   invisible(x)
 }
 
 #' @rdname add_log
 #' @export
-add_log.Container <- function(x, desc, value, tag = NA_character_, ...) {
-  x$log(desc = desc, value = value, tag = tag)
+add_log.Container <- function(x, desc, value, tag = NA_character_, time = .get_sim_time(), ...) {
+  x$log(desc = desc, value = value, tag = tag, time = time)
   invisible(x)
 }
 
 #' @rdname add_log
 #' @export
-add_log.Entity <- function(x, desc, value, tag = NA_character_, ...) {
-  x$log(desc = desc, value = value, tag = tag)
+add_log.Entity <- function(x, desc, value, tag = NA_character_, time = .get_sim_time(), ...) {
+  x$log(desc = desc, value = value, tag = tag, time = time)
   invisible(x)
 }
 

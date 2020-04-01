@@ -21,11 +21,19 @@ get_log(x)
 
 add_log(x, ...)
 
-\method{add_log}{World}(x, entity = NULL, desc, value, tag = NA_character_, ...)
+\method{add_log}{World}(
+  x,
+  entity = NULL,
+  desc,
+  value,
+  tag = NA_character_,
+  time = .get_sim_time(),
+  ...
+)
 
-\method{add_log}{Container}(x, desc, value, tag = NA_character_, ...)
+\method{add_log}{Container}(x, desc, value, tag = NA_character_, time = .get_sim_time(), ...)
 
-\method{add_log}{Entity}(x, desc, value, tag = NA_character_, ...)
+\method{add_log}{Entity}(x, desc, value, tag = NA_character_, time = .get_sim_time(), ...)
 }
 \arguments{
 \item{x}{(\link{Container}|\link{Entity})\cr
@@ -44,6 +52,10 @@ an object to be stored. You can even store an \link{xtabs} object, if you wish.}
 
 \item{tag}{(\code{character(1)})\cr
 a tag, default as \code{NA_character}.}
+
+\item{time}{(\code{integer(1)})\cr
+a number denoting timestep, not the actual timestamp which is already auto-generated
+for each log entry.}
 }
 \value{
 \code{add_log} invinsibly returns \code{x}, while \code{get_log} returns \link[data.table:data.table]{data.table::data.table}
