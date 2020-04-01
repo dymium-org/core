@@ -370,6 +370,7 @@ Trans <- R6Class(
 #' Currently, these classes are supported in the `model` argument of the Transition's
 #' constructor:
 #' - [caret::train],
+#' - [mlr::train]
 #' - [stats::lm],
 #' - [stats::glm],
 #' - a numeric vector,
@@ -379,6 +380,10 @@ Trans <- R6Class(
 #' @note See the 'Transition' section of the
 #' [dymiumCore's introduction](https://core.dymium.org/articles/dymium-intro.html)
 #' webpage for more detail.
+#'
+#' Also note that, all models that can return predicted probabilities estimated using
+#' [caret::train] and [mlr::train] should work in `transition()` and `TransitionClassification`.
+#' However, currently, regression models only work in `TransitionRegression`.
 #'
 #' @return a character vector
 #' @export

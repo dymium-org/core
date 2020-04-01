@@ -17,6 +17,7 @@ Currently, these classes are supported in the \code{model} argument of the Trans
 constructor:
 \itemize{
 \item \link[caret:train]{caret::train},
+\item \link[mlr:train]{mlr::train}
 \item \link[stats:lm]{stats::lm},
 \item \link[stats:glm]{stats::glm},
 \item a numeric vector,
@@ -28,4 +29,8 @@ constructor:
 See the 'Transition' section of the
 \href{https://core.dymium.org/articles/dymium-intro.html}{dymiumCore's introduction}
 webpage for more detail.
+
+Also note that, all models that can return predicted probabilities estimated using
+\link[caret:train]{caret::train} and \link[mlr:train]{mlr::train} should work in \code{transition()} and \code{TransitionClassification}.
+However, currently, regression models only work in \code{TransitionRegression}.
 }
