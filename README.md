@@ -144,9 +144,17 @@ for (year in 1:10) {
                attr = "age", 
                values = c(yes = -1L), 
                preprocessing_fn = filter_alive) %>%
-    add_log(., time = year, desc = "count:Individual", value = .$entities$Individual$get_data()[age != -1L, .N])
+    add_log(time = year, 
+            desc = "count:Individual", 
+            value = .$entities$Individual$get_data()[age != -1L, .N])
 }
 ```
+
+> Note that, the line `value = .$entities$Individual$get_data()[age !=
+> -1L, .N]` is using the world object’s placeholder which is called `.`
+> for extracting the attribute data of individual agents. This is a
+> feature of `magrittr`, to learn more about various ways that `%>%` can
+> be used see [its documentation page](https://magrittr.tidyverse.org/).
 
 To get the attribute data of any \[Entity\] object use `$get_data()`
 method.
@@ -194,16 +202,16 @@ log_data <-
   .[, value := unlist(value)]
 print(log_data)
 #>     time created_timestamp class  tag             desc value
-#>  1:    1        1585721184 World <NA> count:Individual   332
-#>  2:    2        1585721184 World <NA> count:Individual   296
-#>  3:    3        1585721184 World <NA> count:Individual   264
-#>  4:    4        1585721184 World <NA> count:Individual   241
-#>  5:    5        1585721184 World <NA> count:Individual   209
-#>  6:    6        1585721184 World <NA> count:Individual   191
-#>  7:    7        1585721184 World <NA> count:Individual   169
-#>  8:    8        1585721184 World <NA> count:Individual   151
-#>  9:    9        1585721184 World <NA> count:Individual   139
-#> 10:   10        1585721184 World <NA> count:Individual   126
+#>  1:    1        1585760565 World <NA> count:Individual   332
+#>  2:    2        1585760565 World <NA> count:Individual   296
+#>  3:    3        1585760565 World <NA> count:Individual   264
+#>  4:    4        1585760565 World <NA> count:Individual   241
+#>  5:    5        1585760565 World <NA> count:Individual   209
+#>  6:    6        1585760565 World <NA> count:Individual   191
+#>  7:    7        1585760565 World <NA> count:Individual   169
+#>  8:    8        1585760565 World <NA> count:Individual   151
+#>  9:    9        1585760565 World <NA> count:Individual   139
+#> 10:   10        1585760565 World <NA> count:Individual   126
 ```
 
 Let’s visualise how many individual agents are still alive at the end of
