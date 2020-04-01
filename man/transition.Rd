@@ -13,6 +13,7 @@ transition(
   targeted_ids = NULL,
   preprocessing_fn = NULL,
   attr = NULL,
+  values = NULL,
   verbose = FALSE
 )
 
@@ -45,7 +46,12 @@ the Note section below for how to create a preprocessing function.}
 \item{attr}{a character denoting which of the attribute if \code{entity} should be
 updated as the result of the transition or \code{NULL}.}
 
-\item{verbose}{a logical value, default as \code{FALSE}.}
+\item{values}{named \code{vector()}\cr
+A named vector that is used to replace the outcomes of the model in the field
+specified in \code{attr}. See the example section.}
+
+\item{verbose}{\code{logical()}\cr
+Default as \code{FALSE}.}
 }
 \value{
 \link{transition} returns the first argument which is the \link{World} object, while
@@ -120,11 +126,17 @@ filter_male <-
   . \%>\%
   .[sex == "male", ]
 
+filter_not_dead <-
+  . \%>\%
+  .[age != -1]
+
 # create a multinomial logit model using `caret`
 mnl <- caret::train(marital_status ~ age + sex,
                     data = toy_individuals,
                     method = "multinom",
                     trace = FALSE)
+# this model denotes that there is a 10\% chance that an individual will decease
+death_model <- list(yes = 0.1, no = 0.9)
 
 # create a toy world
 create_toy_world()
@@ -142,4 +154,17 @@ get_transition(world,
                model = mnl,
                preprocessing_fn = filter_male)
 
+# lets make a pipeline of transitions
+world \%>\%
+  transition(entity = "Individual",
+             model = mnl,
+             preprocessing_fn = . \%>\% filter_male \%>\% filter_not_dead,
+             attr = "marital_status") \%>\%
+  transition(entity = "Individual",
+             model = death_model,
+             preprocessing_fn = filter_not_dead,
+             attr = "age",
+             values = c(yes = -1L))
+# print the attributes of the individual agents
+world$entities$Individual$get_data()
 }
