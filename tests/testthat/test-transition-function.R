@@ -74,3 +74,39 @@ test_that("transition works with mlr models", {
                                 null.ok = FALSE)
   }
 })
+
+
+test_that("transition's values param works", {
+
+  birth_model <- list(yes = 0.1, no = 0.9)
+  death_model <- list(yes = 0.5, no = 0.5)
+
+  ind_data <-
+    data.table::copy(toy_individuals) %>%
+    .[, give_birth := "no"]
+
+  world <- World$new()
+  world$add(x = Individual$new(.data = ind_data, id_col = "pid"))
+
+  world %>%
+    transition(entity = "Individual",
+               model = birth_model,
+               attr = "give_birth") %>%
+    transition(entity = "Individual",
+               model = death_model,
+               attr = "age",
+               values = c(yes = -1L))
+
+  checkmate::expect_data_table(
+    x = world$entities$Individual$get_data(),
+    nrows = nrow(ind_data),
+    col.names = "strict"
+  )
+  checkmate::expect_names(names(world$entities$Individual$get_data()),
+                          permutation.of = names(ind_data))
+  checkmate::expect_integerish(world$entities$Individual$get_data()[, age],
+                               lower = -1,
+                               any.missing = FALSE)
+  checkmate::expect_character(world$entities$Individual$get_data()[, give_birth],
+                              pattern = "yes|no")
+})

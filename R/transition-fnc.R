@@ -19,7 +19,11 @@
 #' the Note section below for how to create a preprocessing function.
 #' @param attr a character denoting which of the attribute if `entity` should be
 #'  updated as the result of the transition or `NULL`.
-#' @param verbose a logical value, default as `FALSE`.
+#' @param verbose `logical()`\cr
+#'  Default as `FALSE`.
+#' @param values named `vector()`\cr
+#'  A named vector that is used to replace the outcomes of the model in the field
+#'  specified in `attr`. See the example section.
 #'
 #' @note
 #'
@@ -94,11 +98,17 @@
 #'   . %>%
 #'   .[sex == "male", ]
 #'
+#' filter_not_dead <-
+#'   . %>%
+#'   .[age != -1]
+#'
 #' # create a multinomial logit model using `caret`
 #' mnl <- caret::train(marital_status ~ age + sex,
 #'                     data = toy_individuals,
 #'                     method = "multinom",
 #'                     trace = FALSE)
+#' # this model denotes that there is a 10% chance that an individual will decease
+#' death_model <- list(yes = 0.1, no = 0.9)
 #'
 #' # create a toy world
 #' create_toy_world()
@@ -116,7 +126,30 @@
 #'                model = mnl,
 #'                preprocessing_fn = filter_male)
 #'
-transition <- function(world, entity, model, target = NULL, targeted_ids = NULL, preprocessing_fn = NULL, attr = NULL, verbose = FALSE) {
+#' # lets make a pipeline of transitions
+#' world %>%
+#'   transition(entity = "Individual",
+#'              model = mnl,
+#'              preprocessing_fn = . %>% filter_male %>% filter_not_dead,
+#'              attr = "marital_status") %>%
+#'   transition(entity = "Individual",
+#'              model = death_model,
+#'              preprocessing_fn = filter_not_dead,
+#'              attr = "age",
+#'              values = c(yes = -1L))
+#' # print the attributes of the individual agents
+#' world$entities$Individual$get_data()
+transition <-
+  function(world,
+           entity,
+           model,
+           target = NULL,
+           targeted_ids = NULL,
+           preprocessing_fn = NULL,
+           attr = NULL,
+           values = NULL,
+           verbose = FALSE) {
+
   result <- get_transition(world, entity, model, target, targeted_ids, preprocessing_fn)
   e <- world$get(entity)
   if (verbose) {
@@ -149,11 +182,29 @@ transition <- function(world, entity, model, target = NULL, targeted_ids = NULL,
   # update attr using the result
   if (!is.null(attr) & nrow(result) != 0) {
     checkmate::assert_names(x = attr, subset.of = e$database$attrs$colnames())
-    idx <- e$get_idx(result[['id']])
-    data.table::set(e$get_data(copy = FALSE),
-                    i = idx,
-                    j = attr,
-                    value = result[['response']])
+    if (!is.null(values)) {
+      checkmate::assert_atomic(x = values,
+                               names =  "strict",
+                               any.missing = FALSE,
+                               max.len = uniqueN(result[['response']]))
+      relabelled_responses <- values[match(result[['response']], names(values))]
+      valid_responses <- relabelled_responses[!is.na(relabelled_responses)]
+      idx <- e$get_idx(ids = result[!is.na(relabelled_responses), id])
+      if (class(valid_responses) != e$get_data(copy = FALSE)[, class(get(attr))]) {
+        stop("`values` must have the same type as the variable in `attr`. ",
+             class(valid_responses), "!=", e$get_data(copy = FALSE)[, class(get(attr))])
+      }
+      data.table::set(x = e$get_data(copy = FALSE),
+                      i = idx,
+                      j = attr,
+                      value = valid_responses)
+    } else {
+      idx <- e$get_idx(result[['id']])
+      data.table::set(e$get_data(copy = FALSE),
+                      i = idx,
+                      j = attr,
+                      value = result[['response']])
+    }
   }
   # return world to make this function pipable.
   invisible(world)
