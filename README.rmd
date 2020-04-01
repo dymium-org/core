@@ -10,8 +10,11 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  message = FALSE
 )
+knitr::opts_chunk$set(dpi = 300, fig.width = 7)
+set.seed(728)
 ```
 <!-- badges: start -->
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/dymium-org/dymiumCore?include_prereleases)
@@ -31,7 +34,7 @@ knitr::opts_chunk$set(
 
 __:newspaper: News__
 
--  :tada: [Upcoming release of dymiumCore, version 0.1.6.](https://blog.amarin.dev/posts/dymiumcore-version-0-1-6-release/)
+-  :tada: [dymiumCore version 0.1.6.](https://blog.amarin.dev/posts/dymiumcore-version-0-1-6-release/)
 
 # Why another microsimulation framework?
 
@@ -62,6 +65,91 @@ remotes::install_github("dymium-org/dymiumCore")
 ```
 
 Note that, `dymiumCore` is not yet on CRAN. 
+
+## A Hello World Example!
+
+This is a minimal example of how one can create a discrete-time microsimulation model with dymiumCore. 
+
+In this example, we have three events: ageing, giving birth, and dying. The ageing event increases age of all individuals by 1 year in each iteration, as control by the for loop. The giving birth event only changes the 'give_birth' variable of eligible female individuals (age between 18 to 50) to 'yes' if the transition for an individual is successful. Note that this simple example doesn't add newborns from the birth event to the population, however, it can be done easily using `Individual$add()`. The dead event changes the age attribute of dying individuals to '-1', which means once an individual is dead it will not be considered in any transition or mutate_entity statement, as we apply `not_dead_filter` and a subset statement to them.
+
+The first principle of dymiumCore is to keep all [Entity] objects and models (optionally) inside a `World` object. This allows us to construct a microsimulation model as a data analysis pipeline, which you will see below.
+
+```{r}
+library(dymiumCore)
+library(data.table)
+
+# create simple models
+birth_model <- list(yes = 0.1, no = 0.9)
+death_model <- list(yes = 0.1, no = 0.9)
+
+# prepare population data
+ind_data <- 
+  data.table::copy(toy_individuals) %>%
+  .[, give_birth := "no"]
+
+# create a World object, a container for all entities and models for simulation
+world <- World$new()
+world$add(x = Individual$new(.data = ind_data, id_col = "pid"))
+
+# create filters, this is a method for creating functions using `magrittr` and
+# data.table's syntax
+adult_female_filter <- 
+  . %>%
+  .[sex == "female" & age %between% c(18, 50)]
+
+not_dead_filter <- 
+  . %>%
+  .[age != -1]
+
+# create a pipeline of transitions
+for (year in 1:10) {
+  world %>%
+    mutate_entity(entity = "Individual", 
+                  age := age + 1L, 
+                  subset = age != -1L) %>%
+    transition(entity = "Individual", 
+               model = birth_model, 
+               attr = "give_birth", 
+               preprocessing_fn = . %>% adult_female_filter %>% not_dead_filter) %>%
+    transition(entity = "Individual", 
+               model = death_model, 
+               attr = "age", 
+               values = c(yes = -1L), 
+               preprocessing_fn = not_dead_filter) %>%
+    add_log(., time = year, desc = "count:Individual", value = .$entities$Individual$get_data()[age != -1L, .N])
+}
+```
+
+To get the attribute data of the individual agents use `$get_data()` method
+
+```{r}
+world$entities$Individual$get_data()
+```
+
+The `add_log` function allows any object to be stored in our World object for doing post-simulation analyses. In the example, we logged the number of individuals that were alive in each simulation year. We can then extract that log data using `get_log()`. The value column of the data.table returns by `get_log()` is a list column, this is to allow any object to be stored, so we must flatten in to integer for plotting later.
+
+```{r}
+# get log data
+log_data <- 
+  get_log(world) %>% 
+  .[, value := unlist(value)]
+print(log_data)
+```
+
+
+Let's visualise how many individual agents are still alive at the end of the simulation.
+
+```{r example}
+library(ggplot2)
+ggplot(data = log_data) +
+  geom_col(aes(x = time, y = value, fill = value)) +
+  labs(x = "Time", y = "Number of Individuals") +
+  scale_x_continuous(n.breaks = 10) +
+  guides(fill = "none") +
+  theme_minimal(base_size = 16)
+```
+
+This is just an introductory example of dymiumCore, the real power of the package is in the building blocks and functions that allow you to create a large-scale microsimulation model that is easily maintainable and scalable model by breaking down each components into modules as illustrated in [dymium-org/dymiumExampleProject](https://github.com/dymium-org/dymiumExampleProject).
 
 ## Documentation and Tutorials
 

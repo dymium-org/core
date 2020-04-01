@@ -5,7 +5,6 @@
 
 ![GitHub release (latest by date including
 pre-releases)](https://img.shields.io/github/v/release/dymium-org/dymiumCore?include_prereleases)
-[![](https://img.shields.io/badge/devel%20version-0.1.6.9000-blue.svg)](https://github.com/dymium-org/dymiumCore)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Travis build
@@ -30,7 +29,7 @@ contexts as well.
 
 **:newspaper: News**
 
-  - :tada: [Upcoming release of dymiumCore,
+  - :tada: [dymiumCore
     version 0.1.6.](https://blog.amarin.dev/posts/dymiumcore-version-0-1-6-release/)
 
 # Why another microsimulation framework?
@@ -80,6 +79,154 @@ remotes::install_github("dymium-org/dymiumCore")
 ```
 
 Note that, `dymiumCore` is not yet on CRAN.
+
+## A Hello World Example\!
+
+This is a minimal example of how one can create a discrete-time
+microsimulation model with dymiumCore.
+
+In this example, we have three events: ageing, giving birth, and dying.
+The ageing event increases age of all individuals by 1 year in each
+iteration, as control by the for loop. The giving birth event only
+changes the ‘give\_birth’ variable of eligible female individuals (age
+between 18 to 50) to ‘yes’ if the transition for an individual is
+successful. Note that this simple example doesn’t add newborns from the
+birth event to the population, however, it can be done easily using
+`Individual$add()`. The dead event changes the age attribute of dying
+individuals to ‘-1’, which means once an individual is dead it will not
+be considered in any transition or mutate\_entity statement, as we apply
+`not_dead_filter` and a subset statement to them.
+
+The first principle of dymiumCore is to keep all \[Entity\] objects and
+models (optionally) inside a `World` object. This allows us to construct
+a microsimulation model as a data analysis pipeline, which you will see
+below.
+
+``` r
+library(dymiumCore)
+library(data.table)
+
+# create simple models
+birth_model <- list(yes = 0.1, no = 0.9)
+death_model <- list(yes = 0.1, no = 0.9)
+
+# prepare population data
+ind_data <- 
+  data.table::copy(toy_individuals) %>%
+  .[, give_birth := "no"]
+
+# create a World object, a container for all entities and models for simulation
+world <- World$new()
+world$add(x = Individual$new(.data = ind_data, id_col = "pid"))
+
+# create filters, this is a method for creating functions using `magrittr` and
+# data.table's syntax
+adult_female_filter <- 
+  . %>%
+  .[sex == "female" & age %between% c(18, 50)]
+
+not_dead_filter <- 
+  . %>%
+  .[age != -1]
+
+# create a pipeline of transitions
+for (year in 1:10) {
+  world %>%
+    mutate_entity(entity = "Individual", 
+                  age := age + 1L, 
+                  subset = age != -1L) %>%
+    transition(entity = "Individual", 
+               model = birth_model, 
+               attr = "give_birth", 
+               preprocessing_fn = . %>% adult_female_filter %>% not_dead_filter) %>%
+    transition(entity = "Individual", 
+               model = death_model, 
+               attr = "age", 
+               values = c(yes = -1L), 
+               preprocessing_fn = not_dead_filter) %>%
+    add_log(., time = year, desc = "count:Individual", value = .$entities$Individual$get_data()[age != -1L, .N])
+}
+```
+
+To get the attribute data of the individual agents use `$get_data()`
+method
+
+``` r
+world$entities$Individual$get_data()
+#>      pid hid age    sex marital_status partner_id father_id mother_id
+#>   1:   1   1  -1   male  never married         NA        NA        NA
+#>   2:   2   2  -1 female  never married         NA        NA        NA
+#>   3:   3   2  -1 female  never married         NA        NA        NA
+#>   4:   4   3  -1   male        married          5        NA        NA
+#>   5:   5   3  -1 female        married          4        NA        NA
+#>  ---                                                                 
+#> 369: 369 143  83   male        married        368        NA        NA
+#> 370: 370 144  59 female        married        371        NA        NA
+#> 371: 371 144  -1   male        married        370        NA        NA
+#> 372: 372 144  -1   male  never married         NA       371       370
+#> 373: 373 144  -1   male  never married         NA       371       370
+#>      give_birth
+#>   1:         no
+#>   2:         no
+#>   3:         no
+#>   4:         no
+#>   5:         no
+#>  ---           
+#> 369:         no
+#> 370:         no
+#> 371:         no
+#> 372:         no
+#> 373:         no
+```
+
+The `add_log` function allows any object to be stored in our World
+object for doing post-simulation analyses. In the example, we logged the
+number of individuals that were alive in each simulation year. We can
+then extract that log data using `get_log()`. The value column of the
+data.table returns by `get_log()` is a list column, this is to allow any
+object to be stored, so we must flatten in to integer for plotting
+later.
+
+``` r
+# get log data
+log_data <- 
+  get_log(world) %>% 
+  .[, value := unlist(value)]
+print(log_data)
+#>     time created_timestamp class  tag             desc value
+#>  1:    1        1585717720 World <NA> count:Individual   332
+#>  2:    2        1585717720 World <NA> count:Individual   296
+#>  3:    3        1585717720 World <NA> count:Individual   264
+#>  4:    4        1585717720 World <NA> count:Individual   241
+#>  5:    5        1585717720 World <NA> count:Individual   209
+#>  6:    6        1585717720 World <NA> count:Individual   191
+#>  7:    7        1585717720 World <NA> count:Individual   169
+#>  8:    8        1585717720 World <NA> count:Individual   151
+#>  9:    9        1585717721 World <NA> count:Individual   139
+#> 10:   10        1585717721 World <NA> count:Individual   126
+```
+
+Let’s visualise how many individual agents are still alive at the end of
+the simulation.
+
+``` r
+library(ggplot2)
+ggplot(data = log_data) +
+  geom_col(aes(x = time, y = value, fill = value)) +
+  labs(x = "Time", y = "Number of Individuals") +
+  scale_x_continuous(n.breaks = 10) +
+  guides(fill = "none") +
+  theme_minimal(base_size = 16)
+```
+
+<img src="man/figures/README-example-1.png" width="100%" />
+
+This is just an introductory example of dymiumCore, the real power of
+the package is in the building blocks and functions that allow you to
+create a large-scale microsimulation model that is easily maintainable
+and scalable model by breaking down each components into modules as
+illustrated in
+[dymium-org/dymiumExampleProject](https://github.com/dymium-org/dymiumExampleProject).
 
 ## Documentation and Tutorials
 
