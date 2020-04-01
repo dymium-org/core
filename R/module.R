@@ -13,7 +13,10 @@ dymiumModulesRepo <- "dymium-org/dymiumModules"
 #' be downloaded.
 #' @param force A logical value. force download even though the module already exists locally.
 #' @param remove_download a logical value whether to delete the downloaded zip file or not.
-#' @template repo-arg
+#' @param .basedir :: `character(1)`\cr
+#' The base directory that the downloaded module will be saved at. [here::here()] is
+#' used to provide the default value which is is the root folder of the active RStudio project.
+#' @template param_modulerepo
 #'
 #' @return path to the module.
 #'
@@ -65,7 +68,7 @@ download_module <- function(name, repo = dymiumModulesRepo, version, force = FAL
 #' Check if a module exists in a remote repository
 #'
 #' @param name name of the module to check.
-#' @template repo-arg
+#' @template param_modulerepo
 #'
 #' @return a logical value.
 #' @export
@@ -86,7 +89,7 @@ check_module <- function(name, repo = dymiumModulesRepo) {
 #' @param version a character. For example, if you would like to check
 #' for version 0.1.0 type it as a character '0.1.0'.
 #'
-#' @template repo-arg
+#' @template param_modulerepo
 #'
 #' @return a logical value
 #' @export
@@ -126,7 +129,7 @@ extract_module_versions <- function(name, filenames) {
 #' Get all version numbers of a module
 #'
 #' @param name name of the module.
-#' @template repo-arg
+#' @template param_modulerepo
 #'
 #' @return a character vector.
 #' @export
@@ -156,7 +159,7 @@ get_module_versions <- function(name, repo = dymiumModulesRepo) {
 
 #' Get the names of available modules from a remote repository
 #'
-#' @template repo-arg
+#' @template param_modulerepo
 #'
 #' @return a character vector.
 #' @export
@@ -179,7 +182,7 @@ get_modules <- function(repo = dymiumModulesRepo) {
 #' Get all files from a module
 #'
 #' @param name name of the module.
-#' @template repo-arg
+#' @template param_modulerepo
 #'
 #' @return a character vector.
 #' @export
@@ -202,7 +205,7 @@ get_module_files <- function(name, repo = dymiumModulesRepo) {
 
 #' Get all files from all modules in a repository.
 #'
-#' @template repo-arg
+#' @template param_modulerepo
 #'
 #' @return a character vector.
 #' @export

@@ -8,32 +8,24 @@
 #'
 #' A container for the supported model objects (see [SupportedTransitionModels]).
 #'
-#' @section Construction:
+#' @section S3 methods:
 #'
-#' ```
-#' x <- Model$new(x)
-#' ```
+#' * `summary(m)`\cr
+#'  Ruturns summary of the stored model object.
 #'
-#' * `x` :: ([caret::train] | [data.table::data.table] | named `list`)\cr
-#' A model object that compatible.
+#' @section Active field (read-only):
 #'
-#' @section Public Methods:
+#' * `model`\cr
+#' The stored model object in its original form.
 #'
-#'  * `get()`\cr
-#'  () -> ([caret::train] | [data.table::data.table] | named `list`)\cr
-#'  Get a model object.
+#' @section Public fields:
 #'
-#'  * `set(x)`\cr
-#'  ([caret::train] | [data.table::data.table] | named `list`)\cr
-#'  Get a model object.
-#'
-#'  * `modify()`\cr
-#'  An abstract method.
-#'
-#'  * `simulate()`\cr
-#'  An abstract method.
-#'
-#'  * `print()`\cr
+#' * `preprocessing_fn`\cr
+#' Default as NULL, this is to store a preprocessing function which will be
+#' used to evaluate the entity data in [Trans] prior to simulating the
+#' transition. A situation where this is useful could be when you want to limit
+#' the use of a [Model] object to the specific group of agents (e.g: age between
+#' `x` and `y`) that was used to estimate the model.
 #'
 #' @aliases Models
 #'
@@ -55,28 +47,63 @@ Model <-
     classname = "Model",
     inherit = Generic,
     public = list(
-      initialize = function(x) {
+
+
+      #' @description
+      #' Creates a new instance of this [R6][R6::R6Class] class.
+      #'
+      #' @param x a model object that is of one of {`r paste(get_supported_models(), collapse = ", ")`}
+      #' @param preprocessing_fn a function.
+      initialize = function(x, preprocessing_fn = NULL) {
+        self$preprocessing_fn <- preprocessing_fn
         self$set(x)
       },
+
+      #' @description
+      #'
+      #' Returns a copy of the stored model object. This is to prevent returning
+      #' a reference of the data.table object that might be used as a model.
+      #'
+      #' @return a model object.
       get = function() {
-        private$.model
+        if (is.data.table(private$.model)) {
+          return(data.table::copy(private$.model))
+        }
+        return(private$.model)
       },
+
+      #' @description
+      #'
+      #' An abstract method.
+      #'
+      #' @return
       set = function(x) {
         stopifnot(private$.check_model(x))
         private$.model <- x
         return(self)
       },
-      modify = function() {
-        private$abstract()
-      },
-      simulate = function() {
-        private$abstract()
-      },
+
+      #' @description
+      #'
+      #' Returns the class of the stored model object.
+      #'
+      #' @return a character
       class = function() {
         class(private$.model)
       },
+
       print = function() {
         print(private$.model)
+      },
+
+      preprocessing_fn = NULL
+    ),
+    active = list(
+      model = function() {
+        if (is.data.table(private$.model)) {
+          return(data.table::copy(private$.model))
+        }
+        get(".model", envir = private)
       }
     ),
     private = list(
@@ -95,3 +122,13 @@ Model <-
       }
     )
   )
+
+
+#' @export
+summary.Model <- function(object, ...) {
+  if (object$class() == "WrappedModel") {
+    summary(object$model$learner.model)
+  } else {
+    summary(object$model)
+  }
+}

@@ -1,30 +1,14 @@
 #' @title Entity class
 #'
+#' @include Generic.R
+#'
 #' @description
 #'
 #' The base class (first building block) for [Agent], [Asset] and [Environment].
 #'
-#' @usage NULL
-#' @include Generic.R
-#' @format [R6::R6Class] object.
 #'
-#' @section Construction:
-#'
-#' ```
-#' x <- Entity$new(databackend, .data, id_col)
-#' ```
-#'
-#' Stores `.data` as a DataBackend object inside the object's list of data (`private$.data`)
-#' and registers the `id_col` (`private$.id_col`).
-#'
-#' * `databackend` :: an [R6::R6Class] generator]\cr
-#'   An [R6::R6Class] generator that inherits from `DataBackend`.
-#'
-#' * `.data` :: `data.frame()`\cr
-#'   A object that inherits from `data.frame`.
-#'
-#' * `id_col` :: `character(1)`\cr
-#'   The id column of `.data`.
+#' @template param_databackend
+#' @template param_data
 #'
 #' @section Fields:
 #'
@@ -118,9 +102,15 @@ Entity <-
     inherit = Generic,
     public = list(
 
-
-      cont = NULL,
-
+      #' @description
+      #'
+      #' Create a new instance of this [R6][R6::R6Class] class.
+      #'
+      #' @param id_col The name of the id column of `.data` and all relation columns. The first
+      #'   element will be checked as the main id column of the entity data, which
+      #'   must be unique integers. The rest of the vector will be consider as relation
+      #'   columns. For example, if `c("pid", "partner_id")` is given `pid` must contain
+      #'   unique integers, while `partner_id` can be `NA` or non-unique integers.
       initialize = function(databackend, .data, id_col) {
         checkmate::assert_string(id_col, na.ok = FALSE, null.ok = FALSE)
         checkmate::assert_names(names(.data), must.include = id_col, type = 'strict')

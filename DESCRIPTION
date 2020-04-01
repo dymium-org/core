@@ -41,9 +41,19 @@ Suggests:
     covr,
     mapview,
     knitr,
-    rmarkdown
-Roxygen: list(markdown = TRUE, r6 = FALSE)
-RoxygenNote: 7.0.2
+    rmarkdown,
+    ggplot2 (>= 3.0.0),
+    DiagrammeR (>= 1.0.0),
+    randomForest,
+    reactable,
+    patchwork (>= 1.0.0),
+    scales (>= 1.1.0),
+    prettydoc,
+    ggthemes (>= 4.2.0),
+    visNetwork (>= 2.0.0)
+Roxygen: list(markdown = TRUE, r6 = TRUE)
+RoxygenNote: 7.1.0
+StagedInstall: no
 VignetteBuilder: knitr
 Collate: 
     'Generic.R'
