@@ -29,7 +29,8 @@ Imports:
     usethis (>= 1.5.0),
     cli (>= 2.0.0),
     fs (>= 1.3.0),
-    httr (>= 1.4.0)
+    httr (>= 1.4.0),
+    rlang (>= 0.4.0)
 Suggests:
     testthat (>= 2.1.0),
     fastmatch (>= 1.1.0),
@@ -97,6 +98,7 @@ Collate:
     'data.R'
     'dymiumCore-package.R'
     'module.R'
+    'mutate-entity.R'
     'population-register.R'
     'scenario.R'
     'simulate_choice.R'
