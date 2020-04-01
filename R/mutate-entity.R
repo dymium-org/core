@@ -52,6 +52,6 @@ mutate_entity <- function(world, entity, ..., ids = NULL, subset) {
     .subset <- rlang::enexpr(subset)
     e$get_data(copy = FALSE)[eval(.subset), ...]
   }
-  return(world)
+  invisible(world)
 }
 
