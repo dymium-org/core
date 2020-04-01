@@ -124,7 +124,7 @@ for (year in 1:10) {
 
 > Note that, the line `value = .$entities$Individual$get_data()[age != -1L, .N]` is using the world object's placeholder which is called `.` for extracting the attribute data of individual agents. This is a feature of `magrittr`, to learn more about various ways that `%>%` can be used see [its documentation page](https://magrittr.tidyverse.org/).
 
-To get the attribute data of any [Entity] object use `$get_data()` method.
+To get the attribute data of any `Entity` object use `$get_data()` method.
 
 ```{r}
 world$entities$Individual$get_data()

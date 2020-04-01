@@ -156,7 +156,7 @@ for (year in 1:10) {
 > feature of `magrittr`, to learn more about various ways that `%>%` can
 > be used see [its documentation page](https://magrittr.tidyverse.org/).
 
-To get the attribute data of any \[Entity\] object use `$get_data()`
+To get the attribute data of any `Entity` object use `$get_data()`
 method.
 
 ``` r
