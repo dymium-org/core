@@ -121,25 +121,26 @@ normalise_derived_vars <- function(.data) {
   return(.data)
 }
 
-#' Get log from Generic
-#'
-#' @param x a [Generic] object.
-#'
-#' @return a log data.table.
+
 #' @export
-#'
-#' @examples
+#' @rdname add_log
 get_log <- function(x) {
   UseMethod("get_log", x)
 }
 
-#' @rdname get_log
+#' @rdname add_log
 #' @export
 get_log.Generic <- function(x) {
   return(x$.__enclos_env__$private$.log)
 }
 
-#' @rdname get_log
+#' @rdname add_log
+#' @export
+get_log.World <- function(x) {
+  get_log.Container(x)
+}
+
+#' @rdname add_log
 #' @export
 get_log.Container <- function(x) {
   x_log <- get_log.Generic(x)
@@ -151,6 +152,76 @@ get_log.Container <- function(x) {
       data.table::setorder(., time, created_timestamp)
   )
 }
+
+#' @title Add log to a Container or Entity object
+#'
+#' @description
+#'
+#' This is an S3 method for adding logs to a [Container] or [Entity] object in
+#' a microsimulation pipeline. This method passes all the arguments to the `log()`
+#' method of the object in `x`.
+#'
+#' @param x ([Container]|[Entity])\cr
+#'  an instance of [R6::R6Class] to add a log entry to.
+#' @param entity (`character`)\cr
+#'  an [Entity] classname.
+#' @param desc (`character(1)`)\cr
+#'  a log description.
+#' @param value (`any`)\cr
+#'  an object to be stored. You can even store an [xtabs] object, if you wish.
+#' @param tag (`character(1)`)\cr
+#'  a tag, default as `NA_character`.
+#' @param ... dots
+#'
+#' @family logging
+#' @return `add_log` invinsibly returns `x`, while `get_log` returns [data.table::data.table]
+#'  with the following structure:
+#' ```
+#' data.table(time = integer(),
+#'            created_timestamp = integer(),
+#'            class = character(),
+#'            tag = character(),
+#'            desc = character(),
+#'            value = list())
+#' ```
+#'
+#' @export
+#'
+#' @examples
+#'
+#' create_toy_world()
+#' add_log(world, entity = "Individual", desc = "count:individuals", value = world$entities$Individual$n())
+#' get_log(world)
+add_log <-  function(x, ...) {
+  UseMethod("add_log")
+}
+
+#' @rdname add_log
+#' @export
+add_log.World <- function(x, entity = NULL, desc, value, tag = NA_character_, ...) {
+  if (is.null(entity)) {
+    x$log(desc = desc, value = value, tag = tag)
+  } else {
+    e <- x$get(entity)
+    e$log(desc = desc, value = value, tag = tag)
+  }
+  invisible(x)
+}
+
+#' @rdname add_log
+#' @export
+add_log.Container <- function(x, desc, value, tag = NA_character_, ...) {
+  x$log(desc = desc, value = value, tag = tag)
+  invisible(x)
+}
+
+#' @rdname add_log
+#' @export
+add_log.Entity <- function(x, desc, value, tag = NA_character_, ...) {
+  x$log(desc = desc, value = value, tag = tag)
+  invisible(x)
+}
+
 
 #' Assign new ids to data
 #'
@@ -234,3 +305,4 @@ register <- function(x, ..., only_primary_id_col = FALSE) {
 
   return(.data_lst2)
 }
+
