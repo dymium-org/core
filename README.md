@@ -121,11 +121,11 @@ world$add(x = Individual$new(.data = ind_data, id_col = "pid"))
 
 # create filters, this is a method for creating functions using `magrittr` and
 # data.table's syntax
-adult_female_filter <- 
+filter_eligible_females <- 
   . %>%
   .[sex == "female" & age %between% c(18, 50)]
 
-not_dead_filter <- 
+filter_alive <- 
   . %>%
   .[age != -1]
 
@@ -138,12 +138,12 @@ for (year in 1:10) {
     transition(entity = "Individual", 
                model = birth_model, 
                attr = "give_birth", 
-               preprocessing_fn = . %>% adult_female_filter %>% not_dead_filter) %>%
+               preprocessing_fn = . %>% filter_eligible_females %>% filter_alive) %>%
     transition(entity = "Individual", 
                model = death_model, 
                attr = "age", 
                values = c(yes = -1L), 
-               preprocessing_fn = not_dead_filter) %>%
+               preprocessing_fn = filter_alive) %>%
     add_log(., time = year, desc = "count:Individual", value = .$entities$Individual$get_data()[age != -1L, .N])
 }
 ```
@@ -194,16 +194,16 @@ log_data <-
   .[, value := unlist(value)]
 print(log_data)
 #>     time created_timestamp class  tag             desc value
-#>  1:    1        1585718447 World <NA> count:Individual   332
-#>  2:    2        1585718447 World <NA> count:Individual   296
-#>  3:    3        1585718447 World <NA> count:Individual   264
-#>  4:    4        1585718447 World <NA> count:Individual   241
-#>  5:    5        1585718447 World <NA> count:Individual   209
-#>  6:    6        1585718447 World <NA> count:Individual   191
-#>  7:    7        1585718447 World <NA> count:Individual   169
-#>  8:    8        1585718447 World <NA> count:Individual   151
-#>  9:    9        1585718447 World <NA> count:Individual   139
-#> 10:   10        1585718447 World <NA> count:Individual   126
+#>  1:    1        1585718666 World <NA> count:Individual   332
+#>  2:    2        1585718666 World <NA> count:Individual   296
+#>  3:    3        1585718666 World <NA> count:Individual   264
+#>  4:    4        1585718666 World <NA> count:Individual   241
+#>  5:    5        1585718666 World <NA> count:Individual   209
+#>  6:    6        1585718666 World <NA> count:Individual   191
+#>  7:    7        1585718666 World <NA> count:Individual   169
+#>  8:    8        1585718666 World <NA> count:Individual   151
+#>  9:    9        1585718666 World <NA> count:Individual   139
+#> 10:   10        1585718666 World <NA> count:Individual   126
 ```
 
 Let’s visualise how many individual agents are still alive at the end of
