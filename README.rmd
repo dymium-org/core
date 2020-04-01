@@ -149,7 +149,7 @@ ggplot(data = log_data) +
   theme_minimal(base_size = 16)
 ```
 
-This is just an introductory example of dymiumCore, the real power of the package is in the building blocks and functions that allow you to create a large-scale microsimulation model that is easily maintainable and scalable model by breaking down each components into modules as illustrated in [dymium-org/dymiumExampleProject](https://github.com/dymium-org/dymiumExampleProject).
+This is just an introductory example of dymiumCore, the real power of the package is in the building blocks and functions that allow you to create a large-scale microsimulation model that is easily maintainable and scalable model by breaking down each complex component into an event function as illustrated in [dymium-org/dymiumExampleProject](https://github.com/dymium-org/dymiumExampleProject).
 
 ## Documentation and Tutorials
 

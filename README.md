@@ -194,16 +194,16 @@ log_data <-
   .[, value := unlist(value)]
 print(log_data)
 #>     time created_timestamp class  tag             desc value
-#>  1:    1        1585718124 World <NA> count:Individual   332
-#>  2:    2        1585718124 World <NA> count:Individual   296
-#>  3:    3        1585718124 World <NA> count:Individual   264
-#>  4:    4        1585718124 World <NA> count:Individual   241
-#>  5:    5        1585718124 World <NA> count:Individual   209
-#>  6:    6        1585718124 World <NA> count:Individual   191
-#>  7:    7        1585718124 World <NA> count:Individual   169
-#>  8:    8        1585718124 World <NA> count:Individual   151
-#>  9:    9        1585718124 World <NA> count:Individual   139
-#> 10:   10        1585718124 World <NA> count:Individual   126
+#>  1:    1        1585718447 World <NA> count:Individual   332
+#>  2:    2        1585718447 World <NA> count:Individual   296
+#>  3:    3        1585718447 World <NA> count:Individual   264
+#>  4:    4        1585718447 World <NA> count:Individual   241
+#>  5:    5        1585718447 World <NA> count:Individual   209
+#>  6:    6        1585718447 World <NA> count:Individual   191
+#>  7:    7        1585718447 World <NA> count:Individual   169
+#>  8:    8        1585718447 World <NA> count:Individual   151
+#>  9:    9        1585718447 World <NA> count:Individual   139
+#> 10:   10        1585718447 World <NA> count:Individual   126
 ```
 
 Let’s visualise how many individual agents are still alive at the end of
@@ -224,8 +224,8 @@ ggplot(data = log_data) +
 This is just an introductory example of dymiumCore, the real power of
 the package is in the building blocks and functions that allow you to
 create a large-scale microsimulation model that is easily maintainable
-and scalable model by breaking down each components into modules as
-illustrated in
+and scalable model by breaking down each complex component into an event
+function as illustrated in
 [dymium-org/dymiumExampleProject](https://github.com/dymium-org/dymiumExampleProject).
 
 ## Documentation and Tutorials
