@@ -4,18 +4,19 @@
 #'
 #' A class that perform Monte Carlo simulation on agents using a probabilistic model.
 #' Work flow: `initialise()` -> `filter()` -> `mutate()` -> `simulate()` -> `postprocess()`.
-#' Note that, the order of filter and mutate can be swap by overwriting the `preprocess()` method.
-#' The default order as speficied in the `preprocess` method is:
+#' Note that, to swap the run order of `filter()` and `mutate()` you need to change the
+#' `mutate_first` public field to `TRUE`.
 #'
-#' ```r
-#' filter(.data) %>%
-#'  mutate(.)
-#' ```
+#' @note
+#'
+#' `target` can be static or dynamic depending on the data structure of it. A static
+#' target can be a named list or an integer value depending its usage in each
+#' event function.
 #'
 #' @section Construction:
 #'
 #' ```
-#' Transition$new(x, model, target = NULL, targeted_agents = NULL)
+#' Trans$new(x, model, target = NULL, targeted_agents = NULL)
 #' ```
 #'
 #' * `x` :: [`R6`]\cr
@@ -35,7 +36,10 @@
 #'
 #' @section Fields:
 #'
-#'  * `NULL`\cr
+#'  * `mutate_first`:: `logical(1)`\cr
+#'  Default as FALSE, this flag is used to indicate whether the attribute data from
+#'  the Agent in `x` should be mutated (`$mutate(.data)`) before filtered (`$filter(.data)`).
+#'  See the description section for more details about the processing steps of [Trans].
 #'
 #' @section Methods:
 #'
@@ -54,11 +58,6 @@
 #'  by the given model. Adding derived variables and historical life course of the agents
 #'  can be done in this step.
 #'
-#' * `preprocess(.data)`\cr
-#' ([data.table::data.table()]) -> `[data.table::data.table()]`\cr
-#' By default, preprocess runs `filter()` then `mutate()` as described in the description section.
-#' This can be overwritten to change the order and add extra steps.
-#'
 #' * `update_agents(attr)`\cr
 #' (`character(1)`)\cr
 #' Update the attribute data of the agents that undergo the transition event.
@@ -75,34 +74,47 @@
 #' (`character()`) -> (`integer()`)\cr
 #' Returns ids of the agents that have their response equal to `response_filter`.
 #'
-#'
-#' @param x a Agent class inheritance object
-#' @param model a model object
-#' @param target a integer
-#'
 #' @export
 # TransitionClass ---------------------------------------------------------
-Transition <- R6Class(
-  classname = "Transition",
+Trans <- R6Class(
+  classname = "Trans",
   inherit = Generic,
   public = list(
     # Public ----------------------------------------------------------
+    mutate_first = FALSE,
+
     # load data, filter, and other settings
     initialize = function(x, model, target = NULL, targeted_agents = NULL) {
       # checks
       checkmate::assert_class(x, c("Agent"))
-      checkmate::assert_subset(class(model)[[1]], choices = SupportedTransitionModels())
-      checkmate::assert_list(target, any.missing = FALSE, types = 'integerish', names = 'strict', null.ok = TRUE)
+      checkmate::assert(
+        checkmate::check_subset(class(model)[[1]], choices = SupportedTransitionModels()),
+        checkmate::check_r6(model, classes = "Model"),
+        combine = "or"
+      )
+      dymiumCore::assert_target(target, null.ok = TRUE)
       checkmate::assert_integerish(targeted_agents, lower = 1, any.missing = FALSE, null.ok = TRUE)
+
 
       # store inputs
       private$.AgtObj <- x
-      private$.model <- model
-      private$.target <- target
+      if (checkmate::test_r6(model, classes = "Model")) {
+        private$.model <- model$model
+        private$.model_preprocessing_fn <- model$preprocessing_fn
+      } else {
+        private$.model <- model
+      }
+      private$.target <- Target$new(target)$get()
       private$.targeted_agents <- targeted_agents
 
-      # run the steps
-      private$run_preprocessing_steps()
+      # run the steps ------
+      # catch the case when an empited `targeted_agents` is given.
+      if (is.null(targeted_agents) | length(targeted_agents) != 0) {
+        private$run_preprocessing_steps()
+      } else {
+        private$.sim_data <- NULL
+      }
+
       private$run_simulation()
       private$run_postprocessing_steps()
 
@@ -113,11 +125,11 @@ Transition <- R6Class(
       # TODO: how to allow decision_filter for other logical operators
       # (eg: <=, =>, !=)?
       if (is.null(response_filter)) {
-        return(private$.sim_result[, (id)])
+        return(private$.sim_result[["id"]])
       }
       private$.sim_result %>%
         # filter
-        .[response %in% response_filter, (id)]
+        .[response %in% response_filter, id]
     },
 
     get_data = function() {
@@ -151,22 +163,10 @@ Transition <- R6Class(
       .data
     },
 
-    preprocess = function(.data) {
-      self$filter(.data) %>%
-        self$mutate(.)
+    postprocess = function(.sim_result) {
+      .sim_result
     },
 
-    postprocess = function(.data) {
-      .data
-    },
-
-    #' @details
-    #' Update the attribute data of the agents that undergo the transition event.
-    #'
-    #' @param attr the column name in agents' attribute data to be updated using the
-    #'  response result from the transition event.
-    #'
-    #' @return NULL
     update_agents = function(attr) {
       private$update(attr)
     },
@@ -181,10 +181,10 @@ Transition <- R6Class(
       }
 
       if (is.character(private$.sim_result[['response']])) {
-        .value <-
-          glue::glue_collapse(unique(private$.sim_result[['response']]),
-                              sep = ", ",
-                              width = 100)
+        rs <- summary(as.factor(private$.sim_result[['response']]))
+        .value <- paste0(names(rs), ": ",
+                        round(rs, 2),
+                        collapse = " | ")
       }
 
       msg <- glue::glue(
@@ -202,6 +202,7 @@ Transition <- R6Class(
   private = list(
     # Private ----------------------------------------------------------
     .model = NULL, # model object or data.table
+    .model_preprocessing_fn = NULL,
     .AgtObj = R6::R6Class(), # use as a reference holder
     .sim_data = data.table(), # preprocessed simulation data
     .sim_result = data.table(), # two columns: id, response
@@ -222,15 +223,36 @@ Transition <- R6Class(
 
       checkmate::assert_data_table(raw_data, min.rows = 1, null.ok = FALSE, .var.name = "Agent's data")
 
-      preprocessed_data <- self$preprocess(raw_data)
-
-      if (!is.data.table(preprocessed_data)) {
-        data.table::setDT(preprocessed_data)
+      # Model's preprocessing function
+      if (!is.null(private$.model_preprocessing_fn)) {
+        raw_data <- private$.model_preprocessing_fn(raw_data)
       }
 
-      # sanity checks
-      checkmate::assert_data_table(preprocessed_data, min.rows = 1, null.ok = FALSE)
-      checkmate::assert_names(names(preprocessed_data), must.include = AgtObj$get_id_col())
+      # preprocess data
+      if (self$mutate_first) {
+        preprocessed_data <-
+          raw_data %>%
+          self$mutate(.) %>%
+          self$filter(.)
+      } else {
+        preprocessed_data <- self$filter(raw_data)
+      }
+
+      # check if after `filter` there are still data
+      if (nrow(preprocessed_data) > 0) {
+        if (!self$mutate_first) {
+          preprocessed_data <- self$mutate(preprocessed_data)
+        }
+        # sanity checks
+        checkmate::assert_data_frame(preprocessed_data, min.rows = 1, null.ok = FALSE)
+        checkmate::assert_names(names(preprocessed_data), must.include = AgtObj$get_id_col())
+        if (!is.data.table(preprocessed_data)) {
+          data.table::setDT(preprocessed_data)
+        }
+      } else {
+        # simulation won't be run if this is NULL
+        preprocessed_data <- NULL
+      }
 
       private$.sim_data <- preprocessed_data
 
@@ -245,53 +267,48 @@ Transition <- R6Class(
     simulate = function() {
 
       # expect a vector
+      lg$warn("Transition is not meant not be used directly! It only gives an incorrect \\
+               simulation result for internal testing purposes! Please use \\
+               TransitionClassification or TransitonRegression instead.")
       response <- rep(1, nrow(private$.sim_data)) # dummy
-
-      # response <- switch(
-      #   EXPR = class(private$.model)[[1]],
-      #   "train" = simulate_train(self, private),
-      #   "data.table" = simulate_datatable(self, private),
-      #   "list" = simulate_list(self, private),
-      #   "NULL" = simulate_numeric(self, private),
-      #   stop(
-      #     glue::glue(
-      #       "{class(self)[[1]]} class doesn't have an implementation of {class(private$.model)} \\
-      #       class. Please kindly request this in dymiumCore's Github issue or send in a PR! :)"
-      #     )
-      #   )
-      # )
 
       response
     },
 
     run_simulation = function() {
-      response <- private$simulate()
+      if (!is.null(private$.sim_data)) {
+        response <- private$simulate()
 
-      # validity checks
-      if (length(response) != nrow(private$.sim_data)) {
-        stop(glue::glue("The number of predictions from the model doesn't \\
+        # validity checks
+        if (length(response) != nrow(private$.sim_data)) {
+          stop(glue::glue("The number of predictions from the model doesn't \\
                                     equal to the number of row of the data used \\
                                     to simulate it."))
+        }
+
+        # construct simulation result
+        sim_result <-
+          data.table::data.table(id = private$.sim_data[[private$.AgtObj$get_id_col()]],
+                                 response = response)
+
+        if (is.null(private$.target)) {
+          checkmate::assert(
+            checkmate::check_integerish(sim_result[['id']], unique = TRUE),
+            checkmate::check_data_table(sim_result, any.missing = FALSE, null.ok = FALSE),
+            checkmate::check_names(names(sim_result), identical.to = c("id", "response")),
+            combine = 'and'
+          )
+        } else {
+          checkmate::assert(
+            checkmate::check_integerish(sim_result[['id']], any.missing = FALSE, unique = TRUE),
+            checkmate::check_data_table(sim_result, any.missing = TRUE, null.ok = FALSE),
+            checkmate::check_names(names(sim_result), identical.to = c("id", "response")),
+            combine = 'and'
+          )
+        }
+      } else {
+        sim_result <- data.table(id = integer(), response = character())
       }
-      checkmate::assert(
-        checkmate::check_character(response, any.missing = FALSE, null.ok = FALSE),
-        checkmate::check_numeric(response, finite = TRUE, any.missing = FALSE, null.ok = FALSE),
-        combine = 'or'
-      )
-
-      # construct simulation result
-      sim_result <-
-        data.table::data.table(
-          id = private$.sim_data[[private$.AgtObj$get_id_col()]],
-          response = response
-        )
-
-      checkmate::assert(
-        checkmate::check_integerish(sim_result[['id']], unique = TRUE),
-        checkmate::check_data_table(sim_result, any.missing = FALSE, null.ok = FALSE),
-        checkmate::check_names(names(sim_result), identical.to = c("id", "response")),
-        combine = 'and'
-      )
 
       private$.sim_result <- sim_result
       invisible(TRUE)
@@ -331,16 +348,48 @@ Transition <- R6Class(
  )
 )
 
-#' Classes of supported objects to be use in Transition.
+# Functions ---------------------------------------------------------------
+
+.pick_target <- function(target) {
+  if (!is.data.frame(target)) {
+    return(target)
+  }
+  if (!is.data.table(target)) {
+    target <- as.data.table(target)
+  }
+  current_sim_time <- .get_sim_time()
+
+  index_closest_time <- which.min(abs(target[['time']] - current_sim_time))
+
+  return(as.list(target[index_closest_time, -c("time")]))
+}
+
+#' Get all object classes that are supported by Transition
 #'
 #' @description
 #' Currently, these classes are supported in the `model` argument of the Transition's
-#' constructor: [caret::train], a named `list`, and [data.table::data.table].
+#' constructor:
+#' - [caret::train],
+#' - [stats::lm],
+#' - [stats::glm],
+#' - a numeric vector,
+#' - a named `list`, and
+#' - [data.table::data.table].
+#'
+#' @note See the 'Transition' section of the
+#' [dymiumCore's introduction](https://core.dymium.org/articles/dymium-intro.html)
+#' webpage for more detail.
 #'
 #' @return a character vector
 #' @export
 SupportedTransitionModels <- function() {
-  return(c("train", "list", "data.table", "numeric"))
+  get_supported_models()
+}
+
+#' @rdname SupportedTransitionModels
+#' @export
+get_supported_models <- function() {
+  return(c("train", "list", "data.table", "numeric", "glm", "lm", "WrappedModel"))
 }
 
 monte_carlo_sim <- function(prediction, target) {
@@ -352,6 +401,11 @@ monte_carlo_sim <- function(prediction, target) {
     null.ok = FALSE,
     col.names = 'unique'
   )
+
+  if (!is.data.table(prediction)) {
+    setDT(prediction)
+  }
+
   choices <- names(prediction)
 
   if (!is.null(target)) {
@@ -362,3 +416,22 @@ monte_carlo_sim <- function(prediction, target) {
   }
 }
 
+is_regression <- function(x) {
+  if (inherits(x, "train")) {
+    if (x$modelType == "Regression")
+      return(TRUE)
+    if (x$modelType == "Classification")
+      return(FALSE)
+    stop("The model is neither regression or classification.")
+  }
+  if (inherits(x, "lm")) {
+    if(family(x)$link %in% c("identity", "log")) {
+      return(TRUE)
+    }
+    if(family(x)$link %in% c("logit", "probit")) {
+      return(FALSE)
+    }
+    stop("The model is neither regression or classification.")
+  }
+  return(FALSE)
+}

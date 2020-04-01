@@ -11,9 +11,9 @@
 #'
 #' validate_linkages(world)
 validate_linkages <- function(world) {
-  for (E in world$Entities) {
+  for (E in world$entities) {
     E_id_col <- E$get_id_col()
-    for (e in world$Entities) {
+    for (e in world$entities) {
       if (E$class() == e$class()) {
         next()
       }

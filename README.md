@@ -3,39 +3,235 @@
 
 <!-- badges: start -->
 
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+![GitHub release (latest by date including
+pre-releases)](https://img.shields.io/github/v/release/dymium-org/dymiumCore?include_prereleases)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore)
-[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore)
-[![Build
-Status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://travis-ci.org/dymium-org/dymiumCore)
+[![Travis build
+status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://travis-ci.org/dymium-org/dymiumCore)
+[![AppVeyor build
+status](https://ci.appveyor.com/api/projects/status/qhjt91cg08ob7s16/branch/master?svg=true)](https://ci.appveyor.com/project/asiripanich/dymiumcore/branch/master)
 [![Codecov test
 coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.svg)](https://codecov.io/gh/dymium-org/dymiumCore?branch=master)
+[![Lifecycle:
+maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+<!-- [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore) -->
 <!-- badges: end -->
 
-# dymiumCore <img src="man/figures/logo.png" align="right" alt="" width="120" />
+# dymiumCore
+
+<img src="man/figures/dymium-banner.png" align="centre" />
 
 **dymiumCore** is an R package which provides a toolbox for developing a
-microsimulation model that is modular and pipable. While the core focus
-of the package is for modelling urban systems, dymium can be easily
-extended to apply in other contexts as well.
+microsimulation model. While the core focus of the package is for
+modelling urban systems, dymium can be easily extended to apply in other
+contexts as well.
+
+**:newspaper: News**
+
+  - :tada: [dymiumCore
+    version 0.1.6.](https://blog.amarin.dev/posts/dymiumcore-version-0-1-6-release/)
+
+# Why another microsimulation framework?
+
+It is true that there is no shortage of open source microsimulation
+frameworks, but many of the existing ones often use a platform that
+doesn’t support data analysis as good as R, or use a programming
+langauge that many modellers may be unfamiliar with. Hence, those
+frameworks would not be the first choice for many modellers who are
+interested in microsimulation modelling but lack the programming skills
+or time to learn a programming langauge that is foreign and has no other
+benefits to them. The main philosophy of `dymiumCore` is to use the
+power of existing R packages to create functions and classes that are
+the basic building blocks of any microsimulation model, in general, and
+to allow an entire workflow from data preparation, model estimation,
+microsimulation, calibration to visualisation within only the R
+environment, where many other frameworks do not offer. This enhances
+reproducibility and maintainability of your microsimulation model and
+allow others to build on your work more easily. [Read
+more…](https://core.dymium.org/articles/why-another-microsim.html)
+
+# Why `dymiumCore`?
+
+  - written in R
+  - easy to setup
+  - ready-to-use events see
+    [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
+  - microsimulation events are modular, sharable and scalable
+  - equipped with the basic building blocks for building a
+    microsimulation model that is flexible and extensible.
+  - can use parameters from various model objects (e.g. `stats::lm`,
+    `stats::glm`, `caret::train`, `mlr::train`).
 
 ## Installation
 
-The dymiumCore package has not been released on CRAN, but you can
-install from [GitHub](https://github.com/) with:
+You can install the released version of dymiumCore from Github with:
 
 ``` r
-# install.packages("remotes")
+remotes::install_github("dymium-org/dymiumCore", 
+                         ref = remotes::github_release())
+```
+
+The current development version on Github can be installed with:
+
+``` r
 remotes::install_github("dymium-org/dymiumCore")
 ```
 
-## Tutorials
+Note that, `dymiumCore` is not yet on CRAN.
 
-For tutorials please see the articles at <https://main.dymium.org>.
+## A Hello World Example\!
+
+This is a minimal example of how one can create a discrete-time
+microsimulation model with dymiumCore.
+
+In this example, we have three events: ageing, giving birth, and dying.
+The ageing event increases age of all individuals by 1 year in each
+iteration, as control by the for loop. The giving birth event only
+changes the ‘give\_birth’ variable of eligible female individuals (age
+between 18 to 50) to ‘yes’ if the transition for an individual is
+successful. Note that this simple example doesn’t add newborns from the
+birth event to the population, however, it can be done easily using
+`Individual$add()`. The dead event changes the age attribute of dying
+individuals to ‘-1’, which means once an individual is dead it will not
+be considered in any transition or mutate\_entity statement, as we apply
+`not_dead_filter` and a subset statement to them.
+
+The first principle of dymiumCore is to keep all \[Entity\] objects and
+models (optionally) inside a `World` object. This allows us to construct
+a microsimulation model as a data analysis pipeline, which you will see
+below.
+
+``` r
+library(dymiumCore)
+library(data.table)
+
+# create simple models
+birth_model <- list(yes = 0.1, no = 0.9)
+death_model <- list(yes = 0.1, no = 0.9)
+
+# prepare population data
+ind_data <- 
+  data.table::copy(toy_individuals) %>%
+  .[, give_birth := "no"]
+
+# create a World object, a container for all entities and models for simulation
+world <- World$new()
+world$add(x = Individual$new(.data = ind_data, id_col = "pid"))
+
+# create filters, this is a method for creating functions using `magrittr` and
+# data.table's syntax
+filter_eligible_females <- 
+  . %>%
+  .[sex == "female" & age %between% c(18, 50)]
+
+filter_alive <- 
+  . %>%
+  .[age != -1]
+
+# create a pipeline of transition events
+for (year in 1:10) {
+  world %>%
+    mutate_entity(entity = "Individual", 
+                  age := age + 1L, 
+                  subset = age != -1L) %>%
+    transition(entity = "Individual", 
+               model = birth_model, 
+               attr = "give_birth", 
+               preprocessing_fn = . %>% filter_eligible_females %>% filter_alive) %>%
+    transition(entity = "Individual", 
+               model = death_model, 
+               attr = "age", 
+               values = c(yes = -1L), 
+               preprocessing_fn = filter_alive) %>%
+    add_log(., time = year, desc = "count:Individual", value = .$entities$Individual$get_data()[age != -1L, .N])
+}
+```
+
+To get the attribute data of any \[Entity\] object use `$get_data()`
+method.
+
+``` r
+world$entities$Individual$get_data()
+#>      pid hid age    sex marital_status partner_id father_id mother_id
+#>   1:   1   1  -1   male  never married         NA        NA        NA
+#>   2:   2   2  -1 female  never married         NA        NA        NA
+#>   3:   3   2  -1 female  never married         NA        NA        NA
+#>   4:   4   3  -1   male        married          5        NA        NA
+#>   5:   5   3  -1 female        married          4        NA        NA
+#>  ---                                                                 
+#> 369: 369 143  83   male        married        368        NA        NA
+#> 370: 370 144  59 female        married        371        NA        NA
+#> 371: 371 144  -1   male        married        370        NA        NA
+#> 372: 372 144  -1   male  never married         NA       371       370
+#> 373: 373 144  -1   male  never married         NA       371       370
+#>      give_birth
+#>   1:         no
+#>   2:         no
+#>   3:         no
+#>   4:         no
+#>   5:         no
+#>  ---           
+#> 369:         no
+#> 370:         no
+#> 371:         no
+#> 372:         no
+#> 373:         no
+```
+
+The `add_log` function allows any object to be stored in our World
+object for doing post-simulation analysis. In the example, we logged the
+number of individuals that were alive in each simulation year. We can
+extract the log data using `get_log()`. The `value` column of the log
+data by `get_log()` is a list column, this is to allow any object to be
+stored in `value`, so we must flatten in to integer to make the log data
+easier to work with.
+
+``` r
+# get log data
+log_data <- 
+  get_log(world) %>% 
+  .[, value := unlist(value)]
+print(log_data)
+#>     time created_timestamp class  tag             desc value
+#>  1:    1        1585718666 World <NA> count:Individual   332
+#>  2:    2        1585718666 World <NA> count:Individual   296
+#>  3:    3        1585718666 World <NA> count:Individual   264
+#>  4:    4        1585718666 World <NA> count:Individual   241
+#>  5:    5        1585718666 World <NA> count:Individual   209
+#>  6:    6        1585718666 World <NA> count:Individual   191
+#>  7:    7        1585718666 World <NA> count:Individual   169
+#>  8:    8        1585718666 World <NA> count:Individual   151
+#>  9:    9        1585718666 World <NA> count:Individual   139
+#> 10:   10        1585718666 World <NA> count:Individual   126
+```
+
+Let’s visualise how many individual agents are still alive at the end of
+the simulation.
+
+``` r
+library(ggplot2)
+ggplot(data = log_data) +
+  geom_col(aes(x = time, y = value, fill = value)) +
+  labs(x = "Time", y = "Number of Individuals") +
+  scale_x_continuous(n.breaks = 10) +
+  guides(fill = "none") +
+  theme_minimal(base_size = 16)
+```
+
+<img src="man/figures/README-example-1.png" width="100%" />
+
+This is just an introductory example of dymiumCore, the real power of
+the package is in the building blocks and functions that allow you to
+create a large-scale microsimulation model that is easily maintainable
+and scalable model by breaking down each complex component into an event
+function as illustrated in
+[dymium-org/dymiumExampleProject](https://github.com/dymium-org/dymiumExampleProject).
+
+## Documentation and Tutorials
+
+For documentation and tutorials, please check our website at
+<https://core.dymium.org>.
 
 ## Available modules
 
@@ -43,199 +239,65 @@ Please visit
 [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
 to see the available modules.
 
-## Overview of the building blocks
+## Try `dymiumCore` with an example project
 
-An implementation of a microsimulation model usually consists of these
-three components which are entity, transition and market.
+Please visit
+[dymium-org/dymiumExampleProject](https://github.com/dymium-org/dymiumExampleProject)
+to learn more about this.
 
-### Entities
+## Collaboration
 
-Entities can be persons, firms, buildings, zones, transport network etc.
-They can be conviniently defined as a class, based on the concept of
-‘objects’ in object-oriented programming. Each entity is known by its
-fields and methods, what it represents and what it can do. A person may
-contains fields such as age, gender, marital status. A person give
-birth, leave parental home, etc. While a household may have household
-size, household id, number of vehicles owned as its fields. A household
-can relocate, have new members and etc.
+We are open to collaboration on this project. If you are interested,
+please email us at amarin at dymium.org.
 
-### Transition
+## Development plan (as of 14th March 2020)
 
-In a microsimulation model, entities are given rules for them to follow
-under different conditions. A rule can simply be an ifelse statement
-such as:
+  - [x] **Version 0.1.0**: (21 Jan 2020) Release all the basic building
+    blocks for microsimulation modelling.
+      - [x] **Version 0.1.6**: Support `mlr` in `transision()` and
+        `TransitionClassification`.
+      - [ ] Support regression model creation from parameters.
+      - [ ] Support `mlr3` and `mlogit` model objects in the Transition
+        classes.
+  - [ ] **Version 0.2.0**: Implement model-based calibration.
+  - [ ] **Version 0.3.0**: Visualisation functions for life-courses,
+    spatial data, etc.
+  - [ ] **Version 0.4.0**: Integration with dymiumGUI.
 
-    if age is greater than 16:
-        can_marry 
-    else:
-        cant_marry
+## Related open-source frameworks and models
 
-or probabilistic such as a rate-based model or a classification model
-(binary logit model, multinomial logit model, hazard-based model, random
-forest, and artificial neural network) that takes attributes of the
-entities as the input variables.
+**General-purpose microsimulation frameworks**
 
-dymium provides a class called `TransitionClassification` and
-`TransitionRegression` which take in a rule and entities then simulate
-the outcomes of the entities given the provided rule. For probabilistic
-rules, Monte Carlo simulation will be performed based on the
-probabilistic values from the rules.
+  - [LIAM2, Python](https://github.com/liam2/liam2)
+  - [JASMINE, Java](http://www.jas-mine.net/)
+  - [MicSim,
+    R](https://cran.r-project.org/web/packages/MicSim/index.html)
+  - [neworder, Python](https://github.com/virgesmith/neworder)
+  - [simarioV2, R](https://github.com/kcha193/simarioV2)
+  - [JAMSIM, Java](https://github.com/compassresearchcentre/jamsim)
 
-Currently, dymiumCore we only support model objects fitted using the
-`caret` package, a named list, and a data.frame or data.table for Monte
-Carlo simulation.
+**Multi-agent programmable modeling environment**
 
-| Package |     Class |                                     Model types |         status |
-| ------: | --------: | ----------------------------------------------: | -------------: |
-|   caret |   `train` |            classification and regression models |      supported |
-|  mlogit |  `mlogit` |                        multinomial logit models | in-development |
-|    mlr3 | `Learner` | classification, survival, and regression models |        planned |
+  - [NetLogo](https://ccl.northwestern.edu/netlogo/)
 
-**Note that**: rate-based models can be used for simulation as well. To
-use them, you first need to import them as a data.frame and a named
-list.
+**Urban microsimulation land-use models**
 
-  - If a `data.frame` or `data.table` is provided, it must contain a key
-    column or keys columns and must have a column named ‘prob’ that must
-    be a numeric type with values within \[0,1\] which represent
-    probability values. Recently, models of type data.table have gained
-    a new support where multiple choices can be simulated using a
-    data.table object as a model. The data.table object should contains
-    matching variables and two extra columns which are `probs`, a list
-    column that contains numeric vectors, and `choices`, also a list
-    column but contains character vectors.
+  - [UrbanSim, Python](https://github.com/UDST/urbansim)
+  - [ILUTE, C\#](https://github.com/TravelModellingGroup/ILUTE)
+  - [SILO, Java](https://github.com/msmobility/silo)
 
-<!-- end list -->
+## Recommended scholarly articles
 
-``` r
-library(data.table) # use install.packages("data.table") to install
+To learn more about dynamic microsimulation modelling and some of its
+use cases please see these articles.
 
-(rate_based_model <-
-  data.table(
-  sex = c("male", "female"),
-  prob = c(0.3, 0.2)
-))
-#>       sex prob
-#> 1:   male  0.3
-#> 2: female  0.2
-
-(choice_model <-
-  data.table(
-    sex = c('male', 'female'),
-    probs = list(c(0.3,0.7), c(0.4,0.6)),
-    choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
-))
-#>       sex   probs                choices
-#> 1:   male 0.3,0.7 can drive,cannot drive
-#> 2: female 0.4,0.6 can drive,cannot drive
-```
-
-  - A named `list` can be used to represent choices, where the names of
-    the list are choices and their values are their associated
-    probabilities.
-
-<!-- end list -->
-
-``` r
-(binary_list_model <- list(yes = 0.05, no = 0.95))
-#> $yes
-#> [1] 0.05
-#> 
-#> $no
-#> [1] 0.95
-(marriage_model <- list(married = 0.05, not_married = 0.95))
-#> $married
-#> [1] 0.05
-#> 
-#> $not_married
-#> [1] 0.95
-(employment_model <- list(employed = 0.4, unemployed = 0.2, not_in_labour_force = 0.3))
-#> $employed
-#> [1] 0.4
-#> 
-#> $unemployed
-#> [1] 0.2
-#> 
-#> $not_in_labour_force
-#> [1] 0.3
-```
-
-In a binary choice model, it is recommended that the outcome variable
-should be coded as “yes” and “no” as many of the modules available at
-[dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
-use with this convention.
-
-### Market
-
-In microsimulation, a market is where entities are directly interact
-with one another. A market can be an abstraction of a real-estate
-bidding market, a mate matching market, a labour market, etc. The entire
-market are separated into two sides (i.e. proposers and proprosees,
-buyers and sellers, labours and firms). Interactions maybe one-sided or
-two-sided depends on the matching mechanism that is used. When it is
-one-sided only agents from one side of the market make the decision
-about what they get based on their preference. When it is the matching
-problem is two-sided one then both sides of the market evaluate evaluate
-options available to them and interact in a way that mimic bidding.
-
-Note that, the number of alternatives available to each agent is
-customisable to realistically represent a matching situation that is
-being simulated. For example, in a housing search situation, it might be
-inappropiate to assume that all relocating households have perfect
-knowledge about all the available dwelling units that are on the market
-at any moment in time. Hence, the modeller might want to limit the
-number of alternatives available in the choiceset of each household or
-the number of zones that the households look for their options.
-
-Currently, there are two implementations of market matching algorithms
-which are
-
-  - Stochastic matching (`MatchingMarketStochastic`) and
-  - Optimal matching (`MatchingMarketOptimal`)
-
-In `MatchingMarketStochastic`, only one-sided matching problems can be
-solved. All agents that are seeking a match are randomly ordered into a
-virtual queue. The first agent in the queue gets to select an
-alternative among all the alternatives that available to it. While in
-`MatchingMarketOptimal`, both one-sided and two-sided problems can be
-solved. All agents are aware of all the available alternatives
-(e.g. houses, partners, etc.) in the market. This generally a very
-strong assumption. Hence, to mitigate such strong assumption the whole
-market can be further segmented into sub markets where agents that are
-more alike or geographically near one others are stratified into the
-same sub market and only aware of each others and not those that are
-their unlikely matches.
-
-### Logging
-
-dymium uses the `lgr` package for logging internally in the base code.
-By default, only log messages with `warn` level or higher will be
-displayed in the R console. The users are also encourage to use the same
-logger object that is used internally to create additional logging
-messages. The same logger may be used for logging of simulation results.
-To log a simulation result, use `lg$info()` and use `SIM_OUTPUT` as
-value in the msg argument.
-
-``` r
-dymiumCore:::lg$info("SIM_OUTPUT", desc = "number_of_individuals", value = 1000)
-```
-
-Note that, the first argument of `lg$info()` is `msg` and you do not
-have to specify that (i.e. `lg$info(msg = "SIM_OUTPUT"`)) otherwise you
-will get the following error.
-
-``` r
-[2020-01-06 07:28:40.881] An error occurred during logging: Error in .subset2(public_bind_env, "initialize")(...): formal argument "msg" matched by multiple actual arguments
-```
-
-To access the log data of your simulation results use the following
-command.
-
-``` r
-dymiumCore:::lg$appenders$buff$appenders$sim_output$data
-```
-
-``` r
-#>   level           timestamp     logger caller        msg                  desc     value
-#> 1   400 2020-01-06 07:29:49 dymiumCore   eval SIM_OUTPUT number_of_individuals      1000
-```
+  - O’Donoghue, C. (2001). Dynamic microsimulation: a methodological
+    survey. Brazilian Electronic Journal of Economics, 4(2), 77.
+  - Li, J., & O’Donoghue, C. (2013). A survey of dynamic microsimulation
+    models: uses, model structure and methodology. International Journal
+    of microsimulation, 6(2), 3-55.
+  - Rutter, C. M., Zaslavsky, A. M., & Feuer, E. J. (2011). Dynamic
+    microsimulation models for health outcomes: a review. Medical
+    Decision Making, 31(1), 10-18.
+  - GouuAs, K. G., & Kitamura, R. (1992). Travel demand forecasting with
+    dynamic microsimulation.

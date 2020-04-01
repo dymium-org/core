@@ -24,25 +24,24 @@ dymiumModulesRepo <- "dymium-org/dymiumModules"
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   # download an test module.
 #'   download_modules('test', version = '0.0.1')
 #' }
 #'
-download_module <- function(name, repo = dymiumModulesRepo, version, force = FALSE, remove_download = FALSE) {
-  modules_path <- fs::path("modules")
+download_module <- function(name, repo = dymiumModulesRepo, version, force = FALSE, remove_download = FALSE, .basedir = here::here()) {
+  modules_path <- fs::path(.basedir, "modules")
   usethis::use_directory('modules')
   all_module_files <- get_all_module_files()
   all_versions <- extract_module_versions(name = name, filenames = all_module_files)
   if (missing(version)) {
     cli::cli_alert_warning("The argument 'version' was not specified. The latest \\
                             version of the module '{.strong {name}}' will be downloaded.")
-    version <- all_versions[[length(all_versions)]]
+    version <- max(numeric_version(all_versions, strict = TRUE))
     cli::cli_alert_info("The latest version of module '{.strong {name}}' is '{version}'.")
   } else {
     check_version(version, all_versions, name = name)
   }
-
   module_filename <- paste0(name, "_", version)
   if (isFALSE(force) && fs::dir_exists(fs::path(modules_path, module_filename))) {
     cli::cli_alert_danger("'{.strong {module_filename}}' already exists in \\
@@ -54,9 +53,9 @@ download_module <- function(name, repo = dymiumModulesRepo, version, force = FAL
   }
   module_download_url <-
     paste0("https://github.com/", repo, "/raw/master/modules/", name, "/", module_filename, ".zip")
-  tmp_module_path <- fs::path("modules", "temp-module.zip")
+  tmp_module_path <- fs::path(modules_path, "temp-module.zip")
   utils::download.file(url = module_download_url, destfile = tmp_module_path, overwrite = FALSE, cacheOK = FALSE)
-  utils::unzip(zipfile = tmp_module_path, exdir = modules_path, overwrite = FALSE)
+  utils::unzip(zipfile = tmp_module_path, exdir = fs::path(modules_path, name), overwrite = FALSE)
   if (remove_download) {
     fs::file_delete(path = tmp_module_path)
   }
@@ -75,7 +74,7 @@ download_module <- function(name, repo = dymiumModulesRepo, version, force = FAL
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   check_module('test')
 #' }
 check_module <- function(name, repo = dymiumModulesRepo) {
@@ -96,7 +95,7 @@ check_module <- function(name, repo = dymiumModulesRepo) {
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   check_module_version('test', version = '0.0.1')
 #' }
 check_module_version <- function(name, repo = dymiumModulesRepo, version) {
@@ -136,7 +135,7 @@ extract_module_versions <- function(name, filenames) {
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   get_module_versions("demography")
 #' }
 get_module_versions <- function(name, repo = dymiumModulesRepo) {
@@ -166,7 +165,7 @@ get_module_versions <- function(name, repo = dymiumModulesRepo) {
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   get_modules()
 #' }
 get_modules <- function(repo = dymiumModulesRepo) {
@@ -189,7 +188,7 @@ get_modules <- function(repo = dymiumModulesRepo) {
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   get_module_files("demography")
 #' }
 #'
@@ -212,7 +211,7 @@ get_module_files <- function(name, repo = dymiumModulesRepo) {
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   get_all_module_files("dymium-org/dymiumModules)
 #' }
 #'

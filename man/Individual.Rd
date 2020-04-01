@@ -3,17 +3,21 @@
 \name{Individual}
 \alias{Individual}
 \title{Individual class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Agent}<-\link{Entity}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Agent}<-\link{Entity}.
+}
 \description{
 Create Individual class, extended Agent class.
 }
 \section{Construction}{
-\preformatted{Ind <- Individual$new(.data, id_col)
+\preformatted{Ind <- Individual$new(.data, id_col, hid_col)
 }
 \itemize{
-\item .data::\link[data.table:data.table]{data.table::data.table}\cr
+\item \code{.data}::\link[data.table:data.table]{data.table::data.table}\cr
 Microdata of Individuals.
-\item id_col::\code{character(1)}\cr
+\item \code{id_col}::\code{character()}\cr
+Names of the primary id colum and relation id colunns in \code{.data}
+\item \code{hid_col}::\code{character(1)}\cr
 Name of the id colum in \code{.data}
 }
 }
@@ -28,11 +32,8 @@ Name of the id colum in \code{.data}
 \section{Public Methods}{
 
 
-Inherits all methods from \link{Agent} and the following..
+Inherits all fields and methods of \link{Agent}.
 \itemize{
-\item \code{initialise_data(data, id_col = "pid", hid_col)}\cr
-(\code{\link[data.table:data.table]{data.table::data.table()}}, \code{character(1)}, \code{character(1)}) -> \code{NULL}\cr
-Add data.
 \item \code{get_father(ids)}\cr
 (\code{integer()}) -> \code{integer()}\cr
 Get father ids of the corresponding individual ids.
@@ -69,13 +70,15 @@ Returns individual ids matches the input \code{hids}.
 \item \code{get_hid_col()}\cr
 () -> \code{character(1)}\cr
 Returns household id or \code{hid} of the individual-object.
-\item \code{add_relationship(ids, target_ids, type = c('father', 'mother', 'partner'))}\cr
-(\code{integer()}, \code{integer()}, \code{character(1)})\cr
-Return nothing, but it adds relationship of the type specifies in \code{type} by
-the user with the id of \code{target_ids} to individuals with ids in \code{ids}.
+\item \code{add_relationship(ids, target_ids, type)}\cr
+(\code{integer()}, \code{integer()}, \code{'father'|'mother'|'partner'})\cr
+Adds \code{target_ids} to the relationship column in \code{type} of the individual
+agents in \code{ids}. Note that, if \code{type} is 'partner' then both agents with id in
+\code{ids} and \code{target_ids} will add each other as 'partner'. Hence, no need for
+you to call this function twice to assign partner relationship to all the couples.
 \item \code{remove_relationship(ids, type = "partner")}\cr
-(\code{integer()}, \code{character()})\cr
-Note: children and parents can't be removed, only partner can be removed.
+(\code{integer()}, \code{'partner'})\cr
+Note that, children and parents can't be removed. Only partner relationship can be removed.
 \item \code{have_relationship(ids = NULL, type)}\cr
 (\code{integer()}, \code{character(1)}) -> \code{logical()}\cr
 Check if individuals in \code{ids} have the relationship of type \code{type}.
@@ -89,12 +92,6 @@ of the same length.
 \item \code{get_parent_hid(ids = NULL)}\cr
 (\code{integer()}) -> \code{\link[data.table:data.table]{data.table::data.table()}}\cr
 Returns a data.table with three columns: pid, father_hid and mother_hid.
-\item \code{living_with_parents(ids = NULL)}\cr
-(\code{integer()}) -> \code{logical()}\cr
-Returns a logical of length \code{ids} if ids is not NULL else the length will be
-equal to the number of rows of the data. The idea is to compare both parents'
-household ids with the household id of self. Dead individuals will always return
-FALSE as their answer.
 \item \code{living_together(self_ids, target_ids)}\cr
 (\code{integer()}, \code{integer()}) -> \code{logical()}\cr
 Check if two individuals are living together in the same household. Returns

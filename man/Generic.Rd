@@ -3,7 +3,9 @@
 \name{Generic}
 \alias{Generic}
 \title{Generic class}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object.
+}
 \description{
 Can be used as a template for other objects. This contains useful utility
 functions for abstraction objects. See the public members (methods).
@@ -27,9 +29,15 @@ functions for abstraction objects. See the public members (methods).
 () -> \code{self & private}\cr
 Makes debugging the object easier by assigning self and private to the
 global environment of the current seesion.
-\item \code{message(x, ...)}\cr
-Print \code{message} onto the console with the object classname append in front of
-the message. To turn this off, set options(dymium.agent.verbose = FALSE).
+\item \code{log(desc, value, tag = "", time = .get_sim_time(), .lg = parent.frame()[["lg"]])}\cr
+(\code{character(1)}, any objects, \code{character(1)}, \code{integer(1)}, \link[lgr:Logger]{lgr::Logger})\cr
+For logging simulation outcomes to \code{private$.log}. \code{get_log(x)} can be used to
+extract the log data from any object that inherit \code{Generic}. Note that, the
+logger in \code{log} can be specified. By default, it tries to look in the \code{parent.frame}
+the calling scope to find a logger named \code{lg} which is the default name used in
+dymium modules. If not found, then it will automatically use dymiumCore's logger.
+\item \code{is_dymium_class()}\cr
+Returns \code{TRUE}. Use for internal checking.
 }
 }
 

@@ -22,7 +22,7 @@ Check the existence of a module version.
 }
 \examples{
 
-if (FALSE) {
+\dontrun{
   check_module_version('test', version = '0.0.1')
 }
 }

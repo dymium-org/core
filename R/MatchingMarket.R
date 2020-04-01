@@ -99,47 +99,47 @@ MatchingMarket <- R6::R6Class(
                           grouping_vars = NULL,
                           max_market_size = 5000 ^ 2) {
       # CHECK INPUTS
-      assert_that(is.data.table(agentset_A))
-      assert_that(is.data.table(agentset_B))
+      checkmate::expect_data_table(agentset_A)
+      checkmate::expect_data_table(agentset_B)
 
       if (missing(id_col_A)) {
-        assert_that(uniqueN(agentset_A[, 1]) == nrow(agentset_A))
+        stopifnot(uniqueN(agentset_A[, 1]) == nrow(agentset_A))
         id_col_A <- names(agentset_A)[1]
       } else {
-        assert_that(has_name(agentset_A, id_col_A))
-        assert_that(uniqueN(agentset_A[[id_col_A]]) == nrow(agentset_A),
-                    msg = self$message("Please make sure the id column of agentset_A ",
-                                       "is correctly specified."))
+        checkmate::assert_names(names(agentset_A), must.include = id_col_A)
+        if (uniqueN(agentset_A[[id_col_A]]) != nrow(agentset_A)) {
+          stop("Please make sure the id column of agentset_A is correctly specified.")
+        }
       }
 
       if (missing(id_col_B)) {
-        assert_that(uniqueN(agentset_B[[1]]) == nrow(agentset_B))
+        stopifnot(uniqueN(agentset_B[[1]]) == nrow(agentset_B))
         id_col_B <- names(agentset_B)[1]
       } else {
-        assert_that(has_name(agentset_B, id_col_B))
-        assert_that(uniqueN(agentset_B[[id_col_B]]) == nrow(agentset_B),
-                    msg = self$message("Please make sure the id column of agentset_B ",
-                                             "is correctly specified."))
+        checkmate::assert_names(names(agentset_B), must.include = id_col_B)
+        if (uniqueN(agentset_B[[id_col_B]]) != nrow(agentset_B)) {
+          stop("Please make sure the id column of agentset_A is correctly specified.")
+        }
       }
 
       if (!is.null(grouping_vars)) {
-        assert_that(has_name(agentset_A, grouping_vars))
-        assert_that(has_name(agentset_B, grouping_vars))
+        checkmate::assert_names(names(agentset_A), must.include = grouping_vars)
+        checkmate::assert_names(names(agentset_B), must.include = grouping_vars)
       }
 
       if (!is.null(slots_B)) {
-        assert_that(is.numeric(slots_B))
-        assert_that(length(slots_B) == nrow(agentset_B))
-        assert_that(all(slots_B >= 1))
+        checkmate::assert_integerish(slots_B, len = nrow(agentset_B), lower = 1)
         agentset_B <- copy(agentset_B)[, slots := slots_B]
       }
 
-      assert_that(is.numeric(max_market_size))
+      checkmate::assert_count(max_market_size, positive = T, na.ok = FALSE, null.ok = FALSE)
 
       if (max_market_size > 5000 ^ 2) {
-        self$message(
-          "The maximum allowable market size is 5000^2.
-          Anything more than this could be inefficient to compute on a laptop."
+        stop(
+          glue::glue(
+            "The maximum allowable market size is 5000^2. Anything more than this \\
+            could be inefficient to compute on a laptop."
+          )
         )
       }
 
@@ -194,11 +194,11 @@ MatchingMarket <- R6::R6Class(
     split_by_group = function(matching_problem = self$matching_problem,
                               grouping_vars = self$matching_problem$grouping_vars) {
       if (is.null(grouping_vars)) {
-        stop(self$message("no grouping_vars."))
+        stop("`grouping_vars` was not given.")
       }
       if (!all(grouping_vars != self$matching_problem$grouping_vars)) {
-        assert_that(has_name(matching_problem$agentset_A, grouping_vars))
-        assert_that(has_name(matching_problem$agentset_B, grouping_vars))
+        checkmate::assert_names(names(matching_problem$agentset_A), must.include = grouping_vars)
+        checkmate::assert_names(names(matching_problem$agentset_B), must.include = grouping_vars)
       }
       # SPLIT DATA INTO GROUPS
       agentset_A_by_group <-
@@ -207,8 +207,8 @@ MatchingMarket <- R6::R6Class(
         split(matching_problem$agentset_B, by = grouping_vars, sorted = TRUE)
       # CHECK VALIDITY
       # TODO: split_by_group should create an empty data.table for each missing group in either of the agentsets
-      assert_that(length(agentset_B_by_group) == length(agentset_A_by_group))
-      assert_that(all(names(agentset_A_by_group) == names(agentset_B_by_group)))
+      stopifnot(length(agentset_B_by_group) == length(agentset_A_by_group))
+      stopifnot(all(names(agentset_A_by_group) == names(agentset_B_by_group)))
       matching_problem_by_group <-
         map2(.x = agentset_A_by_group,
              .y = agentset_B_by_group,
@@ -222,9 +222,7 @@ MatchingMarket <- R6::R6Class(
 
     # Returns a list of data.tables
     split_by_n = function(matching_problem = self$matching_problem, n_submarkets = NULL) {
-      if (!is.null(n_submarkets)) {
-        assert_that(is.numeric(n_submarkets))
-      }
+      checkmate::assert_count(n_submarkets, positive = T, null.ok = T, na.ok = FALSE)
 
       # * as.numeric is needed to avoid integer overflow
       # see https://stackoverflow.com/questions/8804779/what-is-integer-overflow-in-r-and-how-can-it-happen

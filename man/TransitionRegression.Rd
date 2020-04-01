@@ -3,39 +3,54 @@
 \name{TransitionRegression}
 \alias{TransitionRegression}
 \title{Transition for regression model}
-\description{
-A class that perform Monte Carlo simulation on agents using a probabilistic model.
-Work flow: \code{initialise()} -> \code{filter()} -> \code{mutate()} -> \code{simulate()} -> \code{postprocess()}.
-Note that, the order of filter and mutate can be swap by overwriting the \code{preprocess()} method.
-The default order as speficied in the \code{preprocess} method is:\if{html}{\out{<div class="r">}}\preformatted{filter(.data) \%>\%
- mutate(.)
-}\if{html}{\out{</div>}}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Trans}
 }
-\details{
-Update the attribute data of the agents that undergo the transition event.
+\description{
+This is particularly useful for updating agents' attributes that can be modelled
+using a regression model.
+
+By calling the constructor method of \link{TransitionClassification} this will
+initiate the following steps:
+\enumerate{
+\item \code{initialise(x, model, target, targeted_agents)} ->
+\item \code{filter(.data)}: filter agents to apply the transition to.
+\item \code{mutate(.data)}: add variables to the data of the filtered agents.
+\item \code{simulate()}: simulate the transition outcome using the probabilistic model
+\item \code{postprocess(.sim_result)}: post-processing the simulation result.
+}
+
+Note that, the order of filter and mutate can be swap by overwriting the \code{mutate_first}
+public field to \code{TRUE}. This may be useful in cases where agent selection for
+the transition depends on one or more derived variables.
+
+To get the simulation result use \verb{$get_result()}.
+}
+\note{
+TransitionRegression only returns a raw output of the simulation result.
+In a future update, there will be an option which allows the prediction result
+to be drawn from a distribution to add randomness to the result.
 }
 \section{Construction}{
-\preformatted{Transition$new(x, model, target = NULL, targeted_agents = NULL)
+\preformatted{TransitionRegression$new(x, model, targeted_agents = NULL)
 }
 \itemize{
-\item \code{x} :: \code{\link{R6}}\cr
+\item \code{x} :: \link[R6:R6Class]{R6::R6Class}\cr
 A Agent class inheritance object.
-\item \code{model} :: \code{object}\cr
-A model
-\item \code{target} :: \code{\link[=integer]{integer()}}\cr
-(Default as NULL). A number that forces the number of micro events to occur. For example, if
-`10`` is speficied, there will be 10 agents that under go the event. However,
-if a integer vector is given it must be the same length as the classes in the model.
-This only works for classification models.
+\item \code{model} :: \verb{any object} in \link{SupportedTransitionModels}\cr
+A model object to be used to simulate transition.
 \item \code{targeted_agent} :: \code{\link[=integer]{integer()}}\cr
-(Default as NULL) A integer vectors that contains ids of agents in \code{x} to undergo the event.
+(Default as NULL)
+A integer vectors that contains ids of agents in \code{x} to undergo the event.
 }
 }
 
 \section{Fields}{
 
 \itemize{
-\item \code{NULL}\cr
+\item \code{mutate_first}:: \code{logical(1)}\cr
+Default as FALSE, this flag is used to indicate whether the attribute data from
+the Agent in \code{x} should be mutated (\verb{$mutate(.data)}) before filtered (\verb{$filter(.data)}).
 }
 }
 
@@ -55,10 +70,6 @@ By default this method returns the input \code{.data}. This method can be overwr
 to give the user the flexibility to 'mutate' the data prior to making prediction
 by the given model. Adding derived variables and historical life course of the agents
 can be done in this step.
-\item \code{preprocess(.data)}\cr
-(\code{\link[data.table:data.table]{data.table::data.table()}}) -> \verb{[data.table::data.table()]}\cr
-By default, preprocess runs \code{filter()} then \code{mutate()} as described in the description section.
-This can be overwritten to change the order and add extra steps.
 \item \code{update_agents(attr)}\cr
 (\code{character(1)})\cr
 Update the attribute data of the agents that undergo the transition event.
@@ -74,3 +85,6 @@ Returns ids of the agents that have their response equal to \code{response_filte
 }
 }
 
+\seealso{
+\link{TransitionClassification} and \link{Trans}.
+}

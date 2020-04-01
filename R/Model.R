@@ -7,6 +7,10 @@
 #' @description
 #'
 #' A container for the supported model objects (see [SupportedTransitionModels]).
+#' When a model object is stored inside Model it can be assess using reference semantics.
+#' This is particularly useful when you want to store model objects inside [World].
+#' By doing so, you can assess those models from [World] as it is flowing down a
+#' microsimulation pipeline just like [Entities].
 #'
 #' @section S3 methods:
 #'
@@ -27,19 +31,41 @@
 #' the use of a [Model] object to the specific group of agents (e.g: age between
 #' `x` and `y`) that was used to estimate the model.
 #'
+#' @section Public fields:
+#'
+#' * `preprocessing_fn`\cr
+#' Default as NULL, this is to store a preprocessing function which will be
+#' used to evaluate the entity data in [Trans] prior to simulating the
+#' transition. A situation where this is useful could be when you want to limit
+#' the use of a [Model] object to the specific group of agents (e.g: age between
+#' `x` and `y`) that was used to estimate the model.
+#'
 #' @aliases Models
 #'
 #' @examples
 #'
+#' simple_prob_model <- Model$new(x = list(yes = 0.95, no = 0.05))
+#'
+#' simple_glm_model <- Model$new(x = stats::glm(factor(sex) ~ age,
+#'                               data = toy_individuals, family = "binomial"))
+#'
+#' # return the original model object
+#' simple_prob_model$model
+#'
+#' # add to world
 #' world <- World$new()
 #'
-#' prob_model <- list(yes = 0.95, no = 0.05)
+#' world$add(simple_prob_model, name = "simple_prob_model")
+#' world$add(simple_glm_model, name = "simple_glm_model")
 #'
-#' world$add(x = prob_model, name = "prob_model")
+#' # to access
+#' world$get("simple_prob_model")
+#' world$get("simple_glm_model")
 #'
-#' world$get(x = "prob_model")
-#'
-#' world$get_model(x = "prob_model")
+#' # or alternatively you can use `get_model` which makes sure that it only looks
+#' # through the named list of stored Model objects inside [World].
+#' world$get_model("simple_prob_model")
+#' world$get_model("simple_glm_model")
 #'
 #' @export
 Model <-
@@ -78,7 +104,7 @@ Model <-
       #'
       #' @return
       set = function(x) {
-        stopifnot(private$.check_model(x))
+        assert_transition_supported_model(x)
         private$.model <- x
         return(self)
       },
@@ -95,7 +121,6 @@ Model <-
       print = function() {
         print(private$.model)
       },
-
       preprocessing_fn = NULL
     ),
     active = list(
@@ -107,19 +132,7 @@ Model <-
       }
     ),
     private = list(
-      .model = NULL,
-      .check_model = function(x) {
-        checkmate::assert_subset(class(x)[[1]], choices = c("train", "data.table", "list"), empty.ok = FALSE)
-        if (inherits(x, "list")) {
-          checkmate::assert_names(names(x), type = "unique")
-          # NOTE: this is
-          # checkmate::assert_numeric(unlist(x), lower = 0, finite = TRUE, any.missing = FALSE, null.ok = FALSE)
-        }
-        if (inherits(x, "data.table")) {
-          checkmate::assert_data_table(x, col.names = "strict", null.ok = FALSE, min.rows = 1)
-        }
-        return(TRUE)
-      }
+      .model = NULL
     )
   )
 

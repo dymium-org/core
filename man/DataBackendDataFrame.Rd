@@ -3,7 +3,9 @@
 \name{DataBackendDataFrame}
 \alias{DataBackendDataFrame}
 \title{data.frame as data backend}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{DataBackend}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{DataBackend}.
+}
 \description{
 Data backend of data.frame. It is recommended to use \link{DataBackendDataTable}
 as it is more feature rich, efficient and significantly faster for many operations.
@@ -31,19 +33,21 @@ A \link{data.frame} object.
 \item \code{add(.data, fill = FALSE)}\cr
 (\code{data.frame()}) -> \code{NULL}\cr
 Add data.
-\item \code{get(rows, cols, copy = TRUE)}\cr
-(\code{integer(1)}, \code{character()}, \code{logical(1)}) -> \code{data.frame()}\cr
-Add data.
-\item \code{remove(.data, fill = FALSE)}\cr
-(\link[data.table:data.table]{data.table::data.table}) -> \code{NULL}\cr
+\item \code{get(rows, cols)}\cr
+(\code{integer()}, \code{character()}) -> \code{data.frame()}\cr
+Get data. \code{rows} must be an integer vector, while \code{cols} can be either a character
+vector or an integer vector.
+\item \code{remove(rows, cols)}\cr
+(\code{integer()}, \code{integer()}) -> \code{NULL}\cr
 (abstract) Remove the data. (Developer's note: Those records that get removed
 should be stored in \code{private$.removed_data} see the source code of \link{DataBackendDataTable}
 for example.)
 \item \code{view(interactive = FALSE)}\cr
 (\code{logical(1)})\cr
-View the data.
+View the data. If \code{interactive} is TRUE, the data will be shown in your
+data tab if you are using RStudio.
 \item \code{head(n = 5)}\cr
-() -> \code{data.frame()}\cr
+(\code{integer(1)}) -> \code{data.frame()}\cr
 Get the head of the data.
 \item \code{ncol()}\cr
 () -> \code{integer(1)}\cr

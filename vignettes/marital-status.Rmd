@@ -1,0 +1,183 @@
+---
+title: "Marital status"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  out.width = '100%',
+  fig.align = "center", 
+  fig.width =  7,
+  fig.height =  5,
+  dpi = 200,
+  warning = FALSE
+)
+```
+
+## Build your world!
+
+In dymium, a 'world' object contains everything from representations of entities
+(eg: individuals, households, residential building, firms, and so on) to the rules
+(eg: probabilistic models, rates, exogenous variables, etc) that the entities in
+your world follow. 
+
+Hence, to create your first dymium model you must first prepare your `world` and
+add your entities and rules that they will follow.`dymiumCore` provides four toy
+datasets which are individuals, households, residential buildings and zones. All
+of them are linkable by the id columns. All individuals belong to households, all
+households occupy residential buildings, all residential buildings are in the zones. 
+
+Let's create a world object.
+
+```{r}
+library(dymiumCore)
+world <- World$new()
+```
+
+`World$new()` is a `R6::R6Class()` constructor, a constructor is a class method that 
+creates an object of that class. So the line above creates a `World` object and assigns 
+it as `world` to your global environment. Now, your newly created world is still emptied.
+So we are going to add individuals into it using the `toy_individuals` dataset from `dymiumCore`. 
+
+```{r}
+library(reactable)
+reactable::reactable(toy_individuals, filterable = TRUE, minRows = 10)
+```
+
+To add individuals into world and you must first create an Individual object. 
+The Individual class is provided by `dymiumCore`, it contains methods that help 
+you to access and modify microdata of individuals such as the `toy_individuals` data.
+To see what methods and fields are available put `?Individual` into your R console 
+and press enter.
+ 
+```{r}
+Ind <- Individual$new(.data = toy_individuals, id_col = "pid")
+Ind
+```
+By calling `Ind` it returns some useful information about the object such as the
+number of entities of class Individual and the inheritance structure. 
+ 
+Now let's add `Ind` into `world` using `world`'s `add` method. 
+
+```{r}
+world$add(Ind, name = "Individual")
+```
+
+You can see from the warning message above that `name` is not needed when adding 
+an Entity class to `world` since it will use the name of the class as the name 
+of the added object. However, when you add a model object the `name` argument must
+be specified. Currently, only one instance of each Entity class can be added to
+`world` since there is no obvious benefit to adding multiple instances of the same
+class to `world` since it is probably easier and clearer just to combine them as
+one instance.
+
+Now that your `world` contains Individual agents we may want to introduce some 
+rules so that we can start to microsimulate something!
+
+
+Let's microsimulate changes in marital status of the Individual agents.
+
+Using `toy_individuals` as the data to estimate a marital status model with the
+`caret` package. By default, `caret` will fit a random forest model if the `method`
+argument in `train` is not specified.
+
+```{r}
+library(caret)
+marital_status_model <- train(marital_status ~ age + sex, 
+                              data = toy_individuals)
+```
+
+Add the model to `world` and assign its key as "marital_status_model".
+
+```{r}
+world$add(marital_status_model, name = "marital_status_model")
+```
+
+Create an event function for changes in marital status.
+
+```{r}
+event_demography_maritalStatus <- function(world) {
+  
+  # get the stored Individual object from `world`
+  Ind <- world$get("Individual")
+  
+  # get the stored marital status model object from `world`
+  # unpack it with `$get()`
+  model <- world$get("marital_status_model")$get()
+  
+  # create a TransitionClassification object to perform a simulation using the model
+  # on the individual agents.
+  TransMaritalStatus <- TransitionClassification$new(Ind, model)
+  
+  # update the `marital_status` column of the individual agents using the simulated 
+  # result
+  TransMaritalStatus$update_agents(attr = "marital_status")
+  
+  # end of event must returns the input world object which now contains the updated
+  # individual agents.
+  return(world)
+}
+```
+
+Since the marital status model uses age of the individual as an explanatory variable
+we make all individuals aged one year more every iteration
+
+```{r}
+event_demography_age <- function(world) {
+  
+  # get the stored Individual object from `world`
+  Ind <- world$get("Individual")
+  
+  # increase age of all individuals by one 
+  # note that in R 1L is integer while 1 is numeric.
+  Ind$get_data(copy = FALSE)[, age := age + 1L]
+  
+  return(world)
+}
+```
+
+When calling the `get_data` method of an Entity class and specify `copy` as `FALSE`
+the reference to the data will be returned hence allows  the data to be updated 
+in place/by reference. If `copy` is `TRUE` or not given a copy of the data will
+be returned hence any mofification to that data wouldn't change the data of those
+entities. 
+
+Now, build a microsimulation pipeline to run for 10 iterations and store some 
+statistics at the end of each iteration for visualisation later. 
+
+```{r}
+count_ls <- list()
+for (i in 1:10) {
+  world$start_iter(time_step = i, unit = "year") %>%
+    event_demography_age() %>%
+    event_demography_maritalStatus()
+  
+  # record the count of households by zone in each iteration
+  count_ls[[i]] <-
+    world$get("Individual")$get_data()[, .(count = .N, iteration = i), marital_status]
+}
+```
+
+Create a visualisation to show how the distribution of marital status changes
+over the course of the simulation.
+
+```{r fig.height = 7}
+library(data.table)
+library(ggplot2)
+count <- rbindlist(count_ls)
+
+ggplot(count, aes(iteration, count, group = marital_status)) +
+  geom_line() + 
+  geom_point(size = 2) + 
+  theme_bw() + 
+  labs(title = "Marital status across 10 iterations") +
+  facet_wrap(~ marital_status)
+```
+
+The reason why the number of people with marital status "not applicable" is in decline is because there were no births added to the simulated population. All "not applicable" individuals are those with age less than 16 year-old.

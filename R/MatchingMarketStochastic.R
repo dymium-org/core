@@ -38,20 +38,20 @@ MatchingMarketStochastic <- R6::R6Class(
                         parallel = FALSE) {
       checkmate::assert_flag(by_group, na.ok = FALSE, null.ok = FALSE)
       checkmate::assert_flag(parallel, na.ok = FALSE, null.ok = FALSE)
-      assert_that(
-        is.null(self$matching_problem$slots_B),
-        msg = self$message(
-          "Stochastic matching is currently not supported",
-          "many-to-one matching problem. Please create a new",
-          "MatchingMarket object without giving any `slots_B` value",
-          "to use `stochastic_matching` method. Else use `optimal_matching`",
-          "method for solving many-to-one matching."
+
+      if (!is.null(self$matching_problem$slots_B)) {
+        stop(
+          glue::glue(
+            "Stochastic matching is currently not supported many-to-one matching \\
+             problem. Please create a new MatchingMarket object without giving any \\
+             `slots_B` value to use `stochastic_matching` method. Else use `optimal_matching` \\
+             method for solving many-to-one matching."
+          )
         )
-      )
+      }
 
       if (parallel & isFALSE(by_group)) {
-        self$message("`parallel` is ignored. ",
-                     "Currently, `parallel` only works when by_group is TRUE.")
+        lg$info("`parallel` is ignored. Currently, `parallel` only works when by_group is TRUE.")
       }
 
       if (by_group) {

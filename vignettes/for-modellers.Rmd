@@ -1,0 +1,193 @@
+---
+title: "dymiumCore for modellers"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{dymiumCore for modellers}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo = FALSE, message=FALSE}
+library(dymiumCore)
+```
+
+# Introduction
+
+This manual is for people who would like to put together a microsimulation model using ready-to-use modules from [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules). The most the you are willing to change are entity data and model parameters that go into your microsimulation model. If this is you then read on! :) otherwise please see the manual section and select the appropriate manual for you.
+
+# Requirements
+
+It is recommended that you setup a new RStudio project for your microsimulation project. See this [page](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) if you are using RStudio but new to using Projects. If you don't have RStudio please go ahead and download it at (rstudio.com).
+
+Every module in [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules) repository relies on the [modules](https://cran.r-project.org/web/packages/modules/index.html) package to work properly. Hence, make sure your have the package installed before using any module.
+
+# Modules
+
+It is important for a microsimulation model to be modular for greater maintainability and extendability. Your can read more about this discussion from [R Cassells, A Harding, S Kelly, 2006](https://www.researchgate.net/profile/Ann_Harding/publication/239806013_Problems_and_Prospects_for_Dynamic_Microsimulation_A_review_and_lessons_for_APPSIM/links/53e080520cf2aede4b4cca72/Problems-and-Prospects-for-Dynamic-Microsimulation-A-review-and-lessons-for-APPSIM.pdf) and [Eric Miller, 2019](http://www.academia.edu/download/44911022/Integrated_Urban_Water_Modelling_-_Past_20160420-25966-stkce3.pdf). 
+
+In dymium, a module is basically a group of related events (i.e. ageing, giving birth and dying belong to the `demography` module). In fact, when we say dymium is modular we actually refer to the events that are being modular. This will be explained more in the next section.
+
+## Download and use existing modules
+
+I recommend that before you download any module you should first see its README page inside the repository. For example, if you want to know about the `demography` module or the events it has please see the [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules/tree/master/modules/demography) repository.
+
+Once you are certain which module you want then use `download_module()` to download that module into your project. This function allows modules to be downloaded into your project. For example, if you would like to download the `demography` module:
+
+```{r, eval=FALSE}
+download_module("demography")
+```
+
+By default, this downloads the latest version of the `demography` module from [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules) into a newly created folder called `modules` at the root of project. See `?download_module` for more download options.
+
+# Events
+
+The term `event` is used to refer to a process that is set to occur within a microsimulation model. For example, if your microsimulation model is for simulating the dynamic of population then you would have an ageing event, a birth event, a death event, and (optionally) a migration event. All events should be self-contained, meaning they do not need other events to be present to work. However, some events require other events. As an example, the `divorce` event from the `demography` module needs the `separate` event to work. This is because only people that can be divorced must first be in separation, which is simulated by the `separate` event. 
+
+## Use an event
+
+Inside the __demography__ module you will find a number of R scripts. `helpers.R`, `constants.R`, `logger.R`, `tests` folder are files and folder that got created when a new module is created using `use_module()`. To learn more about them see the developer manual. The R scripts other than those are event scripts and they are the ones that you should import to your microsimulation model.
+
+For example, if you would like to use the birth event which can be found at `your_project_folder/modules/demography/birth.R` in your microsimulation model do as the following:
+
+```{r, eval = FALSE}
+event_demography_birth <- modules::use('modules/demography/birth.R')
+```
+
+The above chuck imports the birth event into your active R environment by assigning it to a variable called `event_demography_birth`. Any event that is imported using `modules` have the following fields exposed: `run()` and `REQUIRED_MODELS`. 
+
+```{r, eval = FALSE}
+event_demography_birth$run()
+```
+
+The `run()` function of any event takes the same four main arguments which are `x`, `model`, `target`, `time_step`. Some `run()` functions may take more than the four main arguments. Therefore you should always check the README page of the module of the event that you are using.
+
+```{r, eval = FALSE}
+event_demography_birth$REQUIRED_MODELS
+```
+
+`REQUIRED_MODELS` is a field that contains `NULL` if no models are required by the event or a character vector. Anytime `run()` is called it will check if the supplied model argument or the supplied world has all the required models or not. If not then an error will appear.
+
+## Modify an event
+
+At some point, you may find yourself wanting to include some additional variables to a model but those variables don't exist in the attribute data of your agents. Those additional variables maybe variables that get generated during the simulation (such as the length of the current marriage, the age of the youngest child, the number of divorces) or derive from an existing attribute (such as age in 5-year age group etc.). These can be easily included in the `Transition` object of your model.
+
+For example, in the birth event of the demography module there is a `TransitionBirth` class that is extended from `TransitionClassification`. 
+
+```{r, eval = FALSE}
+# See https://github.com/dymium-org/dymiumModules/blob/d53fdb47680efc9a05e56f0c420c85907e73794e/modules/demography/birth.R#L147-L167
+TransitionBirth <- R6Class(
+  classname = "TransitionBirth",
+  inherit = dymiumCore::TransitionClassification,
+  public = list(
+    filter = function(.data) {
+      .data %>%
+        helpers$FilterAgent$Ind$can_give_birth(.)# %>%
+        # helpers$FilterAgent$Ind$is_in_relationship(.)
+    },
+    mutate = function(.data) {
+      Ind <- private$.AgtObj
+      .data %>%
+        helpers$DeriveVar$IND$has_resident_children(x = ., Ind) %>%
+        helpers$DeriveVar$IND$n_resident_children(x = ., Ind) %>%
+        helpers$DeriveVar$IND$age_youngest_resident_child(x = ., Ind) %>%
+        helpers$DeriveVar$IND$age5(x = ., Ind) %>%
+        helpers$DeriveVar$IND$n_children(x = ., Ind) %>%
+        helpers$DeriveVar$IND$mrs(x = ., Ind)
+    }
+  )
+)
+```
+
+`TransitionBirth` has two implemented methods that `TransitionClassification` doesn't have which are `filter(.data)` and `mutate(.data)`. 
+
+The `filter` method defines the criteria which the agents must meet to undergo this `TransitionBirth` transition, which is to give birth. `helpers$FilterAgent$Ind$can_give_birth(x)`, a function defined in `helpers.R`, filters only those agents that are women with age between `RULES$GIVE_BIRTH$AGE_LOWER_BOUND` and `RULES$GIVE_BIRTH$AGE_UPPER_BOUND`. The age rules can be found in `constants.R` and they can be changed to suit your assumption.
+
+```{r, eval = FALSE}
+helpers$FilterAgent$Ind$can_give_birth = function(x) {
+  get_individual_data(x) %>%
+    .[sex == IND$SEX$FEMALE &
+        age %between% c(RULES$GIVE_BIRTH$AGE_LOWER_BOUND,
+                        RULES$GIVE_BIRTH$AGE_UPPER_BOUND)]
+}
+```
+
+While the `mutate(.data)` method allows you to add additional variables to be used as predictors in your model. As you can see, there are quite a few additional variables that get added to the agent data from the number of children, the age of the youngest residential child, etc.
+
+By default the filter data from `filter()` will be passed to the `mutate(.data)` function then to the `simulate` function of `Transition`. However, this order can be changed in case you need to filter agents based on a derived variable by setting the `mutate_first` field equal to `TRUE`.
+
+```{r, eval = FALSE}
+TransitionBirth <- R6Class(
+  classname = "TransitionBirth",
+  inherit = dymiumCore::TransitionClassification,
+  public = list(
+    filter = function(.data) {
+      .data %>%
+        helpers$FilterAgent$Ind$can_give_birth(.)# %>%
+        # helpers$FilterAgent$Ind$is_in_relationship(.)
+    },
+    mutate = function(.data) {
+      Ind <- private$.AgtObj
+      .data %>%
+        helpers$DeriveVar$IND$has_resident_children(x = ., Ind) %>%
+        helpers$DeriveVar$IND$n_resident_children(x = ., Ind) %>%
+        helpers$DeriveVar$IND$age_youngest_resident_child(x = ., Ind) %>%
+        helpers$DeriveVar$IND$age5(x = ., Ind) %>%
+        helpers$DeriveVar$IND$n_children(x = ., Ind) %>%
+        helpers$DeriveVar$IND$mrs(x = ., Ind)
+    },
+    mutate_first = TRUE # mutate before filter !!!
+  )
+)
+```
+
+
+# Let's put together a microsimulation model
+
+## Single run
+
+Putting together a microsimulation model using `dymium` is very simple. Once you have your `world` object constructed with all the necessary entities and models for your incluced event functions you just need to create a flow-control statement such as a for-loop which exits at some point. 
+
+In the example below, the simulation will be stopped after the 10th iteration. Note that, `world` has a `$start_iter()` method which sets the simulation clock to the time_step in `i` before returning itself down the pipeline. The time from the simulation clock is used by many functions such as `add_history`, `Generic$log()` and `is_scheduled`. Therefore, we recommend that you use the `$start_iter()` method to pass the world object down the pipeline in your microsimulation model setup. 
+
+```{r, eval = FALSE}
+for (i in 1:10) {
+  world$start_iter(time_step = i, unit = "year") %>%
+    event_1$run(.) %>%
+    event_2$run(.)
+}
+```
+
+## Parallel runs
+
+Microsimulation models rely randomly number generators to produce their simulation results, the results between different runs are very unlikely to be identical. Hence, to validate the model or to conduct a sensitivity analysis it is a good idea to run the same simulation setup multiple times and analyse the variance of the results.
+
+To do that here is a simple example using the `future` and `furrr` packages.
+
+```{r, eval = FALSE}
+library(future)
+library(furrr)
+
+cl <- makeClusterPSOCK(workers = 2)
+future::plan(cluster, workers = cl)
+
+res <- furrr::future_map(1:4, ~ {
+  world <- readRDS("path/to/world.rds")
+  for (i in 1:10) {
+    world$start_iter(time_step = i, unit = "year") %>%
+      event_1$run(.) %>%
+      event_2$run(.)
+  }
+  return(world)
+})
+
+parallel::stopCluster(cl)
+```
+
+

@@ -3,7 +3,9 @@
 \name{ContainerGeneric}
 \alias{ContainerGeneric}
 \title{ContainerGeneric}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Generic]{dymiumCore::Generic}}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Generic]{dymiumCore::Generic}
+}
 \description{
 ContainerGeneric is the base class for the \link{Container} classes. \link{ContainerGeneric}
 isn't supposed to be use directly.

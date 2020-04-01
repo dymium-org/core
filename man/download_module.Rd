@@ -9,7 +9,8 @@ download_module(
   repo = dymiumModulesRepo,
   version,
   force = FALSE,
-  remove_download = FALSE
+  remove_download = FALSE,
+  .basedir = here::here()
 )
 }
 \arguments{
@@ -23,6 +24,10 @@ be downloaded.}
 \item{force}{A logical value. force download even though the module already exists locally.}
 
 \item{remove_download}{a logical value whether to delete the downloaded zip file or not.}
+
+\item{.basedir}{:: \code{character(1)}\cr
+The base directory that the downloaded module will be saved at. \code{\link[here:here]{here::here()}} is
+used to provide the default value which is is the root folder of the active RStudio project.}
 }
 \value{
 path to the module.
@@ -34,7 +39,7 @@ of your project. If the 'modules' folder does not exist, it will be created.
 }
 \examples{
 
-if (FALSE) {
+\dontrun{
   # download an test module.
   download_modules('test', version = '0.0.1')
 }

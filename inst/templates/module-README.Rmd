@@ -1,0 +1,130 @@
+---
+output:
+  github_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# {{{module}}} module documentation
+
+- Authors: Your name
+- Email: your@email.com
+- Current version: 0.1
+
+This module provides the following functionalities...
+
+# Release notes
+
+## Version 0.1
+
+This is the first version of this module.
+
+# Requirements
+
+This module requires the following packages ... and external dependecies such as ... 
+
+# Events
+
+## Event name 1
+
+### Description
+
+This event does...
+
+<details>
+
+Some technical details of the inner working, assumptions, and settings of the event function that shouldn't bother the user at their first glance.
+
+</details>
+
+### Usage
+
+```{r}
+event_{{{module}}}_eventname1 <- modules::use(here::here("{{{module_path}}}/eventname.R"))
+```
+
+```{r, echo = FALSE}
+event_{{{module}}}_eventname1
+```
+
+### Params
+
+* world: a World object.
+* model: a named list.
+
+```{r}
+# For example
+model <- list(x1 = list(yes = 0.5, no = 0.5),
+              x2 = data.table(sex = c("male", "female"), prob = c(0.2, 0.1)))
+```
+
+* target: a named list.
+* time_steps: a numeric vector that indicates the time steps in the simulation clock
+that this event should be run.
+
+### Example
+
+```{r, eval = FALSE}
+event_{{{module}}}_eventname1 <- modules::use(here::here("{{{module_path}}}/eventname.R"))
+
+create_toy_world() 
+
+world %>%
+  event_{{{module}}}_eventname1$run(world = ., model = model)
+```
+
+## Event name 2
+
+### Description
+
+This event does...
+
+<details>
+
+Some technical details of the inner working, assumptions, and settings of the event function that shouldn't bother the user at their first glance.
+
+</details>
+
+### Usage
+
+```{r}
+event_{{{module}}}_eventname2 <- modules::use(here::here("{{{module_path}}}/eventname.R"))
+```
+
+```{r, echo = FALSE}
+event_{{{module}}}_eventname2
+```
+
+### Params
+
+* world: a World object.
+* model: a named list.
+
+```{r}
+# For example
+model <- list(x1 = list(yes = 0.5, no = 0.5),
+              x2 = data.table(sex = c("male", "female"), prob = c(0.2, 0.1)))
+```
+
+* target: a named list.
+* time_steps: a numeric vector that indicates the time steps in the simulation clock
+that this event should be run.
+
+### Example
+
+```{r, eval = FALSE}
+event_{{{module}}}_eventname2 <- modules::use(here::here("{{{module_path}}}/eventname.R"))
+
+create_toy_world() 
+
+world %>%
+  event_{{{module}}}_eventname2$run(world = ., model = model)
+```
+
+# Known issues
+
+Here are some known issues

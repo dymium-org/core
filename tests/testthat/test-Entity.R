@@ -9,6 +9,7 @@ test_that("data", {
   expect_is(MyObj$data(), class = "DataBackendDataTable")
 })
 
+# get_data -----------
 test_that("get_data", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   expect_is(MyObj$get_data(), "data.table")
@@ -18,8 +19,14 @@ test_that("get_data", {
   rand_ids <- sample(toy_individuals$pid, 10)
   expect_equal(MyObj$get_data(ids = rand_ids, copy = TRUE)[[MyObj$get_id_col()]], rand_ids)
   checkmate::expect_data_frame(MyObj$get_data(ids = c(1,1)), nrows = 2, null.ok = FALSE)
+
+  # test modify
+  MyObj$get_data()[, sex := "none"]
+  checkmate::assert_subset(MyObj$get_data()[, sex], choices = c("male", "female"))
+
 })
 
+# add_data -----------
 test_that("add_data", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
 
@@ -28,8 +35,44 @@ test_that("add_data", {
 
   MyObj$add_data(databackend = DataBackendDataTable, .data = toy_individuals, name = "attrs2")
   expect_true(all.equal(MyObj$get_data(name = "attrs2"), toy_individuals))
+
+  Enty <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
 })
 
+# add -----------
+test_that("add", {
+  Enty <-
+    Entity$new(
+      databackend = DataBackendDataTable,
+      .data = toy_individuals,
+      id_col = c("pid", "partner_id", "mother_id", "father_id")
+    )
+
+  n_entities_before <- Enty$n()
+  new_ent_dt <- data.table::copy(toy_individuals)[, .derived_col := 1]
+  expect_error(Enty$add(.data = new_ent_dt, check_existing = TRUE),
+               regexp = "One or more of the main unique `ids` in `.data` already exist in the existing attribute data of this Entity.")
+
+  data_lst <- register(x = Enty, new_ent_dt)
+  Enty$add(data_lst$new_ent_dt, check_existing = FALSE)
+  expect_error(Enty$add(.data = new_ent_dt, check_existing = TRUE),
+               regexp = "One or more of the main unique `ids` in `.data` already exist in the existing attribute data of this Entity.")
+
+  data_lst <- register(x = Enty, new_ent_dt)
+  Enty$add(data_lst$new_ent_dt, check_existing = FALSE)
+  expect_equal(Enty$n(), expected = nrow(toy_individuals) * 3)
+
+  # shuffle column order
+  data_lst <- register(x = Enty, new_ent_dt)
+  data.table::setcolorder(data_lst$new_ent_dt, sample(names(data_lst$new_ent_dt)))
+  expect_null(Enty$add(.data = data_lst$new_ent_dt, check_existing = FALSE))
+
+  # create newborns
+  new_ent_dt <- data.table::copy(toy_individuals)[1:20, pid := 2001:2020]
+  expect_null(Enty$add(new_ent_dt, check_existing = TRUE))
+})
+
+# summary ----------
 test_that("summary", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   expect_is(MyObj$summary(verbose = FALSE), "data.frame")
@@ -46,25 +89,30 @@ test_that("remove", {
 
 test_that("get_ids", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
-  expect_true(length(MyObj$get_ids()) != 0)
-  expect_true(length(MyObj$get_ids(idx = c(1:10))) == 10)
+  checkmate::expect_integerish(
+    MyObj$get_ids(),
+    lower = 1,
+    any.missing = FALSE,
+    unique = T,
+    null.ok = FALSE,
+    min.len = nrow(toy_individuals)
+  )
 })
 
 test_that("get_idx", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   expect_length(MyObj$get_idx(c(2,1,4,2)), 4)
   expect_equal(MyObj$get_idx(c(2,1,4,2)), c(2,1,4,2))
-  expect_error(MyObj$get_idx(c(2,1,4,2,NA)), "These ids do not exist")
-  expect_error(MyObj$get_idx(c(2,1,4,2,1000)), "These ids do not exist")
+  expect_error(MyObj$get_idx(c(2,1,4,2,NA)), "Contains missing values \\(element 5\\).")
+  expect_error(MyObj$get_idx(c(2,1,4,2,1000)), "These ids don't exist in Entity: 1000")
 })
 
 test_that("ids_exist", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   rand_ids <- sample(MyObj$get_data()[[MyObj$get_id_col()]], 3)
-  expect_equal(MyObj$ids_exist(ids = rand_ids, by_element = T), rep(TRUE, 3))
-  expect_equal(MyObj$ids_exist(ids = c(rand_ids, 9999999), by_element = T), c(rep(TRUE, 3), FALSE))
-  expect_equal(MyObj$ids_exist(ids = c(rand_ids, 9999999), by_element = FALSE), FALSE)
-  expect_error(MyObj$ids_exist(ids = NA, by_element = FALSE), "Contains missing values")
+  expect_true(MyObj$ids_exist(ids = rand_ids))
+  expect_equal(MyObj$ids_exist(ids = c(rand_ids, 9999999)), FALSE)
+  expect_error(MyObj$ids_exist(ids = NA), "Contains missing values")
 })
 
 test_that("idx_exist", {
@@ -92,21 +140,15 @@ test_that("has_attr", {
 test_that("get_attr", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   checkmate::expect_integerish(MyObj$get_attr(MyObj$get_id_col()), any.missing = FALSE, min.len = 1, null.ok = FALSE, unique = TRUE)
-  expect_error(MyObj$get_attr("abcd"), "failed: Must include the elements \\{abcd\\}")
-  expect_error(MyObj$get_attr('age', ids = c(99999999)), regexp = 'These ids do not exist')
+  expect_error(MyObj$get_attr("abcd"), "Must be a subset of set")
+  expect_error(MyObj$get_attr('age', ids = c(99999999)), regexp = "These ids don't exist in Entity: 99999999")
   checkmate::expect_integerish(MyObj$get_attr('age', ids = c(1,2,3)), lower = 0, any.missing = FALSE, len = 3, null.ok = FALSE)
 })
 
 test_that("generate_new_ids", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   checkmate::expect_integerish(MyObj$get_attr(MyObj$get_id_col()), any.missing = FALSE, min.len = 1, null.ok = FALSE, unique = TRUE)
-  expect_error(MyObj$get_attr("abcd"), "failed: Must include the elements \\{abcd\\}")
-})
-
-test_that("check_ids", {
-  MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
-  expect_error(MyObj$check_ids(99999), regexp = "Not all ids exist. Here are the missing ones: 99999")
-  expect_equal(MyObj$check_ids(MyObj$get_ids()[1]), TRUE)
+  expect_error(MyObj$get_attr("abcd"), "Must be a subset of set")
 })
 
 test_that("database", {
@@ -114,3 +156,26 @@ test_that("database", {
   checkmate::expect_list(MyObj$database, types = c("DataBackend"), len = 1, any.missing = FALSE, names = "strict")
 })
 
+test_that("$subset_ids", {
+  Ent <-
+    Entity$new(
+      databackend = DataBackendDataTable,
+      .data = dymiumCore::toy_individuals,
+      id_col = "pid"
+    )
+
+  Ent$subset_ids(sex == "female")
+
+  # filter non-existed column
+  expect_error(Ent$subset_ids(sexp == "FEMALE"),
+               regexp = "object 'sexp' not found")
+
+  # return a vector of ids
+  checkmate::expect_integerish(
+    Ent$subset_ids(sex == "female"),
+    lower = 1,
+    any.missing = FALSE,
+    unique = TRUE
+  )
+
+})

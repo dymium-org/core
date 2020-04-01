@@ -14,7 +14,7 @@
 #'
 #' @examples
 #'
-#' if (FALSE) {
+#' \dontrun{
 #'   # create a World object and assign it as 'world' to the global environment.
 #'   create_toy_world()
 #'
@@ -43,3 +43,50 @@ dm_save <- function(x, dir = getOption("dymium.output_dir")) {
   cli::cli_alert_success("Saved {class(x)[[1]]} to path:{path}")
   invisible()
 }
+
+#' Extract data from Entity objects
+#'
+#' @param x a [World] or [Entity] object.
+#'
+#' @return a named list of data from their DataBackend objects.
+#' @export
+#'
+#' @examples
+#'
+#' create_toy_world()
+#' extract_data(world)
+#' extract_data(world$entities$Individual)
+extract_data <- function(x) {
+  UseMethod("extract_data", x)
+}
+
+#' @export
+#' @rdname extract_data
+extract_data.World <- function(x) {
+  d_lst <- lapply(x$entities, extract_data)
+  flatten_names <- names(unlist(d_lst, recursive = FALSE))
+  d_lst <- purrr::flatten(d_lst)
+  names(d_lst) <- flatten_names
+  return(d_lst)
+}
+
+#' @export
+#' @rdname extract_data
+extract_data.Entity <- function(x) {
+  d_lst <- lapply(x$database, extract_data)
+  flatten_names <- names(unlist(d_lst, recursive = FALSE))
+  d_lst <- purrr::flatten(d_lst)
+  names(d_lst) <- flatten_names
+  return(d_lst)
+}
+
+#' @export
+#' @rdname extract_data
+extract_data.DataBackendDataFrame <- function(x) {
+  x_lst <- list(
+    data = x$data,
+    removed_data = x$removed_data
+  )
+  return(x_lst)
+}
+

@@ -3,7 +3,9 @@
 \name{Pipeline}
 \alias{Pipeline}
 \title{Pipeline class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Generic]{dymiumCore::Generic}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Generic]{dymiumCore::Generic}.
+}
 \description{
 Pipeline is a warper of event functions. It can shuffle the order in which
 the warped event functions get executed or even repeatedly run the event functions.
@@ -47,10 +49,8 @@ created with, its built date, creator info, R version, etc.
 
 \examples{
 
-Pop <- Population$new()
-
-# load toy data into Population
-Pop$initialise_data(toy_individuals, toy_households)
+# create Population
+Pop <- Population$new(toy_individuals, toy_households, pid_col = "pid", hid_col = "hid")
 
 # create 3 dummy events
 event1 <- function(object) {

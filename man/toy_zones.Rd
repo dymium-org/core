@@ -4,7 +4,8 @@
 \name{toy_zones}
 \alias{toy_zones}
 \title{Toy zone data}
-\format{A \link[sf:sf]{sf::sf} data frame with 11 rows and 14 variables:
+\format{
+A \link[sf:sf]{sf::sf} data frame with 11 rows and 14 variables:
 \describe{
 \item{zid}{(\code{integer()}) zone id}
 \item{sa2_main}{(\code{integer()})}
@@ -20,12 +21,16 @@
 \item{ste_name11}{(\code{integer()})}
 \item{albers_sqm}{(\code{double()})}
 \item{geometry}{(\code{list()})}
-}}
+}
+}
 \usage{
 toy_zones
 }
 \description{
 Note that this dataset requires the \code{sf} package to work properly. This
 dataset contains 11 SA2 zones of Melborune CBD, Australia in a \link[sf:sf]{sf::sf} format.
+}
+\examples{
+toy_zones
 }
 \keyword{datasets}

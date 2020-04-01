@@ -104,6 +104,13 @@ use_module <- function(name) {
   usethis::use_directory(module_path)
 
   usethis::use_template(
+    template = "module-README.rmd",
+    save_as = fs::path(module_path, "README.rmd"),
+    data = list(module_path = module_path,
+                module = name),
+    package = "dymiumCore"
+  )
+  usethis::use_template(
     template = "logger.R",
     save_as = fs::path(module_path, "logger.R"),
     data = list(module_path = module_path,
@@ -128,40 +135,37 @@ use_module <- function(name) {
   invisible(module_path)
 }
 
-check_pkg_installed <- function(pkg) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
-   stop(glue("Package '{pkg}' required. Please install before re-trying."))
-  }
-}
-
-#' Create a dymium scenario folder
+#' Add a README rmarkdown file to an existing module
 #'
-#' @description
-#' Creates a scenario folder using a standard format which contains an 'inputs' folder,
-#' an 'outputs' folder inside.
+#' @param name name of an existing module
 #'
-#'
-#' @param name Name of the scenario
-#' @param active a logical value with defauly being FALSE. This determines whether
-#' to set the current active scenario to this newly created scenario or not.
+#' @return NULL
 #' @export
 #'
 #' @examples
 #'
 #' \dontrun{
-#'   use_scenario(name = "demography")
+#' # this assumes that you have a module named 'demography'
+#' use_module_readme(name = "demography")
 #' }
-use_scenario <- function(name, active = TRUE) {
-  .check_file_name(name)
-  path <- fs::path("scenarios", name)
-  usethis::use_directory("scenarios", ignore = TRUE)
-  usethis::use_directory(path)
-  usethis::use_directory(fs::path(path, "inputs"))
-  usethis::use_directory(fs::path(path, "outputs"))
-  if (active) {
-    set_active_scenario(name)
+use_module_readme <- function(name) {
+  module_path <- fs::path("modules", name)
+  if (!has_module(name)) {
+    stop(glue("The module {name} doesn't exists at {module_path}."))
   }
-  invisible(path)
+  usethis::use_template(
+    template = "module-README.rmd",
+    save_as = fs::path(module_path, "README.rmd"),
+    data = list(module_path = module_path,
+                module = name),
+    package = "dymiumCore"
+  )
+}
+
+check_pkg_installed <- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+   stop(glue("Package '{pkg}' required. Please install before re-trying."))
+  }
 }
 
 has_module <- function(name) {

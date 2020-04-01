@@ -19,7 +19,7 @@ pipeline. This saves an instance of Entity or Container to a directory.
 }
 \examples{
 
-if (FALSE) {
+\dontrun{
   # create a World object and assign it as 'world' to the global environment.
   create_toy_world()
 

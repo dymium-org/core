@@ -3,13 +3,15 @@
 \name{Population}
 \alias{Population}
 \title{Population}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Container]{dymiumCore::Container}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Container}<-\link{ContainerGeneric}<-\link{Generic}.
+}
 \description{
-Population contains an instance of \link{Individual} and \link{Household} and methods
-that modify both if its contained objects simutaneously.
+A \link{Container} specifically made for a \link{Individual} object and a \link{Household} object.
+It also contains methods that modify both if its contained objects simutaneously.
 }
 \section{Construction}{
-\preformatted{Pop <- Population$new()
+\preformatted{Population$new(ind_data, hh_data, pid_col, hid_col)
 }
 \itemize{
 \item ind_data::\link[data.table:data.table]{data.table::data.table}\cr
@@ -19,33 +21,33 @@ Microdata of Households.
 \item pid_col::\code{character(1)}\cr
 Individual/Person id column in \code{ind_data}.
 \item hid_col::\code{character(1)}\cr
-Hoysehold id column in \code{hh_data}
+Household id column in \code{hh_data}
 }
 }
 
 \section{Public Fields}{
 
 \itemize{
-\item \code{ind}:: \code{NULL} | an \link[R6:R6Class]{R6::R6Class} object\cr
-Shorthand to the \link{Individual} object.
-\item \code{hh}:: \code{NULL} | an \link[R6:R6Class]{R6::R6Class} object\cr
-Shorthand to the \link{Household} object.
+\item \code{ind}:: an \link{Individual} object\cr
+Shorthand to the \link{Individual} object. This will be deprecated in a future release.
+Please use \verb{$get()} to get a reference of object instead of this.
+\item \code{hh}:: an \link{Household} object\cr
+Shorthand to the \link{Household} object. This will be deprecated in a future release.
+Please use \verb{$get()} to get a reference of object instead of this.
 }
 }
 
 \section{Public Methods}{
 
 \itemize{
-\item \code{initialise_data(ind_data, hh_data, pid_col, hid_col)}\cr
-Load the microdata of individuals and households to construct \link{Individual} and
-\link{Household} objects.
 \item \code{add_population(ind_data, hh_data)}\cr
 (\code{\link[data.table:data.table]{data.table::data.table()}}, \code{\link[data.table:data.table]{data.table::data.table()}})\cr
-add a new population. This requires that all individuals \code{ind_data} belong
-to valid households. In the case, that \code{hh_data} is not provided, household ids of
-\code{ind_data} will be checked against household ids of the existing households inside
-the Population object being added to. One may use \code{pop_register()} to replace
-the id columns of the new population with ids that don't exist in the Population object.
+Add a new population. This requires that all individuals \code{ind_data} belong
+to valid households. In the case that \code{hh_data} is not provided, household ids of
+\code{ind_data} will be checked against the household ids of the existing households.
+All records in \code{ind_data} and \code{hh_data} will be assigned new unique ids to
+make sure that their ids are not a duplicate of the ids of existing entities
+of their respective entity type.
 \item \code{join_household(ind_ids, hh_ids)}\cr
 (\code{integer()}, \code{integer()})\cr
 Individuals join their new households and the households' affected attributes,
@@ -54,44 +56,45 @@ must not be in any household prior to joining a new one. Individual's
 existing household can be removed using \code{leave_household}.
 \item \code{leave_household(ind_ids)}\cr
 (\code{integer()})\cr
-Remove the individuals' household ids in ind_ids and update the households'
-affected attributes, from members leaving the household.
+Remove the household ids of the individuals in ind_ids and update the households'
+affected attributes, from their members leaving. Note that, if the
+household has no individuals then it will be removed. This will only cause
+a problem if all members of two or more households are to swap their households.
+There are no good reasons why that case should be allowed anyway.
 \item \code{remove_emptied_households()}\cr
-Remove emptied households.
-\item \code{remove_population(pid = NULL, hid = NULL)}\cr
+Remove all emptied households.
+\item \code{remove_population(pid, hid)}\cr
 (\code{integer()}, \code{integer()})\cr
 Remove population from \verb{$ind} and \verb{$hh} of this \code{Pop} object. If only \code{hid}
 is given all household members of households in \code{hid} arg will be removed.
 To remove only individuals leave \code{hid} to NULL and specify individuals by their ids
 in \code{pid}.
-\item \code{inspect(ind_ids = NULL, see_hh = FALSE)}\cr
-(\code{integer()}, \code{logical(1)}) -> \link[data.table:data.table]{data.table::data.table}\cr
-Print to console data of individuals and their households and return the history
-of \code{ind_ids}.
-\item \code{inspect_members(hhid = NULL)}\cr
-(\code{integer()}) -> \code{\link[data.table:data.table]{data.table::data.table()}}\cr
-Returns Individual$data of all members in \code{hhid}.
-\item \code{count_all(verbose = TRUE)}\cr
-Print out the number of individuals and households to console.
-\item \code{get_hhsize(hids)}\cr
-(\code{integer()})\cr
-Get hhsize from individual's data and merge it to household data.
+\item \code{get_hhsize(hids = NULL)}\cr
+(\code{integer()} | \code{NULL}) -> (\code{integer()})\cr
+Get household size of the households in \code{hids} if \code{NULL} then household size
+of all households will be returned.
 \item \code{update_hhsize()}\cr
-Update household size.
+Update household size of all household agents.
 \item \code{update()}\cr
-mask all the household update functions that need to be adjust after changes
+Masks all the household update functions that need to be adjust after changes
 in household members or in their attributes; such as change in partnership status,
 change of income, birth.
-\item \verb{keep_log(var, value, time = .get_sim_time()}\cr
-(\code{character(1)},\code{list}|\code{integer(1)}|\code{character(1)}|\code{logical(1)}, \code{integer(1)})\cr
-Keep log of events. \code{var} usually uses one of these prefixes "all", "occ", "count" or "id".
-\item \code{get_log(type = "all")}\cr
-(c("all", "occ", "count", "id")) -> \code{\link[data.table:data.table]{data.table::data.table()}}\cr
-Get the event log stored by \code{keep_log}.
 \item \code{check_unique_id_cols(ind_data, hh_data = NULL)}\cr
 (\code{\link[data.table:data.table]{data.table::data.table()}}, \code{\link[data.table:data.table]{data.table::data.table()}}) -> \code{logical(1)}\cr
 Check that all id cols of the input data are unique from the existing ids in
 their respective objects.
+\item \code{plot_relationship(hid)}\cr
+(\code{integer(1)})\cr
+Plot the relationship network within the household of \code{hid}.
+\item \code{household_type(hid)}\cr
+(\code{integer()}) -> (\code{character()})\cr
+Return the household type classification result of the households in \code{hid}.
+The result has be one of the following: 'couple_hh', 'couple_hh_with_children',
+'lone_parent_hh' and 'non_family_hh'. Note that, the classification doesn't
+take into account of the reference family of the household as we have yet to
+implement explicit distinction between single family household and multi-family
+household. Hence, if there are a couple and a lone parent residing in the same
+household it would be classified as a \code{couple_hh}.
 }
 }
 

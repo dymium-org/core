@@ -11,7 +11,8 @@
 #' @name dymiumCore
 #' @import R6
 #' @import data.table
-#' @import assertthat
+#' @importFrom rlang enexpr
+#' @importFrom checkmate makeExpectation vname
 #' @importFrom glue glue glue_col glue_collapse
 #' @importFrom fs path dir_create path_ext_remove path_ext path_ext_set
 #' @importFrom usethis use_template use_directory

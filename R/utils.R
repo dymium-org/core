@@ -103,7 +103,7 @@ element_wise_expand_lists = function(l1, l2) {
 }
 
 
-#' lookup_and_replace
+#' Look up and replace values in columns, including list columns.
 #'
 #' Replace all values in a data.frame using a lookup table. Maximum of one list
 #' column can be include in `cols_to_lookup`.
@@ -165,6 +165,85 @@ lookup_and_replace = function(data, lookup_table, cols, id_col = NULL) {
 
   stopifnot(identical(data[0, ], data_emptied[0, ]))
   return(data)
+}
+
+
+#' Look up and replace values in columns.
+#'
+#' @description
+#'
+#' Replace keys with their values.
+#'
+#' @param x a data.frame
+#' @param cols a character vector of column names in `x` to be replaced.
+#' @param mapping a data.frame contains two columns which are `.key` and `.value`
+#'
+#' @return a data.frame
+#' @export
+#'
+#' @examples
+lookup_and_replace2 <- function(x, cols, mapping) {
+  checkmate::assert_data_frame(x)
+  checkmate::assert_character(cols)
+  checkmate::assert_names(names(x), must.include = cols)
+  checkmate::assert_data_frame(mapping, min.rows = 1, min.cols = 2)
+  checkmate::assert_names(names(mapping), must.include = c(".key", ".value"))
+
+  if (!is.data.table(x)) {
+    x <- as.data.table(x)
+  }
+
+  if (!is.data.table(mapping)) {
+    mapping <- as.data.table(mapping)
+  }
+
+  # preserve for validation
+  x_col_order <- names(x)
+  x_str <- x[0, ]
+
+  for (col in cols) {
+
+    # check that the data type in key and col are matched
+    if (typeof(x[["col"]]) != typeof(mapping[["value"]])) {
+      stop(paste0("Type of '", col, "' in `x` and '.key' in `mapping` are not matched."))
+    }
+
+    # merge new values
+    x <-
+      merge(x = x,
+            y = mapping,
+            by.x = col,
+            by.y = ".key",
+            all.x = TRUE,
+            sort = FALSE,
+            allow.cartesian = FALSE
+      )
+
+    # check
+    if (sum(is.na(x[[col]])) != sum(is.na(x[[".value"]]))) {
+      stop(paste0("Some entries in the '", col, "' column couldn't ",
+                  "find a mapping value in `mapping`."))
+    }
+
+    # final cleansing
+    x %>%
+      .[, c(col) := NULL] %>%
+      data.table::setnames(., old = ".value", new = col)
+
+  }
+
+  # preserve the original column order
+  data.table::setcolorder(x, x_col_order)
+
+  # don't check keys
+  data.table::setkey(x_str, NULL)
+  data.table::setkey(x, NULL)
+
+  # final checking of column types and data dimiensions
+  checkmate::assert_data_table(x)
+  checkmate::assert_names(names(x), identical.to = names(x_str))
+
+  return(x)
 }
 
 #' .lookup_and_replace_list_cols

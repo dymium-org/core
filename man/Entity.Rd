@@ -4,16 +4,12 @@
 \alias{Entity}
 \alias{Entities}
 \title{Entity class}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object.
+}
 \description{
 The base class (first building block) for \link{Agent}, \link{Asset} and \link{Environment}.
 }
-\section{Fields}{
-
-\describe{
-\item{\code{database}}{a list of all \link{DataBackends} of the Entity}
-}}
-
 \section{Construction}{
 \preformatted{x <- Entity$new(databackend, .data, id_col)
 }
@@ -25,15 +21,23 @@ and registers the \code{id_col} (\code{private$.id_col}).
 An \link[R6:R6Class]{R6::R6Class} generator that inherits from \code{DataBackend}.
 \item \code{.data} :: \code{data.frame()}\cr
 A object that inherits from \code{data.frame}.
-\item \code{id_col} :: \code{character(1)}\cr
-The id column of \code{.data}.
+\item \code{id_col} :: \code{character()}\cr
+The name of the id column of \code{.data} and all relation columns. The first
+element will be checked as the main id column of the entity data, which
+must be unique integers. The rest of the vector will be consider as relation
+columns. For example, if \code{c("pid", "partner_id")} is given \code{pid} must contain
+unique integers, while \code{partner_id} can be \code{NA} or non-unique integers.
 }
 }
 
-\section{Fields}{
+\section{Active Fields (read-only)}{
 
 \itemize{
-\item \code{cont}: a reference semantic to its \link{Container} object. Default as NULL.
+\item \code{database}: a list of \link{DataBackend} objects that \link{Entity} possess.
+\item \code{id_col}: a character vector of all id columns with the first element being
+the main id column and the other elements, if any, are relation columns.
+\item \code{data_template}: a data.table object that contains the minimum data requirement apart
+from the \code{id_col}.
 }
 }
 
@@ -44,15 +48,18 @@ The id column of \code{.data}.
 (\code{DataBackend}, \code{data.frame}, \code{character(1)}) -> \code{NULL}\cr
 Append new data to the object's data list (\code{private$.data}). the new data
 must be linkable with the attribute data of the object by the id_col.
-\item \code{check_ids(ids)}\cr
-(\code{integer()})\cr
-Return true if all ids exist if not raises an informative error.
 \item \code{data(name)}\cr
 (\code{character(1)}) -> (\verb{[dymiumCore::DataBackend]}|\code{NULL})\cr
 Returns a \link{DataBackend} with the name that matches \code{name}.
 If \code{name} is not given, the function will try to return the \link{DataBackend} with name \code{attrs}.
 If \code{attrs} is not present or no \code{DataBackEnd} objects have been loaded it will
 return \code{NULL}.
+\item \code{add(.data, check_existing = FALSE)}\cr
+(\code{\link[data.table:data.table]{data.table::data.table()}}, \code{logical(1)})\cr
+Add attribute data of new entities. This makes sure none of the ids
+of the new entities are the same as the existing entity records. However, other id columns,
+relation columns can be exempted from the check by setting \code{check_existing} as \code{FALSE}.
+Meaning, the other id columns can contain ids of the existing entities.
 \item \code{get_id_col}\cr
 () -> \code{character(1)}\cr
 Returns the column id field of data.
@@ -66,7 +73,7 @@ objects have been loaded it will return \code{NULL}.
 () -> \code{character()}\cr
 Returns the names of all data objects (in \code{private$.data}) that belongs to this object.
 \item \code{get_removed_data(name)}\cr
-(\code{character(1)}) -> \verb{[data.table::data.table()]}\cr
+(\code{character(1)}) -> \code{\link[data.table:data.table]{data.table::data.table()}}\cr
 Return removed agent data. If \code{name} is missing, the first data, which should
 contains the main attributes of the agent object, will be returned.
 \item \code{get_ids(idx)}\cr
@@ -83,13 +90,10 @@ the corresponding values to \code{ids} are returned, in the same order as the \c
 (\code{character()}) -> \code{logical()}\cr
 Check which of the attribute names given in \code{x} exist in the attribute data
 of the object.
-\item \code{ids_exist(ids, by_element = FALSE, include_removed_data = FALSE)}\cr
-(\code{integer()}, \code{logical(1)}, \code{logical(1)}) -> \code{logical()}\cr
-Returns a logical vector of the same length as the argument \code{ids}. This function
-checks whether the ids in the argument \code{ids} exist or not. If \code{by_element} is
-TRUE then it will return a logical vector with the same length as \code{ids} in
-their respective order. And if \code{inclide_removed_data} is TRUE it will check
-the removed data to see if the ids ever existed.
+\item \code{ids_exist(ids, include_removed_data = FALSE)}\cr
+(\code{integer()}, \code{logical(1)}) -> \code{logical()}\cr
+Check whether \code{ids} exist or not.  And if \code{inclide_removed_data} is \code{TRUE} it
+will also check the removed data.
 \item \code{idx_exist(idx, by_element = FALSE)}\cr
 (\code{integer()}) -> \code{logical()}\cr
 Returns a logical vector of the same length as the argument \code{idx}. This function
@@ -103,6 +107,9 @@ Returns the number of entities represented by this object.
 (\code{logical(1)}) -> \code{self}\cr
 Print to console the number of datasets and their dimensions. \code{n} is the number of rows
 that will be output to console by \code{head()}, if 0 nothing will be printed.
+\item \code{subset_ids(expr)}\cr
+(\code{expr}) -> \verb{[data.table::data.table()]}\cr
+Return ids of rows matches the expression.
 }
 }
 

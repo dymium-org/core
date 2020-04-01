@@ -9,13 +9,16 @@
 #' @section Construction:
 #'
 #' ```
-#' Ind <- Individual$new(.data, id_col)
+#' Ind <- Individual$new(.data, id_col, hid_col)
 #' ```
 #'
-#' * .data::[data.table::data.table]\cr
+#' * `.data`::[data.table::data.table]\cr
 #'   Microdata of Individuals.
 #'
-#' * id_col::`character(1)`\cr
+#' * `id_col`::`character()`\cr
+#'   Names of the primary id colum and relation id colunns in `.data`
+#'
+#' * `hid_col`::`character(1)`\cr
 #'   Name of the id colum in `.data`
 #'
 #' @section Public Fields:
@@ -24,11 +27,7 @@
 #'
 #' @section Public Methods:
 #'
-#'  Inherits all methods from [Agent] and the following..
-#'
-#'  * `initialise_data(data, id_col = "pid", hid_col)`\cr
-#'  ([data.table::data.table()], `character(1)`, `character(1)`) -> `NULL`\cr
-#'  Add data.
+#'  Inherits all fields and methods of [Agent].
 #'
 #'  * `get_father(ids)`\cr
 #'  (`integer()`) -> `integer()`\cr
@@ -76,14 +75,16 @@
 #'  () -> `character(1)`\cr
 #'  Returns household id or `hid` of the individual-object.
 #'
-#'  * `add_relationship(ids, target_ids, type = c('father', 'mother', 'partner'))`\cr
-#'  (`integer()`, `integer()`, `character(1)`)\cr
-#'  Return nothing, but it adds relationship of the type specifies in `type` by
-#'  the user with the id of `target_ids` to individuals with ids in `ids`.
+#'  * `add_relationship(ids, target_ids, type)`\cr
+#'  (`integer()`, `integer()`, `'father'|'mother'|'partner'`)\cr
+#'  Adds `target_ids` to the relationship column in `type` of the individual
+#'  agents in `ids`. Note that, if `type` is 'partner' then both agents with id in
+#'  `ids` and `target_ids` will add each other as 'partner'. Hence, no need for
+#'  you to call this function twice to assign partner relationship to all the couples.
 #'
 #'  * `remove_relationship(ids, type = "partner")`\cr
-#'  (`integer()`, `character()`)\cr
-#'  Note: children and parents can't be removed, only partner can be removed.
+#'  (`integer()`, `'partner'`)\cr
+#'  Note that, children and parents can't be removed. Only partner relationship can be removed.
 #'
 #'  * `have_relationship(ids = NULL, type)`\cr
 #'  (`integer()`, `character(1)`) -> `logical()`\cr
@@ -101,13 +102,6 @@
 #'  * `get_parent_hid(ids = NULL)`\cr
 #'  (`integer()`) -> [data.table::data.table()]\cr
 #'  Returns a data.table with three columns: pid, father_hid and mother_hid.
-#'
-#'  * `living_with_parents(ids = NULL)`\cr
-#'  (`integer()`) -> `logical()`\cr
-#'  Returns a logical of length `ids` if ids is not NULL else the length will be
-#'  equal to the number of rows of the data. The idea is to compare both parents'
-#'  household ids with the household id of self. Dead individuals will always return
-#'  FALSE as their answer.
 #'
 #'  * `living_together(self_ids, target_ids)`\cr
 #'  (`integer()`, `integer()`) -> `logical()`\cr
@@ -128,28 +122,15 @@ Individual <- R6::R6Class(
   "Individual",
   inherit = Agent,
   public = list(
-    initialise_data = function(.data, id_col = "pid", hid_col) {
-      super$initialise_data(.data = .data, id_col = id_col)
-      if (!missing(hid_col)) {
+
+    initialize = function(.data, id_col = "pid", hid_col = NULL) {
+      super$initialize(.data = .data, id_col = id_col)
+      if (!is.null(hid_col)) {
         checkmate::assert_names(names(.data), must.include = hid_col)
         private$.hid_col <- hid_col
         lg$info("sets hid_col to: '{private$.hid_col}'")
       }
-      invisible()
-    },
-
-    data_template = function() {
-      data.table(
-        pid = integer(),
-        hid = integer(),
-        # fid = integer(), # firm/work id
-        age = integer(),
-        sex = character(),
-        marital_status = character(),
-        partner_id = integer(),
-        father_id = integer(),
-        mother_id = integer()
-      )
+      return(invisible(self))
     },
 
     get_household_ids = function(ids) {
@@ -198,6 +179,15 @@ Individual <- R6::R6Class(
       res
     },
 
+    add = function(.data, check_existing = FALSE, ...) {
+      dots <- list(...)
+      if (!is.null(self$get_hid_col()) & is.null(dots$add_population)) {
+        checkmate::assert_names(names(.data), must.include = self$get_hid_col())
+        assert_subset2(.data[[self$get_hid_col()]], self$get_attr(self$get_hid_col()))
+      }
+      super$add(.data, check_existing)
+    },
+
     add_relationship = function(ids, target_ids, type = c('father', 'mother', 'partner')) {
 
       type <- match.arg(type)
@@ -219,52 +209,31 @@ Individual <- R6::R6Class(
       switch(type,
              "father" = {
                # expect that if emptied == integer(0)
-               stopifnot(
-                 all(self$get_data(copy = FALSE)[self_idx, is.na(father_id)]),
-                 msg = paste0(type,
-                              " id should only have one agent id at birth.",
-                              " See issue #25")
-               )
-
+               if (!all(self$get_data(copy = FALSE)[self_idx, is.na(father_id)])) {
+                 stop(paste0(type, " id should only have one agent id at birth."))
+               }
                self$get_data(copy = FALSE)[self_idx, father_id := target_ids]
              },
              "mother" = {
                # expect that if emptied == integer(0)
-               stopifnot(
-                 all(self$get_data(copy = FALSE)[self_idx, is.na(mother_id)]),
-                 msg = paste0(type,
-                              " id should only have one agent id at birth.",
-                              " See issue #25")
-               )
-
-               self$get_data(copy = FALSE)[self_idx,
-                                         mother_id := target_ids]
-
+               if (!all(self$get_data(copy = FALSE)[self_idx, is.na(mother_id)])) {
+                 stop(paste0(type, " id should only have one agent id at birth."))
+               }
+               self$get_data(copy = FALSE)[self_idx, mother_id := target_ids]
              },
              "partner" = {
                # expect that if emptied == integer(0)
                if (!all(self$get_data(copy = FALSE)[self_idx, is.na(partner_id)])) {
                  print(self$get_data(copy = FALSE)[self_idx,])
-                 stop(paste0(
-                   type,
-                   " id cannot be overwrite but can be removed.",
-                   " See issue #25"
-                 ))
+                 stop(paste0(type, " id cannot be overwrite but can be removed."))
                }
-
                target_idx <- self$get_idx(ids = target_ids)
-
                # self adds partner
-               self$get_data(copy = FALSE)[self_idx,
-                                         partner_id := target_ids]
-
+               self$get_data(copy = FALSE)[self_idx, partner_id := target_ids]
                # partner adds self
-               self$get_data(copy = FALSE)[target_idx,
-                                         partner_id := ids]
-
+               self$get_data(copy = FALSE)[target_idx, partner_id := ids]
              })
-
-      return(invisible())
+      invisible()
     },
 
     remove_relationship = function(ids, type = c("partner")) {
@@ -415,51 +384,59 @@ Individual <- R6::R6Class(
       }
     },
 
-    living_with_parents = function(ids = NULL) {
-      stop("use $living_together instead until this function is fixed.")
-      # TODO: potential bugs
-      # A case where both parents (who have been divorced and living in different
-      # households) are in the matching market at the same time and both needs
-      # to check for dependent children there will be more than one instance of
-      # their children ids in `ids` arg. The bug only shows when we try to
-      # rearrange `data` to match the order of `ids` with `order(match(pid, ids)`
-      # this bug is cauaght by the last asserttion statement that
-      # `result$pid` and ids are not match.
-      #
-      # Potential fixes
-      # - use merge instead of order
-      #
-      # filter out dead individuals
-      active_ind_ids <- ids[self$is_alive(ids = ids)]
-
-      # get parents' household ids
-      parent_hids <- self$get_parent_hid(active_ind_ids)
-      data <-
-        self$get_data(active_ind_ids)[, .(pid, hid)] %>%
-        .[parent_hids, on = self$get_id_col()] %>%
-        .[, rowId := 1:.N]
-
-      # check if self household id is the same as either of the parents'
-      result <-
-        data[, .(living_with_parents = any(hid %in% c(father_hid, mother_hid))),
-             by = .(pid, rowId)][order(match(pid, ids)), ]
-
-      # check if there is any dead individuals in `ids`
-      if (length(active_ind_ids) != length(ids)) {
-        # dead individuals will always return FALSE as their answer
-        dead_ind <-
-          data.table::data.table(pid = ids[!ids %in% active_ind_ids],
-                                 living_with_parents = FALSE)
-        result <- rbind(result, dead_ind) %>%
-          # sort the order of `result` to match the order of `ids`
-          .[list(pid = ids), on = "pid"]
-      }
-
-      # check that we get all the result of the active individuals
-      stopifnot(all(result$pid == ids))
-
-      return(result$living_with_parents)
-    },
+    # @description
+    #
+    #  Returns a logical of length `ids` if ids is not NULL else the length will be
+    #  equal to the number of rows of the data. The idea is to compare both parents'
+    #  household ids with the household id of self. Dead individuals will always return
+    #  FALSE as their answer.
+    #
+    # @return a logical vector with the same length as `ids`
+    # living_with_parents = function(ids = NULL) {
+    #   stop("use $living_together instead until this function is fixed.")
+    #   # TODO: potential bugs
+    #   # A case where both parents (who have been divorced and living in different
+    #   # households) are in the matching market at the same time and both needs
+    #   # to check for dependent children there will be more than one instance of
+    #   # their children ids in `ids` arg. The bug only shows when we try to
+    #   # rearrange `data` to match the order of `ids` with `order(match(pid, ids)`
+    #   # this bug is cauaght by the last asserttion statement that
+    #   # `result$pid` and ids are not match.
+    #   #
+    #   # Potential fixes
+    #   # - use merge instead of order
+    #   #
+    #   # filter out dead individuals
+    #   active_ind_ids <- ids[self$is_alive(ids = ids)]
+    #
+    #   # get parents' household ids
+    #   parent_hids <- self$get_parent_hid(active_ind_ids)
+    #   data <-
+    #     self$get_data(active_ind_ids)[, .(pid, hid)] %>%
+    #     .[parent_hids, on = self$get_id_col()] %>%
+    #     .[, rowId := 1:.N]
+    #
+    #   # check if self household id is the same as either of the parents'
+    #   result <-
+    #     data[, .(living_with_parents = any(hid %in% c(father_hid, mother_hid))),
+    #          by = .(pid, rowId)][order(match(pid, ids)), ]
+    #
+    #   # check if there is any dead individuals in `ids`
+    #   if (length(active_ind_ids) != length(ids)) {
+    #     # dead individuals will always return FALSE as their answer
+    #     dead_ind <-
+    #       data.table::data.table(pid = ids[!ids %in% active_ind_ids],
+    #                              living_with_parents = FALSE)
+    #     result <- rbind(result, dead_ind) %>%
+    #       # sort the order of `result` to match the order of `ids`
+    #       .[list(pid = ids), on = "pid"]
+    #   }
+    #
+    #   # check that we get all the result of the active individuals
+    #   stopifnot(all(result$pid == ids))
+    #
+    #   return(result$living_with_parents)
+    # },
 
     living_together = function(self_ids, target_ids) {
       stopifnot(length(self_ids) == length(target_ids))
@@ -475,11 +452,10 @@ Individual <- R6::R6Class(
         .[, hid.x == hid.y]
       stopifnot(length(result) == length(self_ids))
       result
-    },
-
-    have_resident_child = function(ids) {
-      stop("Has not been implemented yet.")
     }
+    # have_resident_child = function(ids) {
+    #   stop("Has not been implemented yet.")
+    # }
 
   ),
 
@@ -487,6 +463,7 @@ Individual <- R6::R6Class(
     # private -----------------------------------------------------------------
     .hid_col = character(),
     relationship_types = c("father", "mother", "partner", "children"),
+
     # ***********************************************************
     # get_relationship(ids, type):
     #    return a list of ids those match the relationship type of the input
@@ -523,5 +500,19 @@ Individual <- R6::R6Class(
              "mother" = {return(self$get_data(copy = FALSE)[idx, mother_id])},
              "partner" = {return(self$get_data(copy = FALSE)[idx, partner_id])},
              "children" = {return(.get_children(ids))})
+    }),
+
+  active = list(
+    data_template = function() {
+      data.table(
+        age = integer(),
+        sex = character(),
+        marital_status = character(),
+        partner_id = integer(),
+        father_id = integer(),
+        mother_id = integer()
+      )
     }
-))
+  )
+
+  )

@@ -4,19 +4,33 @@
 \alias{pop_register}
 \title{Population register}
 \usage{
-pop_register(x, ind_data, hh_data)
+pop_register(x, ind_data, hh_data = NULL)
 }
 \arguments{
-\item{x}{An Dymium's Agent object that contains Population object}
+\item{x}{an R6 \link{Population} object.}
 
-\item{ind_data}{a data.table contains individual data}
+\item{ind_data}{a data.table that contains individual data}
 
-\item{hh_data}{a data.table contains household data}
+\item{hh_data}{a data.table that contains household data}
 }
 \value{
-a list contains ind_data and hh_data
+a list contains ind_data and hh_data as data.tables.
 }
 \description{
-Assign new ids to a new population. It is crucial that all ids in the relationship
-columns do exist in the data of the new population.
+Assign new ids to new population data.
+}
+\note{
+It is expected that the provided data in \code{ind_data} and \code{hh_data} have the same
+structure or columns as the individual and household data in the \link{Population} object
+in \code{x}. Also, it is crucial that all ids in the relationship columns do exist in
+the data of the new population data.
+}
+\examples{
+
+create_toy_world()
+
+pop <- world$get("Population")
+
+new_population_data <- pop_register(pop, toy_individuals, toy_households)
+
 }

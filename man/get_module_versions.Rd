@@ -19,7 +19,7 @@ Get all version numbers of a module
 }
 \examples{
 
-if (FALSE) {
+\dontrun{
   get_module_versions("demography")
 }
 }

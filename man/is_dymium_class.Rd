@@ -23,6 +23,9 @@ x  <- R6Class()
 is_dymium_class(x)
 
 # Dymium object
-Pop <- Population$new()
+Pop <- Population$new(ind_data = toy_individuals,
+                      hh_data = toy_households,
+                      pid_col = "pid",
+                      hid_col = "hid")
 is_dymium_class(Pop)
 }

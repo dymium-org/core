@@ -4,11 +4,13 @@
 \name{toy_households}
 \alias{toy_households}
 \title{Toy household microdata}
-\format{A data frame with 100 rows and 2 variables:
+\format{
+A data frame with 100 rows and 2 variables:
 \describe{
 \item{hid}{(\code{integer()}) household id}
 \item{did}{(\code{integer()}) dwelling id}
-}}
+}
+}
 \usage{
 data(toy_households)
 }
@@ -16,5 +18,8 @@ data(toy_households)
 This dataset contains a toy population of households that is linked with \link{toy_individuals}
 that contains its corresponding toy population of individuals. This dataset is only to be used for testing
 dymium packages.
+}
+\examples{
+toy_households
 }
 \keyword{datasets}

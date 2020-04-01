@@ -1,0 +1,398 @@
+---
+title: "Introduction to dymiumCore"
+author: "Amarin Siripanich"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(dymiumCore)
+```
+
+This vignette introduces the basic building blocks for microsimulation in `dymiumCore`, how they can be put together to create a microsimulation model, and how to take advantage of existing modules from the [dymiumModules](https://github.com/dymium-org/dymiumModules) repository. 
+
+# Overview of the building blocks 
+
+Microsimulation models, regardless of their study contexts, generally share the same basic components which are entities and their behaviour. The rest of the article focuses on the main building blocks of microsimulation in term of implementation. 
+
+## Entities and Containers
+
+The main focus of `dymiumCore` is to be used for urban modelling hence we provide the entity classes that often found in the context of urban modelling. The main entity classes are `Agent`, `Asset` and `Environment`. They are inheritances of the `Entity` class. Extended from the main entity classes are `Individual`, `Household`, `Building`, `Firm` (coming soon), `Network`, `Zone` and many more to come. All the inheritances of `Entity` have the same constructor function which requires attribute data of the entities to be created and name of the id column. 
+
+Let's try to create an instance of `Individual` using the `toy_individuals` dataset, microdata, that comes with `dymiumCore`. Note that, the `pid` column is its id column.
+
+```{r}
+toy_individuals
+```
+
+All entity classes are R6 class. Hence to create an object from an R6 class we need to call its constructor method which is `$new()`.
+
+```{r}
+Ind <- Individual$new(.data = toy_individuals, id_col = "pid")
+Ind
+```
+
+Individual agents are usually grouped into households, since household is often a more meaningful unit of analysis than individual. `Population` can be used to create `Individual` and `Household` that are linked together. `Population` is an inheritance of the `Container` class but has methods that can help you to modify, update, and inspect `Individual` and `Household` jointly.
+
+Here is how you create an instance of `Population`.
+
+```{r}
+Pop <- Population$new(ind_data = toy_individuals,
+                      hh_data = toy_households, 
+                      pid_col = "pid", 
+                      hid_col = "hid")
+```
+
+You can use `$plot_relatioship` method to visualise the relationship network within a household. Note that, the nodes are labelled by their id and age (id:age). 
+
+```{r, fig.asp=1, fig.width=7, fig.cap="Click on the nodes to see their attributes"}
+Pop$plot_relatioship(hid = 4)
+```
+
+`World` is also a `Container` class. The main purpose of a `Container` class is to store some objects that can be easily accessed using their keys. In dymium, we use `World` to contain entities, other containers, and models that we setup for simulation. We also give `World` some other responsibilities such as having the control over the simulation clock. 
+
+Here is how you can create a `World` object and add entities into it.
+
+```{r}
+world <- World$new()
+# add Population
+world$add(x = Pop)
+world
+```
+
+Now, let's add a glm model into our world. Note that, when a model object is added it will be warped inside `Model` so that it has a reference semantic like all other entities and containers.
+
+```{r}
+my_logit_model <-
+  glm(I(as.factor(sex)) ~ age + marital_status,
+      data = toy_individuals,
+      family = binomial(link = "logit"))
+world$add(x = my_logit_model, name = "my_logit_model")
+```
+
+To access the objects that we have just added we can either use one of these methods
+
+Use `$get(name)` to get any added object using its name. If you add an Entity object to World you do not need to name it as it will be named as its class name. But for a model object, you will need to give it a name. 
+
+```{r}
+world$get("Individual")
+world$get("my_logit_model")
+```
+
+Or you can access them using these fields of `World`. As the names suggest, all objects added are categorised into differnt fields by their class for easy access.
+
+```{r}
+world$entities
+world$entities$Individual
+world$models
+world$containers
+```
+
+The `$Cont` field holds all objects that `World` contains. 
+
+```{r}
+world$Cont
+```
+
+## Transition
+
+In a microsimulation model, entities are given rules for them to follow under 
+different conditions. A rule can simply be an ifelse statement such as:
+
+```
+if age is greater than 16:
+    can_marry 
+else:
+    cant_marry
+```
+
+This rule is deterministic since it makes sure that all individual agents above the age of 16 can get married.
+
+To use probabilistic rules you may want to use a rate-based model or a classification model 
+(binary logit model, multinomial logit model, hazard-based model, random forest, 
+and artificial neural network) that takes attributes of the entities as the
+input variables.
+
+`dymiumCore` provides `TransitionClassification` and `TransitionRegression`, both are [R6::R6Class], which take in a rule and entities then simulate the outcomes of the entities given the provided rule.  For probabilistic rules, Monte Carlo simulation will be performed based on the probabilistic values from the rules.
+
+### Supported models
+
+Currently, `dymiumCore` only supports the model objects fitted using `caret` and `stats` in the `Transition` classes.
+
+| Package |        Class |                                     Model types |         status |
+| ------: | -----------: | ----------------------------------------------: | -------------: |
+|   caret |      `train` |            classification and regression models |      supported |
+|   stats | `lm` & `glm` |                   generalised regression models |      supported |
+|  mlogit |     `mlogit` |                        multinomial logit models | in-development |
+|    mlr3 |    `Learner` | classification, survival, and regression models |        planned |
+
+
+The example below shows how one can use `caret` to fit a multinomial model and use the model to simulate marital status of individual agents with `TransitionClassification`. 
+
+First we create a world object for testing using the `create_toy_world()` function. This function creates a world object named `world` in the global environment.
+
+```{r}
+# create a toy world named `world` in the global environment
+create_toy_world()
+```
+
+To create a shorthand access to the `Individual` object inside `world` we use the `$get()` method. 
+
+```{r}
+# get the reference of Individual
+Ind <- world$get("Individual")
+```
+
+Let's create a table that shows the counts of marital status of the individual agents in `Individual`.
+
+```{r}
+table(Ind$get_attr("marital_status"))
+```
+
+Now we want to fit a multinomial model (predicts multiple choices) using the `caret` package. `caret` may asks you to install `nnet` which provides an implementation of a multinomial model through its `multinom` function.
+
+```{r}
+# fit a multinomial model where `y` is marital status and `x`s are age, age squared and sex.
+marital_status_model <-
+  caret::train(marital_status ~ age + I(age ^ 2) + sex, 
+               data = toy_individuals, 
+               method = "multinom", 
+               trControl = caret::trainControl(method = "none"))
+```
+
+`TransitionClassification` and `TransitionRegression` are R6 classes and to use them we need to call its constructor function. The first argument in the constructor function can be any object that inherits `Entity` and follows by the model argument which must be one of the supported models or special cases that will be discussed in the next section. There are additional arguments that can be set such as `target`, `targeted_agents` and `model_by_id` that can be used. Please see its documentation for more information about those extra arguments. 
+
+```{r}
+TransMaritalStatus <- TransitionClassification$new(x = Ind, model = marital_status_model)
+```
+
+Creating a `Transition` object will trigger a series of processes under the hood, including stochastically simulating decisions using the given model. Which in this case, TransitionClassification stochastically simulate marital status of the individual agents using the multinomial model. 
+
+```{r}
+TransMaritalStatus
+```
+
+To see the simulation result use the `$get_result()` method.
+
+```{r}
+# get the result in a data.table
+TransMaritalStatus$get_result()
+```
+
+We can update marital status of all individual agents with new values from the simulation using the `$update_agents` method and set `attr` to `marital_status`. Notice that we passed a reference to `Individual` when we constructed `TransMaritalStatus` so `update_agents` knows which one to update. 
+
+```{r}
+# update the marital status of all individual agents using the simulated result
+TransMaritalStatus$update_agents(attr = "marital_status")
+```
+
+or we can update marital status of the individual agents explicitly using `data.table` operations as the follow:
+
+```{r, eval = FALSE}
+# first we must get the indexes of all the ids. Note that the order of the indexes
+# must correspond to their ids. You can use the `$get_idx()` method to get ordered indexes.
+idx <- Ind$get_idx(ids = TransMaritalStatus$get_result()[["id"]])
+
+# there are two ways that you can update marital status that is in the attribute data (`attrs`)
+# of the individual agents
+# (1) using data.table syntax.
+Ind$get_data(name = "attrs", copy = FALSE)[idx, marital_status := TransMaritalStatus$get_result()[["response"]]]
+
+# (2) using the data.table's `set` function.
+data.table::set(x = Ind$get_data(name = "attrs", copy = FALSE), 
+                i = idx, 
+                j = "marital_status", 
+                value = TransMaritalStatus$get_result()[["response"]])
+```
+
+Now let's see the total count of each marital status again.
+
+```{r}
+# count marital status of all individuals
+table(Ind$get_attr("marital_status"))
+```
+
+### Using transition probabilities
+
+In microsimulation, modellers often use transition probabilities that they obtained 
+from official sources. Hence, __dymiumCore__ provides an easy step to use those
+transition probabilities in `Transition`. __A static rate model__, __a dynamic rate model__, 
+and __a enumerated choice model__ can be provided in a data.table format. When a
+data.table is provided as the model argument to `Transition`, `Transition`  will 
+figure out which of the three models the provided data.table matches based on the following criteria. 
+
+It is __a static rate model__, if the provided data.table contains a numeric `prob` 
+column with values between 0 to 1.
+
+```{r}
+library(data.table) # use install.packages("data.table") to install
+
+(rate_based_model <-
+  data.table(
+  sex = c("male", "female"),
+  prob = c(0.3, 0.2)
+))
+```
+
+It is __a dynamic rate model__, if the provided data.table contains columns that indicate
+time periods with a prefix `t_` follow by a numeric value i.e.  `t_0`, `t_2011`, `t_2050`.
+Those time period columns must be of type numeric and the values under those columns 
+must be within 0 to 1. 
+
+```{r}
+(dynamic_rate_based_model <-
+  data.table(
+  sex = c("male", "female"),
+  prob = c(0.3, 0.2),
+  t_2010 = c(0.5, 0.2),
+  t_2011 = c(0.3, 0.1),
+  t_2012 = c(0.4, 0.3)
+))
+```
+
+It is __a choice model__, if the provided data.table has list columns with names
+`probs` and `choices` containing numeric vectors and character vectors, respectively.  
+
+```{r}
+(choice_model <-
+  data.table(
+    sex = c('male', 'female'),
+    probs = list(c(0.3,0.7), c(0.4,0.6)),
+    choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
+))
+```
+
+__Note that__, if the the provided data.table matches more than one of the three formats
+then `Transition` will raise an error. 
+
+__Suggestion:__  you can import transition probability tables that are in a `csv` format
+or a `.xlsx` format to R using the `fread` function from the `data.table` package or `read.csv()`
+from the `utils` package that comes preinstalled with R or `read_xlsx()` from the
+`readxl` package for xlsx files.
+
+- A named `list` can be used to represent choices, where the names of the list are 
+choices and their values are their associated probabilities. 
+
+```{r}
+(binary_list_model <- list(yes = 0.05, no = 0.95))
+(marriage_model <- list(married = 0.05, not_married = 0.95))
+(employment_model <- list(employed = 0.4, unemployed = 0.2, not_in_labour_force = 0.3))
+```
+
+In a binary choice model, it is recommended that the outcome variable should be 
+coded as "yes" and "no" as many of the modules available at [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
+use with this convention.
+
+## Market
+
+The market component of dymium may be regarded as its first step to incorporating an aspect of agent-based simulation to its microsimulation component. In short, market is where entities can interact with one another to achieve a pre-defined goal. For example, mate matching is an important part in a closed population simulation where individual agents are partnered through some matching rules that are given to them. The rules can be as simple as minimising the age difference between two individual agents of opposite sex or differences in other socioeconomic characteristics. 
+
+Market can be an abstraction of a real-estate bidding market, a mate matching market, a labour market, etc. The entire market are separated into two sides (i.e. proposers and proprosees, buyers and sellers, labours and firms). Interaction between agents can be one-sided or two-sided depends on the matching mechanism that is used. When it is one-sided only agents from one side of the market make the decision about what they get based on their preference. When it is the matching problem is two-sided one then both sides of the market evaluate evaluate options available to them and interact in a way that mimic bidding.
+
+Note that, the number of alternatives available to each agent is customisable to realistically represent a matching situation that is being simulated. For example, in a housing search situation, it might be inappropiate to assume that all relocating households have perfect knowledge about all the available dwelling units that are on the market at any moment in time. Hence, the modeller might want to limit the number of alternatives available in the choiceset of each household or the number of zones that the households
+look for their options. 
+
+Currently, there are two implementations of market matching algorithms which are
+
+- Stochastic matching (`MatchingMarketStochastic`) and
+- Optimal matching (`MatchingMarketOptimal`)
+
+In `MatchingMarketStochastic`, only one-sided matching problems can be solved. All agents that are seeking a match are randomly ordered into a virtual queue. The first agent in the queue gets to select an alternative among all the alternatives that available to it. While in `MatchingMarketOptimal`, both one-sided and two-sided problems can be solved. All agents are aware of all the available alternatives (e.g. houses, partners, etc.) in the market. This generally a very strong assumption. Hence, to mitigate such strong assumption the whole market can be further segmented  into sub markets where agents that are more alike or geographically near one others are stratified into the same sub market and only aware of each others and not those that are their unlikely matches.
+
+To learn more about `Market` see the 'mate matching' use case under Articles.
+
+## Logging
+
+There are a few ways that you can log in dymium. To choose which of the logging methods is suitable in your please consider the following. Please note that, this subsection is only to give a brief overview of the methods so please see its documentation for more details.
+
+### Logging with `lgr`
+
+The `lgr` package is used by dymiumCore internally. This sometimes give warnings on the console. You can also see lower-level log messages if you change the log threshold.
+
+```{r, eval = FALSE}
+dymiumCore:::lg$set_threshold("info")
+dymiumCore:::lg$set_threshold("trace")
+```
+
+The default threshold for is set to `warn` which only shows warning messages and above (i.e. debug, fatal). As you can see, the internal logger is not exported hence it is not meant to be used by the end-user.
+
+`lgr` is also used in dymium modules. If you create a new module using `use_module()` a lgr logger will be available for you to use within your event functions, see `logger.R` in your module folder.
+
+There are many powerful stuffs you can do with `lgr` and to learn more about it please see its [vignette](https://s-fleck.github.io/lgr/articles/lgr.html). 
+
+### Logging with `Generic$log()`
+
+All classes that inherit `Generic`, namely `Entity` and `Container`, have the `log()` method available to them. The main purpose of this function is to give the user a convinient way to log simulation outputs. `get_log()` can be used on objects that have the `$log()` method to gather all logs.
+
+```{r}
+create_toy_world()
+total_no_individuals <- world$entities$Individual$n()
+world$entities$Individual$log(desc = "total_no_individuals", value = total_no_individuals)
+get_log(world)
+```
+
+### Logging with `add_history()`
+
+`add_history()` has a more specific used and only applicable to `Entity`, it is meant to be used for logging of past events that occur to each entity. This is particularly useful when past actions of entities can influence their current and future actions. There are helper functions to get and combine histories such as `get_history()` and `combine_histories()`.
+
+```{r}
+create_toy_world()
+add_history(entity = world$entities$Individual, ids = 1:3, event = "marriage")
+get_history(x = world$entities$Individual)
+# alternatively you can use insepct to view the attribute data of the individuals
+# and their history data at the same time
+inspect(entity = world$entities$Individual, ids = 1:3)
+```
+
+# Time scale
+
+Micosimulation models usually operate in cycle, where a cycle typically consider as 1 year for most discrete-time dynamic microsimulation models. However, this large time-step may not be preferrable to some events that may change more than once per year, such as employment status. Hence, these transitions in the real world may not be replicated in the simulated world. However, it is possible to mix events of different time scales in `dymiumCore` easily, using `Pipeline`. 
+
+First, let's create three dummy microsimulation events. Let's assume that Event 1 and Event 2 happen at the rate of every 3 months, while only Event 3 happens on an annual basis.
+
+```{r}
+# create dummy events
+event_1 <- function(x) {
+  print("Running event 1")
+  invisible(x)
+}
+
+event_2 <- function(x) {
+  print("Running event 2")
+  invisible(x)
+}
+
+event_3 <- function(x) {
+  print("Running event 3")
+  invisible(x)
+}
+
+# Create a Pipeline that has only Event 1 and Event 2.
+quaterly_events <- 
+  Pipeline$new(x = . %>%
+                 event_1(.) %>%
+                 event_2(.))
+
+create_toy_world()
+
+# create a microsimulation pipeline that runs for 2 cycles or 2 years.
+for (i in 1:2) {
+  print(paste0("Year: ", i))
+  world$start_iter(time_step = i, unit = "year") %>%
+    quaterly_events$run(., n_loops = 4) %>% # set to 4 == quaterly
+    event_3()
+}
+```
+
+Notice that, we set `n_loops` equal to 4, which means the events inside `quaterly_events`, the Pipeline object that we have created, will be executed for 4 cycles before `event_3` will be run in each cycle of the for loop.

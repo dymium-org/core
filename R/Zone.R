@@ -11,9 +11,5 @@ Zone <- R6::R6Class(
   classname = "Zone",
   inherit = Environment,
   public = list(
-    initialise_data = function(data, id_col) {
-      super$initialise_data(data, id_col)
-      invisible()
-    }
   )
 )

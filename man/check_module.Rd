@@ -19,7 +19,7 @@ Check if a module exists in a remote repository
 }
 \examples{
 
-if (FALSE) {
+\dontrun{
   check_module('test')
 }
 }

@@ -6,7 +6,7 @@ test_that("individual class's methods", {
 
 # is_alive ----------------------------------------------------------------
 
-  expect_equal(object = Ind$is_alive(c(Ind$get_ids()[1], 99999999, Ind$get_ids()[1])),
+  expect_equal(object = Ind$is_alive(c(1,999999,2)),
                expected = c(TRUE, FALSE, TRUE))
 
 # get_children functions --------------------------------------------------
@@ -100,4 +100,13 @@ test_that("invoke a derived variable and add new data", {
   n_before <- Ind$n()
   pop$add_population(ind_data = migrants$ind_data, hh_data = migrants$hh_data)
   expect_gt(Ind$n(), n_before)
+})
+
+test_that("get_parent_hid", {
+  create_toy_population()
+  Ind <- pop$get('Individual')
+  self_f_hid <- Ind$get_data()[!is.na(father_id), hid]
+  self_m_hid <- Ind$get_data()[!is.na(mother_id), hid]
+  expect_setequal(self_f_hid, Ind$get_parent_hid(ids = Ind$get_data()[!is.na(father_id), pid])[["father_hid"]])
+  expect_setequal(self_m_hid, Ind$get_parent_hid(ids = Ind$get_data()[!is.na(mother_id), pid])[["mother_hid"]])
 })

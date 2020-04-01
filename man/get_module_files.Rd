@@ -19,7 +19,7 @@ Get all files from a module
 }
 \examples{
 
-if (FALSE) {
+\dontrun{
   get_module_files("demography")
 }
 

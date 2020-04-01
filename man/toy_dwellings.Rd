@@ -4,19 +4,24 @@
 \name{toy_dwellings}
 \alias{toy_dwellings}
 \title{Toy dwelling microdata}
-\format{A data frame with 100 rows and 2 variables:
+\format{
+A data frame with 100 rows and 2 variables:
 \describe{
 \item{did}{(\code{integer()}) dwelling id}
 \item{hid}{(\code{integer()}) household id}
 \item{zid}{(\code{integer()}) zone id}
 \item{structure}{(\code{character()}) structure of dwelling}
 \item{bedroom}{(\code{integer()}) number of bedrooms}
-}}
+}
+}
 \usage{
 toy_dwellings
 }
 \description{
 This dataset contains a toy population of dwellings that is linked with \link{toy_individuals} and \link{toy_households}.
 This dataset is only to be used for testing dymium packages.
+}
+\examples{
+toy_dwellings
 }
 \keyword{datasets}
