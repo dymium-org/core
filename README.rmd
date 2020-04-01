@@ -72,7 +72,7 @@ This is a minimal example of how one can create a discrete-time microsimulation 
 
 In this example, we have three events: ageing, giving birth, and dying. The ageing event increases age of all individuals by 1 year in each iteration, as control by the for loop. The giving birth event only changes the 'give_birth' variable of eligible female individuals (age between 18 to 50) to 'yes' if the transition for an individual is successful. Note that this simple example doesn't add newborns from the birth event to the population, however, it can be done easily using `Individual$add()`. The dead event changes the age attribute of dying individuals to '-1', which means once an individual is dead it will not be considered in any transition or mutate_entity statement, as we apply `not_dead_filter` and a subset statement to them.
 
-The first principle of dymiumCore is to keep all [Entity] objects and models (optionally) inside a `World` object. This allows us to construct a microsimulation model as a data analysis pipeline, which you will see below.
+The first principle of dymiumCore is to keep all `Entity` objects and models (optionally) inside a `World` object. This allows us to construct a microsimulation model as a data analysis pipeline, which you will see below.
 
 ```{r}
 library(dymiumCore)
@@ -126,7 +126,7 @@ To get the attribute data of any [Entity] object use `$get_data()` method.
 world$entities$Individual$get_data()
 ```
 
-The `add_log` function allows any object to be stored in our World object for doing post-simulation analysis. In the example, we logged the number of individuals that were alive in each simulation year. We can extract the log data using `get_log()`. The `value` column of the log data by `get_log()` is a list column, this is to allow any object to be stored in `value`, so we must flatten in to integer to make the log data easier to work with.
+The `add_log()` function allows any object to be stored in our World object for doing post-simulation analysis. In the example, we logged the number of individuals that were alive in each simulation year. We can extract the log data using `get_log()`. The `value` column of the log data by `get_log()` is a list column, this is to allow any object to be stored in `value`, so we must flatten in to integer to make the log data easier to work with.
 
 ```{r}
 # get log data

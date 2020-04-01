@@ -97,7 +97,7 @@ individuals to ‘-1’, which means once an individual is dead it will not
 be considered in any transition or mutate\_entity statement, as we apply
 `not_dead_filter` and a subset statement to them.
 
-The first principle of dymiumCore is to keep all \[Entity\] objects and
+The first principle of dymiumCore is to keep all `Entity` objects and
 models (optionally) inside a `World` object. This allows us to construct
 a microsimulation model as a data analysis pipeline, which you will see
 below.
@@ -179,7 +179,7 @@ world$entities$Individual$get_data()
 #> 373:         no
 ```
 
-The `add_log` function allows any object to be stored in our World
+The `add_log()` function allows any object to be stored in our World
 object for doing post-simulation analysis. In the example, we logged the
 number of individuals that were alive in each simulation year. We can
 extract the log data using `get_log()`. The `value` column of the log
@@ -194,16 +194,16 @@ log_data <-
   .[, value := unlist(value)]
 print(log_data)
 #>     time created_timestamp class  tag             desc value
-#>  1:    1        1585718666 World <NA> count:Individual   332
-#>  2:    2        1585718666 World <NA> count:Individual   296
-#>  3:    3        1585718666 World <NA> count:Individual   264
-#>  4:    4        1585718666 World <NA> count:Individual   241
-#>  5:    5        1585718666 World <NA> count:Individual   209
-#>  6:    6        1585718666 World <NA> count:Individual   191
-#>  7:    7        1585718666 World <NA> count:Individual   169
-#>  8:    8        1585718666 World <NA> count:Individual   151
-#>  9:    9        1585718666 World <NA> count:Individual   139
-#> 10:   10        1585718666 World <NA> count:Individual   126
+#>  1:    1        1585721184 World <NA> count:Individual   332
+#>  2:    2        1585721184 World <NA> count:Individual   296
+#>  3:    3        1585721184 World <NA> count:Individual   264
+#>  4:    4        1585721184 World <NA> count:Individual   241
+#>  5:    5        1585721184 World <NA> count:Individual   209
+#>  6:    6        1585721184 World <NA> count:Individual   191
+#>  7:    7        1585721184 World <NA> count:Individual   169
+#>  8:    8        1585721184 World <NA> count:Individual   151
+#>  9:    9        1585721184 World <NA> count:Individual   139
+#> 10:   10        1585721184 World <NA> count:Individual   126
 ```
 
 Let’s visualise how many individual agents are still alive at the end of
