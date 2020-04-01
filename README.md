@@ -129,7 +129,7 @@ not_dead_filter <-
   . %>%
   .[age != -1]
 
-# create a pipeline of transitions
+# create a pipeline of transition events
 for (year in 1:10) {
   world %>%
     mutate_entity(entity = "Individual", 
@@ -148,8 +148,8 @@ for (year in 1:10) {
 }
 ```
 
-To get the attribute data of the individual agents use `$get_data()`
-method
+To get the attribute data of any \[Entity\] object use `$get_data()`
+method.
 
 ``` r
 world$entities$Individual$get_data()
@@ -180,12 +180,12 @@ world$entities$Individual$get_data()
 ```
 
 The `add_log` function allows any object to be stored in our World
-object for doing post-simulation analyses. In the example, we logged the
+object for doing post-simulation analysis. In the example, we logged the
 number of individuals that were alive in each simulation year. We can
-then extract that log data using `get_log()`. The value column of the
-data.table returns by `get_log()` is a list column, this is to allow any
-object to be stored, so we must flatten in to integer for plotting
-later.
+extract the log data using `get_log()`. The `value` column of the log
+data by `get_log()` is a list column, this is to allow any object to be
+stored in `value`, so we must flatten in to integer to make the log data
+easier to work with.
 
 ``` r
 # get log data
@@ -194,16 +194,16 @@ log_data <-
   .[, value := unlist(value)]
 print(log_data)
 #>     time created_timestamp class  tag             desc value
-#>  1:    1        1585717720 World <NA> count:Individual   332
-#>  2:    2        1585717720 World <NA> count:Individual   296
-#>  3:    3        1585717720 World <NA> count:Individual   264
-#>  4:    4        1585717720 World <NA> count:Individual   241
-#>  5:    5        1585717720 World <NA> count:Individual   209
-#>  6:    6        1585717720 World <NA> count:Individual   191
-#>  7:    7        1585717720 World <NA> count:Individual   169
-#>  8:    8        1585717720 World <NA> count:Individual   151
-#>  9:    9        1585717721 World <NA> count:Individual   139
-#> 10:   10        1585717721 World <NA> count:Individual   126
+#>  1:    1        1585718124 World <NA> count:Individual   332
+#>  2:    2        1585718124 World <NA> count:Individual   296
+#>  3:    3        1585718124 World <NA> count:Individual   264
+#>  4:    4        1585718124 World <NA> count:Individual   241
+#>  5:    5        1585718124 World <NA> count:Individual   209
+#>  6:    6        1585718124 World <NA> count:Individual   191
+#>  7:    7        1585718124 World <NA> count:Individual   169
+#>  8:    8        1585718124 World <NA> count:Individual   151
+#>  9:    9        1585718124 World <NA> count:Individual   139
+#> 10:   10        1585718124 World <NA> count:Individual   126
 ```
 
 Let’s visualise how many individual agents are still alive at the end of
