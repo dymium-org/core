@@ -25,12 +25,12 @@
 #' world %>% mutate_entity(entity = "Individual", age := age + 1L)
 #'
 #' # increase age of all female individual agents by 1 year.
-#' world %>% mutate_entity(entity = "Individual", age := age + 1L, subset == sex == "female")
+#' world %>% mutate_entity(entity = "Individual", age := age + 1L, subset = sex == "female")
 #'
 #' # incrementally increase age of all individual agents by 1 year in each iteration
 #'
 #' for (i in 1:10) {
-#'   world %>% mutate_entity(entity = "Individual", age := age + 1L, subset == sex == "female")
+#'   world %>% mutate_entity(entity = "Individual", age := age + 1L, subset = sex == "female")
 #' }
 mutate_entity <- function(world, entity, ..., ids = NULL, subset) {
   checkmate::assert_r6(world, classes = "World")
