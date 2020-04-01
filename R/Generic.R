@@ -35,7 +35,7 @@
 #' * `is_dymium_class()`\cr
 #' Returns `TRUE`. Use for internal checking.
 #'
-#' @section Private field
+#' @section Private field:
 #'
 #' * `.log`\cr
 #' A data.table for storing logs. There are 6 columns: time (integer),
@@ -61,10 +61,10 @@ Generic <- R6Class(
       return(invisible(self))
     },
 
-    log = function(desc, value, tag = "", time = .get_sim_time(), .lg = parent.frame()[["lg"]]) {
+    log = function(desc, value, tag = NA_character_, time = .get_sim_time(), .lg = parent.frame()[["lg"]]) {
       checkmate::assert_string(desc, null.ok = FALSE, na.ok = FALSE)
       checkmate::assert_vector(value, any.missing = FALSE, null.ok = FALSE)
-      checkmate::assert_string(tag, null.ok = FALSE, na.ok = FALSE)
+      checkmate::assert_string(tag, null.ok = FALSE, na.ok = TRUE)
       checkmate::assert_integerish(time, lower = 0, len = 1, null.ok = FALSE)
       .caller = lgr::get_caller(-2)
       if (is.null(.lg))
