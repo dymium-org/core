@@ -85,7 +85,8 @@
 #' @include Transition.R
 #' @export
 #'
-#' @example
+#' @examples
+#'
 #' # load toy data
 #' create_toy_population()
 #' Ind <- pop$get("Individual")

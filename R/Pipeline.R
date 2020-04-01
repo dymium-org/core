@@ -1,9 +1,26 @@
-#' @title Pipeline class
+#' @title Pipeline
 #'
 #' @description
 #'
-#' Pipeline is a warper of event functions. It can shuffle the order in which
-#' the warped event functions get executed or even repeatedly run the event functions.
+#' Pipeline acts as a wraper for event functions. It can shuffle the order in which
+#' the wrapped event functions get executed and also control how many times they
+#' should be run within the pipeline. The later capability allows the modeller to
+#' mix events with different time resolutions in a single microsimulation pipeline.
+#' A more tangible example would be when you are modelling residential relocation
+#' of households, renters may relocate every 6 months but buyers don't move that often
+#' hence you can use the Pipeline to run a renter relocation event twice for every
+#' run of a buy relocation event.
+#'
+#' ```{r eval = FALSE}
+#' pipeline <- Pipeline$new(. %>%
+#'                           renter_relocation_event())
+#'
+#' for (year in 1:5) {
+#'   world %>%
+#'     pipeline$run(n_loops = 2) %>%
+#'     buyer_relocation_event()
+#' }
+#' ```
 #'
 #' @usage NULL
 #' @format [R6::R6Class] object inheriting from [dymiumCore::Generic].
@@ -16,34 +33,25 @@
 #' Pipeline$new(x)
 #' ```
 #'
-#' * x\cr
-#'   Event functions in a %>% structure where the start of the pipe must be
-#'   `.`. See the example.
-#'
-#' @section Public Fields:
-#'
-#' * `Entities`\cr
-#'  Contains the instances of Entity and its inheritences those were added by
-#'  `self$add_entity()`.
-#'
-#' * `config`\cr
-#'  Contains the config file that was used to create the instance, if there is any.
-#'
-#' * `Models`\cr
-#'  Contains model objects.
-#'
-#' * `info`\cr
-#'  Contains information about the World object such as dymium's version it was
-#'  created with, its built date, creator info, R version, etc.
+#' * `x`\cr
+#'   Event functions in a `%>%` structure where the start of the pipe must be `.`. \
+#'   See the example section below.
 #'
 #' @section Public Methods:
 #'
 #' * `set(x)`\cr
+#'   Sets the event functions inside the Pipeline object.
 #'
 #' * `get()`\cr
+#'   Returns the event functions.
 #'
-#' * `run(x, shuffle, n_loops)`\cr
+#' * `run(x, shuffle = FALSE, n_loops = 1L)`\cr
 #'  ([Container], `logical(1)`, `integer(1)`) -> [Container]\cr
+#'   Execute the event functions in the order that it was added. To make the
+#'   order randomised set shuffle as `TRUE`. `n_loops` controls how many times
+#'   should the event functions be executed before exiting the Pipeline. If it is
+#'   greater than one then the event functions will be run multiple times it
+#'   the same order or randomised orders each time, depending on the value in `shuffle`.
 #'
 #' * `print()`\cr
 #'

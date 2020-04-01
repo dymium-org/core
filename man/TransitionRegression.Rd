@@ -85,6 +85,25 @@ Returns ids of the agents that have their response equal to \code{response_filte
 }
 }
 
+\examples{
+
+# load toy data
+create_toy_population()
+Ind <- pop$get("Individual")
+
+# fit a OLS regression model
+model_lm <- glm(age ~ sex + marital_status,
+                data = Ind$get_data(),
+                family = "gaussian")
+summary(model_lm)
+
+TransAge <- TransitionRegression$new(Ind, model = model_lm)
+# see the simulation result
+TransAge
+
+# update the individual agents' 'age' field using their simulated age
+TransAge$update_agents(attr = "age")
+}
 \seealso{
 \link{TransitionClassification} and \link{Trans}.
 }

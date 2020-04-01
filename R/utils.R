@@ -180,8 +180,6 @@ lookup_and_replace = function(data, lookup_table, cols, id_col = NULL) {
 #'
 #' @return a data.frame
 #' @export
-#'
-#' @examples
 lookup_and_replace2 <- function(x, cols, mapping) {
   checkmate::assert_data_frame(x)
   checkmate::assert_character(cols)

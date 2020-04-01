@@ -2,37 +2,35 @@
 % Please edit documentation in R/Pipeline.R
 \name{Pipeline}
 \alias{Pipeline}
-\title{Pipeline class}
+\title{Pipeline}
 \format{
 \link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Generic]{dymiumCore::Generic}.
 }
 \description{
-Pipeline is a warper of event functions. It can shuffle the order in which
-the warped event functions get executed or even repeatedly run the event functions.
+Pipeline acts as a wraper for event functions. It can shuffle the order in which
+the wrapped event functions get executed and also control how many times they
+should be run within the pipeline. The later capability allows the modeller to
+mix events with different time resolutions in a single microsimulation pipeline.
+A more tangible example would be when you are modelling residential relocation
+of households, renters may relocate every 6 months but buyers don't move that often
+hence you can use the Pipeline to run a renter relocation event twice for every
+run of a buy relocation event.\if{html}{\out{<div class="r">}}\preformatted{pipeline <- Pipeline$new(. \%>\%
+                          renter_relocation_event())
+
+for (year in 1:5) \{
+  world \%>\%
+    pipeline$run(n_loops = 2) \%>\%
+    buyer_relocation_event()
+\}
+}\if{html}{\out{</div>}}
 }
 \section{Construction}{
 \preformatted{Pipeline$new(x)
 }
 \itemize{
-\item x\cr
-Event functions in a \%>\% structure where the start of the pipe must be
-\code{.}. See the example.
-}
-}
-
-\section{Public Fields}{
-
-\itemize{
-\item \code{Entities}\cr
-Contains the instances of Entity and its inheritences those were added by
-\code{self$add_entity()}.
-\item \code{config}\cr
-Contains the config file that was used to create the instance, if there is any.
-\item \code{Models}\cr
-Contains model objects.
-\item \code{info}\cr
-Contains information about the World object such as dymium's version it was
-created with, its built date, creator info, R version, etc.
+\item \code{x}\cr
+Event functions in a \verb{\%>\%} structure where the start of the pipe must be \code{.}. \
+See the example section below.
 }
 }
 
@@ -40,9 +38,16 @@ created with, its built date, creator info, R version, etc.
 
 \itemize{
 \item \code{set(x)}\cr
+Sets the event functions inside the Pipeline object.
 \item \code{get()}\cr
-\item \code{run(x, shuffle, n_loops)}\cr
+Returns the event functions.
+\item \code{run(x, shuffle = FALSE, n_loops = 1L)}\cr
 (\link{Container}, \code{logical(1)}, \code{integer(1)}) -> \link{Container}\cr
+Execute the event functions in the order that it was added. To make the
+order randomised set shuffle as \code{TRUE}. \code{n_loops} controls how many times
+should the event functions be executed before exiting the Pipeline. If it is
+greater than one then the event functions will be run multiple times it
+the same order or randomised orders each time, depending on the value in \code{shuffle}.
 \item \code{print()}\cr
 }
 }
