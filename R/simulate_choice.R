@@ -25,6 +25,23 @@ simulate_choice.train <- function(model, newdata, target = NULL, ...) {
   simulate_choice(probs, target)
 }
 
+simulate_choice.list <- function(model, newdata, target = NULL, ...) {
+  checkmate::assert_list(
+    x = model,
+    types = "numeric",
+    names = "strict",
+    null.ok = FALSE,
+    any.missing = FALSE
+  )
+  checkmate::assert_data_frame(newdata)
+  dymiumCore::sample_choice(
+    x = names(model),
+    size = nrow(newdata),
+    prob = model,
+    replace = TRUE
+  )
+}
+
 #' @rdname simulate_choice
 #' @export
 simulate_choice.glm <- function(model, newdata, target = NULL, ...) {
