@@ -36,7 +36,8 @@
 #'
 #' @examples
 #'
-#' create_toy_world()
+#' world <- World$new()
+#' world$add(x = Individual$new(toy_individuals, id_col = "pid"))
 #' add_entity(world, entity = "Individual", newdata = toy_individuals)
 add_entity <-
   function(world,
@@ -76,10 +77,10 @@ add_entity <-
       .[, .SD, .SDcols = names(.)[!names(.) %in% weight_col]]
   }
   if (checkmate::test_true(condition)) {
-    lg$warn("Added {nrow(newdata)} new records to {e$class()}.")
+    lg$info("Added {nrow(newdata)} new records to {e$class()}.")
     e$add(.data = newdata, check_existing = check_relationship_id_cols)
   } else {
-    lg$warn("Added 0 new records to {e$class()}, since `condition` was FALSE.")
+    lg$info("Added 0 new records to {e$class()}, since `condition` was FALSE.")
   }
   invisible(world)
 }

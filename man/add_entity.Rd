@@ -58,6 +58,7 @@ a \link{World} object. This is one of the pipe-friendly functions.
 }
 \examples{
 
-create_toy_world()
+world <- World$new()
+world$add(x = Individual$new(toy_individuals, id_col = "pid"))
 add_entity(world, entity = "Individual", newdata = toy_individuals)
 }
