@@ -48,19 +48,17 @@ test_that("add", {
       id_col = c("pid", "partner_id", "mother_id", "father_id")
     )
 
+  # add new data, where only the main id column is unique from the existing ones.
   n_entities_before <- Enty$n()
   new_ent_dt <- data.table::copy(toy_individuals)[, .derived_col := 1]
-  expect_error(Enty$add(.data = new_ent_dt, check_existing = TRUE),
-               regexp = "One or more of the main unique `ids` in `.data` already exist in the existing attribute data of this Entity.")
+  Enty$add(.data = new_ent_dt, check_existing = TRUE)
+  checkmate::expect_data_table(Enty$get_data(), nrows = nrow(new_ent_dt) * 2)
 
+  # add totally new data, where none of the id columns are overlapped with the
+  # existing ones
   data_lst <- register(x = Enty, new_ent_dt)
   Enty$add(data_lst$new_ent_dt, check_existing = FALSE)
-  expect_error(Enty$add(.data = new_ent_dt, check_existing = TRUE),
-               regexp = "One or more of the main unique `ids` in `.data` already exist in the existing attribute data of this Entity.")
-
-  data_lst <- register(x = Enty, new_ent_dt)
-  Enty$add(data_lst$new_ent_dt, check_existing = FALSE)
-  expect_equal(Enty$n(), expected = nrow(toy_individuals) * 3)
+  checkmate::expect_data_table(Enty$get_data(), nrows = nrow(new_ent_dt) * 3)
 
   # shuffle column order
   data_lst <- register(x = Enty, new_ent_dt)

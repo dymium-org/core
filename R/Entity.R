@@ -271,8 +271,13 @@ Entity <-
       #  be existing ids
       add = function(.data, check_existing = FALSE) {
 
+        # make sure the original copy of the data will not be mutated.
+        .data <- data.table::copy(.data)
+
         # check data structure -----------
         NewData <- DataBackendDataTable$new(.data, key = self$id_col[[1]])
+
+        id_col <- self$id_col[[1]]
 
         res <-
           all.equal(target = omit_derived_vars(self$database$attrs$data[0, ]),
@@ -289,11 +294,28 @@ Entity <-
         }
 
         # check id columns ----------
-        new_ids <- .data[[self$id_col[[1]]]]
+        ids_in_newdata <- .data[[id_col]]
 
-        if (test_entity_ids(self, new_ids, include_removed_data = T, informative = TRUE)) {
-          stop(glue::glue("One or more of the main unique `ids` in `.data` already exist \\
-                          in the existing attribute data of this Entity."))
+        checkmate::assert_integerish(
+          ids_in_newdata,
+          any.missing = FALSE,
+          null.ok = FALSE,
+          unique = T
+        )
+
+        if (all(ids_in_newdata %in% self$database$attrs$data[[self$id_col[[1]]]])) {
+          lg$warn("All ids in the new data already exist in the existing data. \\
+                  The ids will be replaced with new generated ids to make sure \\
+                  all records have unique ids assigned to them.")
+          ids_in_newdata <- self$generate_new_ids(n = length(ids_in_newdata))
+          data.table::set(x = .data,
+                          j = id_col,
+                          value = ids_in_newdata)
+        }
+
+        if (test_entity_ids(self, ids_in_newdata, include_removed_data = T, informative = TRUE)) {
+          stop("One or more of the main unique `ids` in `.data` already exist ",
+               "in the existing attribute data of this Entity.")
         }
 
         # check relation columns
@@ -308,9 +330,9 @@ Entity <-
           ids_in_relation_cols <- unique(ids_in_relation_cols)
 
           if (check_existing) {
-            assert_subset2(ids_in_relation_cols, choices = c(self$get_ids(), new_ids))
+            assert_subset2(ids_in_relation_cols, choices = c(self$get_ids(), ids_in_newdata))
           } else {
-            assert_subset2(ids_in_relation_cols, choices = new_ids)
+            assert_subset2(ids_in_relation_cols, choices = ids_in_newdata)
           }
         }
 

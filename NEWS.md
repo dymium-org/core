@@ -6,6 +6,7 @@
 - Made `$colnames()` into an active field for `DataBackendDataFrame`.
 - Added `omit_derived_varnames()` for internal use.
 - `Individual` now has a `hid_col` active field which returns its household id column name.
+- `Entity$add()` now gives `newdata` new unique ids by default.
 
 ## Minor changes
 
