@@ -133,7 +133,6 @@ Entity <-
     public = list(
 
       initialize = function(databackend, .data, id_col) {
-        # browser()
         checkmate::assert_character(id_col, null.ok = FALSE, min.len = 1, unique = T, any.missing = FALSE, names = "unnamed")
         checkmate::assert_names(names(.data), must.include = id_col, type = 'strict')
         checkmate::assert_integerish(.data[[id_col[1]]], unique = TRUE, any.missing = FALSE, null.ok = FALSE, min.len = 1)
