@@ -90,6 +90,7 @@ Collate:
     'TransitionRegression.R'
     'World.R'
     'Zone.R'
+    'add_entity.R'
     'alignment.R'
     'checkmate.R'
     'checks.R'
