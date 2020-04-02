@@ -23,7 +23,12 @@
 #'
 #' @section Public Fields:
 #'
-#'  * NULL\cr
+#'  * `NULL`\cr
+#'
+#' @section Active Fields (read-only):
+#'
+#' * `hid_col`::(`character(1)`)\cr
+#'  Household id variable name.
 #'
 #' @section Public Methods:
 #'
@@ -160,8 +165,7 @@ Individual <- R6::R6Class(
       if (length(private$.hid_col) != 0) {
         return(private$.hid_col)
       }
-      self$msg_warn("`hid_col` has not been specified")
-      invisible()
+      return(NULL)
     },
 
     get_ids_from_id_cols = function(id_cols = NULL, na.rm = TRUE) {
@@ -459,6 +463,23 @@ Individual <- R6::R6Class(
 
   ),
 
+  active = list(
+    hid_col = function() {
+      base::get(".hid_col", envir = private)
+    },
+
+    data_template = function() {
+      data.table(
+        age = integer(),
+        sex = character(),
+        marital_status = character(),
+        partner_id = integer(),
+        father_id = integer(),
+        mother_id = integer()
+      )
+    }
+  ),
+
   private = list(
     # private -----------------------------------------------------------------
     .hid_col = character(),
@@ -500,19 +521,5 @@ Individual <- R6::R6Class(
              "mother" = {return(self$get_data(copy = FALSE)[idx, mother_id])},
              "partner" = {return(self$get_data(copy = FALSE)[idx, partner_id])},
              "children" = {return(.get_children(ids))})
-    }),
-
-  active = list(
-    data_template = function() {
-      data.table(
-        age = integer(),
-        sex = character(),
-        marital_status = character(),
-        partner_id = integer(),
-        father_id = integer(),
-        mother_id = integer()
-      )
-    }
-  )
-
+    })
   )

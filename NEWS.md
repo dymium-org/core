@@ -5,6 +5,7 @@
 - Introduced `add_log()`, `get_log()`, `mutate_entity()`, and `add_entity()`. These functions are supposed to make constructing a microsimulation pipeline simpler. See their documentation for details.
 - Made `$colnames()` into an active field for `DataBackendDataFrame`.
 - Added `omit_derived_varnames()` for internal use.
+- `Individual` now has a `hid_col` active field which returns its household id column name.
 
 ## Minor changes
 

@@ -25,7 +25,15 @@ Name of the id colum in \code{.data}
 \section{Public Fields}{
 
 \itemize{
-\item NULL\cr
+\item \code{NULL}\cr
+}
+}
+
+\section{Active Fields (read-only)}{
+
+\itemize{
+\item \code{hid_col}::(\code{character(1)})\cr
+Household id variable name.
 }
 }
 
