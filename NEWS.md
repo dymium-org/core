@@ -3,6 +3,7 @@
 - `transition()` gains `values` field, it expects a named vector where its values will be used to replace the outcomes of the model and update the variable in `attr`. See the example section to learnsmore.
 - `transition()` now supports a named `list` model, e.g: list(yes = 0.1, no = 0.9).
 - Introduced `add_log()`, `get_log()`, `mutate_entity()`, and `add_entity()`. These functions are supposed to make constructing a microsimulation pipeline simpler. See their documentation for details.
+- Made `$colnames()` into an active field for `DataBackendDataFrame`.
 
 ## Minor changes
 

@@ -27,3 +27,8 @@ test_that("get", {
                regexp = "max of 'rows' exceeds the number of rows of the data")
   expect_equal(names(x$get(cols = c("x1", "x2"))), c("x1", "x2"))
 })
+
+test_that("DataBackendDataFrame's active fields", {
+  d <- DataBackendDataFrame$new(data.table(x1 = c(1,2,3), x2 = c(1,2,3)))
+  checkmate::expect_names(d$colnames, permutation.of = c("x1", "x2"))
+})

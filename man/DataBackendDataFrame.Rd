@@ -27,6 +27,14 @@ A \link{data.frame} object.
 }
 }
 
+\section{Active field (read-only)}{
+
+\itemize{
+\item \code{colnames}\cr
+The column names of the data.
+}
+}
+
 \section{Methods}{
 
 \itemize{
@@ -55,9 +63,6 @@ Get the number of columns.
 \item \code{nrow()}\cr
 () -> \code{integer(1)}\cr
 Get the number of rows.
-\item \code{colnames()}\cr
-() -> \code{character()}\cr
-Get the column names.
 \item \code{get_removed()}\cr
 () -> \code{data.frame()}\cr
 Get the removed data.

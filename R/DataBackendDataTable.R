@@ -69,10 +69,6 @@
 #'  () -> `integer(1)`\cr
 #'  Get the number of rows.
 #'
-#'  * `colnames()`\cr
-#'  () -> `character()`\cr
-#'  Get the column names.
-#'
 #'  * `get_removed()`\cr
 #'  () -> `data.frame()`\cr
 #'  Get the removed data.

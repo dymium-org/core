@@ -22,6 +22,11 @@
 #'
 #'  * `NULL`\cr
 #'
+#' @section Active field (read-only):
+#'
+#'  * `colnames`\cr
+#'  The column names of the data.
+#'
 #' @section Methods:
 #'
 #'  * `add(.data, fill = FALSE)`\cr
@@ -55,10 +60,6 @@
 #'  * `nrow()`\cr
 #'  () -> `integer(1)`\cr
 #'  Get the number of rows.
-#'
-#'  * `colnames()`\cr
-#'  () -> `character()`\cr
-#'  Get the column names.
 #'
 #'  * `get_removed()`\cr
 #'  () -> `data.frame()`\cr
@@ -130,10 +131,6 @@ DataBackendDataFrame <-
         ncol(private$.data)
       },
 
-      colnames = function() {
-        colnames(private$.data)
-      },
-
       nrow = function() {
         nrow(private$.data)
       },
@@ -145,4 +142,12 @@ DataBackendDataFrame <-
       get_removed = function() {
         private$.removed_data
       }
+    ),
+
+    active = list(
+
+      colnames = function() {
+        return(colnames(base::get(x = ".data", envir = private)))
+      }
+
     ))
