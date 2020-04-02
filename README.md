@@ -229,9 +229,9 @@ the simulation.
 
 ``` r
 library(ggplot2)
-ggplot(data = log_data) +
-  geom_col(aes(x = time, y = value, fill = value)) +
-  geom_label(aes(x = time, y = value, label = value)) +
+ggplot(data = log_data, aes(x = time, y = value)) +
+  geom_col(aes(fill = value)) +
+  geom_label(aes(label = value)) +
   labs(x = "Time", y = "Number of Individuals") +
   scale_x_continuous(n.breaks = 10) +
   guides(fill = "none") +
