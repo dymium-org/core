@@ -26,11 +26,11 @@ is_dymium_class <- function(x) {
   )
 }
 
-#' get_sim_time
+#' @title Get the current timestep of the simulation
 #'
-#' get the simulation time from .DMevn$sim_time. This object is readable by all
-#' objects in the package but only modifiable by instances of World-class through
-#' `$set_time(x)` method.
+#' This function returns the time attribute of a [World] object, if any, otherwise
+#' it returns 0L. Note that, this should not be set through `options()`, instead
+#' it should be set by a [World] object through `World$set_time()`.
 #'
 #' @return a numerical value
 #' @export
@@ -46,6 +46,8 @@ get_sim_time <- function() {
 .get_sim_time <- function() {
   get_sim_time()
 }
+
+
 
 #' Omit derived variables from a data.frame
 #'

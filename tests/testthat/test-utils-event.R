@@ -1,6 +1,6 @@
 test_that("scheduler", {
-  expect_true(is_scheduled(time_steps = 0))
-  expect_false(is_scheduled(time_steps = 1))
+  checkmate::expect_flag(is_scheduled(time_steps = 0), na.ok = FALSE)
+  checkmate::expect_flag(is_scheduled(time_steps = 1), na.ok = FALSE)
 })
 
 

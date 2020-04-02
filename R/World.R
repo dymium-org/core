@@ -111,7 +111,8 @@ World <- R6::R6Class(
     info = list(
       built.datetime = Sys.time(),
       dymiumCore.version = utils::packageVersion("dymiumCore"),
-      sessionInfo = utils::sessionInfo()
+      sessionInfo = utils::sessionInfo(),
+      clock = 0L
     ),
 
     initialize = function() {
@@ -317,7 +318,7 @@ World <- R6::R6Class(
     },
 
     get_time = function(x) {
-      get("sim_time", envir = .DMevn)
+      self$info$clock
     },
 
     get_info = function() {
@@ -328,7 +329,8 @@ World <- R6::R6Class(
     # @param x An integer value.
     set_time = function(x) {
       checkmate::assert_integerish(x, lower = 0, len = 1)
-      assign("sim_time", as.integer(x), envir = .DMevn)
+      self$info$clock <- x
+      options(dymium.simulation_clock = x)
       invisible()
     },
 

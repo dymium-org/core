@@ -1,6 +1,3 @@
-# for storing variables that accessible and modifiable by all functions and objects
-.DMevn <- new.env(parent = emptyenv())
-
 .dymium_tempdir <- file.path(tempdir(), "scenario")
 
 .dymium_options <- function() {
@@ -28,6 +25,7 @@
   # set global options
   opts <- options()
   opts.dymium <- list(
+    dymium.simulation_clock = 0L,
     dymium.scenario_dir = file.path(.dymium_tempdir),
     dymium.input_dir = file.path(.dymium_tempdir, "inputs"),
     dymium.output_dir = file.path(.dymium_tempdir, "outputs"),
@@ -35,9 +33,6 @@
   )
   toset <- !(names(opts.dymium) %in% names(opts))
   if (any(toset)) options(opts.dymium[toset])
-
-  # setup package global variables
-  .DMevn[["sim_time"]] <- 0L
 
   # setup logger
   assign("lg", lgr::get_logger_glue(name = pkgname), envir = parent.env(environment()))
@@ -65,7 +60,6 @@
 
   # print to console
   .dymium_options_msg()
-
 
   invisible()
 }
