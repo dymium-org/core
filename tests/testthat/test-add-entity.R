@@ -8,7 +8,7 @@ test_that("add_entity works", {
                nrow(ind_data) * 2)
 })
 
-test_that("add_entity works with weights", {
+test_that("add_entity works with weights and targets", {
   world <- World$new()
 
   ind_data <-
@@ -19,18 +19,28 @@ test_that("add_entity works with weights", {
 
   world$add(x = Individual$new(ind_data, id_col = "pid"))
 
-  target <- 10
+  target_not_zero <- 10
 
   add_entity(
     world,
     entity = "Individual",
     newdata = ind_data_with_weights,
-    target = target,
+    target = target_not_zero,
     weight_col = "weight"
   )
 
   expect_equal(nrow(world$entities$Individual$get_data()),
-               target + nrow(ind_data))
+               target_not_zero + nrow(ind_data))
+
+  add_entity(
+    world,
+    entity = "Individual",
+    newdata = ind_data_with_weights,
+    target = 0
+  )
+
+  expect_equal(nrow(world$entities$Individual$get_data()),
+               target_not_zero + nrow(ind_data))
 
 })
 
@@ -93,3 +103,4 @@ test_that("add_entity works with condition", {
                target + nrow(ind_data))
 
 })
+
