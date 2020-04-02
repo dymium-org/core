@@ -20,3 +20,9 @@ test_that("register", {
     # {register(x = world$entities$Individual, .)}
   # world$entities$Individual$add(.data = new_ind_data)
 })
+
+test_that("omit_derived_vars", {
+  x <- data.frame(a = 1, b = 2, .c = 3)
+  checkmate::assert_names(names(omit_derived_vars(x)), permutation.of = c("a", "b"))
+  expect_equal(omit_derived_varnames(x), c("a", "b"))
+})

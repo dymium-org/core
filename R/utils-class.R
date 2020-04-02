@@ -98,6 +98,14 @@ omit_derived_vars <- function(.data) {
   }
 }
 
+#' @rdname omit_derived_vars
+#' @export
+omit_derived_varnames <- function(.data) {
+  checkmate::assert_data_frame(.data, null.ok = FALSE)
+  cols <- grep("^\\.", x = names(.data), value = TRUE, invert = TRUE)
+  return(cols)
+}
+
 #' Normalise the names of derived variables
 #'
 #' @description

@@ -2,9 +2,12 @@
 % Please edit documentation in R/utils-class.R
 \name{omit_derived_vars}
 \alias{omit_derived_vars}
+\alias{omit_derived_varnames}
 \title{Omit derived variables from a data.frame}
 \usage{
 omit_derived_vars(.data)
+
+omit_derived_varnames(.data)
 }
 \arguments{
 \item{.data}{a data.frame object.}
