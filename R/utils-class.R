@@ -36,12 +36,15 @@ is_dymium_class <- function(x) {
 #' @export
 #' @examples
 #'
-#' .get_sim_time()
-.get_sim_time <- function() {
-  get("sim_time", envir = .DMevn)
+#' get_sim_time()
+get_sim_time <- function() {
+  getOption("dymium.simulation_clock")
 }
 
+#' @rdname get_sim_time
 #' @export
+.get_sim_time <- function() {
+  get_sim_time()
 }
 
 #' Omit derived variables from a data.frame
