@@ -69,9 +69,8 @@ run <- function(world, model = NULL, target = NULL, time_steps = NULL) {
   # (Recommended)
   # create a reference to the entity and model objects for easy access for examples:
   # To get entities..
-  # Pop <- assign_reference(world, Population)
-  # Hh <- assign_reference(world, "Household")
-  # Hh <- world$get("Household")
+  # Pop <- world$get("Population")
+  # Hh <- world$("Household")
   # To get models..
   # MyModel <- world$get("MyModel")
   # MyModel <- world$get_model("MyModel")

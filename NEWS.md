@@ -7,6 +7,7 @@
 - Added `omit_derived_varnames()` for internal use.
 - `Individual` now has a `hid_col` active field which returns its household id column name.
 - `Entity$add()` now gives `newdata` new unique ids by default.
+- Deprecated `assign_reference()`, `Container$get()` should be used instead.
 
 ## Minor changes
 

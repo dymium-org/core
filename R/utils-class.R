@@ -41,31 +41,7 @@ is_dymium_class <- function(x) {
   get("sim_time", envir = .DMevn)
 }
 
-
-#' Assign reference
-#'
-#' @description
-#'
-#' A warper function of [World]'s get() method.
-#'
-#' @param x a [World] object.
-#' @param object_class a character or a [R6::R6Class] generator.
-#'
-#' @return an [R6::R6Class] object
 #' @export
-#'
-#' @examples
-#'
-#' create_toy_world()
-#' # both calls are equivalent
-#' Pop <- assign_reference(world, "Population")
-#' Pop <- assign_reference(world, Population)
-assign_reference <- function(x, object_class) {
-  checkmate::assert_r6(x, classes = "Container", public = c("get"))
-  if (inherits(object_class, "R6ClassGenerator")) {
-    object_class <- object_class$classname
-  }
-  x$get(object_class)
 }
 
 #' Omit derived variables from a data.frame
@@ -316,4 +292,3 @@ register <- function(x, ..., only_primary_id_col = FALSE) {
 
   return(.data_lst2)
 }
-
