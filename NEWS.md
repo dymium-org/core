@@ -1,4 +1,4 @@
-# dymiumCore (development version)
+# dymiumCore 0.1.7
 
 - `transition()` gains `values` field, it expects a named vector where its values will be used to replace the outcomes of the model and update the variable in `attr`. See the example section to learnsmore.
 - `transition()` now supports a named `list` model, e.g: list(yes = 0.1, no = 0.9).
