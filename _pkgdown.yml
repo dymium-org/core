@@ -76,11 +76,13 @@ reference:
     - matches("^Trans.")
     - transition
     - mutate_entity
+    - add_entity
     - SupportedTransitionModels
     - Target
     - simulate_choice
     - alignment
     - Pipeline
+    - register
     - starts_with("Match")
 - title: Logging and inspection
   contents:
@@ -140,17 +142,18 @@ reference:
     - normalise_derived_vars
     - sample_choice
     - lookup_and_replace
+    - lookup_and_replace2
     - condense_rows
     - element_wise_expand_lists
     - unnest_datatable
     - dt_group_and_sort
     - validate_linkages
+    - is_dymium_class
 
 - title: Base classes
   contents:
     - Generic
     - Entity
-    - Transition
+    - Trans
     - DataBackend
     - ContainerGeneric
-    - is_dymium_class
