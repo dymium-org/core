@@ -90,9 +90,7 @@ The ageing event increases age of all individuals by 1 year in each
 iteration, as control by the for loop. The giving birth event only
 changes the ‘give\_birth’ variable of eligible female individuals (age
 between 18 to 50) to ‘yes’ if the transition for an individual is
-successful. Note that this simple example doesn’t add newborns from the
-birth event to the population, however, it can be done easily using
-`Individual$add()`. The dead event changes the age attribute of dying
+successful. The death event changes the age attribute of dying
 individuals to ‘-1’, which means once an individual is dead it will not
 be considered in any transition or mutate\_entity statement, as we apply
 `not_dead_filter` and a subset statement to them.
@@ -113,7 +111,7 @@ death_model <- list(yes = 0.1, no = 0.9)
 # prepare population data
 ind_data <- 
   data.table::copy(toy_individuals) %>%
-  .[, give_birth := "no"]
+  .[, .give_birth := "no"]
 
 # create a World object, a container for all entities and models for simulation
 world <- World$new()
@@ -132,18 +130,30 @@ filter_alive <-
 # create a pipeline of transition events
 for (year in 1:10) {
   world %>%
+    # ageing
     mutate_entity(entity = "Individual", 
                   age := age + 1L, 
                   subset = age != -1L) %>%
+    # simulate birth decision
     transition(entity = "Individual", 
                model = birth_model, 
-               attr = "give_birth", 
+               attr = ".give_birth", 
                preprocessing_fn = . %>% filter_eligible_females %>% filter_alive) %>%
+    # add newborns
+    add_entity(entity = "Individual", 
+               newdata = toy_individuals[age == 0, ], 
+               target = .$entities$Individual$get_data()[.give_birth == "yes", .N]) %>%
+    # reset the birth decision variable
+    mutate_entity(entity = "Individual", 
+                  .give_birth := "no", 
+                  subset = age != -1L) %>%
+    # simulate deaths
     transition(entity = "Individual", 
                model = death_model, 
                attr = "age", 
                values = c(yes = -1L), 
                preprocessing_fn = filter_alive) %>%
+    # log the total number of alive individuals at the end of the iteration
     add_log(time = year, 
             desc = "count:Individual", 
             value = .$entities$Individual$get_data()[age != -1L, .N])
@@ -168,23 +178,23 @@ world$entities$Individual$get_data()
 #>   4:   4   3  -1   male        married          5        NA        NA
 #>   5:   5   3  -1 female        married          4        NA        NA
 #>  ---                                                                 
-#> 369: 369 143  83   male        married        368        NA        NA
-#> 370: 370 144  59 female        married        371        NA        NA
-#> 371: 371 144  -1   male        married        370        NA        NA
-#> 372: 372 144  -1   male  never married         NA       371       370
-#> 373: 373 144  -1   male  never married         NA       371       370
-#>      give_birth
-#>   1:         no
-#>   2:         no
-#>   3:         no
-#>   4:         no
-#>   5:         no
-#>  ---           
-#> 369:         no
-#> 370:         no
-#> 371:         no
-#> 372:         no
-#> 373:         no
+#> 418: 418  43   3   male not applicable         NA        NA       108
+#> 419: 419   3   2   male not applicable         NA         4         5
+#> 420: 420  39   2 female not applicable         NA        96        97
+#> 421: 421  72   2 female not applicable         NA       184       185
+#> 422: 422  72   1 female not applicable         NA       184       185
+#>      .give_birth
+#>   1:          no
+#>   2:          no
+#>   3:          no
+#>   4:          no
+#>   5:          no
+#>  ---            
+#> 418:          no
+#> 419:          no
+#> 420:          no
+#> 421:          no
+#> 422:          no
 ```
 
 The `add_log()` function allows any object to be stored in our World
@@ -202,16 +212,16 @@ log_data <-
   .[, value := unlist(value)]
 print(log_data)
 #>     time created_timestamp class  tag             desc value
-#>  1:    1        1585760565 World <NA> count:Individual   332
-#>  2:    2        1585760565 World <NA> count:Individual   296
-#>  3:    3        1585760565 World <NA> count:Individual   264
-#>  4:    4        1585760565 World <NA> count:Individual   241
-#>  5:    5        1585760565 World <NA> count:Individual   209
-#>  6:    6        1585760565 World <NA> count:Individual   191
-#>  7:    7        1585760565 World <NA> count:Individual   169
-#>  8:    8        1585760565 World <NA> count:Individual   151
-#>  9:    9        1585760565 World <NA> count:Individual   139
-#> 10:   10        1585760565 World <NA> count:Individual   126
+#>  1:    1        1585854944 World <NA> count:Individual   340
+#>  2:    2        1585854944 World <NA> count:Individual   307
+#>  3:    3        1585854944 World <NA> count:Individual   278
+#>  4:    4        1585854944 World <NA> count:Individual   260
+#>  5:    5        1585854944 World <NA> count:Individual   247
+#>  6:    6        1585854944 World <NA> count:Individual   226
+#>  7:    7        1585854944 World <NA> count:Individual   204
+#>  8:    8        1585854944 World <NA> count:Individual   190
+#>  9:    9        1585854944 World <NA> count:Individual   177
+#> 10:   10        1585854944 World <NA> count:Individual   161
 ```
 
 Let’s visualise how many individual agents are still alive at the end of
@@ -221,6 +231,7 @@ the simulation.
 library(ggplot2)
 ggplot(data = log_data) +
   geom_col(aes(x = time, y = value, fill = value)) +
+  geom_label(aes(x = time, y = value, label = value)) +
   labs(x = "Time", y = "Number of Individuals") +
   scale_x_continuous(n.breaks = 10) +
   guides(fill = "none") +
