@@ -189,8 +189,8 @@ inspect <- function(entity, ids, related_entity = NULL, verbose = TRUE) {
   print(entity_data)
 
   if (!is.null(related_entity)) {
-    if (!entity$get_id_col() %in% related_entity$data()$colnames() &
-        !related_entity$get_id_col() %in% entity$data()$colnames()) {
+    if (!entity$get_id_col() %in% related_entity$database$attrs$colnames &
+        !related_entity$get_id_col() %in% entity$database$attrs$colnames) {
       stop(glue::glue("'entity' cannot be linked with 'related_entity' \\
                       through their primary id variables."))
     }
@@ -199,7 +199,7 @@ inspect <- function(entity, ids, related_entity = NULL, verbose = TRUE) {
     }
 
     # entities are 'members' to related entities
-    if (related_entity$get_id_col() %in% entity$data()$colnames()) {
+    if (related_entity$get_id_col() %in% entity$database$attrs$colnames) {
       if (verbose)  {
         cli::cli_alert_info("Note that, entities are 'members' to related entities.")
       }
@@ -209,7 +209,7 @@ inspect <- function(entity, ids, related_entity = NULL, verbose = TRUE) {
         related_entity$get_data(ids = related_entity_ids)
     }
     # entities are 'groups' of related entities
-    if (entity$get_id_col() %in% related_entity$data()$colnames()) {
+    if (entity$get_id_col() %in% related_entity$database$attrs$colnames) {
       if (verbose)  {
         cli::cli_alert_info("Note that, entities are 'groups' of related entities.")
       }

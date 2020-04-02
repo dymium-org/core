@@ -87,7 +87,7 @@ Asset <- R6::R6Class(
 
     set_owner_object = function(x) {
       checkmate::assert_r6(x, classes = c("Agent", "Entity"))
-      checkmate::assert_names(x = x$data()$colnames(),
+      checkmate::assert_names(x = x$database$attrs$colnames,
                               must.include = self$get_id_col(),
                               .var.name = "Attribute data of owner 'x'")
 

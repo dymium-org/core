@@ -243,7 +243,7 @@ Entity <-
             return(
               data.table:::na.omit.data.table(
                 DataObj$get(copy = FALSE)[J(ids)],
-                cols = DataObj$colnames()[2]
+                cols = DataObj$colnames[2]
               )
             )
           } else {
@@ -319,7 +319,7 @@ Entity <-
       },
 
       has_attr = function(x) {
-        x %in% self$data()$colnames()
+        x %in% self$database$attrs$colnames
       },
 
       get_attr = function(x, ids) {

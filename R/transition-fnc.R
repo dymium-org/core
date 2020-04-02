@@ -181,7 +181,7 @@ transition <-
   }
   # update attr using the result
   if (!is.null(attr) & nrow(result) != 0) {
-    checkmate::assert_names(x = attr, subset.of = e$database$attrs$colnames())
+    checkmate::assert_names(x = attr, subset.of = e$database$attrs$colnames)
     if (!is.null(values)) {
       checkmate::assert_atomic(x = values,
                                names =  "strict",
