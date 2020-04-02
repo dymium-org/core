@@ -4,7 +4,7 @@
 \alias{mutate_entity}
 \title{Mutate entities}
 \usage{
-mutate_entity(world, entity, ..., ids = NULL, subset)
+mutate_entity(world, entity, ..., ids = NULL, subset, preprocessing_fn)
 }
 \arguments{
 \item{world}{a \link{World} object.}
@@ -16,6 +16,8 @@ mutate_entity(world, entity, ..., ids = NULL, subset)
 \item{ids}{a integer vector containing ids of \code{entity} to be mutated.}
 
 \item{subset}{a subset expression, e.g: age > 30.}
+
+\item{preprocessing_fn}{a filter function that accepts a data.table object.}
 }
 \value{
 a \link{World} object.
@@ -25,7 +27,8 @@ This function allows the attribute data of any \link{Entity} instance and its
 inheritances stored in \link{World} to be mutated.
 
 It is useful for updating attribute variables, such as age of entities in each
-iteration etc.
+iteration etc. Note that, only one or none of the filter strategies
+{ids, subset, preprocessing_fn} should be used at a time.
 }
 \examples{
 
