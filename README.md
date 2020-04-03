@@ -128,8 +128,8 @@ filter_alive <-
   .[age != -1]
 
 # create a pipeline of transition events
-for (year in 1:10) {
-  world %>%
+microsimulation_pipeline <-
+  . %>% 
     # ageing
     mutate_entity(entity = "Individual", 
                   age := age + 1L, 
@@ -154,10 +154,11 @@ for (year in 1:10) {
                values = c(yes = -1L), 
                preprocessing_fn = filter_alive) %>%
     # log the total number of alive individuals at the end of the iteration
-    add_log(time = year, 
-            desc = "count:Individual", 
+    add_log(desc = "count:Individual", 
             value = .$entities$Individual$get_data()[age != -1L, .N])
-}
+
+# compile and execute
+sim(world = world, pipeline = microsimulation_pipeline, n_iters = 10)
 ```
 
 > Note that, the line `value = .$entities$Individual$get_data()[age !=
