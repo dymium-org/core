@@ -44,6 +44,7 @@ Suggests:
     covr,
     mapview (>= 2.7.0),
     knitr,
+    randomForest,
     rmarkdown,
     ggplot2 (>= 3.0.0),
     DiagrammeR (>= 1.0.0),
