@@ -1,6 +1,7 @@
-#' @title Compile then execute a microsimulation pipeline
+#' @title Compile and execute a microsimulation pipeline
 #'
-#' This function compiles then executes a microsimulation pipeline.
+#' @description
+#' This function compiles and executes a microsimulation pipeline.
 #'
 #' @param world (`World`)\cr
 #'  A [World] object.
@@ -68,7 +69,7 @@
 #'   add_log(desc = "count:Individual",
 #'           value = .$entities$Individual$get_data()[age != -1L, .N])
 #'
-#' # complie simulation
+#' # complie and execute a simulation pipeline
 #' sim(world = world, pipeline = microsimulation_pipeline, n_iters = 10)
 sim <- function(world, pipeline, n_iters, write.error.dump.folder) {
 

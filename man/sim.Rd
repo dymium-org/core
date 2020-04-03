@@ -2,9 +2,7 @@
 % Please edit documentation in R/sim.R
 \name{sim}
 \alias{sim}
-\title{Compile then execute a microsimulation pipeline
-
-This function compiles then executes a microsimulation pipeline.}
+\title{Compile and execute a microsimulation pipeline}
 \usage{
 sim(world, pipeline, n_iters, write.error.dump.folder)
 }
@@ -22,9 +20,7 @@ Number of times the microsimulation pipeline should be repeated.}
 \code{NULL}
 }
 \description{
-Compile then execute a microsimulation pipeline
-
-This function compiles then executes a microsimulation pipeline.
+This function compiles and executes a microsimulation pipeline.
 }
 \examples{
 
@@ -82,6 +78,6 @@ microsimulation_pipeline <-
   add_log(desc = "count:Individual",
           value = .$entities$Individual$get_data()[age != -1L, .N])
 
-# complie simulation
+# complie and execute a simulation pipeline
 sim(world = world, pipeline = microsimulation_pipeline, n_iters = 10)
 }
