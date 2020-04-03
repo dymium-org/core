@@ -9,6 +9,9 @@
 #'  A functional sequence (`fseq`) object.
 #' @param n_iters a number of iterations. (`integer(1)`)\cr
 #'  Number of times the microsimulation pipeline should be repeated.
+#' @param write.error.dump.folder (`character(1)`)\cr
+#'  path: Saves the dump of the workspace in a specific folder instead of the
+#'  working directory
 #'
 #' @return `NULL`
 #' @export
