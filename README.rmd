@@ -184,12 +184,14 @@ Please visit [dymium-org/dymiumExampleProject](https://github.com/dymium-org/dym
 
 We are open to collaboration on this project. If you are interested, please email us at amarin at dymium.org.
 
-## Development plan (as of 14th March 2020)
+## Development plan (as of 3rd April 2020)
 
 - [x] __Version 0.1.0__: (21 Jan 2020) Release all the basic building blocks for microsimulation modelling.
   - [x] __Version 0.1.6__: Support `mlr` in `transision()` and `TransitionClassification`.
-  - [ ] Support regression model creation from parameters. 
-  - [ ] Support `mlr3` and `mlogit` model objects in the Transition classes.
+  - [x] __Version 0.1.7__: Introduce simpler APIs (`mutate_entity()`, `add_entity()`, `add_log()`, `transition()`) for creating simple microsimulation pipelines.
+  - [ ] __Version 0.1.8__: Support regression model creation from parameters. 
+  - [ ] __Version 0.1.9__: Support `mlr3` and `mlogit` model objects in the Transition classes.
+  - [ ] __Version 0.1.10__: Support multiple choice models (multinomial logit models (MNL) and MNL with varying alternatives) with utility functions for sampling and simulation. This will be the last milestone for version 0.1.
 - [ ] __Version 0.2.0__: Implement model-based calibration.
 - [ ] __Version 0.3.0__: Visualisation functions for life-courses, spatial data, etc.
 - [ ] __Version 0.4.0__: Integration with dymiumGUI.
