@@ -14,7 +14,7 @@ test_that("Dynamic target creation", {
   TgtDy <- Target$new(target_dynamic)
   expect_equal(TgtDy$get(time = 0), TgtDy$get(time = 1))
   expect_equal(TgtDy$get(time = 10), TgtDy$get(time = 11))
-  expect_equal(TgtDy$get(), TgtDy$get(time = 1))
+  expect_equal(TgtDy$get(), TgtDy$get(time = get_sim_time()))
   expect_equal(TgtDy$data, target_dynamic)
   expect_true(TgtDy$dynamic)
   expect_target(TgtDy)
