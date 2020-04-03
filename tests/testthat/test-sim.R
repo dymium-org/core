@@ -65,3 +65,78 @@ test_that("sim works", {
                "Assertion on 'pipeline' failed: Must be a function")
 
 })
+
+test_that("sim_parallel works", {
+
+  testthat::skip("still experimental")
+
+  # create simple models
+  birth_model <- list(yes = 0.1, no = 0.9)
+  death_model <- list(yes = 0.1, no = 0.9)
+
+  # prepare population data
+  ind_data <-
+    data.table::copy(toy_individuals) %>%
+    .[, .give_birth := "no"]
+
+  # create filters, this is a method for creating functions using `magrittr` and
+  # data.table's syntax
+  filter_alive <-
+    . %>%
+    .[age != -1]
+
+  filter_eligible_females <-
+    . %>%
+    .[sex == "female" & age %in% c(18:50)] %>%
+    filter_alive
+
+  ?magrittr::use_series()
+
+  # create a World object, a container for all entities and models for simulation
+  world <- World$new()
+  world$add(x = Individual$new(.data = ind_data, id_col = "pid"))
+  world$add(death_model, name = "death_model")
+  world$add(birth_model, name = "birth_model")
+  world$add(filter_alive, name = "filter_alive")
+  world$add(filter_eligible_females, name = "filter_eligible_female")
+
+  microsimulation_pipeline <-
+    . %>%
+    # ageing
+    mutate_entity(entity = "Individual",
+                  age := age + 1L,
+                  subset = age != -1L) %>%
+    # simulate birth decision
+    transition(entity = "Individual",
+               model = .$models$birth_model,
+               attr = ".give_birth",
+               preprocessing_fn = .$fseqs$filter_eligible_female) %>%
+    # add newborns
+    add_entity(entity = "Individual",
+               newdata = toy_individuals[age == 0, ],
+               target = .$entities$Individual$get_data()[.give_birth == "yes", .N]) %>%
+    # reset the birth decision variable
+    mutate_entity(entity = "Individual",
+                  .give_birth := "no",
+                  subset = age != -1L) %>%
+    # simulate deaths
+    transition(entity = "Individual",
+               model = .$models$death_model,
+               attr = "age",
+               values = c(yes = -1L),
+               preprocessing_fn = .$fseqs$filter_alive) %>%
+    # log the total number of alive individuals at the end of the iteration
+    add_log(desc = "count:Individual",
+            value = .$entities$Individual$get_data()[age != -1L, .N])
+
+  # complie and execute a simulation pipeline
+  # sim(world = world, pipeline = microsimulation_pipeline, n_iters = 10)
+
+  # parallel sim
+  simulated_worlds <- sim_parallel(world = world,
+                                   pipeline = microsimulation_pipeline,
+                                   n_iters = 5,
+                                   n_repeats = 2,
+                                   n_workers = 2)
+
+})

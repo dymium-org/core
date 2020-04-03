@@ -2,9 +2,28 @@
 % Please edit documentation in R/sim.R
 \name{sim}
 \alias{sim}
+\alias{sim_parallel}
 \title{Compile and execute a microsimulation pipeline}
 \usage{
-sim(world, pipeline, n_iters, write.error.dump.folder)
+sim(
+  world,
+  pipeline,
+  n_iters = 1,
+  write.error.dump.folder = get_active_scenario()$output_dir,
+  write.error.dump.file = FALSE
+)
+
+sim_parallel(
+  world,
+  pipeline,
+  n_iters = 1L,
+  n_repeats = 1L,
+  n_workers = 1L,
+  DTthreads = data.table::getDTthreads(),
+  .future_options,
+  write.error.dump.file = FALSE,
+  write.error.dump.folder = get_active_scenario()$output_dir
+)
 }
 \arguments{
 \item{world}{(\code{World})\cr
@@ -14,17 +33,38 @@ A \link{World} object.}
 A functional sequence (\code{fseq}) object.}
 
 \item{n_iters}{a number of iterations. (\code{integer(1)})\cr
-Number of times the microsimulation pipeline should be repeated.}
+Number of times the microsimulation pipeline, \code{pipeline}, should be repeated
+on the \code{world} object.}
 
 \item{write.error.dump.folder}{(\code{character(1)})\cr
 path: Saves the dump of the workspace in a specific folder instead of the
 working directory}
+
+\item{n_repeats}{(\code{integer(1)})\cr
+Number of times the entire simulation should be repeated. This is not the same as
+\code{n_iters}.}
+
+\item{n_workers}{(\code{integer(1)})\cr
+Number of parallel workers. This requires the \code{parallel} package to be installed.}
+
+\item{DTthreads}{(\code{integer(1)}|\code{missing})\cr
+Number of cores data.table is allowed to used in an R session. If missing,
+it will use the default number of cores set by \link[data.table:data.table]{data.table::data.table}, which
+is usually half of the available number of cores.}
+
+\item{.options}{\code{\link[furrr:future_options]{furrr::future_options()}}\cr
+By default this is set to \code{furrr::future_options(scheduling = FALSE)}.
+See \code{\link[furrr:future_options]{furrr::future_options()}} for more details.}
 }
 \value{
-\code{NULL}
+\code{sim} doesn't return anything but mutates the given \link{World} object. While,
+\code{sim_paralell()} returns \code{n_tasks} number of mutated \link{World} objects.
 }
 \description{
 This function compiles and executes a microsimulation pipeline.
+
+\code{sim} mutates the given \link{World} object. While, \code{sim_parallel} clones the
+given \link{World} object and returns \code{n_repeats} of mutated \link{Worlds}.
 }
 \examples{
 

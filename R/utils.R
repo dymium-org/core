@@ -406,3 +406,18 @@ get_current_git_branch <- function() {
     gsub("\\*|\\ ", "", .)
   return(current_branch)
 }
+
+
+check_package <- function(pkgname, repos = "https://cloud.r-project.org") {
+  if (!requireNamespace(pkgname, quietly = TRUE)) {
+    .choice <-
+      utils::menu(choices = c("Yes", "No"),
+                  title = glue::glue("The `{pkgname}` package is required. \\
+                                     Would you like to download and install the package now?"))
+    if (.choice == 1) {
+      install.packages(pkgname, repos = repos)
+    } else {
+      stop(sprintf("The `%s` is required but missing.", pkgname))
+    }
+  }
+}

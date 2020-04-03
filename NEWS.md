@@ -1,6 +1,6 @@
 # dymiumCore (development version)
 
-- Added `sim()` for compiling and executing a microsimulation pipeline.
+- Added `sim()` and `sim_parallel()` for compiling and executing a microsimulation pipeline.
 
 # dymiumCore 0.1.7
 

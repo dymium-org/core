@@ -128,6 +128,7 @@ World <- R6::R6Class(
         checkmate::check_r6(x, classes = c("Entity", "Generic"), null.ok = FALSE),
         checkmate::check_r6(x, classes = c("Container", "Generic"), null.ok = FALSE),
         checkmate::check_r6(x, classes = c("Model", "Generic"), null.ok = FALSE),
+        checkmate::check_function(x, nargs = 1),
         checkmate::check_subset(class(x)[[1]],
                                 choices = dymiumCore::SupportedTransitionModels(),
                                 empty.ok = FALSE),
@@ -172,6 +173,11 @@ World <- R6::R6Class(
         .listname <- ".models"
       }
 
+      if (inherits(x, "fseq")) {
+        lg$info("Adding a function object '{name}' to the `fseqs` field.")
+        .listname <- ".fseqs"
+      }
+
       # make sure there is only one of each Entity sub class stored in entities
       .listnames <- names(get(.listname, envir = private))
       if (name %in% .listnames) {
@@ -199,6 +205,10 @@ World <- R6::R6Class(
              ".models" = {
                private$.models[[.pos]] <- self$get(.last_pos)
                names(private$.models)[.pos] <- name
+             },
+             ".fseqs" = {
+               private$.fseqs[[.pos]] <- self$get(.last_pos)
+               names(private$.fseqs)[.pos] <- name
              },
              stop("Something is not right please report this issue to the maintainer."))
 
@@ -387,6 +397,10 @@ World <- R6::R6Class(
     models = function() {
       get(".models", envir = private)
     },
+    # @field containers a list of all [fseq] stored in World.
+    fseqs = function() {
+      get(".fseqs", envir = private)
+    },
     scale = function() {
       options("dymium.simulation_scale")[[1]]
     }
@@ -395,6 +409,7 @@ World <- R6::R6Class(
   private = list(
     .containers = list(),
     .entities = list(),
-    .models = list()
+    .models = list(),
+    .fseqs = list()
   )
 )
