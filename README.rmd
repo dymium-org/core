@@ -70,7 +70,7 @@ Note that, `dymiumCore` is not yet on CRAN.
 
 This is a minimal example of how one can create a discrete-time microsimulation model with dymiumCore. 
 
-In this example, we have three events: ageing, giving birth, and dying. The ageing event increases age of all individuals by 1 year in each iteration, as control by the for loop. The giving birth event only changes the 'give_birth' variable of eligible female individuals (age between 18 to 50) to 'yes' if the transition for an individual is successful. The death event changes the age attribute of dying individuals to '-1', which means once an individual is dead it will not be considered in any transition or mutate_entity statement, as we apply `not_dead_filter` and a subset statement to them.
+In this example, we have three events: aging, giving birth, and dying. The aging event increases age of all individuals by 1 year in each iteration, as control by the for loop. The giving birth event only changes the 'give_birth' variable of eligible female individuals (age between 18 to 50) to 'yes' if the transition for an individual is successful. The death event changes the age attribute of dying individuals to '-1', which means once an individual is dead it will not be considered in any of the `transition()` or `mutate_entity()` function calls, as we apply `filter_alive` and a subset statement to them.
 
 The first principle of dymiumCore is to keep all `Entity` objects and models (optionally) inside a `World` object. This allows us to construct a microsimulation model as a data analysis pipeline, which you will see below.
 
@@ -112,7 +112,7 @@ microsimulation_pipeline <-
     transition(entity = "Individual", 
                model = birth_model, 
                attr = ".give_birth", 
-               preprocessing_fn = . %>% filter_eligible_females %>% filter_alive) %>%
+               preprocessing_fn = filter_eligible_females) %>%
     # add newborns
     add_entity(entity = "Individual", 
                newdata = toy_individuals[age == 0, ], 
