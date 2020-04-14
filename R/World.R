@@ -131,10 +131,11 @@ World <- R6::R6Class(
         checkmate::check_subset(class(x)[[1]],
                                 choices = dymiumCore::SupportedTransitionModels(),
                                 empty.ok = FALSE),
+        check_target(x, null.ok = FALSE),
         combine = "or"
       )
 
-      if ((inherits(x, "Entity") | inherits(x, "Container")) & !inherits(x, "Model")) {
+      if ((inherits(x, "Entity") | inherits(x, "Container")) & !inherits(x, "Model") & !inherits(x, "Target")) {
         stopifnot(x$is_dymium_class())
         if (!missing(name)) {
           lg$warn("The given `name` will be ignored since the object in x \\
@@ -172,6 +173,11 @@ World <- R6::R6Class(
         .listname <- ".models"
       }
 
+      if (inherits(x, "Target")) {
+        lg$info("Adding a Target object '{name}' to the `targets` field.")
+        .listname <- ".targets"
+      }
+
       # make sure there is only one of each Entity sub class stored in entities
       .listnames <- names(get(.listname, envir = private))
       if (name %in% .listnames) {
@@ -199,6 +205,10 @@ World <- R6::R6Class(
              ".models" = {
                private$.models[[.pos]] <- self$get(.last_pos)
                names(private$.models)[.pos] <- name
+             },
+             ".targets" = {
+               private$.targets[[.pos]] <- self$get(.last_pos)
+               names(private$.targets)[.pos] <- name
              },
              stop("Something is not right please report this issue to the maintainer."))
 
@@ -387,6 +397,9 @@ World <- R6::R6Class(
     models = function() {
       get(".models", envir = private)
     },
+    targets = function() {
+      get(".targets", envir = private)
+    },
     scale = function() {
       options("dymium.simulation_scale")[[1]]
     }
@@ -395,6 +408,7 @@ World <- R6::R6Class(
   private = list(
     .containers = list(),
     .entities = list(),
-    .models = list()
+    .models = list(),
+    .targets = list()
   )
 )

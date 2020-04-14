@@ -1,6 +1,7 @@
 # dymiumCore (development version)
 
 - Added `sim()` for compiling and executing a microsimulation pipeline.
+- Added `targets` as an active field. 
 
 # dymiumCore 0.1.7
 
