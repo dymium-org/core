@@ -219,7 +219,7 @@ get_transition <- function(world, entity, model, target = NULL, targeted_ids = N
   }
   checkmate::assert(
     check_transition_supported_model(model),
-    checkmate::check_r6(model, class = "Model")
+    checkmate::check_r6(model, classes = "Model")
   )
   assert_target(target, null.ok = TRUE)
   e <- world$get(entity)
@@ -233,7 +233,7 @@ get_transition <- function(world, entity, model, target = NULL, targeted_ids = N
     e_data <-
       preprocessing_fn(e_data)
   }
-  if (!is.null(model$preprocessing_fn) && test_r6(model, class = "Model")) {
+  if (!is.null(model$preprocessing_fn) && checkmate::test_r6(model, classes = "Model")) {
     e_data <-
       model$preprocessing_fn(e_data)
   }
