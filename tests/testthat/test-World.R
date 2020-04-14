@@ -109,3 +109,10 @@ test_that("active fields", {
   checkmate::expect_list(world$models, types = c("Model", NULL), names = "strict")
   checkmate::expect_list(world$containers, types = c("Container"), names = "strict")
 })
+
+test_that("add target", {
+  t <- Target$new(x = list(yes = 10, no = 20))
+  w <- World$new()
+  w$add(x = t, name = "a_target")
+  expect_error(w$add(x = t, name = "a_target"))
+})
