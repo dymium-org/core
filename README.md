@@ -27,11 +27,6 @@ microsimulation model. While the core focus of the package is for
 modelling urban systems, dymium can be easily extended to apply in other
 contexts as well.
 
-**:newspaper: News**
-
-  - :tada: [dymiumCore
-    version 0.1.6.](https://blog.amarin.dev/posts/dymiumcore-version-0-1-6-release/)
-
 # Why another microsimulation framework?
 
 It is true that there is no shortage of open source microsimulation
