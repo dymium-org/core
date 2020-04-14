@@ -110,3 +110,12 @@ test_that("transition's values param works", {
   checkmate::expect_character(world$entities$Individual$get_data()[, give_birth],
                               pattern = "yes|no")
 })
+
+test_that("transition's works with Model object", {
+  create_toy_world()
+  my_model <- Model$new(x = create_mlr_multinomial_model(),
+                        preprocessing_fn = . %>% .[sex == "male"])
+  res <- get_transition(world, entity = "Individual", model = my_model)
+  expect_true(all(world$entities$Individual$get_attr("sex", ids = res[["id"]]) == "male"))
+  checkmate::expect_character(res[["response"]], any.missing = FALSE, null.ok = FALSE)
+})
