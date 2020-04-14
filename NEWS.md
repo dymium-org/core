@@ -2,6 +2,7 @@
 
 - Added `sim()` for compiling and executing a microsimulation pipeline.
 - Added `targets` as an active field. 
+- Fixed `get_transition` didn't use the preprocessing function when the `model` argument is of `Model` class.
 
 # dymiumCore 0.1.7
 
