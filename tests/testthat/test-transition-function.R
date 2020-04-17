@@ -119,3 +119,16 @@ test_that("transition's works with Model object", {
   expect_true(all(world$entities$Individual$get_attr("sex", ids = res[["id"]]) == "male"))
   checkmate::expect_character(res[["response"]], any.missing = FALSE, null.ok = FALSE)
 })
+
+test_that("remove dot prefix of derived variables", {
+  create_toy_world()
+  world$entities$Individual$get_data(copy = FALSE) %>%
+    .[, .married_male := fifelse(marital_status == "married" & sex == "male", T, F)]
+  fit_data <- normalise_derived_vars(world$entities$Individual$get_data())
+  logit_model <- glm(factor(sex) ~ married_male, data = fit_data, family = "binomial")
+  my_model <- Model$new(x = logit_model,
+                        preprocessing_fn = . %>% .[sex == "male"])
+  res <- get_transition(world, entity = "Individual", model = my_model)
+  expect_true(all(world$entities$Individual$get_attr("sex", ids = res[["id"]]) == "male"))
+  checkmate::expect_character(res[["response"]], any.missing = FALSE, null.ok = FALSE)
+})
