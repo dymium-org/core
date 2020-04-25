@@ -320,6 +320,8 @@ Trans <- R6Class(
             combine = 'and'
           )
         } else {
+          # when target is used it is possible that some records in the result
+          # will be NAs.
           checkmate::assert(
             checkmate::check_integerish(sim_result[['id']], any.missing = FALSE, unique = TRUE),
             checkmate::check_data_table(sim_result, any.missing = TRUE, null.ok = FALSE),
