@@ -191,11 +191,3 @@ test_that("Transition is fair", {
   t_test_res <- t.test(x = responses == "yes", mu = 0.2)
   expect_gte(object = t_test_res$p.value, expected = 0.001)
 })
-
-
-test_that('Transition$draw works', {
-  create_toy_world()
-  m <- Model$new(list(yes = 0.5, no = 0.5))
-  trans_obj <- TransitionClassification$new(x = world$entities$Individual, model = m)
-  trans_obj$draw(10)
-})

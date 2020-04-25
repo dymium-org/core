@@ -318,3 +318,26 @@ test_that("TransitionClassifcation works with mlr model", {
     )
   }
 })
+
+
+test_that("TransitionClassifition$draw", {
+  create_toy_population()
+  Ind <- pop$get("Individual")
+  Hh <- pop$get("Household")
+
+  # create model
+  fitting_data <- Ind$get_data()[, male := ifelse(sex == 'male', 'yes', 'no')]
+  caret_binary_model <- create_caret_binary_model()
+  glm_binary_model <- create_glm_binary_model()
+
+  # create transition
+  a_transition <- TransitionClassification$new(Ind, model)
+  res1 <- a_transition$draw(target = list(male = 10))
+  res2 <- a_transition$draw(target = Target$new(list(male = 10, female = 10)))
+
+  checkmate::expect_integerish(res1[['id']])
+  checkmate::expect_integerish(res2[['id']])
+
+  checkmate::expect_character(res1[['response']], pattern = "^male$|^female$", any.missing = FALSE)
+  checkmate::expect_character(res2[['response']], pattern = "^male$|^female$", any.missing = FALSE)
+})

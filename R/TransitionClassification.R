@@ -107,8 +107,8 @@
 #' (`character()`) -> (`integer()`)\cr
 #' Returns ids of the agents that have their response equal to `response_filter`.
 #'
-#' * `draw(n)`\cr
-#' (`interger(1)`) -> (`integer()`)\cr
+#' * `draw(target)`\cr
+#' (`Target`) -> (`data.table(id, choice)`)\cr
 #' Draw ids from the ids of eligible entities where the selection probabilty is
 #' determined by the given `model` object when the object was constructed.
 #'
@@ -173,12 +173,31 @@ TransitionClassification <- R6Class(
       super$initialize(x, model, target = target, targeted_agents = targeted_agents)
     },
 
-    draw = function(n) {
-      checkmate::assert_count(n, na.ok = FALSE, positive = T, null.ok = FALSE)
-      if (n > self$get_nrow_result()) {
-        stop('`n` is greater than the number of eligible agents for this transition.')
+    draw = function(target) {
+      checkmate::assert(
+        checkmate::check_list(target,
+                               types = 'integerish',
+                               any.missing = FALSE,
+                               max.len = ncol(private$.prediction),
+                               min.len = 1,
+                              names = 'strict'),
+        check_target(target, null.ok = FALSE),
+        combine = 'or'
+      )
+      if (checkmate::test_r6(target, classes = "Target")) {
+        target <- target$get()
       }
-
+      if (any(target < 0)) {
+        stop("Target values cannot be less than 0.")
+      }
+      if (any(!names(target) %in% names(private$.prediction))) {
+        stop("All names of target must be a choice in prediction. \n ",
+             "- Names of target: ", paste(names(target), collapse = ", "), ". \n ",
+             "- Choices in prediction: ", paste(names(private$.prediction), collapse = ", "), ".")
+      }
+      data.table(id = private$.sim_data[[private$.AgtObj$get_id_col()]],
+                 response = simulate_choice(private$.prediction, target)) %>%
+        .[!is.na(response)]
     }
   ),
   private = list(
