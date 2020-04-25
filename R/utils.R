@@ -38,6 +38,36 @@ sample_choice <- function(x, size = 1, replace = FALSE, prob = NULL) {
   }
 }
 
+#' Discrete choice sampling
+#'
+#' @description
+#'
+#' A modified sampling function based on `base::sample`. It always assume that
+#' that `x` argument contains discrete values. For example, if a number 8 is given,
+#' it will assume that 8 is the only choice it has and not assume that the choices
+#' are number 1 to 8, like `base::sample` does. This feature makes it safe when the
+#' choices are discrete numbers and use in a programmatic way.
+#'
+#' @return returns a vector of the same type as `x` with length of `size`.
+#' @export
+#'
+#' @examples
+#'
+#' dsample(7, 10, replace = TRUE) # equivalent to rep(7, 10)
+#' dsample(7, 1)
+#' dsample(7) # which is equivalent to the above
+dsample <- function() {
+  if (length(x) != 1) {
+    sample(x = x, size = size, replace = replace, prob = prob)
+  } else {
+    if (replace || size == 1) {
+      rep(x, size)
+    } else {
+      stop("cannot take a sample larger than the population when 'replace = FALSE'")
+    }
+  }
+}
+
 #' Condense rows
 #'
 #' @description
