@@ -208,6 +208,7 @@ Trans <- R6Class(
     .sim_result = data.table(), # two columns: id, response
     .target = integer(),
     .targeted_agents = integer(), # a vector containing agent ids of .AgtObj
+    .prediction = NULL,
 
     run_preprocessing_steps = function() {
 

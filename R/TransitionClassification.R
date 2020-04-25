@@ -107,6 +107,11 @@
 #' (`character()`) -> (`integer()`)\cr
 #' Returns ids of the agents that have their response equal to `response_filter`.
 #'
+#' * `draw(n)`\cr
+#' (`interger(1)`) -> (`integer()`)\cr
+#' Draw ids from the ids of eligible entities where the selection probabilty is
+#' determined by the given `model` object when the object was constructed.
+#'
 #'
 #' @seealso [TransitionRegression] and [Trans].
 #' @include Transition.R
@@ -166,6 +171,14 @@ TransitionClassification <- R6Class(
     initialize = function(x, model, target = NULL, targeted_agents = NULL, model_by_id = FALSE) {
       self$model_by_id <- model_by_id
       super$initialize(x, model, target = target, targeted_agents = targeted_agents)
+    },
+
+    draw = function(n) {
+      checkmate::assert_count(n, na.ok = FALSE, positive = T, null.ok = FALSE)
+      if (n > self$get_nrow_result()) {
+        stop('`n` is greater than the number of eligible agents for this transition.')
+      }
+
     }
   ),
   private = list(
