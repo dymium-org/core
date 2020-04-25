@@ -63,7 +63,7 @@ extract_data <- function(x) {
 #' @export
 #' @rdname extract_data
 extract_data.World <- function(x) {
-  d_lst <- lapply(x$entities, extract_data)
+  d_lst <- lapply(x$Cont[!names(x$Cont) %in% names(x$containers)], extract_data)
   flatten_names <- names(unlist(d_lst, recursive = FALSE))
   d_lst <- purrr::flatten(d_lst)
   names(d_lst) <- flatten_names
@@ -83,10 +83,13 @@ extract_data.Entity <- function(x) {
 #' @export
 #' @rdname extract_data
 extract_data.DataBackendDataFrame <- function(x) {
-  x_lst <- list(
-    data = x$data,
-    removed_data = x$removed_data
-  )
-  return(x_lst)
+  list(data = x$data, removed_data = x$removed_data)
 }
 
+extract_data.Target <- function(x) {
+  list(data = x$data)
+}
+
+extract_data.Model <- function(x) {
+  list(model = x$get(), preprocessing_fnc = x$preprocessing_fn)
+}

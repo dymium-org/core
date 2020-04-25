@@ -6,4 +6,10 @@ test_that("extract_data", {
                          types = "data.table", names = "unique")
   checkmate::expect_list(extract_data(world$entities$Individual$database$attrs),
                          types = "data.table", names = "unique")
+
+  mod <- Model$new(x = list(yes = 1, no = 0), preprocessing_fn = . %>% .[age < 10])
+  world$add(mod, name = "test_model")
+  tar <- Target$new(x = list(yes = 10))
+  world$add(x = tar, name = "test_target")
+  extract_data(world)
 })
