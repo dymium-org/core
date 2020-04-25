@@ -53,7 +53,7 @@ test_that("sim works", {
 
   n_iters = 10
 
-  sim(world = world, pipeline = microsimulation_pipeline, n_iters = n_iters)
+  sim(world = world, pipeline = microsimulation_pipeline, n_iters = n_iters, write.error.dump.folder = FALSE)
 
   expect_equal(world$get_time(), n_iters)
 

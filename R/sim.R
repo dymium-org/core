@@ -74,7 +74,7 @@
 #'
 #' # complie and execute a simulation pipeline
 #' sim(world = world, pipeline = microsimulation_pipeline, n_iters = 10)
-sim <- function(world, pipeline, n_iters, write.error.dump.folder) {
+sim <- function(world, pipeline, n_iters, write.error.dump.file = FALSE, write.error.dump.folder) {
 
   checkmate::assert_r6(world, classes = "World")
   checkmate::assert_function(pipeline, nargs = 1)
@@ -93,7 +93,7 @@ sim <- function(world, pipeline, n_iters, write.error.dump.folder) {
         pipeline(.)
     }
   },
-  write.error.dump.file = TRUE,
+  write.error.dump.file = write.error.dump.file,
   write.error.dump.folder = get_active_scenario()$output_dir)
 
   invisible()
