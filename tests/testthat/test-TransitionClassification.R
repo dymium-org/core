@@ -6,7 +6,7 @@ test_that("train", {
 
   # create model
   fitting_data <- Ind$get_data()[, male := ifelse(sex == 'male', 'yes', 'no')]
-  model <- caret::train(male ~ age + marital_status, data = fitting_data, method = 'glm', family = binomial('logit'))
+  model <- create_caret_binary_model()
 
   # create transition
   a_transition <- TransitionClassification$new(Ind, model)
@@ -18,7 +18,6 @@ test_that("train", {
 })
 
 test_that("datatable - binary", {
-
   create_toy_population()
   Ind <- pop$get("Individual")
 
