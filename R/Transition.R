@@ -199,6 +199,26 @@ Trans <- R6Class(
     }
   ),
 
+  active = list(
+
+    model = function() {
+      get('.model', envir = private)
+    },
+
+    result = function() {
+      get('.sim_result', envir = private)
+    },
+
+    sim_data = function() {
+      get('.sim_data', envir = private)
+    },
+
+    prediction = function() {
+      get('.prediction', envir = private)
+    }
+
+  ),
+
   private = list(
     # Private ----------------------------------------------------------
     .model = NULL, # model object or data.table
