@@ -99,61 +99,58 @@ below.
 library(dymiumCore)
 library(data.table)
 
-# create simple models
-birth_model <- list(yes = 0.1, no = 0.9)
-death_model <- list(yes = 0.1, no = 0.9)
+# create models, all individuals have 5% of dying and fertile females have 5% of giving birth
+birth_model <- death_model <- list(yes = 0.05, no = 0.95)
 
-# prepare population data
-ind_data <- 
-  data.table::copy(toy_individuals) %>%
-  .[, .give_birth := "no"]
+# prepare individual data
+ind_data <- data.table::copy(toy_individuals) %>%
+  .[, .give_birth := "no"] # add a dummy column to store birth decision
 
-# create a World object, a container for all entities and models for simulation
+# create an Individual object
+ind <- Individual$new(.data = ind_data, id_col = "pid")
+
+# create a World object
 world <- World$new()
-world$add(x = Individual$new(.data = ind_data, id_col = "pid"))
 
-# create filters, this is a method for creating functions using `magrittr` and
-# data.table's syntax
-filter_eligible_females <- 
-  . %>%
-  .[sex == "female" & age %between% c(18, 50)]
+# add the Individual object to ‘world’
+world$add(x = ind)
 
-filter_alive <- 
-  . %>%
-  .[age != -1]
+# create a pre-processing function
+filter_fertile <- function(.data) {
+  .data[age %between% c(18, 50) & sex == "female"]
+}
 
-# create a pipeline of transition events
-microsimulation_pipeline <-
-  . %>% 
+# run the microsimulation pipeline below for 10 iterations
+for (i in 1:10) {
+  world$set_time(i) %>%
     # ageing
-    mutate_entity(entity = "Individual", 
-                  age := age + 1L, 
-                  subset = age != -1L) %>%
-    # simulate birth decision
-    transition(entity = "Individual", 
-               model = birth_model, 
-               attr = ".give_birth", 
-               preprocessing_fn = filter_eligible_females) %>%
-    # add newborns
-    add_entity(entity = "Individual", 
-               newdata = toy_individuals[age == 0, ], 
+    mutate_entity(entity = "Individual",
+                  age := age + 1L) %>%
+    # simulate giving birth
+    transition(entity = "Individual",
+               model = birth_model,
+               attr = ".give_birth",
+               preprocessing_fn = filter_fertile) %>%
+    # add newborns, by cloning children of age 0
+    add_entity(entity = "Individual",
+               newdata = ind_data[age == 0, ],
+               check_relationship_id_cols = FALSE,
                target = .$entities$Individual$get_data()[.give_birth == "yes", .N]) %>%
     # reset the birth decision variable
-    mutate_entity(entity = "Individual", 
-                  .give_birth := "no", 
-                  subset = age != -1L) %>%
-    # simulate deaths
-    transition(entity = "Individual", 
-               model = death_model, 
-               attr = "age", 
-               values = c(yes = -1L), 
-               preprocessing_fn = filter_alive) %>%
+    mutate_entity(entity = "Individual",
+                  .give_birth := "no") %>%
+    # simulate dying
+    transition(entity = "Individual",
+               model = death_model,
+               attr = "age",
+               values = c(yes = -1L)) %>%
+    # remove dead individuals
+    remove_entity(entity = "Individual",
+                  subset = age == -1) %>%
     # log the total number of alive individuals at the end of the iteration
-    add_log(desc = "count:Individual", 
-            value = .$entities$Individual$get_data()[age != -1L, .N])
-
-# compile and execute
-sim(world = world, pipeline = microsimulation_pipeline, n_iters = 10)
+    add_log(desc = "count:Individual",
+            value = .$entities$Individual$get_data()[, .N])
+}
 ```
 
 > Note that, the line `value = .$entities$Individual$get_data()[age !=
@@ -168,17 +165,17 @@ method.
 ``` r
 world$entities$Individual$get_data()
 #>      pid hid age    sex marital_status partner_id father_id mother_id
-#>   1:   1   1  -1   male  never married         NA        NA        NA
-#>   2:   2   2  -1 female  never married         NA        NA        NA
-#>   3:   3   2  -1 female  never married         NA        NA        NA
-#>   4:   4   3  -1   male        married          5        NA        NA
-#>   5:   5   3  -1 female        married          4        NA        NA
+#>   1:   1   1  81   male  never married         NA        NA        NA
+#>   2:   2   2  41 female  never married         NA        NA        NA
+#>   3:   4   3  48   male        married          5        NA        NA
+#>   4:   6   3  10   male not applicable         NA         4         5
+#>   5:   8   4  62 female        married          7        NA        NA
 #>  ---                                                                 
-#> 418: 418  43   3   male not applicable         NA        NA       108
-#> 419: 419   3   2   male not applicable         NA         4         5
-#> 420: 420  39   2 female not applicable         NA        96        97
-#> 421: 421  72   2 female not applicable         NA       184       185
-#> 422: 422  72   1 female not applicable         NA       184       185
+#> 243: 400  39   0 female not applicable         NA        96        97
+#> 244: 401  39   0 female not applicable         NA        96        97
+#> 245: 402  39   0 female not applicable         NA        96        97
+#> 246: 403  39   0 female not applicable         NA        96        97
+#> 247: 404   3   0   male not applicable         NA         4         5
 #>      .give_birth
 #>   1:          no
 #>   2:          no
@@ -186,11 +183,11 @@ world$entities$Individual$get_data()
 #>   4:          no
 #>   5:          no
 #>  ---            
-#> 418:          no
-#> 419:          no
-#> 420:          no
-#> 421:          no
-#> 422:          no
+#> 243:          no
+#> 244:          no
+#> 245:          no
+#> 246:          no
+#> 247:          no
 ```
 
 The `add_log()` function allows any object to be stored in our World
@@ -208,16 +205,16 @@ log_data <-
   .[, value := unlist(value)]
 print(log_data)
 #>     time created_timestamp class  tag             desc value
-#>  1:    1        1585854944 World <NA> count:Individual   340
-#>  2:    2        1585854944 World <NA> count:Individual   307
-#>  3:    3        1585854944 World <NA> count:Individual   278
-#>  4:    4        1585854944 World <NA> count:Individual   260
-#>  5:    5        1585854944 World <NA> count:Individual   247
-#>  6:    6        1585854944 World <NA> count:Individual   226
-#>  7:    7        1585854944 World <NA> count:Individual   204
-#>  8:    8        1585854944 World <NA> count:Individual   190
-#>  9:    9        1585854944 World <NA> count:Individual   177
-#> 10:   10        1585854944 World <NA> count:Individual   161
+#>  1:    1        1589784925 World <NA> count:Individual   361
+#>  2:    2        1589784925 World <NA> count:Individual   344
+#>  3:    3        1589784925 World <NA> count:Individual   327
+#>  4:    4        1589784925 World <NA> count:Individual   312
+#>  5:    5        1589784925 World <NA> count:Individual   304
+#>  6:    6        1589784925 World <NA> count:Individual   294
+#>  7:    7        1589784925 World <NA> count:Individual   282
+#>  8:    8        1589784925 World <NA> count:Individual   273
+#>  9:    9        1589784925 World <NA> count:Individual   260
+#> 10:   10        1589784925 World <NA> count:Individual   247
 ```
 
 Let’s visualise how many individual agents are still alive at the end of
@@ -271,14 +268,14 @@ please email us at amarin at dymium.org.
     blocks for microsimulation modelling.
       - [x] **Version 0.1.6**: Support `mlr` in `transision()` and
         `TransitionClassification`.
-      - [x] **Version 0.1.7**: Introduce simpler APIs
+      - [x] **Version 0.1.7 & 0.1.8** : Introduce simpler APIs
         (`mutate_entity()`, `add_entity()`, `add_log()`, `transition()`)
         for creating simple microsimulation pipelines.
-      - [ ] **Version 0.1.8**: Support regression model creation from
+      - [ ] **Version 0.1.9**: Support regression model creation from
         parameters.
-      - [ ] **Version 0.1.9**: Support `mlr3` and `mlogit` model objects
-        in the Transition classes.
-      - [ ] **Version 0.1.10**: Support multiple choice models
+      - [ ] **Version 0.1.10**: Support `mlr3` and `mlogit` model
+        objects in the Transition classes.
+      - [ ] **Version 0.1.11**: Support multiple choice models
         (multinomial logit models (MNL) and MNL with varying
         alternatives) with utility functions for sampling and
         simulation. This will be the last milestone for version 0.1.
@@ -324,3 +321,13 @@ use cases please see these articles.
     Decision Making, 31(1), 10-18.
   - GouuAs, K. G., & Kitamura, R. (1992). Travel demand forecasting with
     dynamic microsimulation.
+
+## Dependencies
+
+``` r
+library(deepdep)
+dd <- deepdep::deepdep("dymiumCore", local = T, depth = 3)
+deepdep::plot_dependencies(dd)
+```
+
+<img src="man/figures/README-deepdep-fig-1.png" width="100%" />

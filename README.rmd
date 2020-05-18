@@ -74,61 +74,58 @@ The first principle of dymiumCore is to keep all `Entity` objects and models (op
 library(dymiumCore)
 library(data.table)
 
-# create simple models
-birth_model <- list(yes = 0.1, no = 0.9)
-death_model <- list(yes = 0.1, no = 0.9)
+# create models, all individuals have 5% of dying and fertile females have 5% of giving birth
+birth_model <- death_model <- list(yes = 0.05, no = 0.95)
 
-# prepare population data
-ind_data <- 
-  data.table::copy(toy_individuals) %>%
-  .[, .give_birth := "no"]
+# prepare individual data
+ind_data <- data.table::copy(toy_individuals) %>%
+  .[, .give_birth := "no"] # add a dummy column to store birth decision
 
-# create a World object, a container for all entities and models for simulation
+# create an Individual object
+ind <- Individual$new(.data = ind_data, id_col = "pid")
+
+# create a World object
 world <- World$new()
-world$add(x = Individual$new(.data = ind_data, id_col = "pid"))
 
-# create filters, this is a method for creating functions using `magrittr` and
-# data.table's syntax
-filter_eligible_females <- 
-  . %>%
-  .[sex == "female" & age %between% c(18, 50)]
+# add the Individual object to ‘world’
+world$add(x = ind)
 
-filter_alive <- 
-  . %>%
-  .[age != -1]
+# create a pre-processing function
+filter_fertile <- function(.data) {
+  .data[age %between% c(18, 50) & sex == "female"]
+}
 
-# create a pipeline of transition events
-microsimulation_pipeline <-
-  . %>% 
+# run the microsimulation pipeline below for 10 iterations
+for (i in 1:10) {
+  world$set_time(i) %>%
     # ageing
-    mutate_entity(entity = "Individual", 
-                  age := age + 1L, 
-                  subset = age != -1L) %>%
-    # simulate birth decision
-    transition(entity = "Individual", 
-               model = birth_model, 
-               attr = ".give_birth", 
-               preprocessing_fn = filter_eligible_females) %>%
-    # add newborns
-    add_entity(entity = "Individual", 
-               newdata = toy_individuals[age == 0, ], 
+    mutate_entity(entity = "Individual",
+                  age := age + 1L) %>%
+    # simulate giving birth
+    transition(entity = "Individual",
+               model = birth_model,
+               attr = ".give_birth",
+               preprocessing_fn = filter_fertile) %>%
+    # add newborns, by cloning children of age 0
+    add_entity(entity = "Individual",
+               newdata = ind_data[age == 0, ],
+               check_relationship_id_cols = FALSE,
                target = .$entities$Individual$get_data()[.give_birth == "yes", .N]) %>%
     # reset the birth decision variable
-    mutate_entity(entity = "Individual", 
-                  .give_birth := "no", 
-                  subset = age != -1L) %>%
-    # simulate deaths
-    transition(entity = "Individual", 
-               model = death_model, 
-               attr = "age", 
-               values = c(yes = -1L), 
-               preprocessing_fn = filter_alive) %>%
+    mutate_entity(entity = "Individual",
+                  .give_birth := "no") %>%
+    # simulate dying
+    transition(entity = "Individual",
+               model = death_model,
+               attr = "age",
+               values = c(yes = -1L)) %>%
+    # remove dead individuals
+    remove_entity(entity = "Individual",
+                  subset = age == -1) %>%
     # log the total number of alive individuals at the end of the iteration
-    add_log(desc = "count:Individual", 
-            value = .$entities$Individual$get_data()[age != -1L, .N])
-
-# compile and execute
-sim(world = world, pipeline = microsimulation_pipeline, n_iters = 10)
+    add_log(desc = "count:Individual",
+            value = .$entities$Individual$get_data()[, .N])
+}
 ```
 
 > Note that, the line `value = .$entities$Individual$get_data()[age != -1L, .N]` is using the world object's placeholder which is called `.` for extracting the attribute data of individual agents. This is a feature of `magrittr`, to learn more about various ways that `%>%` can be used see [its documentation page](https://magrittr.tidyverse.org/).
@@ -185,10 +182,10 @@ We are open to collaboration on this project. If you are interested, please emai
 
 - [x] __Version 0.1.0__: (21 Jan 2020) Release all the basic building blocks for microsimulation modelling.
   - [x] __Version 0.1.6__: Support `mlr` in `transision()` and `TransitionClassification`.
-  - [x] __Version 0.1.7__: Introduce simpler APIs (`mutate_entity()`, `add_entity()`, `add_log()`, `transition()`) for creating simple microsimulation pipelines.
-  - [ ] __Version 0.1.8__: Support regression model creation from parameters. 
-  - [ ] __Version 0.1.9__: Support `mlr3` and `mlogit` model objects in the Transition classes.
-  - [ ] __Version 0.1.10__: Support multiple choice models (multinomial logit models (MNL) and MNL with varying alternatives) with utility functions for sampling and simulation. This will be the last milestone for version 0.1.
+  - [x] __Version 0.1.7 & 0.1.8__ : Introduce simpler APIs (`mutate_entity()`, `add_entity()`, `add_log()`, `transition()`) for creating simple microsimulation pipelines.
+  - [ ] __Version 0.1.9__: Support regression model creation from parameters. 
+  - [ ] __Version 0.1.10__: Support `mlr3` and `mlogit` model objects in the Transition classes.
+  - [ ] __Version 0.1.11__: Support multiple choice models (multinomial logit models (MNL) and MNL with varying alternatives) with utility functions for sampling and simulation. This will be the last milestone for version 0.1.
 - [ ] __Version 0.2.0__: Implement model-based calibration.
 - [ ] __Version 0.3.0__: Visualisation functions for life-courses, spatial data, etc.
 - [ ] __Version 0.4.0__: Integration with dymiumGUI.
@@ -222,3 +219,12 @@ To learn more about dynamic microsimulation modelling and some of its use cases 
 - Li, J., & O'Donoghue, C. (2013). A survey of dynamic microsimulation models: uses, model structure and methodology. International Journal of microsimulation, 6(2), 3-55.
 - Rutter, C. M., Zaslavsky, A. M., & Feuer, E. J. (2011). Dynamic microsimulation models for health outcomes: a review. Medical Decision Making, 31(1), 10-18.
 - GouuAs, K. G., & Kitamura, R. (1992). Travel demand forecasting with dynamic microsimulation.
+
+## Dependencies
+
+```{r deepdep-fig}
+library(deepdep)
+dd <- deepdep::deepdep("dymiumCore", local = T, depth = 3)
+deepdep::plot_dependencies(dd)
+```
+
