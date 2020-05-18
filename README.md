@@ -5,12 +5,10 @@
 
 ![GitHub release (latest by date including
 pre-releases)](https://img.shields.io/github/v/release/dymium-org/dymiumCore?include_prereleases)
+[![R build
+status](https://github.com/dymium-org/dymiumCore/workflows/R-CMD-check/badge.svg)](https://github.com/dymium-org/dymiumCore/actions)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Travis build
-status](https://travis-ci.org/dymium-org/dymiumCore.svg?branch=master)](https://travis-ci.org/dymium-org/dymiumCore)
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/qhjt91cg08ob7s16/branch/master?svg=true)](https://ci.appveyor.com/project/asiripanich/dymiumcore/branch/master)
 [![Codecov test
 coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.svg)](https://codecov.io/gh/dymium-org/dymiumCore?branch=master)
 [![Lifecycle:
@@ -205,16 +203,16 @@ log_data <-
   .[, value := unlist(value)]
 print(log_data)
 #>     time created_timestamp class  tag             desc value
-#>  1:    1        1589784925 World <NA> count:Individual   361
-#>  2:    2        1589784925 World <NA> count:Individual   344
-#>  3:    3        1589784925 World <NA> count:Individual   327
-#>  4:    4        1589784925 World <NA> count:Individual   312
-#>  5:    5        1589784925 World <NA> count:Individual   304
-#>  6:    6        1589784925 World <NA> count:Individual   294
-#>  7:    7        1589784925 World <NA> count:Individual   282
-#>  8:    8        1589784925 World <NA> count:Individual   273
-#>  9:    9        1589784925 World <NA> count:Individual   260
-#> 10:   10        1589784925 World <NA> count:Individual   247
+#>  1:    1        1589791741 World <NA> count:Individual   361
+#>  2:    2        1589791741 World <NA> count:Individual   344
+#>  3:    3        1589791741 World <NA> count:Individual   327
+#>  4:    4        1589791741 World <NA> count:Individual   312
+#>  5:    5        1589791741 World <NA> count:Individual   304
+#>  6:    6        1589791741 World <NA> count:Individual   294
+#>  7:    7        1589791741 World <NA> count:Individual   282
+#>  8:    8        1589791741 World <NA> count:Individual   273
+#>  9:    9        1589791741 World <NA> count:Individual   260
+#> 10:   10        1589791741 World <NA> count:Individual   247
 ```
 
 Let’s visualise how many individual agents are still alive at the end of
