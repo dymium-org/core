@@ -14,7 +14,9 @@ jobs:
       - uses: r-lib/actions/setup-r@v1
       - uses: r-lib/actions/setup-pandoc@v1
       - name: Install rmarkdown
-        run: Rscript -e 'install.packages(c("rmarkdown", "deepdep"))'
+        run: Rscript -e 'install.packages(c("rmarkdown", "deepdep", "remotes", "ggplot2"))'
+      - name: Install dymiumCore
+        run: Rscript -e 'remotes::install_github("dymium-org/dymiumCore")'
       - name: Render README
         run: Rscript -e 'rmarkdown::render("README.Rmd")'
       - name: Commit results
