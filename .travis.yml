@@ -30,6 +30,7 @@ before_install:
 r_packages:
   - caret
   - prettydoc
+  - deepdep
 
 env:
   global:
