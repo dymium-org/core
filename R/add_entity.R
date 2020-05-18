@@ -67,6 +67,7 @@ add_entity <-
   if (!data.table::is.data.table(newdata)) {
     newdata <- as.data.table(newdata)
   }
+
   # unpack target
   if (!is.null(target)) {
     if (is(target, "Target")) {
@@ -98,5 +99,38 @@ add_entity <-
   }
   lg$info("Added {nrow(newdata)} new records to {e$class()}.")
   e$add(.data = newdata, check_existing = check_relationship_id_cols)
+  invisible(world)
+}
+
+
+#' Remove entity
+#'
+#' @description
+#'
+#' Remove entities inside an [Entity] object. The removed entities will be deleted
+#' from The [Entity]'s 'attrs' database and move to the removed_data field of the
+#' [DataBackEnd] that the 'attrs' database uses.
+#'
+#' @param world a [World] object.
+#' @param entity a character denoting the entity class to be remove.
+#' @param subset an expression.
+#'
+#' @return the input [World] object invincibly
+#' @export
+remove_entity <- function(world, entity, subset) {
+  checkmate::assert_r6(world, classes =  "World")
+
+  e <- world$get(entity)
+  e_data <- e$get_data()
+
+  subset_expr = substitute(subset)
+  row_flags = eval(subset_expr, e_data, parent.frame())
+
+  ids <- e_data[row_flags, ][[e$primary_id]]
+
+  if (length(ids) > 0) {
+    e$remove(ids = ids)
+  }
+
   invisible(world)
 }

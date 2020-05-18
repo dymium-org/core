@@ -5,6 +5,7 @@
 - Fixed `get_transition` didn't use the preprocessing function when the `model` argument is of `Model` class.
 - `get_transition` now removes the dot prefix of variables in entity data. Those variables are considered as derived variables which will not be checked against when new entity data are geting added.
 - Added `dsample` for sampling from a discrete distribution, an extension of `base:sample`.
+- Added `remove_entity` for removing entities from an [Entity] object. 
 - `Entity$get_ids` can get the ids of removed entities using newly added the `include_removed` argument.
 - `Entity` gains a `primary_id` field.
 - `Entity$add` did not check for potential duplicate ids in the removed data.
