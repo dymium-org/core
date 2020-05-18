@@ -134,8 +134,8 @@ Currently, `dymiumCore` only supports the model objects fitted using `caret` and
 | ------: | -----------: | ----------------------------------------------: | -------------: |
 |   caret |      `train` |            classification and regression models |      supported |
 |   stats | `lm` & `glm` |                   generalised regression models |      supported |
+|    mlr3 |    `Learner` | classification, survival, and regression models |        supported (only classification models) |
 |  mlogit |     `mlogit` |                        multinomial logit models | in-development |
-|    mlr3 |    `Learner` | classification, survival, and regression models |        planned |
 
 
 The example below shows how one can use `caret` to fit a multinomial model and use the model to simulate marital status of individual agents with `TransitionClassification`. 
