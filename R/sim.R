@@ -12,7 +12,9 @@
 #' @param write.error.dump.folder (`character(1)`)\cr
 #'  path: Saves the dump of the workspace in a specific folder instead of the
 #'  working directory
-#' @param write.error.dump.file
+#' @param write.error.dump.file (`logical(1)`)\cr
+#'  See [tryCatchLog::tryCatchLog].
+#'
 #'
 #' @return `NULL`
 #' @export

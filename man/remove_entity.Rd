@@ -19,5 +19,5 @@ the input \link{World} object invincibly
 \description{
 Remove entities inside an \link{Entity} object. The removed entities will be deleted
 from The \link{Entity}'s 'attrs' database and move to the removed_data field of the
-\link{DataBackEnd} that the 'attrs' database uses.
+\link{DataBackend} that the 'attrs' database uses.
 }

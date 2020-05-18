@@ -22,7 +22,8 @@ A functional sequence (\code{fseq}) object.}
 \item{n_iters}{a number of iterations. (\code{integer(1)})\cr
 Number of times the microsimulation pipeline should be repeated.}
 
-\item{write.error.dump.file}{}
+\item{write.error.dump.file}{(\code{logical(1)})\cr
+See \link[tryCatchLog:tryCatchLog]{tryCatchLog::tryCatchLog}.}
 
 \item{write.error.dump.folder}{(\code{character(1)})\cr
 path: Saves the dump of the workspace in a specific folder instead of the

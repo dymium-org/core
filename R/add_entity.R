@@ -109,7 +109,7 @@ add_entity <-
 #'
 #' Remove entities inside an [Entity] object. The removed entities will be deleted
 #' from The [Entity]'s 'attrs' database and move to the removed_data field of the
-#' [DataBackEnd] that the 'attrs' database uses.
+#' [DataBackend] that the 'attrs' database uses.
 #'
 #' @param world a [World] object.
 #' @param entity a character denoting the entity class to be remove.
