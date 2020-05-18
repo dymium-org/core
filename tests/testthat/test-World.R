@@ -120,3 +120,14 @@ test_that("add target", {
   w$add(x = t, name = "a_target")
   expect_error(w$add(x = t, name = "a_target"))
 })
+
+test_that("set_scale", {
+  create_toy_world()
+  world_scale <- 0.01
+  world$set_scale(scaling_factor = world_scale)
+  expect_true(world$scale == world_scale)
+  world$set_scale(scaling_factor = 1)
+  expect_true(world$scale == 1)
+  expect_error(world$set_scale(scaling_factor = -1))
+  expect_error(world$set_scale(scaling_factor = "1"))
+})
