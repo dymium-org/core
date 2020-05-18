@@ -83,7 +83,7 @@
 #'  Dymium's version, dependencies, R version etc.
 #'
 #' * `set_time(x)`\cr
-#'  (`integer(1)`) -> `NULL`\cr
+#'  (`integer(1)`) -> `self`\cr
 #'  Set the time on the World's simulation clock (.DMevn$sim_time).
 #'
 #' * `set_scale(x)`\cr
@@ -134,6 +134,10 @@ World <- R6::R6Class(
         check_target(x, null.ok = FALSE),
         combine = "or"
       )
+
+      if (checkmate::test_r6(x, "World")) {
+        stop("Adding a World object is not permitted.")
+      }
 
       if ((inherits(x, "Entity") | inherits(x, "Container")) & !inherits(x, "Model") & !inherits(x, "Target")) {
         stopifnot(x$is_dymium_class())
@@ -338,18 +342,19 @@ World <- R6::R6Class(
     # @description Set the simulation clock of World.
     # @param x An integer value.
     set_time = function(x) {
-      checkmate::assert_integerish(x, lower = 0, len = 1)
+      checkmate::assert_count(x, positive = T, na.ok = FALSE, null.ok = FALSE)
       self$info$clock <- x
       options(dymium.simulation_clock = x)
-      invisible()
+      lg$info("Set the clock to {x}")
+      invisible(self)
     },
 
-    set_scale = function(x) {
-      checkmate::assert_number(x, lower = 0, finite = TRUE, null.ok = FALSE)
-      if (x == 0) {
+    set_scale = function(scaling_factor) {
+      checkmate::assert_number(scaling_factor, lower = 0, finite = TRUE, null.ok = FALSE)
+      if (scaling_factor == 0) {
         stop("scale cannot be equal to 0!")
       }
-      options(dymium.simulation_scale = x)
+      options(dymium.simulation_scale = scaling_factor)
       invisible()
     },
 

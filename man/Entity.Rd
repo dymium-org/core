@@ -76,9 +76,10 @@ Returns the names of all data objects (in \code{private$.data}) that belongs to 
 (\code{character(1)}) -> \code{\link[data.table:data.table]{data.table::data.table()}}\cr
 Return removed agent data. If \code{name} is missing, the first data, which should
 contains the main attributes of the agent object, will be returned.
-\item \code{get_ids(idx)}\cr
-(\code{integer()}) -> \code{integer()}\cr
-Return the ids of the indexes in the argrument \code{idx}, respectively.
+\item \verb{get_ids(include_removed = }FALSE\verb{)}\cr
+(\code{logical(1)}) -> \code{integer()}\cr
+Return the ids of the indexes in the argrument \code{idx}, respectively. If \code{include_removed}
+is \code{TRUE}, ids of removed data will also be returned.
 \item \code{get_idx(ids)}\cr
 (\code{integer()}) -> \code{integer()}\cr
 Return the indexes of the ids in the argrument \code{ids}, respectively.

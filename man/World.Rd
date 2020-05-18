@@ -81,7 +81,7 @@ Get the value of .DMevn$sim_time.
 Get information about the creation of the world object.
 Dymium's version, dependencies, R version etc.
 \item \code{set_time(x)}\cr
-(\code{integer(1)}) -> \code{NULL}\cr
+(\code{integer(1)}) -> \code{self}\cr
 Set the time on the World's simulation clock (.DMevn$sim_time).
 \item \code{set_scale(x)}\cr
 (\code{numeric(1)})\cr

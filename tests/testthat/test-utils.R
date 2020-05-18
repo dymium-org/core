@@ -103,3 +103,10 @@ test_that("lookup_and_replace2 - as character", {
   )
   expect_true(all.equal(res, expected_res))
 })
+
+test_that("dsample", {
+
+  expect_equal(dsample(10, size = 10, replace = T), rep(10, 10))
+  expect_equal(dsample(10, size = 10, replace = T, prob = 1), rep(10, 10))
+
+})

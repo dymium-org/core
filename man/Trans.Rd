@@ -22,11 +22,13 @@ event function.
 A Agent class inheritance object.
 \item \code{model} :: \code{object}\cr
 A model
-\item \code{target} :: \code{\link[=integer]{integer()}}\cr
+\item \code{target} :: [\code{integer()}|\link{Target}]\cr
 (Default as NULL). A number that forces the number of micro events to occur. For example, if
 `10`` is speficied, there will be 10 agents that under go the event. However,
 if a integer vector is given it must be the same length as the classes in the model.
-This only works for classification models.
+This only works for classification models. If a \link{Target} object is given, the
+target values will be scaled down by the scaling factor of that was set by
+the \link{World} object in your currently active environment.
 \item \code{targeted_agent} :: \code{\link[=integer]{integer()}}\cr
 (Default as NULL) A integer vectors that contains ids of agents in \code{x} to undergo the event.
 }
