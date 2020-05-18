@@ -28,6 +28,10 @@ test_that("add", {
   expect_error(w$add(list(x = 1), "badName1"), "Must comply to pattern")
   w$add(list(x = 1), "testModelTwo")
   expect_length(w$models, 2)
+
+  # add world ?
+  expect_error(w$add(w), regexp = "Adding a World object is not permitted.")
+
 })
 
 test_that("get", {
@@ -115,4 +119,15 @@ test_that("add target", {
   w <- World$new()
   w$add(x = t, name = "a_target")
   expect_error(w$add(x = t, name = "a_target"))
+})
+
+test_that("set_scale", {
+  create_toy_world()
+  world_scale <- 0.01
+  world$set_scale(scaling_factor = world_scale)
+  expect_true(world$scale == world_scale)
+  world$set_scale(scaling_factor = 1)
+  expect_true(world$scale == 1)
+  expect_error(world$set_scale(scaling_factor = -1))
+  expect_error(world$set_scale(scaling_factor = "1"))
 })

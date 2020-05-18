@@ -172,12 +172,6 @@ TransitionClassification <- R6Class(
 
 # Private -----------------------------------------------------------------
 
-    .AgtObj = R6Class(), # use as a reference holder
-    .sim_data = data.table(),
-    .model = NULL, # model object or data.table
-    .sim_result = data.table(), # two columns: id, response
-    .target = integer(),
-    .targeted_agents = integer(), # a vector containing agent ids
     .allowed_classes = c('train', 'data.table', 'list', "numeric"),
 
     simulate = function() {

@@ -25,11 +25,13 @@
 #' * `model` :: `object`\cr
 #'  A model
 #'
-#' * `target` :: [`integer()`]\cr
+#' * `target` :: [`integer()`|[Target]]\cr
 #'  (Default as NULL). A number that forces the number of micro events to occur. For example, if
 #'  `10`` is speficied, there will be 10 agents that under go the event. However,
 #'  if a integer vector is given it must be the same length as the classes in the model.
-#'  This only works for classification models.
+#'  This only works for classification models. If a [Target] object is given, the
+#'  target values will be scaled down by the scaling factor of that was set by
+#'  the [World] object in your currently active environment.
 #'
 #' * `targeted_agent` :: [`integer()`]\cr
 #'  (Default as NULL) A integer vectors that contains ids of agents in `x` to undergo the event.
@@ -92,19 +94,26 @@ Trans <- R6Class(
         checkmate::check_r6(model, classes = "Model"),
         combine = "or"
       )
-      dymiumCore::assert_target(target, null.ok = TRUE)
       checkmate::assert_integerish(targeted_agents, lower = 1, any.missing = FALSE, null.ok = TRUE)
 
-
-      # store inputs
       private$.AgtObj <- x
+
       if (checkmate::test_r6(model, classes = "Model")) {
         private$.model <- model$model
         private$.model_preprocessing_fn <- model$preprocessing_fn
       } else {
         private$.model <- model
       }
-      private$.target <- Target$new(target)$get()
+
+      if (!is.null(target)) {
+        dymiumCore::assert_target(target)
+        if (checkmate::test_r6(target, "Target")) {
+          private$.target <- target$get()
+        } else {
+          private$.target <- target
+        }
+      }
+
       private$.targeted_agents <- targeted_agents
 
       # run the steps ------
@@ -206,7 +215,7 @@ Trans <- R6Class(
     .AgtObj = R6::R6Class(), # use as a reference holder
     .sim_data = data.table(), # preprocessed simulation data
     .sim_result = data.table(), # two columns: id, response
-    .target = integer(),
+    .target = NULL,
     .targeted_agents = integer(), # a vector containing agent ids of .AgtObj
 
     run_preprocessing_steps = function() {

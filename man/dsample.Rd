@@ -4,7 +4,17 @@
 \alias{dsample}
 \title{Discrete choice sampling}
 \usage{
-dsample()
+dsample(x, size = 1, replace = FALSE, prob = NULL)
+}
+\arguments{
+\item{x}{a vector that contains value(s) that represents a choiceset.}
+
+\item{size}{a non-negative integer giving the number of items to choose.}
+
+\item{replace}{should sampling be with replacement?}
+
+\item{prob}{a vector of probability weights for obtaining the elements
+    of the vector being sampled.}
 }
 \value{
 returns a vector of the same type as \code{x} with length of \code{size}.

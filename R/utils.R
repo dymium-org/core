@@ -48,6 +48,9 @@ sample_choice <- function(x, size = 1, replace = FALSE, prob = NULL) {
 #' are number 1 to 8, like `base::sample` does. This feature makes it safe when the
 #' choices are discrete numbers and use in a programmatic way.
 #'
+#' @param x a vector that contains value(s) that represents a choiceset.
+#' @inheritParams base::sample
+#'
 #' @return returns a vector of the same type as `x` with length of `size`.
 #' @export
 #'
@@ -56,7 +59,7 @@ sample_choice <- function(x, size = 1, replace = FALSE, prob = NULL) {
 #' dsample(7, 10, replace = TRUE) # equivalent to rep(7, 10)
 #' dsample(7, 1)
 #' dsample(7) # which is equivalent to the above
-dsample <- function() {
+dsample <- function(x, size = 1, replace = FALSE, prob = NULL) {
   if (length(x) != 1) {
     sample(x = x, size = size, replace = replace, prob = prob)
   } else {
