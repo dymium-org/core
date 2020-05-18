@@ -135,6 +135,10 @@ World <- R6::R6Class(
         combine = "or"
       )
 
+      if (checkmate::test_r6(x, "World")) {
+        stop("Adding a World object is not permitted.")
+      }
+
       if ((inherits(x, "Entity") | inherits(x, "Container")) & !inherits(x, "Model") & !inherits(x, "Target")) {
         stopifnot(x$is_dymium_class())
         if (!missing(name)) {
