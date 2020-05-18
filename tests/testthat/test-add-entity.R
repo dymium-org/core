@@ -3,9 +3,11 @@ test_that("add_entity works", {
   ind_data <-
     toy_individuals[, -c("hid", "father_id", "mother_id", "partner_id")]
   world$add(x = Individual$new(ind_data, id_col = "pid"))
-  add_entity(world, entity = "Individual", newdata = ind_data)
+  for (i_ in 1:10) {
+    add_entity(world, entity = "Individual", newdata = ind_data)
+  }
   expect_equal(nrow(world$entities$Individual$get_data()),
-               nrow(ind_data) * 2)
+               nrow(ind_data) * 11)
 })
 
 test_that("add_entity works with weights and targets", {

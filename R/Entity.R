@@ -263,6 +263,7 @@ Entity <-
       #  entities to be added. The new data must comply with the existing data fields
       #  of the existing entities' attribute data (`attrs`).
       # @check_existing :: `logical(1)`\cr
+      #  Check the primary id of the new entities, in `.data`.
       #  Whether to check that all ids in id cols exist in the existing entity ids.
       #  If this function is to be called in a birth event, you probably want to
       #  set this to `TRUE` since a newborn individual agent would have its mother id
@@ -271,13 +272,14 @@ Entity <-
       #  be existing ids
       add = function(.data, check_existing = FALSE) {
 
+        checkmate::assert_data_frame(.data)
+        checkmate::assert_flag(check_existing, na.ok = FALSE, null.ok = FALSE)
+
         # make sure the original copy of the data will not be mutated.
         .data <- data.table::copy(.data)
 
         # check data structure -----------
-        NewData <- DataBackendDataTable$new(.data, key = self$id_col[[1]])
-
-        id_col <- self$id_col[[1]]
+        NewData <- DataBackendDataTable$new(.data, key = self$primary_id)
 
         res <-
           all.equal(target = omit_derived_vars(self$database$attrs$data[0, ]),
@@ -294,50 +296,42 @@ Entity <-
         }
 
         # check id columns ----------
-        ids_in_newdata <- .data[[id_col]]
-
         checkmate::assert_integerish(
-          ids_in_newdata,
+          .data[[self$primary_id]],
           any.missing = FALSE,
           null.ok = FALSE,
           unique = T
         )
 
-        if (all(ids_in_newdata %in% self$database$attrs$data[[self$id_col[[1]]]])) {
-          lg$warn("All ids in the new data already exist in the existing data. \\
-                  The ids will be replaced with new generated ids to make sure \\
-                  all records have unique ids assigned to them.")
-          ids_in_newdata <- self$generate_new_ids(n = length(ids_in_newdata))
-          data.table::set(x = .data,
-                          j = id_col,
-                          value = ids_in_newdata)
-        }
-
-        if (test_entity_ids(self, ids_in_newdata, include_removed_data = T, informative = TRUE)) {
-          stop("One or more of the main unique `ids` in `.data` already exist ",
-               "in the existing attribute data of this Entity.")
+        if (any(.data[[self$primary_id]] %in% self$get_ids(include_removed = T))) {
+          lg$warn("entities in `.data` have the same ids as some of the existing \\
+                  entities. The duplicated ids will be replaced.")
+          data.table::set(
+            x = .data,
+            j = self$primary_id,
+            value = self$generate_new_ids(n = .data[, .N])
+          )
         }
 
         # check relation columns
         if (length(self$id_col) > 1) {
           ids_in_relation_cols <- c()
           relation_cols <-
-            self$id_col[!self$id_col %in% self$id_col[[1]]]
+            self$id_col[!self$id_col %in% self$primary_id]
           for (relation_col in relation_cols) {
             ids_in_relation_cols <-
               c(ids_in_relation_cols, na.omit(.data[[relation_col]]))
           }
           ids_in_relation_cols <- unique(ids_in_relation_cols)
-
           if (check_existing) {
-            assert_subset2(ids_in_relation_cols, choices = c(self$get_ids(), ids_in_newdata))
+            assert_subset2(ids_in_relation_cols, choices = c(self$get_ids(), .data[[self$primary_id]]))
           } else {
-            assert_subset2(ids_in_relation_cols, choices = ids_in_newdata)
+            assert_subset2(ids_in_relation_cols, choices = .data[[self$primary_id]])
           }
         }
 
         self$database$attrs$add(.data = .data, fill = TRUE)
-        return(invisible())
+        invisible()
       },
 
       has_attr = function(x) {
