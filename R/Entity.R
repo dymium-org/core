@@ -81,9 +81,10 @@
 #'  Return removed agent data. If `name` is missing, the first data, which should
 #'  contains the main attributes of the agent object, will be returned.
 #'
-#'  * `get_ids(idx)`\cr
-#'  (`integer()`) -> `integer()`\cr
-#'  Return the ids of the indexes in the argrument `idx`, respectively.
+#'  * `get_ids(include_removed = `FALSE`)`\cr
+#'  (`logical(1)`) -> `integer()`\cr
+#'  Return the ids of the indexes in the argrument `idx`, respectively. If `include_removed`
+#'  is `TRUE`, ids of removed data will also be returned.
 #'
 #'  * `get_idx(ids)`\cr
 #'  (`integer()`) -> `integer()`\cr
@@ -360,8 +361,12 @@ Entity <-
         }
       },
 
-      get_ids = function() {
-        return(self$get_attr(self$id_col[[1]]))
+      get_ids = function(include_removed = FALSE) {
+        if (include_removed) {
+          return(c(self$get_attr(self$primary_id),
+                   self$get_removed_data()[[self$primary_id]]))
+        }
+        self$get_attr(self$primary_id)
       },
 
       get_idx = function(ids, expect_na = FALSE) {

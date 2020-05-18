@@ -86,14 +86,21 @@ test_that("remove", {
 })
 
 test_that("get_ids", {
-  MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
+  e <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
+
   checkmate::expect_integerish(
-    MyObj$get_ids(),
+    e$get_ids(),
     lower = 1,
     any.missing = FALSE,
     unique = T,
     null.ok = FALSE,
     min.len = nrow(toy_individuals)
+  )
+
+  e$remove(ids = 1)
+  expect_true(
+    all.equal(sort(e$get_ids(include_removed = T)),
+              sort(toy_individuals[[e$primary_id]]))
   )
 })
 
