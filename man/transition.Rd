@@ -66,7 +66,14 @@ It allows simple state transitions to be simulated directly inside a
 microsimulation pipeline, as it always returns the input \code{World} object.
 }
 \note{
-To create a preprocessing function you can use \code{dplyr} or \code{data.table}. You can
+In general, dymiumCore detects variables in entity data of an \link{Entity} object that
+has a dot prefix as derived variables. Meaning, those derived variables are not
+check against new entity data that are getting added to the \link{Entity} object. But
+when entity data are used in \code{get_transition}, the dot prefix of the derived variables
+will be removed. This is to make it convenient when naming variables during
+the model estimation step.
+
+To create a pre-processing function you can use \code{dplyr} or \code{data.table}. You can
 even combine multiple functions with \link[magrittr:\%>\%]{magrittr::\%>\%}. As an example, if you only
 want to filter just the male population then you can choose one of the
 following options to create your preprocessing function.\preformatted{# as a function using base R
