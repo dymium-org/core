@@ -6,6 +6,8 @@
 - `get_transition` now removes the dot prefix of variables in entity data. Those variables are considered as derived variables which will not be checked against when new entity data are geting added.
 - Added `dsample` for sampling from a discrete distribution, an extension of `base:sample`.
 - `Entity$get_ids` can get the ids of removed entities using newly added the `include_removed` argument.
+- `Entity` gains a `primary_id` field.
+
 
 # dymiumCore 0.1.7
 

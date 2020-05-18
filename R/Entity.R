@@ -542,6 +542,10 @@ Entity <-
         get(".id_col", envir = private)
       },
 
+      primary_id = function() {
+        get(".id_col", envir = private)[[1]]
+      },
+
       data_template = function() {
         return(data.table())
       }
