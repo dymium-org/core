@@ -10,6 +10,7 @@
 - `Entity` gains a `primary_id` field.
 - `Entity$add` did not check for potential duplicate ids in the removed data.
 - `World$set_time` returns self. The `$start_iter` method may be removed in the near future as it is not quite intuitive. 
+- Fixed the unexpected behaviour when a non `Target` object is passed into target arg of `Transition`. Prior to this fix, the object that got passed into the target argument was used to create a Target object. Hence, this created an expected behaviour, when the Target's get method was called it returned a scaled down value of the target. This may not be the desire default effect by users. 
 
 # dymiumCore 0.1.7
 

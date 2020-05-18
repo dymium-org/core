@@ -174,6 +174,7 @@ test_that('target works', {
 
   # create model
   list_model <- list(choice_a = 0.2, choice_b = 0.8)
+  train_model <- create_caret_binary_model()
 
   # create targets
   good_target1 = list(choice_a = 10, choice_b = 20)
@@ -204,6 +205,9 @@ test_that('target works', {
     TransitionClassification$new(Ind, model = list_model, target = bad_target3),
     "Must be a subset of set \\{choice_a,choice_b\\}."
   )
+
+  a_good_train_transition_1 <-
+    TransitionClassification$new(Ind, model = list(yes = 0.05, no = 0.95), target = list(yes = 1))
 
 })
 
@@ -245,6 +249,7 @@ test_that("update", {
 test_that("dynamic target", {
 
   create_toy_world()
+  world$set_scale(1)
 
   model <- list(yes = 0.10, no = 0.90)
 
@@ -284,7 +289,7 @@ test_that("dynamic target", {
 
   for (i in 1:10) {
     world$start_iter(time_step = i, unit = "year") %>%
-      event_dynamic_target(., model, target = dynamic_target)
+      event_dynamic_target(., model, target = Target$new(dynamic_target))
   }
 
   n_ind_after <- Ind$n()
@@ -300,7 +305,7 @@ test_that("dynamic target", {
       nooo = sample(1:20, 10, replace = TRUE)
     )
 
-  expect_error(TransitionClassification$new(world$entities$Individual, model, dynamic_target),
+  expect_error(TransitionClassification$new(world$entities$Individual, model, Target$new(dynamic_target)),
                regexp = "Must be a subset of set \\{yes,no\\}.")
 })
 
@@ -317,4 +322,29 @@ test_that("TransitionClassifcation works with mlr model", {
       len = world$entities$Individual$n()
     )
   }
+})
+
+test_that("The scale of World only affect Target object", {
+  create_toy_world()
+  # the scale shouldn't scale down the value in the target argument
+  # since it was not created as a Target object
+  WORLD_SCALE <- 0.1
+  world$set_scale(WORLD_SCALE)
+  a_target <- list(yes = 10)
+  a_transition <- TransitionClassification$new(x = world$entities$Individual,
+                                               model = list(yes = 0.1, no = 0.9),
+                                               target = a_target)
+  expect_equal(a_transition$.__enclos_env__$private$.target, a_target)
+
+  # however when a Target object is used then the transition outcome should be
+  # scaled down according to the set scale.
+  a_transition <- TransitionClassification$new(x = world$entities$Individual,
+                                               model = list(yes = 0.1, no = 0.9),
+                                               target = Target$new(a_target))
+  expect_equal(a_transition$.__enclos_env__$private$.target %>% as.numeric(.) %>% sum(.),
+               expected = as.numeric(a_target) %>% sum(.) %>% {. * WORLD_SCALE})
+
+  # set scale back to 1, this scale value propagates to other tests as well since
+  # it is a global variable of the package env
+  world$set_scale(1)
 })
