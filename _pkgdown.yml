@@ -77,6 +77,7 @@ reference:
     - transition
     - mutate_entity
     - add_entity
+    - remove_entity
     - SupportedTransitionModels
     - Target
     - simulate_choice
