@@ -349,12 +349,12 @@ World <- R6::R6Class(
       invisible(self)
     },
 
-    set_scale = function(x) {
-      checkmate::assert_number(x, lower = 0, finite = TRUE, null.ok = FALSE)
-      if (x == 0) {
+    set_scale = function(scaling_factor) {
+      checkmate::assert_number(scaling_factor, lower = 0, finite = TRUE, null.ok = FALSE)
+      if (scaling_factor == 0) {
         stop("scale cannot be equal to 0!")
       }
-      options(dymium.simulation_scale = x)
+      options(dymium.simulation_scale = scaling_factor)
       invisible()
     },
 
