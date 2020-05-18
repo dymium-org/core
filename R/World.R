@@ -83,7 +83,7 @@
 #'  Dymium's version, dependencies, R version etc.
 #'
 #' * `set_time(x)`\cr
-#'  (`integer(1)`) -> `NULL`\cr
+#'  (`integer(1)`) -> `self`\cr
 #'  Set the time on the World's simulation clock (.DMevn$sim_time).
 #'
 #' * `set_scale(x)`\cr
@@ -338,10 +338,11 @@ World <- R6::R6Class(
     # @description Set the simulation clock of World.
     # @param x An integer value.
     set_time = function(x) {
-      checkmate::assert_integerish(x, lower = 0, len = 1)
+      checkmate::assert_count(x, positive = T, na.ok = FALSE, null.ok = FALSE)
       self$info$clock <- x
       options(dymium.simulation_clock = x)
-      invisible()
+      lg$info("Set the clock to {x}")
+      invisible(self)
     },
 
     set_scale = function(x) {

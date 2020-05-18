@@ -7,7 +7,7 @@
 - Added `dsample` for sampling from a discrete distribution, an extension of `base:sample`.
 - `Entity$get_ids` can get the ids of removed entities using newly added the `include_removed` argument.
 - `Entity` gains a `primary_id` field.
-
+- `World$set_time` returns self. The `$start_iter` method may be removed in the near future as it is not quite intuitive. 
 
 # dymiumCore 0.1.7
 
