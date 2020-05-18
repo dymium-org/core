@@ -4,7 +4,13 @@
 \alias{sim}
 \title{Compile and execute a microsimulation pipeline}
 \usage{
-sim(world, pipeline, n_iters, write.error.dump.folder)
+sim(
+  world,
+  pipeline,
+  n_iters,
+  write.error.dump.file = FALSE,
+  write.error.dump.folder
+)
 }
 \arguments{
 \item{world}{(\code{World})\cr
@@ -15,6 +21,8 @@ A functional sequence (\code{fseq}) object.}
 
 \item{n_iters}{a number of iterations. (\code{integer(1)})\cr
 Number of times the microsimulation pipeline should be repeated.}
+
+\item{write.error.dump.file}{}
 
 \item{write.error.dump.folder}{(\code{character(1)})\cr
 path: Saves the dump of the workspace in a specific folder instead of the

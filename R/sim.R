@@ -12,6 +12,7 @@
 #' @param write.error.dump.folder (`character(1)`)\cr
 #'  path: Saves the dump of the workspace in a specific folder instead of the
 #'  working directory
+#' @param write.error.dump.file
 #'
 #' @return `NULL`
 #' @export
@@ -80,21 +81,22 @@ sim <- function(world, pipeline, n_iters, write.error.dump.file = FALSE, write.e
   checkmate::assert_function(pipeline, nargs = 1)
   checkmate::assert_count(n_iters, positive = TRUE)
 
-  if (!missing(write.error.dump.folder)) {
-    checkmate::assert_directory_exists(write.error.dump.folder, access = "rwx")
-    output_dir <- write.error.dump.folder
-  } else {
-    output_dir <- get_active_scenario()$output_dir
+  if (write.error.dump.file) {
+    if (!missing(write.error.dump.folder)) {
+      checkmate::assert_directory_exists(write.error.dump.folder, access = "rwx")
+    } else {
+      write.error.dump.folder <- get_active_scenario()$output_dir
+    }
   }
 
   tryCatchLog::tryCatchLog({
     for (i in 1:n_iters) {
       world$start_iter(time_step = world$get_time() + 1L) %>%
         pipeline(.)
-    }
-  },
-  write.error.dump.file = write.error.dump.file,
-  write.error.dump.folder = get_active_scenario()$output_dir)
+    }},
+    write.error.dump.file = write.error.dump.file,
+    write.error.dump.folder = write.error.dump.folder
+  )
 
   invisible()
 }
