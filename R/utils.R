@@ -56,7 +56,7 @@ sample_choice <- function(x, size = 1, replace = FALSE, prob = NULL) {
 #' dsample(7, 10, replace = TRUE) # equivalent to rep(7, 10)
 #' dsample(7, 1)
 #' dsample(7) # which is equivalent to the above
-dsample <- function() {
+dsample <- function(x, size = 1, replace = FALSE, prob = NULL) {
   if (length(x) != 1) {
     sample(x = x, size = size, replace = replace, prob = prob)
   } else {

@@ -4,7 +4,7 @@
 \alias{dsample}
 \title{Discrete choice sampling}
 \usage{
-dsample()
+dsample(x, size = 1, replace = FALSE, prob = NULL)
 }
 \value{
 returns a vector of the same type as \code{x} with length of \code{size}.

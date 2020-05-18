@@ -4,7 +4,7 @@
 - Added `targets` as an active field. 
 - Fixed `get_transition` didn't use the preprocessing function when the `model` argument is of `Model` class.
 - `get_transition` now removes the dot prefix of variables in entity data. Those variables are considered as derived variables which will not be checked against when new entity data are geting added.
-- add `dsample` for sampling from a discrete distribution, an extension of `base:sample`.
+- Added `dsample` for sampling from a discrete distribution, an extension of `base:sample`.
 - `Entity$get_ids` can get the ids of removed entities using newly added the `include_removed` argument.
 
 # dymiumCore 0.1.7
