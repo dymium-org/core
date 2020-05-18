@@ -28,6 +28,10 @@ test_that("add", {
   expect_error(w$add(list(x = 1), "badName1"), "Must comply to pattern")
   w$add(list(x = 1), "testModelTwo")
   expect_length(w$models, 2)
+
+  # add world ?
+  expect_error(w$add(w), regexp = "Adding a World object is not permitted.")
+
 })
 
 test_that("get", {
