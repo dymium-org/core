@@ -209,34 +209,36 @@ Individual <- R6::R6Class(
 
       self_idx <- self$get_idx(ids = unique(ids))
 
-      # add relationship
-      switch(type,
-             "father" = {
-               # expect that if emptied == integer(0)
-               if (!all(self$get_data(copy = FALSE)[self_idx, is.na(father_id)])) {
-                 stop(paste0(type, " id should only have one agent id at birth."))
-               }
-               self$get_data(copy = FALSE)[self_idx, father_id := target_ids]
-             },
-             "mother" = {
-               # expect that if emptied == integer(0)
-               if (!all(self$get_data(copy = FALSE)[self_idx, is.na(mother_id)])) {
-                 stop(paste0(type, " id should only have one agent id at birth."))
-               }
-               self$get_data(copy = FALSE)[self_idx, mother_id := target_ids]
-             },
-             "partner" = {
-               # expect that if emptied == integer(0)
-               if (!all(self$get_data(copy = FALSE)[self_idx, is.na(partner_id)])) {
-                 print(self$get_data(copy = FALSE)[self_idx,])
-                 stop(paste0(type, " id cannot be overwrite but can be removed."))
-               }
-               target_idx <- self$get_idx(ids = target_ids)
-               # self adds partner
-               self$get_data(copy = FALSE)[self_idx, partner_id := target_ids]
-               # partner adds self
-               self$get_data(copy = FALSE)[target_idx, partner_id := ids]
-             })
+      # ADD RELATIONSHIP
+      if (type == 'father') {
+        # expect that if emptied == integer(0)
+        if (!all(self$get_data(copy = FALSE)[self_idx, is.na(father_id)])) {
+          stop(paste0(type, " id should only have one agent id at birth."))
+        }
+        self$get_data(copy = FALSE)[self_idx, father_id := target_ids]
+      }
+
+      if (type == 'mother') {
+        # expect that if emptied == integer(0)
+        if (!all(self$get_data(copy = FALSE)[self_idx, is.na(mother_id)])) {
+          stop(paste0(type, " id should only have one agent id at birth."))
+        }
+        self$get_data(copy = FALSE)[self_idx, mother_id := target_ids]
+      }
+
+      if (type == 'partner') {
+        # expect that if emptied == integer(0)
+        if (!all(self$get_data(copy = FALSE)[self_idx, is.na(partner_id)])) {
+          print(self$get_data(copy = FALSE)[self_idx,])
+          stop(paste0(type, " id cannot be overwrite but can be removed."))
+        }
+        target_idx <- self$get_idx(ids = target_ids)
+        # self adds partner
+        self$get_data(copy = FALSE)[self_idx, partner_id := target_ids]
+        # partner adds self
+        self$get_data(copy = FALSE)[target_idx, partner_id := ids]
+      }
+
       invisible()
     },
 
