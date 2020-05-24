@@ -349,12 +349,19 @@ World <- R6::R6Class(
       invisible(self)
     },
 
-    set_scale = function(scaling_factor) {
-      checkmate::assert_number(scaling_factor, lower = 0, finite = TRUE, null.ok = FALSE)
-      if (scaling_factor == 0) {
+    # @description
+    #
+    # Set the scale of the simulation. This scale does propogate to Target objects
+    # stored inside World.
+    #
+    # @param x :: (`numeric(1)`)\cr
+    #  a scaling factor. 1 as default.
+    set_scale = function(x = 1) {
+      checkmate::assert_number(x, lower = 0, finite = TRUE, null.ok = FALSE)
+      if (x == 0) {
         stop("scale cannot be equal to 0!")
       }
-      options(dymium.simulation_scale = scaling_factor)
+      options(dymium.simulation_scale = x)
       invisible()
     },
 
