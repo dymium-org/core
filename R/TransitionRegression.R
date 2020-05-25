@@ -122,20 +122,18 @@ TransitionRegression <- R6Class(
 
     simulate = function() {
 
-      # response is a vector of simulated choices that maybe of type double,
-      # integer, logical or character.
-      response <- switch(
-        EXPR = class(private$.model)[[1]],
-        "train" = simulate_regression_train(self, private),
-        "glm" = simulate_regression_glm(self, private),
-        "lm" = simulate_regression_glm(self, private),
-        stop(
-          glue::glue(
-            "Transition class doesn't have an implementation of {class(private$.model)} \\
-            class. Please kindly request this in dymiumCore's Github issue or send in a PR! :)"
-          )
+      model_class <- class(private$.model)[[1]]
+
+      response <-
+        switch(
+          EXPR = model_class,
+          "train" = simulate_regression_train(self, private),
+          "glm" = simulate_regression_glm(self, private),
+          "lm" = simulate_regression_glm(self, private)
         )
-      )
+
+      if (is.null(response))
+        stop(sprintf("'%s' is not supported by TransitionRegression.", model_class))
 
       response
     }
