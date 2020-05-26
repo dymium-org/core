@@ -38,8 +38,8 @@ get_models <- function(x, model_names, as_r6model = FALSE) {
 #' Pick models from `model` and `world` while giving a higher priority to any model
 #' object that has the same name between the two. For example, if both have a model
 #' object called `model_one`, although they have totally different values, this will
-#' pick the `model_one` from `model` and not the other `model_one` in `world`. It
-#' go over both objects to find all models with names in `required_models`.
+#' pick the `model_one` from `model` and not the other `model_one` in `world`. The
+#' function goes over both objects to find all models with the names in `required_models`.
 #'
 #' @param model `logical(1)`\cr
 #' A named list that contains models that [Trans] supports.
@@ -73,11 +73,8 @@ get_models <- function(x, model_names, as_r6model = FALSE) {
 #' # in `model`.
 #' final_model
 pick_models <- function(model, world, required_models, as_r6model = FALSE) {
-  checkmate::assert_list(model,
-                         types = SupportedTransitionModels(),
-                         any.missing = FALSE,
-                         null.ok = TRUE,
-                         names = "strict")
+  checkmate::assert_list(model, types = c("Model", SupportedTransitionModels()),
+                         any.missing = FALSE, null.ok = TRUE, names = "strict")
   checkmate::assert_r6(world, classes = "World", public = c("get", "models"))
   checkmate::assert_character(required_models, unique = TRUE, null.ok = TRUE)
 
@@ -96,7 +93,7 @@ pick_models <- function(model, world, required_models, as_r6model = FALSE) {
     get_models(world, model_names = models_not_found, as_r6model = as_r6model)
 
   # return complete list of models
-  append(model, models_from_world)
+  append(model[names(model) %in% required_models], models_from_world)
 }
 
 

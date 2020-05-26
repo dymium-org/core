@@ -91,6 +91,18 @@ test_that("pick_models - default behavior 3", {
   checkmate::expect_list(pick_models(my_model, world, REQUIRED_MODELS), names = "strict")
 })
 
+test_that("pick_models - provide an Model object", {
+  # event function set model to NULL as default
+  create_toy_world()
+  my_model <- list(model_one = Model$new(list(yes = 0.5, no = 0.5)),
+                   model_two = Model$new(list(yes = 0.5, no = 0.5)))
+  REQUIRED_MODELS <- c("model_one")
+  picked_models <- pick_models(my_model, world, REQUIRED_MODELS)
+  checkmate::expect_list(picked_models, names = "strict", len = 1)
+  expect_true(names(picked_models) == REQUIRED_MODELS)
+})
+
+
 test_that("pick_models - deterministic case", {
   # event function set model to NULL as default
   create_toy_world()
