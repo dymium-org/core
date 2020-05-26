@@ -374,20 +374,23 @@ Individual <- R6::R6Class(
     },
 
     get_parent_hid = function(ids = NULL) {
-      data <- self$get_data()
-      # merge hid of mother and father
+
+      ind_data <- self$get_data(copy = FALSE)
+
       father_hid <-
-        data[data, .(pid, father_hid = hid), on = .(pid == father_id)]
+        ind_data[ind_data, .(pid, father_hid = hid), on = .(pid == father_id)]
+
       mother_hid <-
-        data[data, .(pid, mother_hid = hid), on = .(pid == mother_id)]
-      parent_hids <-
-        father_hid[mother_hid, on = self$get_id_col()]
+        ind_data[ind_data, .(pid, mother_hid = hid), on = .(pid == mother_id)]
+
+      parent_hids <- merge(father_hid, mother_hid, by = self$primary_id)
 
       if (!is.null(ids)) {
         parent_hids[pid %in% ids]
       } else {
         parent_hids
       }
+
     },
 
     # @description
