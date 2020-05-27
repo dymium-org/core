@@ -304,3 +304,18 @@ test_that("dynamic target", {
                regexp = "Must be a subset of set \\{yes,no\\}.")
 
 })
+
+# mlogit ----------------
+test_that("mlogit", {
+  if (require(mlogit)) {
+    create_toy_world()
+
+    dwl_data <- world$entities$BuildingResidential$get_data()
+    dwl_data
+
+
+
+    residential_location <- mlogit()
+
+  }
+})

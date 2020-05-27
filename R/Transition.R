@@ -373,7 +373,7 @@ SupportedTransitionModels <- function() {
 #' @rdname SupportedTransitionModels
 #' @export
 get_supported_models <- function() {
-  return(c("train", "list", "data.table", "numeric", "glm", "lm"))
+  return(c("train", "list", "data.table", "numeric", "glm", "lm", "mlogit"))
 }
 
 monte_carlo_sim <- function(prediction, target) {
