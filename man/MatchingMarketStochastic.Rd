@@ -3,7 +3,9 @@
 \name{MatchingMarketStochastic}
 \alias{MatchingMarketStochastic}
 \title{Stochastic Matching Market}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{MatchingMarket}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{MatchingMarket}.
+}
 \description{
 For general detail See \link{MatchingMarket}. This class solves a matching
 problem using a stochastic strategy such as randomly pick based on probabilistic scores

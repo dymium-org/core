@@ -39,6 +39,10 @@
 #' * `models`\cr
 #'  Contains [Models] those were added using `self$add(...)`.
 #'
+#' * `scale`\cr
+#'  A positive numeric value indicating the scale of Targets use by World. Note that,
+#'  this cannot be 0.
+#'
 #' @section Public Methods:
 #'
 #' * `add(x, name)`\cr
@@ -79,8 +83,16 @@
 #'  Dymium's version, dependencies, R version etc.
 #'
 #' * `set_time(x)`\cr
-#'  (`integer(1)`) -> `NULL`\cr
+#'  (`integer(1)`) -> `self`\cr
 #'  Set the time on the World's simulation clock (.DMevn$sim_time).
+#'
+#' * `set_scale(x)`\cr
+#'  (`numeric(1)`)\cr
+#'  Set the simulation scale which is stored as a global option (`dymium.simulation_scale`).
+#'  The scale parameter can also be accessd using `optionGet("dymium.simulation_scale")`.
+#'  The simulation scale parameter is useful for running a downsized version of your
+#'  world without manually going through all the data to scale them down. This scale
+#'  automatically applies to all [Targets] created.
 #'
 #' * `reset_time()`\cr
 #'  Reset the value of .DMevn$sim_time to 0L (L is for forcing type integer
@@ -99,7 +111,8 @@ World <- R6::R6Class(
     info = list(
       built.datetime = Sys.time(),
       dymiumCore.version = utils::packageVersion("dymiumCore"),
-      R.version = base::version
+      sessionInfo = utils::sessionInfo(),
+      clock = 0L
     ),
 
     initialize = function() {
@@ -114,18 +127,24 @@ World <- R6::R6Class(
       checkmate::assert(
         checkmate::check_r6(x, classes = c("Entity", "Generic"), null.ok = FALSE),
         checkmate::check_r6(x, classes = c("Container", "Generic"), null.ok = FALSE),
+        checkmate::check_r6(x, classes = c("Model", "Generic"), null.ok = FALSE),
         checkmate::check_subset(class(x)[[1]],
                                 choices = dymiumCore::SupportedTransitionModels(),
                                 empty.ok = FALSE),
+        check_target(x, null.ok = FALSE),
         combine = "or"
       )
 
-      if (inherits(x, "Generic")) {
+      if (checkmate::test_r6(x, "World")) {
+        stop("Adding a World object is not permitted.")
+      }
+
+      if ((inherits(x, "Entity") | inherits(x, "Container")) & !inherits(x, "Model") & !inherits(x, "Target")) {
         stopifnot(x$is_dymium_class())
         if (!missing(name)) {
           lg$warn("The given `name` will be ignored since the object in x \\
-                  is of a Dymium class object. The classname of the object will be \\
-                  used as its name.")
+                  is of an Entity object or a Container object. The classname \\
+                  of the object will be used as its name.")
         }
         name <- class(x)[[1]]
       }
@@ -151,6 +170,16 @@ World <- R6::R6Class(
         lg$info("Adding a Model object '{name}' to the `models` field.")
         x <- Model$new(x)
         .listname <- ".models"
+      }
+
+      if (inherits(x, "Model")) {
+        lg$info("Adding a Model object '{name}' to the `models` field.")
+        .listname <- ".models"
+      }
+
+      if (inherits(x, "Target")) {
+        lg$info("Adding a Target object '{name}' to the `targets` field.")
+        .listname <- ".targets"
       }
 
       # make sure there is only one of each Entity sub class stored in entities
@@ -180,6 +209,10 @@ World <- R6::R6Class(
              ".models" = {
                private$.models[[.pos]] <- self$get(.last_pos)
                names(private$.models)[.pos] <- name
+             },
+             ".targets" = {
+               private$.targets[[.pos]] <- self$get(.last_pos)
+               names(private$.targets)[.pos] <- name
              },
              stop("Something is not right please report this issue to the maintainer."))
 
@@ -299,7 +332,7 @@ World <- R6::R6Class(
     },
 
     get_time = function(x) {
-      get("sim_time", envir = .DMevn)
+      self$info$clock
     },
 
     get_info = function() {
@@ -309,8 +342,26 @@ World <- R6::R6Class(
     # @description Set the simulation clock of World.
     # @param x An integer value.
     set_time = function(x) {
-      checkmate::assert_integerish(x, lower = 0, len = 1)
-      assign("sim_time", as.integer(x), envir = .DMevn)
+      checkmate::assert_count(x, positive = T, na.ok = FALSE, null.ok = FALSE)
+      self$info$clock <- x
+      options(dymium.simulation_clock = x)
+      lg$info("Set the clock to {x}")
+      invisible(self)
+    },
+
+    # @description
+    #
+    # Set the scale of the simulation. This scale does propogate to Target objects
+    # stored inside World.
+    #
+    # @param x :: (`numeric(1)`)\cr
+    #  a scaling factor. 1 as default.
+    set_scale = function(x = 1) {
+      checkmate::assert_number(x, lower = 0, finite = TRUE, null.ok = FALSE)
+      if (x == 0) {
+        stop("scale cannot be equal to 0!")
+      }
+      options(dymium.simulation_scale = x)
       invisible()
     },
 
@@ -346,23 +397,30 @@ World <- R6::R6Class(
   ),
 
   active = list(
-    #' @field containers a list of all [Containers] stored in World.
+    # @field containers a list of all [Containers] stored in World.
     containers = function() {
       get(".containers", envir = private)
     },
-    #' @field containers a list of all [Entities] stored in World.
+    # @field containers a list of all [Entities] stored in World.
     entities = function() {
       get(".entities", envir = private)
     },
-    #' @field containers a list of all [Models] stored in World.
+    # @field containers a list of all [Models] stored in World.
     models = function() {
       get(".models", envir = private)
+    },
+    targets = function() {
+      get(".targets", envir = private)
+    },
+    scale = function() {
+      options("dymium.simulation_scale")[[1]]
     }
   ),
 
   private = list(
     .containers = list(),
     .entities = list(),
-    .models = list()
+    .models = list(),
+    .targets = list()
   )
 )

@@ -4,7 +4,9 @@
 \alias{Target}
 \alias{Targets}
 \title{Target}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting \link{Generic}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting \link{Generic}.
+}
 \description{
 \code{Target} is to be used within \code{TransitionClassification} or supply to event
 functions. If the target is dynamic then its \code{get} will return its target
@@ -34,21 +36,23 @@ A logical flag which indicates whether the target object is dynamic or not.
 \itemize{
 \item \code{get(time = .get_sim_time())}\cr
 (\code{integer(1)}) -> a named \code{list()}\cr
-Get a alignment target as a named list.
+Get an alignment target as a named list. Note that, all the elements in the list
+will be scaled by multiplying with the value stored in getOption("dymium.simulation_scale")
+and all the values in the output are rounded to their nearest integers.
 }
 }
 
 \examples{
 
 # static target
-TrgtStatic <- Target$new(list(yes = 10))
+TrgtStatic <- Target$new(x = list(yes = 10))
 TrgtStatic$data
 TrgtStatic$dynamic
 TrgtStatic$get()
 
 # dynamic target
 target_dynamic <- data.frame(time = 1:10, yes = 1:10)
-TrgtDynamic <- Target$new(list(yes = 10))
+TrgtDynamic <- Target$new(x = target_dynamic)
 TrgtDynamic$data
 TrgtDynamic$dynamic
 

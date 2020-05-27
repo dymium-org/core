@@ -3,7 +3,9 @@
 \name{World}
 \alias{World}
 \title{A representation of World}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Container}<-\link{ContainerGeneric}<-\link{Generic}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Container}<-\link{ContainerGeneric}<-\link{Generic}.
+}
 \description{
 World is to be used for storing \link{Entities}, \link{Models} and \link{Containers}, setting
 the simulation clock, and for keeping a log of your simulation outputs. You may
@@ -11,16 +13,6 @@ think of it as a container that is to be passed into event functions and let
 each event function accesses the instances it needs that are being stored inside
 World.
 }
-\section{Fields}{
-
-\describe{
-\item{\code{containers}}{a list of all \link{Containers} stored in World.}
-
-\item{\code{containers}}{a list of all \link{Entities} stored in World.}
-
-\item{\code{containers}}{a list of all \link{Models} stored in World.}
-}}
-
 \section{Construction}{
 \preformatted{x <- World$new()
 }
@@ -49,6 +41,9 @@ Contains \link{Containers} those were added using \code{self$add(...)}.
 Contains \link{Entities} those were added using \code{self$add(...)}.
 \item \code{models}\cr
 Contains \link{Models} those were added using \code{self$add(...)}.
+\item \code{scale}\cr
+A positive numeric value indicating the scale of Targets use by World. Note that,
+this cannot be 0.
 }
 }
 
@@ -86,8 +81,15 @@ Get the value of .DMevn$sim_time.
 Get information about the creation of the world object.
 Dymium's version, dependencies, R version etc.
 \item \code{set_time(x)}\cr
-(\code{integer(1)}) -> \code{NULL}\cr
+(\code{integer(1)}) -> \code{self}\cr
 Set the time on the World's simulation clock (.DMevn$sim_time).
+\item \code{set_scale(x)}\cr
+(\code{numeric(1)})\cr
+Set the simulation scale which is stored as a global option (\code{dymium.simulation_scale}).
+The scale parameter can also be accessd using \code{optionGet("dymium.simulation_scale")}.
+The simulation scale parameter is useful for running a downsized version of your
+world without manually going through all the data to scale them down. This scale
+automatically applies to all \link{Targets} created.
 \item \code{reset_time()}\cr
 Reset the value of .DMevn$sim_time to 0L (L is for forcing type integer
 otherwise 0 is of numeric type).

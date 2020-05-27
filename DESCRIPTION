@@ -1,12 +1,12 @@
 Package: dymiumCore
-Type: Package
-Title: The core functions of a Dynamic Microsimulation framework for Integrated Urban Models
-Version: 0.1.3
+Version: 0.1.8.9000
+Title: A Toolkit for Building a Dynamic Microsimulation Model for Integrated Urban Modelling
+Description: A modular microsimulation modelling framework for integrated urban modelling.
 Authors@R: c(
     person("Amarin", "Siripanich", email = "amarin@dymium.org", role = c("aut", "cre")),
-    person("Taha", "Rashidi", role = c("aut")))
+    person("Taha", "Rashidi", role = c("aut"))
+    )
 Maintainer: Amarin Siripanich <amarin@dymium.org>
-Description: A modular microsimulation modelling framework for integrated urban modelling.
 License: GPL-3
 URL: https://core.dymium.org, https://github.com/dymium-org/dymiumCore
 BugReports: https://github.com/dymium-org/dymiumCore/issues
@@ -21,7 +21,6 @@ Imports:
     matchingR (>= 1.3.0),
     magrittr,
     purrr (>= 0.3.0),
-    furrr (>= 0.1.0),
     lest (>= 1.0.0),
     lgr (>= 0.3.3),
     glue (>= 1.3.0),
@@ -29,23 +28,27 @@ Imports:
     usethis (>= 1.5.0),
     cli (>= 2.0.0),
     fs (>= 1.3.0),
-    httr (>= 1.4.0)
+    httr (>= 1.4.0),
+    rlang (>= 0.4.0),
+    tryCatchLog (>= 1.1.0)
 Suggests:
+    furrr (>= 0.1.0),
     testthat (>= 2.1.0),
     fastmatch (>= 1.1.0),
-    caret (>= 6.0),
     mlogit (>= 1.0),
+    caret (>= 6.0.0),
+    mlr (>= 2.17.0),
+    nnet (>= 7.3.0),
     pryr (>= 0.1.4),
     sf (>= 0.8),
     dodgr (>= 0.2.5),
     covr,
     mapview (>= 2.7.0),
     knitr,
+    randomForest,
     rmarkdown,
     ggplot2 (>= 3.0.0),
     DiagrammeR (>= 1.0.0),
-    caret (>= 6.0.0),
-    randomForest,
     reactable,
     patchwork (>= 1.0.0),
     scales (>= 1.1.0),
@@ -53,7 +56,8 @@ Suggests:
     ggthemes (>= 4.2.0),
     visNetwork (>= 2.0.0)
 Roxygen: list(markdown = TRUE, r6 = FALSE)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
+StagedInstall: no
 VignetteBuilder: knitr
 Collate: 
     'Generic.R'
@@ -88,6 +92,7 @@ Collate:
     'TransitionRegression.R'
     'World.R'
     'Zone.R'
+    'add_entity.R'
     'alignment.R'
     'checkmate.R'
     'checks.R'
@@ -95,10 +100,13 @@ Collate:
     'create-world.R'
     'data.R'
     'dymiumCore-package.R'
-    'household-formation.R'
     'module.R'
+    'mutate-entity.R'
     'population-register.R'
     'scenario.R'
+    'sim.R'
+    'simulate_choice.R'
+    'transition-fnc.R'
     'usethis.R'
     'utils-class.R'
     'utils-event.R'

@@ -3,7 +3,9 @@
 \name{DataBackendDataFrame}
 \alias{DataBackendDataFrame}
 \title{data.frame as data backend}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{DataBackend}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{DataBackend}.
+}
 \description{
 Data backend of data.frame. It is recommended to use \link{DataBackendDataTable}
 as it is more feature rich, efficient and significantly faster for many operations.
@@ -25,15 +27,24 @@ A \link{data.frame} object.
 }
 }
 
+\section{Active field (read-only)}{
+
+\itemize{
+\item \code{colnames}\cr
+The column names of the data.
+}
+}
+
 \section{Methods}{
 
 \itemize{
 \item \code{add(.data, fill = FALSE)}\cr
 (\code{data.frame()}) -> \code{NULL}\cr
 Add data.
-\item \code{get(rows, cols, copy = TRUE)}\cr
-(\code{integer(1)}, \code{character()}, \code{logical(1)}) -> \code{data.frame()}\cr
-Add data.
+\item \code{get(rows, cols)}\cr
+(\code{integer()}, \code{character()}) -> \code{data.frame()}\cr
+Get data. \code{rows} must be an integer vector, while \code{cols} can be either a character
+vector or an integer vector.
 \item \code{remove(rows, cols)}\cr
 (\code{integer()}, \code{integer()}) -> \code{NULL}\cr
 (abstract) Remove the data. (Developer's note: Those records that get removed
@@ -52,9 +63,6 @@ Get the number of columns.
 \item \code{nrow()}\cr
 () -> \code{integer(1)}\cr
 Get the number of rows.
-\item \code{colnames()}\cr
-() -> \code{character()}\cr
-Get the column names.
 \item \code{get_removed()}\cr
 () -> \code{data.frame()}\cr
 Get the removed data.

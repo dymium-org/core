@@ -212,7 +212,7 @@ get_module_files <- function(name, repo = dymiumModulesRepo) {
 #' @examples
 #'
 #' \dontrun{
-#'   get_all_module_files("dymium-org/dymiumModules)
+#'   get_all_module_files("dymium-org/dymiumModules")
 #' }
 #'
 get_all_module_files <- function(repo = dymiumModulesRepo) {

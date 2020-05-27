@@ -108,7 +108,7 @@
 #' Returns ids of the agents that have their response equal to `response_filter`.
 #'
 #'
-#' @seealso [TransitionRegression] and [trans].
+#' @seealso [TransitionRegression] and [Trans].
 #' @include Transition.R
 #' @export
 #'
@@ -139,7 +139,7 @@
 #' )
 TransitionClassification <- R6Class(
   classname = "TransitionClassification",
-  inherit = Transition,
+  inherit = Trans,
 
 # Public ------------------------------------------------------------------
 
@@ -172,12 +172,6 @@ TransitionClassification <- R6Class(
 
 # Private -----------------------------------------------------------------
 
-    .AgtObj = R6Class(), # use as a reference holder
-    .sim_data = data.table(),
-    .model = NULL, # model object or data.table
-    .sim_result = data.table(), # two columns: id, response
-    .target = integer(),
-    .targeted_agents = integer(), # a vector containing agent ids
     .allowed_classes = c('train', 'data.table', 'list', "numeric"),
 
     simulate = function() {
@@ -189,10 +183,11 @@ TransitionClassification <- R6Class(
         "list" = simulate_classification_list(self, private),
         "numeric" = simulate_classification_numeric(self, private),
         "glm" = simulate_classification_glm(self, private),
+        "WrappedModel" = simulate_choice(private$.model, private$.sim_data),
         stop(
           glue::glue(
-            "{class(self)[[1]]} class doesn't have an implementation of {class(private$.model)} \\
-            class. Please kindly request this in dymiumCore's Github issue or send in a PR! :)"
+            "{class(self)[[1]]} class doesn't know how to deal with a {class(private$.model)} \\
+            object. Please kindly request this in dymiumCore's Github issue or send in a PR! :)"
           )
         )
       )
@@ -263,7 +258,7 @@ simulate_classification_datatable <- function(self, private) {
     checkmate::assert_names(names(model), subset.of = c(names(private$.sim_data), .reserved_colnames))
   }
 
-  # two ways that data.table can be used in Transition
+  # two ways that data.table can be used in Trans
   # 1) as an enumerated table of a binary model
   # 2) as a classification model
 

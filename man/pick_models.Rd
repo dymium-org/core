@@ -4,16 +4,19 @@
 \alias{pick_models}
 \title{Pick models}
 \usage{
-pick_models(model, world, required_models)
+pick_models(model, world, required_models, as_r6model = FALSE)
 }
 \arguments{
 \item{model}{\code{logical(1)}\cr
-A named list that contains models that \link{Transition} supports.}
+A named list that contains models that \link{Trans} supports.}
 
 \item{world}{a \link{World} object.}
 
 \item{required_models}{\code{character()}\cr
 A character vector contains names of required models.}
+
+\item{as_r6model}{default as FALSE, if TRUE all \code{required_models} will be returned
+as \link{Model} objects.}
 }
 \value{
 a list of models.
@@ -22,8 +25,8 @@ a list of models.
 Pick models from \code{model} and \code{world} while giving a higher priority to any model
 object that has the same name between the two. For example, if both have a model
 object called \code{model_one}, although they have totally different values, this will
-pick the \code{model_one} from \code{model} and not the other \code{model_one} in \code{world}. It
-go over both objects to find all models with names in \code{required_models}.
+pick the \code{model_one} from \code{model} and not the other \code{model_one} in \code{world}. The
+function goes over both objects to find all models with the names in \code{required_models}.
 }
 \note{
 This is used by event functions to prioritise which models, from the user argument

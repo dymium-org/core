@@ -38,6 +38,39 @@ sample_choice <- function(x, size = 1, replace = FALSE, prob = NULL) {
   }
 }
 
+#' Discrete choice sampling
+#'
+#' @description
+#'
+#' A modified sampling function based on `base::sample`. It always assume that
+#' that `x` argument contains discrete values. For example, if a number 8 is given,
+#' it will assume that 8 is the only choice it has and not assume that the choices
+#' are number 1 to 8, like `base::sample` does. This feature makes it safe when the
+#' choices are discrete numbers and use in a programmatic way.
+#'
+#' @param x a vector that contains value(s) that represents a choiceset.
+#' @inheritParams base::sample
+#'
+#' @return returns a vector of the same type as `x` with length of `size`.
+#' @export
+#'
+#' @examples
+#'
+#' dsample(7, 10, replace = TRUE) # equivalent to rep(7, 10)
+#' dsample(7, 1)
+#' dsample(7) # which is equivalent to the above
+dsample <- function(x, size = 1, replace = FALSE, prob = NULL) {
+  if (length(x) != 1) {
+    sample(x = x, size = size, replace = replace, prob = prob)
+  } else {
+    if (replace || size == 1) {
+      rep(x, size)
+    } else {
+      stop("cannot take a sample larger than the population when 'replace = FALSE'")
+    }
+  }
+}
+
 #' Condense rows
 #'
 #' @description
@@ -180,8 +213,6 @@ lookup_and_replace = function(data, lookup_table, cols, id_col = NULL) {
 #'
 #' @return a data.frame
 #' @export
-#'
-#' @examples
 lookup_and_replace2 <- function(x, cols, mapping) {
   checkmate::assert_data_frame(x)
   checkmate::assert_character(cols)
@@ -235,11 +266,13 @@ lookup_and_replace2 <- function(x, cols, mapping) {
   # preserve the original column order
   data.table::setcolorder(x, x_col_order)
 
+  # don't check keys
+  data.table::setkey(x_str, NULL)
+  data.table::setkey(x, NULL)
+
   # final checking of column types and data dimiensions
-  res <- all.equal(x_str, x[0, ])
-  if (!isTRUE(res)) {
-    stop(res)
-  }
+  checkmate::assert_data_table(x)
+  checkmate::assert_names(names(x), identical.to = names(x_str))
 
   return(x)
 }

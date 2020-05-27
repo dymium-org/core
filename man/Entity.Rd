@@ -4,7 +4,9 @@
 \alias{Entity}
 \alias{Entities}
 \title{Entity class}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object.
+}
 \description{
 The base class (first building block) for \link{Agent}, \link{Asset} and \link{Environment}.
 }
@@ -19,8 +21,12 @@ and registers the \code{id_col} (\code{private$.id_col}).
 An \link[R6:R6Class]{R6::R6Class} generator that inherits from \code{DataBackend}.
 \item \code{.data} :: \code{data.frame()}\cr
 A object that inherits from \code{data.frame}.
-\item \code{id_col} :: \code{character(1)}\cr
-The id column of \code{.data}.
+\item \code{id_col} :: \code{character()}\cr
+The name of the id column of \code{.data} and all relation columns. The first
+element will be checked as the main id column of the entity data, which
+must be unique integers. The rest of the vector will be consider as relation
+columns. For example, if \code{c("pid", "partner_id")} is given \code{pid} must contain
+unique integers, while \code{partner_id} can be \code{NA} or non-unique integers.
 }
 }
 
@@ -28,6 +34,10 @@ The id column of \code{.data}.
 
 \itemize{
 \item \code{database}: a list of \link{DataBackend} objects that \link{Entity} possess.
+\item \code{id_col}: a character vector of all id columns with the first element being
+the main id column and the other elements, if any, are relation columns.
+\item \code{data_template}: a data.table object that contains the minimum data requirement apart
+from the \code{id_col}.
 }
 }
 
@@ -44,6 +54,12 @@ Returns a \link{DataBackend} with the name that matches \code{name}.
 If \code{name} is not given, the function will try to return the \link{DataBackend} with name \code{attrs}.
 If \code{attrs} is not present or no \code{DataBackEnd} objects have been loaded it will
 return \code{NULL}.
+\item \code{add(.data, check_existing = FALSE)}\cr
+(\code{\link[data.table:data.table]{data.table::data.table()}}, \code{logical(1)})\cr
+Add attribute data of new entities. This makes sure none of the ids
+of the new entities are the same as the existing entity records. However, other id columns,
+relation columns can be exempted from the check by setting \code{check_existing} as \code{FALSE}.
+Meaning, the other id columns can contain ids of the existing entities.
 \item \code{get_id_col}\cr
 () -> \code{character(1)}\cr
 Returns the column id field of data.
@@ -60,9 +76,10 @@ Returns the names of all data objects (in \code{private$.data}) that belongs to 
 (\code{character(1)}) -> \code{\link[data.table:data.table]{data.table::data.table()}}\cr
 Return removed agent data. If \code{name} is missing, the first data, which should
 contains the main attributes of the agent object, will be returned.
-\item \code{get_ids(idx)}\cr
-(\code{integer()}) -> \code{integer()}\cr
-Return the ids of the indexes in the argrument \code{idx}, respectively.
+\item \verb{get_ids(include_removed = }FALSE\verb{)}\cr
+(\code{logical(1)}) -> \code{integer()}\cr
+Return the ids of the indexes in the argrument \code{idx}, respectively. If \code{include_removed}
+is \code{TRUE}, ids of removed data will also be returned.
 \item \code{get_idx(ids)}\cr
 (\code{integer()}) -> \code{integer()}\cr
 Return the indexes of the ids in the argrument \code{ids}, respectively.

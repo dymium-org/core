@@ -6,9 +6,49 @@ template:
     docsearch:
       api_key: 5b9cd61032daf2c5966b7cd693157aa2
       index_name: dymiumcore
+    ganalytics: UA-158512288-1
+    bootswatch: readable
 
 home:
   title: A toolbox for building a dynamic microsimulation model in R.
+
+toc:
+  depth: 2
+
+navbar:
+  structure:
+      left:  [home, introduction, reference, articles, news]
+      right: [github]
+  components:
+    home:
+      icon: fas fa-home fa-lg
+      href: index.html
+    introduction:
+      text: Introduction
+      href: articles/dymium-intro.html
+    articles:
+      text: Articles
+      menu:
+        - text: "Why another microsimulation package?"
+          href: articles/why-another-microsim.html
+        - text: 'Manual'
+        - text: 'For developers'
+          href: articles/for-developers.html
+        - text: 'For modellers'
+          href: articles/for-modellers.html
+        - text: 'For end users'
+          href: articles/for-endusers.html
+        - text: 'Use cases'
+        - text: 'Residential mobility'
+          href: articles/residential-mobility.html
+        - text: 'Mate matching'
+          href: articles/mate-matching.html
+        - text: 'Marital status'
+          href: articles/marital-status.html
+    news:
+      text: News
+      href: news/index.html
+
 
 reference:
 - title: Entities
@@ -28,28 +68,32 @@ reference:
     - Container
     - World
     - Population
+    - Model
     - pop_register
     - household_formation
-- title: Transitions & Alignment
+- title: Simulation tools & Alignment
   contents:
-    - matches("^Transition.")
-    - trans
+    - matches("^Trans.")
+    - transition
+    - mutate_entity
+    - add_entity
+    - remove_entity
     - SupportedTransitionModels
     - Target
+    - simulate_choice
     - alignment
-- title: Logging
+    - Pipeline
+    - register
+    - starts_with("Match")
+- title: Logging and inspection
   contents:
+    - add_log
+    - get_log
     - add_history
     - get_history
     - combine_histories
     - plot_history
     - inspect
-    - get_log
-- title: Extra classes
-  contents:
-    - starts_with("Match")
-    - Model
-    - Pipeline
 - title: Data backends
   contents:
     - matches("DataBackend.")
@@ -92,60 +136,25 @@ reference:
     - starts_with("expect_")
 - title: "Miscellaneous"
   contents:
+    - extract_data
     - starts_with("dm_")
     - .get_sim_time
     - omit_derived_vars
     - normalise_derived_vars
     - sample_choice
     - lookup_and_replace
+    - lookup_and_replace2
     - condense_rows
     - element_wise_expand_lists
     - unnest_datatable
     - dt_group_and_sort
     - validate_linkages
+    - is_dymium_class
 
 - title: Base classes
   contents:
     - Generic
     - Entity
-    - Transition
+    - Trans
     - DataBackend
     - ContainerGeneric
-    - is_dymium_class
-
-toc:
-  depth: 2
-
-navbar:
-  structure:
-      left:  [home, introduction, reference, articles, news]
-      right: [github]
-  components:
-    home:
-      icon: fas fa-home fa-lg
-      href: index.html
-    introduction:
-      text: Introduction
-      href: articles/dymium-intro.html
-    articles:
-      text: Articles
-      menu:
-        - text: "Why another microsimulation package?"
-          href: articles/why-another-microsim.html
-        - text: 'Manual'
-        - text: 'For developers'
-          href: articles/for-developers.html
-        - text: 'For modellers'
-          href: articles/for-modellers.html
-        - text: 'For end users'
-          href: articles/for-endusers.html
-        - text: 'Use cases'
-        - text: 'Residential mobility'
-          href: articles/residential-mobility.html
-        - text: 'Mate matching'
-          href: articles/mate-matching.html
-        - text: 'Marital status'
-          href: articles/marital-status.html
-    news:
-      text: News
-      href: news/index.html

@@ -71,8 +71,10 @@ test_that("combine_histories & plot_history", {
   chist <- combine_histories(world)
   checkmate::expect_data_table(chist)
   checkmate::expect_names(names(chist), identical.to = c("time", "created_timestamp", "event", "id", "entity"))
-  checkmate::expect_class(plot_history(world, by_entity = TRUE), classes = "ggplot")
-  checkmate::expect_class(plot_history(world, by_entity = FALSE), classes = "ggplot")
-  checkmate::expect_class(plot_history(chist, by_entity = TRUE), classes = "ggplot")
-  checkmate::expect_class(plot_history(chist, by_entity = FALSE), classes = "ggplot")
+  if (requireNamespace("patchwork")) {
+    checkmate::expect_class(plot_history(world, by_entity = TRUE), classes = "ggplot")
+    checkmate::expect_class(plot_history(world, by_entity = FALSE), classes = "ggplot")
+    checkmate::expect_class(plot_history(chist, by_entity = TRUE), classes = "ggplot")
+    checkmate::expect_class(plot_history(chist, by_entity = FALSE), classes = "ggplot")
+  }
 })

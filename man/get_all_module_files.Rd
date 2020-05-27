@@ -15,3 +15,10 @@ a character vector.
 \description{
 Get all files from all modules in a repository.
 }
+\examples{
+
+\dontrun{
+  get_all_module_files("dymium-org/dymiumModules")
+}
+
+}

@@ -3,7 +3,9 @@
 \name{Generic}
 \alias{Generic}
 \title{Generic class}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object.
+}
 \description{
 Can be used as a template for other objects. This contains useful utility
 functions for abstraction objects. See the public members (methods).
@@ -36,6 +38,17 @@ the calling scope to find a logger named \code{lg} which is the default name use
 dymium modules. If not found, then it will automatically use dymiumCore's logger.
 \item \code{is_dymium_class()}\cr
 Returns \code{TRUE}. Use for internal checking.
+}
+}
+
+\section{Private field}{
+
+\itemize{
+\item \code{.log}\cr
+A data.table for storing logs. There are 6 columns: time (integer),
+created_timestamp(integer), class (character), tag (character), desc (character),
+value (list). The \code{value} column is a list column gives it a flexibility to store
+any types of objects.
 }
 }
 

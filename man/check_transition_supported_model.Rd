@@ -5,7 +5,7 @@
 \alias{assert_transition_supported_model}
 \alias{test_transition_supported_model}
 \alias{expect_transition_supported_model}
-\title{Check if an argument is an object that is supported by \link{Transition}}
+\title{Check if an argument is an object that is supported by \link{Trans}}
 \usage{
 check_transition_supported_model(x)
 
@@ -40,5 +40,5 @@ See \code{\link[testthat]{expect_that}}}
 a logical value if TRUE, if false then returns an error message
 }
 \description{
-Check if an argument is an object that is supported by \link{Transition}
+Check if an argument is an object that is supported by \link{Trans}
 }

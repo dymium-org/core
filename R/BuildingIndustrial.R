@@ -23,9 +23,8 @@
 BuildingIndustrial <- R6Class(
   classname = "BuildingIndustrial",
   inherit = Building,
-  public = list(
-
-    # minimum required data structure
+  public = list(),
+  active = list(
     data_template = function() {
       data.table(
         # the first column should always be the unique id column of the class

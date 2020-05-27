@@ -14,10 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-
-# Why another microsimulation package?
-
-As an R user, I feel that there are so many great packages that can makes R a complete platform for microsimulation and yet, to my knowledge, no one has taken advantage of this fact. The stages of microsimulation modelling is no different from the stages of any other modelling excerises in general, at least at the high-level. They can be broken down as the following:
+As an R user, I feel that there are so many great packages that can make R a complete platform for microsimulation and yet, to my knowledge, no one has fully taken advantage of it. The stages of microsimulation modelling is no different from the stages of any other modelling excerises in general, at least at the high-level. They can be broken down as the following:
 
 1. __Data preparation__: synthesise microdata and estimate models. 
 2. __Microsimulation__: microsimulate agents in the microdata using the estimated models.
@@ -34,6 +31,14 @@ In the first stage, packages for data manipulation such as [data.table](http://r
 ### Systhesise microdata
 
 To represent the initial state of the simulation we need microdata and often the microdata that we need is only available as a small sample of the true population. This is to prevent the survey participants from being identified. Hence, we often need to synthesise/reconstruct a population that resembles the true population using the microdata and some known margins of the true population. Luckily, as an R user you have many well deleloped packages to choose from for systhesising data such as [MultiLevelIPF](https://github.com/krlmlr/MultiLevelIPF), [simPop](https://cran.r-project.org/web/packages/simPop/index.html), [mipfp](https://cran.r-project.org/web/packages/mipfp/mipfp.pdf). Even a book on this topic, [Spatial Microsimulation with R by Robin Lovelace and Morgane Dumont](https://spatial-microsim-book.robinlovelace.net), in R is available!
+
+### Imputing variables
+
+Sometimes, you may find that your variables of interest exist in another dataset that is similar to your base microdata. You may use data fusion techiques to transfer those variables to your base microdata. [StatMatch](https://cran.r-project.org/web/packages/StatMatch/index.html) can take care of all your imputation needs. It is very easy to use and comes with a vignette that is well-written. 
+
+<details>
+Let's assume that your dataset, `A`, consists of records with `X` variables and the other dataset, `B`, consist of `X` variables and a `Y` variable. To transfer the `Y` varible, find a probable `Y` value for each of the records of `A` by comparing the `X` variables of both `A` and `B` that are similar, then transfer the `Y` value of the most similar record in `B` to `A`. This, in a nutshell, is called data fusion.
+</details>
 
 ### Esimate models
 

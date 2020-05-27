@@ -3,7 +3,9 @@
 \name{DataBackendDataTable}
 \alias{DataBackendDataTable}
 \title{data.table::data.table as data backend}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{DataBackendDataFrame}<-\link{DataBackend}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{DataBackendDataFrame}<-\link{DataBackend}.
+}
 \description{
 \link{DataBackendDataTable} uses \link[data.table:data.table]{data.table::data.table} as back end to exploit
 its fast and efficient implementations of many data operations. This includes
@@ -11,18 +13,26 @@ the \verb{:=} operator which allows a data.table object to be modified in place,
 without making a copy.
 }
 \section{Construction}{
-\preformatted{x <- DataBackendDataTable$new(.data)
+\preformatted{x <- DataBackendDataTable$new(.data, key = NULL)
 }
 \itemize{
-\item \code{data} :: \code{\link[data.table:data.table]{data.table::data.table()}}\cr
+\item \code{.data} :: \code{\link[data.table:data.table]{data.table::data.table()}}\cr
 The input \code{\link[data.table:data.table]{data.table::data.table()}}.
+\item \code{key} :: \code{NULL}|\code{character(1)}\cr
+The key of \code{.data}.
 }
 }
 
 \section{Fields}{
 
 \itemize{
-\item \code{NULL}\cr
+\item \code{key} :: \code{NULL}|\code{character(1)}\cr
+The key of \code{.data}.
+\item \code{data} :: \code{\link[data.table:data.table]{data.table::data.table()}}\cr
+A copy of the data.table that was used to create the backend object.
+To get the reference of the data.table, use \verb{$get(copy = FALSE)}.
+\item \code{removed_data} :: \code{\link[data.table:data.table]{data.table::data.table()}}\cr
+A copy of the removed data.
 }
 }
 
@@ -37,7 +47,11 @@ Add data.
 Remove the rows in \code{rows} and the columns in \code{cols} in the data.
 \item \code{get(rows, cols, copy = TRUE)}\cr
 (\code{integer(1)}, \code{character()}, \code{logical(1)}) -> \code{data.frame()}\cr
-Add data.
+Get data. If copy is \code{TRUE}, the returned data.table is a copy of the actual data.table
+object used to create this backend object. Otherwise, the reference to the
+data.table is returned which allows it to be modified with \link[data.table:set]{data.table::set} and
+\verb{:=}. Note that, \code{rows} should be indexes of the data.table and \code{cols} are
+a character vector that contains column names to be returned.
 \item \code{view(interactive = FALSE)}\cr
 (\code{logical(1)})\cr
 View the data. If \code{interactive} is TRUE, the data will be shown in your
@@ -51,9 +65,6 @@ Get the number of columns.
 \item \code{nrow()}\cr
 () -> \code{integer(1)}\cr
 Get the number of rows.
-\item \code{colnames()}\cr
-() -> \code{character()}\cr
-Get the column names.
 \item \code{get_removed()}\cr
 () -> \code{data.frame()}\cr
 Get the removed data.

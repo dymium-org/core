@@ -3,7 +3,9 @@
 \name{Agent}
 \alias{Agent}
 \title{Agent class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Entity}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Entity}.
+}
 \description{
 Agent class is the generic class for creating urban actors such
 as \link{Individual}, \link{Household}, firms, \link{Building} and more.
@@ -17,22 +19,13 @@ as \link{Individual}, \link{Household}, firms, \link{Building} and more.
 
 \itemize{
 \item \code{data}::\code{data.table::data.table()}\cr
-Contains the attributes of agent. One of the attributes must be a unique id field
+Contain the attributes of agents. One of the attributes must be a unique id field.
 }
 }
 
 \section{Methods}{
 
 \itemize{
-\item \strong{DEPRECATING} \code{initialise_data(data, id_col)}\cr
-(\code{\link[data.table:data.table]{data.table::data.table()}}, \code{character(1)}) -> \code{NULL}\cr
-Store data to data while making sure that \code{data} meets all the
-requirements. \code{data}, which is also the first set of data for the agent object,
-will be stored at the first index in \code{private$.data}, a named list of data objects, and named
-as \code{attrs}.
-\item \code{add_new_agents(parent_ids = NULL, data = NULL)}\cr
-(\code{integer()}|\code{character()}, \code{\link[data.table:data.table]{data.table::data.table()}}) -> \code{NULL}\cr
-Adds new agent records to data.
 \item \code{get_latest_agent_id(ids)}\cr
 (\code{integer()}) -> \code{integer()}\cr
 Return the id of the last agent that was created.
@@ -53,7 +46,7 @@ except for the id attribute.
 \item \code{add(.data)}\cr
 Add new agents in \code{.data} to the existing pool of agents. It should be noted,
 that all new agents must have all the columns that the existing agents possess
-with the exception of derived variables which is denoted by the \code{.} prefix.
+with exception of derived variables which should be denoted by a \code{.} prefix.
 For example, \code{.past_partner_id} is a derived variable which is allowed to be
 missing in the new agents' data.
 }

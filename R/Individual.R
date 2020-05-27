@@ -9,26 +9,30 @@
 #' @section Construction:
 #'
 #' ```
-#' Ind <- Individual$new(.data, id_col)
+#' Ind <- Individual$new(.data, id_col, hid_col)
 #' ```
 #'
-#' * .data::[data.table::data.table]\cr
+#' * `.data`::[data.table::data.table]\cr
 #'   Microdata of Individuals.
 #'
-#' * id_col::`character(1)`\cr
+#' * `id_col`::`character()`\cr
+#'   Names of the primary id colum and relation id colunns in `.data`
+#'
+#' * `hid_col`::`character(1)`\cr
 #'   Name of the id colum in `.data`
 #'
 #' @section Public Fields:
 #'
-#'  * NULL\cr
+#'  * `NULL`\cr
+#'
+#' @section Active Fields (read-only):
+#'
+#' * `hid_col`::(`character(1)`)\cr
+#'  Household id variable name.
 #'
 #' @section Public Methods:
 #'
-#'  Inherits all methods from [Agent] and the following..
-#'
-#'  * `initialise_data(data, id_col = "pid", hid_col)`\cr
-#'  ([data.table::data.table()], `character(1)`, `character(1)`) -> `NULL`\cr
-#'  Add data.
+#'  Inherits all fields and methods of [Agent].
 #'
 #'  * `get_father(ids)`\cr
 #'  (`integer()`) -> `integer()`\cr
@@ -123,28 +127,15 @@ Individual <- R6::R6Class(
   "Individual",
   inherit = Agent,
   public = list(
-    initialise_data = function(.data, id_col = "pid", hid_col) {
-      super$initialise_data(.data = .data, id_col = id_col)
-      if (!missing(hid_col)) {
+
+    initialize = function(.data, id_col = "pid", hid_col = NULL) {
+      super$initialize(.data = .data, id_col = id_col)
+      if (!is.null(hid_col)) {
         checkmate::assert_names(names(.data), must.include = hid_col)
         private$.hid_col <- hid_col
         lg$info("sets hid_col to: '{private$.hid_col}'")
       }
-      invisible()
-    },
-
-    data_template = function() {
-      data.table(
-        pid = integer(),
-        hid = integer(),
-        # fid = integer(), # firm/work id
-        age = integer(),
-        sex = character(),
-        marital_status = character(),
-        partner_id = integer(),
-        father_id = integer(),
-        mother_id = integer()
-      )
+      return(invisible(self))
     },
 
     get_household_ids = function(ids) {
@@ -174,8 +165,7 @@ Individual <- R6::R6Class(
       if (length(private$.hid_col) != 0) {
         return(private$.hid_col)
       }
-      self$msg_warn("`hid_col` has not been specified")
-      invisible()
+      return(NULL)
     },
 
     get_ids_from_id_cols = function(id_cols = NULL, na.rm = TRUE) {
@@ -191,6 +181,15 @@ Individual <- R6::R6Class(
         return(res[!is.na(res)])
       }
       res
+    },
+
+    add = function(.data, check_existing = FALSE, ...) {
+      dots <- list(...)
+      if (!is.null(self$get_hid_col()) & is.null(dots$add_population)) {
+        checkmate::assert_names(names(.data), must.include = self$get_hid_col())
+        assert_subset2(.data[[self$get_hid_col()]], self$get_attr(self$get_hid_col()))
+      }
+      super$add(.data, check_existing)
     },
 
     add_relationship = function(ids, target_ids, type = c('father', 'mother', 'partner')) {
@@ -210,34 +209,36 @@ Individual <- R6::R6Class(
 
       self_idx <- self$get_idx(ids = unique(ids))
 
-      # add relationship
-      switch(type,
-             "father" = {
-               # expect that if emptied == integer(0)
-               if (!all(self$get_data(copy = FALSE)[self_idx, is.na(father_id)])) {
-                 stop(paste0(type, " id should only have one agent id at birth."))
-               }
-               self$get_data(copy = FALSE)[self_idx, father_id := target_ids]
-             },
-             "mother" = {
-               # expect that if emptied == integer(0)
-               if (!all(self$get_data(copy = FALSE)[self_idx, is.na(mother_id)])) {
-                 stop(paste0(type, " id should only have one agent id at birth."))
-               }
-               self$get_data(copy = FALSE)[self_idx, mother_id := target_ids]
-             },
-             "partner" = {
-               # expect that if emptied == integer(0)
-               if (!all(self$get_data(copy = FALSE)[self_idx, is.na(partner_id)])) {
-                 print(self$get_data(copy = FALSE)[self_idx,])
-                 stop(paste0(type, " id cannot be overwrite but can be removed."))
-               }
-               target_idx <- self$get_idx(ids = target_ids)
-               # self adds partner
-               self$get_data(copy = FALSE)[self_idx, partner_id := target_ids]
-               # partner adds self
-               self$get_data(copy = FALSE)[target_idx, partner_id := ids]
-             })
+      # ADD RELATIONSHIP
+      if (type == 'father') {
+        # expect that if emptied == integer(0)
+        if (!all(self$get_data(copy = FALSE)[self_idx, is.na(father_id)])) {
+          stop(paste0(type, " id should only have one agent id at birth."))
+        }
+        self$get_data(copy = FALSE)[self_idx, father_id := target_ids]
+      }
+
+      if (type == 'mother') {
+        # expect that if emptied == integer(0)
+        if (!all(self$get_data(copy = FALSE)[self_idx, is.na(mother_id)])) {
+          stop(paste0(type, " id should only have one agent id at birth."))
+        }
+        self$get_data(copy = FALSE)[self_idx, mother_id := target_ids]
+      }
+
+      if (type == 'partner') {
+        # expect that if emptied == integer(0)
+        if (!all(self$get_data(copy = FALSE)[self_idx, is.na(partner_id)])) {
+          print(self$get_data(copy = FALSE)[self_idx,])
+          stop(paste0(type, " id cannot be overwrite but can be removed."))
+        }
+        target_idx <- self$get_idx(ids = target_ids)
+        # self adds partner
+        self$get_data(copy = FALSE)[self_idx, partner_id := target_ids]
+        # partner adds self
+        self$get_data(copy = FALSE)[target_idx, partner_id := ids]
+      }
+
       invisible()
     },
 
@@ -373,20 +374,23 @@ Individual <- R6::R6Class(
     },
 
     get_parent_hid = function(ids = NULL) {
-      data <- self$get_data()
-      # merge hid of mother and father
+
+      ind_data <- self$get_data(copy = FALSE)
+
       father_hid <-
-        data[data, .(pid, father_hid = hid), on = .(pid == father_id)]
+        ind_data[ind_data, .(pid, father_hid = hid), on = .(pid == father_id)]
+
       mother_hid <-
-        data[data, .(pid, mother_hid = hid), on = .(pid == mother_id)]
-      parent_hids <-
-        father_hid[mother_hid, on = self$get_id_col()]
+        ind_data[ind_data, .(pid, mother_hid = hid), on = .(pid == mother_id)]
+
+      parent_hids <- merge(father_hid, mother_hid, by = self$primary_id)
 
       if (!is.null(ids)) {
         parent_hids[pid %in% ids]
       } else {
         parent_hids
       }
+
     },
 
     # @description
@@ -464,6 +468,23 @@ Individual <- R6::R6Class(
 
   ),
 
+  active = list(
+    hid_col = function() {
+      base::get(".hid_col", envir = private)
+    },
+
+    data_template = function() {
+      data.table(
+        age = integer(),
+        sex = character(),
+        marital_status = character(),
+        partner_id = integer(),
+        father_id = integer(),
+        mother_id = integer()
+      )
+    }
+  ),
+
   private = list(
     # private -----------------------------------------------------------------
     .hid_col = character(),
@@ -505,5 +526,5 @@ Individual <- R6::R6Class(
              "mother" = {return(self$get_data(copy = FALSE)[idx, mother_id])},
              "partner" = {return(self$get_data(copy = FALSE)[idx, partner_id])},
              "children" = {return(.get_children(ids))})
-    }
-))
+    })
+  )

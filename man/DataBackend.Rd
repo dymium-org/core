@@ -4,7 +4,9 @@
 \alias{DataBackend}
 \alias{DataBackends}
 \title{DataBackend class}
-\format{\link[R6:R6Class]{R6::R6Class} object.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object.
+}
 \description{
 The base class of all DataBackends. \link{DataBackend} isn't supposed to be use directly.
 It is meant to be implemented by the user. It is recommended that \link{DataBackendDataTable}

@@ -22,15 +22,21 @@
 #'
 #'  * `NULL`\cr
 #'
+#' @section Active field (read-only):
+#'
+#'  * `colnames`\cr
+#'  The column names of the data.
+#'
 #' @section Methods:
 #'
 #'  * `add(.data, fill = FALSE)`\cr
 #'  (`data.frame()`) -> `NULL`\cr
 #'  Add data.
 #'
-#'  * `get(rows, cols, copy = TRUE)`\cr
-#'  (`integer(1)`, `character()`, `logical(1)`) -> `data.frame()`\cr
-#'  Add data.
+#'  * `get(rows, cols)`\cr
+#'  (`integer()`, `character()`) -> `data.frame()`\cr
+#'  Get data. `rows` must be an integer vector, while `cols` can be either a character
+#'  vector or an integer vector.
 #'
 #'  * `remove(rows, cols)`\cr
 #'  (`integer()`, `integer()`) -> `NULL`\cr
@@ -55,10 +61,6 @@
 #'  () -> `integer(1)`\cr
 #'  Get the number of rows.
 #'
-#'  * `colnames()`\cr
-#'  () -> `character()`\cr
-#'  Get the column names.
-#'
 #'  * `get_removed()`\cr
 #'  () -> `data.frame()`\cr
 #'  Get the removed data.
@@ -82,8 +84,14 @@ DataBackendDataFrame <-
 
       },
 
-      get = function(rows, cols, copy = TRUE) {
-        .dataframe_get(self, private, .data = private$.data, rows = rows, cols = cols, copy = copy)
+      get = function(rows, cols) {
+        if (!missing(rows)) {
+          checkmate::assert_integerish(rows, any.missing = FALSE, lower = 1)
+          if (max(rows) > nrow(private$.data)) {
+            stop("max of 'rows' exceeds the number of rows of the data.")
+          }
+        }
+        return(subset(private$.data[rows, ], select = cols))
       },
 
       remove = function() {
@@ -115,16 +123,12 @@ DataBackendDataFrame <-
         }
       },
 
-      head = function(n) {
+      head = function(n = 5) {
         head(private$.data, n)
       },
 
       ncol = function() {
         ncol(private$.data)
-      },
-
-      colnames = function() {
-        colnames(private$.data)
       },
 
       nrow = function() {
@@ -136,45 +140,14 @@ DataBackendDataFrame <-
       },
 
       get_removed = function() {
-        .dataframe_get(self, private, .data = private$.removed_data, copy = FALSE)
+        private$.removed_data
       }
+    ),
+
+    active = list(
+
+      colnames = function() {
+        return(colnames(base::get(x = ".data", envir = private)))
+      }
+
     ))
-
-.dataframe_get <- function(self, private, .data, rows, cols, copy = TRUE) {
-  checkmate::assert(
-    checkmate::check_data_frame(.data, null.ok = FALSE),
-    checkmate::check_logical(copy, any.missing = FALSE, len = 1, null.ok = FALSE)
-  )
-
-  if (nrow(.data) == 0) {
-    lg$trace(".data is emptied returning emptied data")
-    return(.data)
-  }
-
-  if (copy == FALSE & !is.data.table(.data)) {
-    lg$warn("`copy = FALSE` is ignored, a data.frame doesn't have a reference semetic.")
-  }
-
-  if (copy == FALSE & is.data.table(.data)) {
-    if (!missing(rows) & !missing(cols)) {
-      stop("Can't return a reference semetic to a subset of a data.table.")
-    }
-    return(.data)
-  }
-
-  if (missing(cols) & !missing(rows)) {
-    checkmate::check_integerish(rows, any.missing = FALSE, null.ok = FALSE)
-    return(.data[rows,])
-  }
-
-  if (!missing(cols)) {
-    checkmate::assert_names(names(.data), must.include = cols)
-  }
-
-  if (is.data.table(.data)) {
-    .data[rows, cols, with = FALSE]
-  } else {
-    .data[rows, cols, drop = FALSE]
-  }
-
-}

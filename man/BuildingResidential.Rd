@@ -3,7 +3,9 @@
 \name{BuildingResidential}
 \alias{BuildingResidential}
 \title{Building Residential class}
-\format{\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Building}<-\link{Asset}<-\link{Entity}.}
+\format{
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Building}<-\link{Asset}<-\link{Entity}.
+}
 \description{
 For storing methods and fields related to residential buildings.
 }

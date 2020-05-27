@@ -4,11 +4,13 @@
 \name{toy_households}
 \alias{toy_households}
 \title{Toy household microdata}
-\format{A data frame with 100 rows and 2 variables:
+\format{
+A data frame with 100 rows and 2 variables:
 \describe{
 \item{hid}{(\code{integer()}) household id}
 \item{did}{(\code{integer()}) dwelling id}
-}}
+}
+}
 \usage{
 data(toy_households)
 }

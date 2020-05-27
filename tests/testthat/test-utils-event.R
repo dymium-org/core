@@ -1,6 +1,6 @@
 test_that("scheduler", {
-  expect_true(is_scheduled(time_steps = 0))
-  expect_false(is_scheduled(time_steps = 1))
+  checkmate::expect_flag(is_scheduled(time_steps = 0), na.ok = FALSE)
+  checkmate::expect_flag(is_scheduled(time_steps = 1), na.ok = FALSE)
 })
 
 
@@ -91,6 +91,18 @@ test_that("pick_models - default behavior 3", {
   checkmate::expect_list(pick_models(my_model, world, REQUIRED_MODELS), names = "strict")
 })
 
+test_that("pick_models - provide an Model object", {
+  # event function set model to NULL as default
+  create_toy_world()
+  my_model <- list(model_one = Model$new(list(yes = 0.5, no = 0.5)),
+                   model_two = Model$new(list(yes = 0.5, no = 0.5)))
+  REQUIRED_MODELS <- c("model_one")
+  picked_models <- pick_models(my_model, world, REQUIRED_MODELS)
+  checkmate::expect_list(picked_models, names = "strict", len = 1)
+  expect_true(names(picked_models) == REQUIRED_MODELS)
+})
+
+
 test_that("pick_models - deterministic case", {
   # event function set model to NULL as default
   create_toy_world()
@@ -99,4 +111,24 @@ test_that("pick_models - deterministic case", {
   world$add(x = list(yes = 0.5, no = 0.5), "model_two")
   REQUIRED_MODELS <- c()
   expect_null(pick_models(my_model, world, REQUIRED_MODELS))
+})
+
+test_that("pick_models with as_r6model is TRUE", {
+  create_toy_world()
+  my_model <- NULL
+  world$add(x = list(yes = 0.5, no = 0.5), "model_one")
+  world$add(x = list(yes = 0.5, no = 0.5), "model_two")
+  REQUIRED_MODELS <- c("model_one")
+  models <- pick_models(my_model, world, REQUIRED_MODELS, as_r6model = TRUE)
+  checkmate::expect_r6(models$model_one, classes = "Model")
+})
+
+test_that("pick_models with as_r6model is FALSE", {
+  create_toy_world()
+  my_model <- NULL
+  world$add(x = list(yes = 0.5, no = 0.5), "model_one")
+  world$add(x = list(yes = 0.5, no = 0.5), "model_two")
+  REQUIRED_MODELS <- c("model_one")
+  models <- pick_models(my_model, world, REQUIRED_MODELS, as_r6model = FALSE)
+  checkmate::expect_list(models$model_one)
 })

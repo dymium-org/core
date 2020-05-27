@@ -33,7 +33,7 @@ expect_required_models(
 \item{names}{a character vector contains names of the required models}
 
 \item{check_supported_model}{Whether to check that each element in \code{x} are
-supported by \link{Transition} using \code{assert_transition_supported_model()}.}
+supported by \link{Trans} using \code{assert_transition_supported_model()}.}
 
 \item{.var.name}{[\code{character(1)}]\cr
 The custom name for \code{x} as passed to any \code{assert*} function.

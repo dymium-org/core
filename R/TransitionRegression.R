@@ -24,7 +24,7 @@
 #' In a future update, there will be an option which allows the prediction result
 #' to be drawn from a distribution to add randomness to the result.
 #'
-#' @format [R6::R6Class] object inheriting from [Transition]
+#' @format [R6::R6Class] object inheriting from [Trans]
 #' @section Construction:
 #'
 #' ```
@@ -80,12 +80,13 @@
 #'  (`character()`) -> (`integer()`)\cr
 #'  Returns ids of the agents that have their response equal to `response_filter`.
 #'
-#' @seealso [TransitionClassification] and [trans].
+#' @seealso [TransitionClassification] and [Trans].
 #'
 #' @include Transition.R
 #' @export
 #'
-#' @example
+#' @examples
+#'
 #' # load toy data
 #' create_toy_population()
 #' Ind <- pop$get("Individual")
@@ -104,7 +105,7 @@
 #' TransAge$update_agents(attr = "age")
 TransitionRegression <- R6Class(
   classname = "TransitionRegression",
-  inherit = Transition,
+  inherit = Trans,
   public = list(
     initialize = function(x, model, targeted_agents = NULL) {
       super$initialize(x, model, target = NULL, targeted_agents = targeted_agents)
@@ -121,20 +122,18 @@ TransitionRegression <- R6Class(
 
     simulate = function() {
 
-      # response is a vector of simulated choices that maybe of type double,
-      # integer, logical or character.
-      response <- switch(
-        EXPR = class(private$.model)[[1]],
-        "train" = simulate_regression_train(self, private),
-        "glm" = simulate_regression_glm(self, private),
-        "lm" = simulate_regression_glm(self, private),
-        stop(
-          glue::glue(
-            "Transition class doesn't have an implementation of {class(private$.model)} \\
-            class. Please kindly request this in dymiumCore's Github issue or send in a PR! :)"
-          )
+      model_class <- class(private$.model)[[1]]
+
+      response <-
+        switch(
+          EXPR = model_class,
+          "train" = simulate_regression_train(self, private),
+          "glm" = simulate_regression_glm(self, private),
+          "lm" = simulate_regression_glm(self, private)
         )
-      )
+
+      if (is.null(response))
+        stop(sprintf("'%s' is not supported by TransitionRegression.", model_class))
 
       response
     }

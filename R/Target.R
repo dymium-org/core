@@ -31,7 +31,9 @@
 #'
 #'  * `get(time = .get_sim_time())`\cr
 #'  (`integer(1)`) -> a named `list()`\cr
-#'  Get a alignment target as a named list.
+#'  Get an alignment target as a named list. Note that, all the elements in the list
+#'  will be scaled by multiplying with the value stored in getOption("dymium.simulation_scale")
+#'  and all the values in the output are rounded to their nearest integers.
 #'
 #' @aliases Targets
 #' @export
@@ -39,14 +41,14 @@
 #' @examples
 #'
 #' # static target
-#' TrgtStatic <- Target$new(list(yes = 10))
+#' TrgtStatic <- Target$new(x = list(yes = 10))
 #' TrgtStatic$data
 #' TrgtStatic$dynamic
 #' TrgtStatic$get()
 #'
 #' # dynamic target
 #' target_dynamic <- data.frame(time = 1:10, yes = 1:10)
-#' TrgtDynamic <- Target$new(list(yes = 10))
+#' TrgtDynamic <- Target$new(x = target_dynamic)
 #' TrgtDynamic$data
 #' TrgtDynamic$dynamic
 #'
@@ -62,28 +64,33 @@ Target <- R6::R6Class(
     initialize = function(x) {
       assert_target(x, null.ok = TRUE)
       if (is.data.frame(x)) {
+        if (!"time" %in% names(x)) {
+          stop(
+            paste("A column named `time` is missing in `x`. Note that,",
+                  "data.frame should be used when creating a dynamic target",
+                  "only. If you want to create a static target use `list` instead.")
+          )
+        }
+        private$.dynamic <- TRUE
         if (!is.data.table(x)) {
           private$.data <- as.data.table(x)
         } else {
           private$.data <- data.table::copy(x)
         }
-        if ("time" %in% names(x)) {
-          private$.dynamic <- TRUE
-        }
+      } else {
+        private$.data <- x
       }
-      private$.data <- x
-      return(invisible(self))
+      invisible(self)
     },
 
     get = function(time = .get_sim_time()) {
       if (private$.dynamic) {
         closest_time_index <- which.min(abs(private$.data[['time']] - time))
-        return(as.list(private$.data[closest_time_index, -c("time")]))
+        return(lapply(private$.data[closest_time_index, -c("time")], function(x) round(x * getOption("dymium.simulation_scale"))))
       }
-      if (is.data.table(private$.data)) {
-        return(copy(private$.data))
+      if (is(object = private$.data, class2 = "list")) {
+        return(lapply(private$.data, function(x) round(x * getOption("dymium.simulation_scale"))))
       }
-      return(private$.data)
     },
 
     print = function() {
@@ -100,6 +107,9 @@ Target <- R6::R6Class(
 
   active = list(
     data = function() {
+      if (is.data.table(private$.data)) {
+        return(data.table::copy(private$.data))
+      }
       base::get(".data", envir = private)
     },
     dynamic = function() {
