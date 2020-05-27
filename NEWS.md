@@ -1,5 +1,6 @@
 # dymiumCore (development version)
 
+- introduced `ModelCustom` a model class that let users specify its parameters and `predict` function.
 # dymiumCore 0.1.8
 
 - Added `sim()` for compiling and executing a microsimulation pipeline.

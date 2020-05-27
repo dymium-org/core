@@ -110,3 +110,18 @@ test_that("dsample", {
   expect_equal(dsample(10, size = 10, replace = T, prob = 1), rep(10, 10))
 
 })
+
+test_that("unnest_dt and unnestv_dt works", {
+  dt <- data.table::data.table(
+    id = 1:3,
+    list_col_a = list(c("a","b","c"), c("a","b","c"), c("a","b","c")))
+  res <- unnest_dt(dt, "list_col_a")
+  checkmate::expect_data_table(res, any.missing = FALSE)
+  expect_equal(res[["id"]],c(rep(1,3), rep(2,3), rep(3,3)))
+  expect_equal(res[["list_col_a"]], rep(c("a", "b", "c"), 3))
+  dt <- data.table::data.table(
+    id = 1:3,
+    list_col_a = list(c("a","b","c"), c("a","b","c"), c("a","b","c")),
+    list_col_b = list(c("a","b","c"), c("a","b","c"), c("a","b","c")))
+  expect_error(unnest_dt(dt, "list_col_a"), "column or expression 2 of 'by' or 'keyby' is type list")
+})

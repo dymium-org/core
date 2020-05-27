@@ -15,18 +15,9 @@ ModelMlogit <- R6::R6Class(
   )
 )
 
-# To construct choiceset for mlogit see https://stackoverflow.com/questions/51458223/multinomial-logit-estimation-on-a-subset-of-alternatives-in-r
 
-# To manually calculate the probs see https://monashdatafluency.github.io/r-linear/topics/linear_models.html
-# This maybe requires as mlogit's predict only returns a data.frame with all columns
-# that correspond to the universal choiceset.
 
 
 # }
 
-
-simulate(
-  preprocess = list(do1, do2, do3),
-  subset =
-)
 

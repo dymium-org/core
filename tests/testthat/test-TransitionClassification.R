@@ -348,18 +348,3 @@ test_that("The scale of World only affect Target object", {
   # it is a global variable of the package env
   world$set_scale(1)
 })
-
-# mlogit ----------------
-test_that("mlogit", {
-  if (require(mlogit)) {
-    create_toy_world()
-
-    dwl_data <- world$entities$BuildingResidential$get_data()
-    dwl_data
-
-
-
-    residential_location <- mlogit()
-
-  }
-})

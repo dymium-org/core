@@ -439,3 +439,36 @@ get_current_git_branch <- function() {
     gsub("\\*|\\ ", "", .)
   return(current_branch)
 }
+
+#' Unnest data.table
+#'
+#' !! Note that this is only working when all list columns in the given
+#' data.frame are to be unnested. See https://github.com/dymium-org/dymiumCore/issues/79.
+#'
+#' @param dt :: (`data.frame()`)\cr
+#'  a data.frame object.
+#' @param cols :: (`character()`)\cr
+#'  a character vector denoting columns to be unnested.
+#'
+#' @return a data.table
+#' @export
+unnest_dt <- function(dt, cols) {
+
+  if (!is.data.frame(dt)) {
+    stop("`dt` must be a data.frame or a data.table.")
+  }
+
+  if (!is.data.table(dt)) {
+    dt <- as.data.table(dt)
+  }
+
+  clnms <- setdiff(colnames(dt), cols)
+
+  dt <- eval(
+    rlang::expr(dt[, lapply(.SD, unlist), by = c(clnms), .SDcols = cols])
+  )
+
+  colnames(dt) <- c(as.character(clnms), as.character(cols))
+
+  dt
+}
