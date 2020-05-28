@@ -125,3 +125,18 @@ test_that("unnest_dt and unnestv_dt works", {
     list_col_b = list(c("a","b","c"), c("a","b","c"), c("a","b","c")))
   expect_error(unnest_dt(dt, "list_col_a"), "column or expression 2 of 'by' or 'keyby' is type list")
 })
+
+
+test_that("which_max_n and which_min_x work", {
+
+  x = 1:4
+  n = 2
+
+  expect_equal(which_max_n(x, n), 3:4)
+  expect_equal(which_min_n(x, n), 1:2)
+
+  expect_error(which_max_n(x, length(x) + 1), "outside bounds")
+  expect_error(which_min_n(x, length(x) + 1), "outside bounds")
+
+})
+
