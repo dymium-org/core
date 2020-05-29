@@ -1,6 +1,7 @@
 # dymiumCore (development version)
 
-- introduced `ModelCustom` a model class that let users specify its parameters and `predict` function.
+- introduced `ModelCustom` a model class that let users specify its parameters and `predict` function. We also add `ModelMultinomialLogit`, `ModelBinaryChoice` and `ModelLinear` which are implementations of `ModelCustom`.
+
 # dymiumCore 0.1.8
 
 - Added `sim()` for compiling and executing a microsimulation pipeline.
