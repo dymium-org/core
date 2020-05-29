@@ -44,9 +44,7 @@ ModelMultinomialLogit <- R6::R6Class(
     predict = function(newdata, chooser_id_col, choice_id_col) {
       data.table(chooser_id = newdata[[chooser_id_col]],
                  choice_id = newdata[[choice_id_col]],
-                 linear_comb = private$.compute_linear_combination(newdata)
-      ) %>%
-        data.table::setorder(chooser_id) %>%
+                 linear_comb = private$.compute_linear_combination(newdata)) %>%
         .[, prob := exp(linear_comb)/sum(exp(linear_comb)), by = chooser_id]
     }
   )
