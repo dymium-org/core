@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{unnest_dt}
 \alias{unnest_dt}
-\title{Unnest data.table}
+\title{Unnest data.table by list columns}
 \usage{
 unnest_dt(dt, cols)
 }

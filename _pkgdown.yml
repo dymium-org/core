@@ -146,7 +146,7 @@ reference:
     - lookup_and_replace2
     - condense_rows
     - element_wise_expand_lists
-    - unnest_datatable
+    - unnest_dt
     - dt_group_and_sort
     - validate_linkages
     - is_dymium_class
