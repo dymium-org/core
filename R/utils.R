@@ -472,3 +472,28 @@ unnest_dt <- function(dt, cols) {
 
   dt
 }
+#' Return the indices of n maximum or minimum values
+#'
+#' @param x :: (`numeric()`)\cr
+#'  an numeric vector
+#' @param n :: (`integer(1)`)\cr
+#'  number of values to return.
+#'
+#' @return an `integer()` vector.
+#' @export
+#'
+#' @examples
+#'
+#' which_max_n(1:4, 2)
+#' which_min_n(1:4, 2)
+#'
+which_max_n <- function(x, n = 1) {
+  which(x >= -sort(-x, partial = n)[n])
+}
+
+
+#' @rdname which_max_n
+#' @export
+which_min_n <- function(x, n = 1) {
+  which(x < -sort(-x, partial = n)[n])
+}

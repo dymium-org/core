@@ -1,6 +1,8 @@
 # dymiumCore (development version)
 
+- renamed `unnest_datatable` to `unnest_dt` and add `unnestv_dt` which can take names of the list columns as a character vector. 
 - introduced `ModelCustom` a model class that let users specify its parameters and `predict` function. We also add `ModelMultinomialLogit`, `ModelBinaryChoice` and `ModelLinear` which are implementations of `ModelCustom`.
+- add helper functions `which_min_n` and `which_max_n`.
 
 # dymiumCore 0.1.8
 
