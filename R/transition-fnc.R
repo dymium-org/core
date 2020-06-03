@@ -220,10 +220,19 @@ transition <-
 #' @rdname transition
 #' @export
 get_transition <- function(world, entity, model, target = NULL, targeted_ids = NULL, preprocessing_fn = NULL) {
+
+
   checkmate::assert_r6(world, classes = "World")
+
+  if(checkmate::test_string(entity, na.ok = FALSE)) {
+    stop("`entity` has to be a string indicating the name of an entity object ",
+         "to undergo the transition.")
+  }
+
   if (!checkmate::test_choice(entity, names(world$entities))) {
     stop("'", entity, "' not found in `world`.")
   }
+
   checkmate::assert(
     check_transition_supported_model(model),
     checkmate::check_r6(model, classes = "Model")
