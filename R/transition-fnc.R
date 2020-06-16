@@ -224,7 +224,7 @@ get_transition <- function(world, entity, model, target = NULL, targeted_ids = N
 
   checkmate::assert_r6(world, classes = "World")
 
-  if(checkmate::test_string(entity, na.ok = FALSE)) {
+  if(!checkmate::test_string(entity, na.ok = FALSE)) {
     stop("`entity` has to be a string indicating the name of an entity object ",
          "to undergo the transition.")
   }
