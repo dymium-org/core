@@ -4,7 +4,7 @@
 \alias{ModelMultinomialLogit}
 \title{ModelMultinomialLogit}
 \arguments{
-\item{formula}{a \code{formula} or \code{\link[mlogit:mFormula]{mlogit::mFormula()}} object.}
+\item{formula}{a \code{formula} object of class \code{\link[mlogit:mFormula]{mlogit::mFormula()}}, \link[Formula:Formula]{Formula::Formula}, or \code{formula}.}
 
 \item{preprocessing_fn}{a pre-processing function that gets applied to the
 data given to the \code{predict} method before making the prediction.}
@@ -34,4 +34,11 @@ of this \link{Model} object.
 \details{
 This model object is use to create a multinomial model using already estimated
 parameters.
+}
+\examples{
+
+if (requireNamespace('mlogit')) {
+
+
+}
 }

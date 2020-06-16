@@ -35,7 +35,7 @@ Suggests:
     furrr (>= 0.1.0),
     testthat (>= 2.1.0),
     fastmatch (>= 1.1.0),
-    mlogit (>= 1.0),
+    mlogit (>= 1.1.0),
     caret (>= 6.0.0),
     mlr (>= 2.17.0),
     nnet (>= 7.3.0),
