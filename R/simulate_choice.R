@@ -25,6 +25,8 @@ simulate_choice.train <- function(model, newdata, target = NULL, ...) {
   simulate_choice(probs, target)
 }
 
+#' @rdname simulate_choice
+#' @export
 simulate_choice.list <- function(model, newdata, target = NULL, ...) {
   checkmate::assert_list(
     x = model,
@@ -57,6 +59,8 @@ simulate_choice.glm <- function(model, newdata, target = NULL, ...) {
   simulate_choice(probs, target)
 }
 
+#' @rdname simulate_choice
+#' @export
 simulate_choice.Model <- function(model, newdata, target = NULL, ...) {
   if (!is.null(model$preprocessing_fn)) {
     newdata <- model$preprocessing_fn(newdata)
@@ -64,6 +68,8 @@ simulate_choice.Model <- function(model, newdata, target = NULL, ...) {
   simulate_choice(model$get(), newdata, target = target, ...)
 }
 
+#' @rdname simulate_choice
+#' @export
 simulate_choice.WrappedModel <- function(model, newdata, target = NULL, ...) {
   if (model$learner$type != "classif") {
     stop("Only `mlr` models of type `classif` (Classification) is supported.")
