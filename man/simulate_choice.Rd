@@ -3,7 +3,10 @@
 \name{simulate_choice}
 \alias{simulate_choice}
 \alias{simulate_choice.train}
+\alias{simulate_choice.list}
 \alias{simulate_choice.glm}
+\alias{simulate_choice.Model}
+\alias{simulate_choice.WrappedModel}
 \alias{simulate_choice.data.frame}
 \title{Simulate a choice situation}
 \usage{
@@ -11,7 +14,13 @@ simulate_choice(model, ...)
 
 \method{simulate_choice}{train}(model, newdata, target = NULL, ...)
 
+\method{simulate_choice}{list}(model, newdata, target = NULL, ...)
+
 \method{simulate_choice}{glm}(model, newdata, target = NULL, ...)
+
+\method{simulate_choice}{Model}(model, newdata, target = NULL, ...)
+
+\method{simulate_choice}{WrappedModel}(model, newdata, target = NULL, ...)
 
 \method{simulate_choice}{data.frame}(model, target = NULL, ...)
 }
