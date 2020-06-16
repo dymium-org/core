@@ -9,11 +9,11 @@
 \usage{
 makeModel(model, ...)
 
-\method{makeModel}{train}(model, preprocessing_fn = NULL)
+\method{makeModel}{train}(model, preprocessing_fn = NULL, ...)
 
-\method{makeModel}{WrappedModel}(model)
+\method{makeModel}{WrappedModel}(model, preprocessing_fn = NULL, ...)
 
-\method{makeModel}{mlogit}(model, preprocessing_fn = NULL)
+\method{makeModel}{mlogit}(model, preprocessing_fn = NULL, ...)
 }
 \arguments{
 \item{model}{a model object. See \code{SupportedTransitionModels()}.}
