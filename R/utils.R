@@ -1,15 +1,3 @@
-#' Pipe operator
-#'
-#' See \code{magrittr::\link[magrittr]{\%>\%}} for details.
-#'
-#' @name %>%
-#' @rdname pipe
-#' @keywords internal
-#' @export
-#' @importFrom magrittr %>%
-#' @usage lhs \%>\% rhs
-NULL
-
 #' @title Modified version of base::sample for programming in a Monte Carlo simulation
 #'
 #' @description

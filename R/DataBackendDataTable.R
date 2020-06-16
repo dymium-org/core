@@ -48,7 +48,7 @@
 #'  (`integer(1)`, `character()`, `logical(1)`) -> `data.frame()`\cr
 #'  Get data. If copy is `TRUE`, the returned data.table is a copy of the actual data.table
 #'  object used to create this backend object. Otherwise, the reference to the
-#'  data.table is returned which allows it to be modified with [data.table::set] and
+#'  data.table is returned which allows it to be modified with [data.table::set()] and
 #'  `:=`. Note that, `rows` should be indexes of the data.table and `cols` are
 #'  a character vector that contains column names to be returned.
 #'

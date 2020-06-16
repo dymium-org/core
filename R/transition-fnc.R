@@ -35,7 +35,7 @@
 #' the model estimation step.
 #'
 #' To create a pre-processing function you can use `dplyr` or `data.table`. You can
-#' even combine multiple functions with [magrittr::%>%]. As an example, if you only
+#' even combine multiple functions with `magrittr::%>%`. As an example, if you only
 #' want to filter just the male population then you can choose one of the
 #' following options to create your preprocessing function.
 #'
