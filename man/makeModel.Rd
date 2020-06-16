@@ -4,13 +4,16 @@
 \alias{makeModel}
 \alias{makeModel.train}
 \alias{makeModel.WrappedModel}
+\alias{makeModel.mlogit}
 \title{make Model}
 \usage{
 makeModel(model, ...)
 
 \method{makeModel}{train}(model, preprocessing_fn = NULL)
 
-\method{makeModel}{WrappedModel}()
+\method{makeModel}{WrappedModel}(model)
+
+\method{makeModel}{mlogit}(model)
 }
 \arguments{
 \item{model}{a model object. See \code{SupportedTransitionModels()}.}

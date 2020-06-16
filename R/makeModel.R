@@ -13,6 +13,7 @@ makeModel <- function(model, ...) {
 }
 
 #' @rdname makeModel
+#' @export
 makeModel.train <- function(model, preprocessing_fn = NULL) {
 
   compatible_methods = c("glm")
@@ -57,6 +58,12 @@ makeModel.train <- function(model, preprocessing_fn = NULL) {
 }
 
 #' @rdname makeModel
-makeModel.WrappedModel <- function() {
+makeModel.WrappedModel <- function(model) {
   stop("Not implemented yet.")
+}
+
+#' @rdname makeModel
+#' @export
+makeModel.mlogit <- function(model) {
+  ModelMultinomialLogit$new(params = model[['coefficients']], formula = model[['formula']])
 }
