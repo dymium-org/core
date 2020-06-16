@@ -105,6 +105,7 @@ Collate:
     'create-world.R'
     'data.R'
     'dymiumCore-package.R'
+    'makeModel.R'
     'module.R'
     'mutate-entity.R'
     'population-register.R'
