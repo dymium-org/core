@@ -20,7 +20,7 @@ ModelBinaryChoice <- R6::R6Class(
     #'  data given to the `predict` method before making the prediction.
     #'
     #' @return NULL
-    initialize = function(params, formula, preprocessing_fn) {
+    initialize = function(params, formula, preprocessing_fn = NULL) {
       super$initialize(params = params,
                        formula = formula,
                        type = "binary_choice",
