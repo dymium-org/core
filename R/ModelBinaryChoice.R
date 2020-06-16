@@ -35,7 +35,7 @@ ModelBinaryChoice <- R6::R6Class(
     #'
     #' @param newdata a `data.frame` object.
     #' @param link_function :: `character(1)`\cr
-    #'  default as 'logit' using [stats::binomial(link = "logit")]. Choice of
+    #'  default as 'logit' using `stats::binomial(link = "logit")`. Choice of
     #'  'logit' and 'probit'. TODO: implement 'probit' option.
     #'
     #' @return

@@ -17,7 +17,7 @@ data given to the \code{predict} method before making the prediction.}
 \item{newdata}{a \code{data.frame} object.}
 
 \item{link_function}{:: \code{character(1)}\cr
-default as 'logit' using \link[stats:binomial(link = "logit")]{stats::binomial(link = "logit")}. Choice of
+default as 'logit' using \code{stats::binomial(link = "logit")}. Choice of
 'logit' and 'probit'. TODO: implement 'probit' option.}
 }
 \value{
