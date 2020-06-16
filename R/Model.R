@@ -87,8 +87,10 @@ Model <-
     inherit = Generic,
     public = list(
       initialize = function(x, preprocessing_fn = NULL) {
+        checkmate::assert_function(preprocessing_fn, nargs = 1, null.ok = TRUE)
         self$preprocessing_fn <- preprocessing_fn
         self$set(x)
+        invisible()
       },
       get = function() {
         private$.model
@@ -96,7 +98,7 @@ Model <-
       set = function(x) {
         assert_transition_supported_model(x)
         private$.model <- x
-        return(self)
+        invisible(self)
       },
       modify = function() {
         private$abstract()
