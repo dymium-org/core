@@ -48,7 +48,11 @@ DataBackendSpatialFeature <- R6::R6Class(
   public = list(
     initialize = function(.data, key = NULL) {
       if (!requireNamespace("sf", quietly = TRUE)) {
-        .choice <- utils::menu(choices = c("Yes", "No"), title = "DataBackendSpatialFeature needs the sf package to work. Would you like to download the sf package?")
+        .choice <-
+          utils::menu(choices = c("Yes", "No"),
+                      title = paste0("DataBackendSpatialFeature needs the sf ",
+                                     "package to work. Would you like to download ",
+                                     "the sf package?"))
         if (.choice == 1) {
           install.packages("sf", repos = "https://cloud.r-project.org")
         } else {
