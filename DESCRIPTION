@@ -100,7 +100,6 @@ Collate:
     'alignment.R'
     'checkmate.R'
     'checks.R'
-    'choice-simulation.R'
     'constants.R'
     'create-world.R'
     'data.R'

@@ -4,6 +4,8 @@
 \alias{ModelMultinomialLogit}
 \title{ModelMultinomialLogit}
 \arguments{
+\item{params}{a named numeric vector.}
+
 \item{formula}{a \code{formula} object of class \code{\link[mlogit:mFormula]{mlogit::mFormula()}}, \link[Formula:Formula]{Formula::Formula}, or \code{formula}.}
 
 \item{preprocessing_fn}{a pre-processing function that gets applied to the
