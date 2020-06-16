@@ -7,6 +7,9 @@
 \item{params}{a \code{data.frame} object.}
 
 \item{formula}{a \code{formula} object.}
+
+\item{preprocessing_fn}{a pre-processing function that gets applied to the
+data given to the \code{predict} method before making the prediction.}
 }
 \description{
 Initialisation function

@@ -28,16 +28,24 @@ ModelCustom <- R6::R6Class(
     #'
     #' Constructor function.
     #'
-    #' @param params
-    #' @param formula
-    #' @param type
+    #' @param params a named `numeric()`.
+    #' @param formula a model `formula()`.
+    #' @param type type of the model.
+    #' @param preprocessing_fn a pre-processing function that gets applied to the
+    #'  data given to the `predict` method before making the prediction.
     #'
     #' @return `NULL`
-    initialize = function(params, formula, type = "custom") {
+    initialize = function(params, formula, type = "custom", preprocessing_fn) {
 
-      self$params = checkmate::assert_numeric(params, finite = T, any.missing = FALSE, names = "unique")
+      self$params = checkmate::assert_numeric(params,
+                                              finite = T,
+                                              any.missing = FALSE,
+                                              names = "unique")
       self$formula = checkmate::assert_formula(formula, null.ok = FALSE)
       self$type = checkmate::assert_string(type, na.ok = FALSE)
+      self$preprocessing_fn = checkmate::assert_function(preprocessing_fn,
+                                                         nargs = 1,
+                                                         null.ok = TRUE)
       self$terms = terms(formula)
       private$.model = self
 

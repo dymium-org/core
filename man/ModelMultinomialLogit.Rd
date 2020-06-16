@@ -6,6 +6,9 @@
 \arguments{
 \item{formula}{a \code{formula} or \code{\link[mlogit:mFormula]{mlogit::mFormula()}} object.}
 
+\item{preprocessing_fn}{a pre-processing function that gets applied to the
+data given to the \code{predict} method before making the prediction.}
+
 \item{newdata}{(\code{data.frame()}) \cr
 new data to generate probabilities conditioned on its explanatory variables.}
 

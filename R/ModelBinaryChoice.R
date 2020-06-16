@@ -16,10 +16,15 @@ ModelBinaryChoice <- R6::R6Class(
     #'
     #' @param params a `data.frame` object.
     #' @param formula a `formula` object.
+    #' @param preprocessing_fn a pre-processing function that gets applied to the
+    #'  data given to the `predict` method before making the prediction.
     #'
     #' @return NULL
-    initialize = function(params, formula) {
-      super$initialize(params, formula, type = "binary_choice")
+    initialize = function(params, formula, preprocessing_fn) {
+      super$initialize(params = params,
+                       formula = formula,
+                       type = "binary_choice",
+                       preprocessing_fn = preprocessing_fn)
       invisible(NULL)
     },
 

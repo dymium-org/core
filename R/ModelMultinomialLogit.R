@@ -19,10 +19,15 @@ ModelMultinomialLogit <- R6::R6Class(
     #'
     #' @param params
     #' @param formula a `formula` or [mlogit::mFormula()] object.
+    #' @param preprocessing_fn a pre-processing function that gets applied to the
+    #'  data given to the `predict` method before making the prediction.
     #'
     #' @return NULL
-    initialize = function(params, formula) {
-      super$initialize(params, formula, type = "multinomial")
+    initialize = function(params, formula, preprocessing_fn) {
+      super$initialize(params = params,
+                       formula = formula,
+                       type = "multinomial",
+                       preprocessing_fn = preprocessing_fn)
       invisible(NULL)
     },
 

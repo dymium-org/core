@@ -4,7 +4,14 @@
 \alias{ModelCustom}
 \title{ModelCustom}
 \arguments{
-\item{type}{}
+\item{params}{a named \code{numeric()}.}
+
+\item{formula}{a model \code{formula()}.}
+
+\item{type}{type of the model.}
+
+\item{preprocessing_fn}{a pre-processing function that gets applied to the
+data given to the \code{predict} method before making the prediction.}
 }
 \value{
 \code{NULL}

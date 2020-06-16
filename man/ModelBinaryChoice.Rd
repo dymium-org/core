@@ -11,6 +11,9 @@
 
 \item{formula}{a \code{formula} object.}
 
+\item{preprocessing_fn}{a pre-processing function that gets applied to the
+data given to the \code{predict} method before making the prediction.}
+
 \item{newdata}{a \code{data.frame} object.}
 
 \item{link_function}{:: \code{character(1)}\cr
