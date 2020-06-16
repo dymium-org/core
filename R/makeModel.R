@@ -4,11 +4,12 @@
 #' Make a light weight model object that can be used by `transition()`, `TransitionClassification`, `TransitionRegression`.
 #'
 #' @param model a model object. See `SupportedTransitionModels()`.
+#' @param preprocessing_fn a preprocessing function.
 #' @param ... dots.
 #'
 #' @return a `Model` object.
 #' @export
-makeModel <- function(model, ...) {
+"makeModel" <- function(model, ...) {
   UseMethod("makeModel")
 }
 
@@ -31,29 +32,6 @@ makeModel.train <- function(model, preprocessing_fn = NULL) {
                                  preprocessing_fn = preprocessing_fn))
   }
 
-  # if (model$method == "multinom") {
-  #
-  #   stop("Not")
-  #   browser()
-  #
-  #   params <- model[["finalModel"]][["wts"]]
-  #
-  #   names(params) <-
-  #     lapply(model[["finalModel"]][["lab"]], function(x) {
-  #       c(x, model[["finalModel"]][["coefnames"]])
-  #       }) %>% unlist()
-  #
-  #   model.matrix(model$terms)
-  #
-  #   m <- model.frame(formula = model$terms, toy_individuals)
-  #   Terms <- delete.response(model$terms)
-  #   x <- model.matrix(Terms, m, contrasts = model$contrasts)
-  #
-  #   return(ModelMultinomialLogit$new(params = params,
-  #                                    formula = model$terms,
-  #                                    preprocessing_fn = preprocessing_fn))
-  # }
-
   stop("something went wrong.")
 }
 
@@ -64,6 +42,8 @@ makeModel.WrappedModel <- function(model) {
 
 #' @rdname makeModel
 #' @export
-makeModel.mlogit <- function(model) {
-  ModelMultinomialLogit$new(params = model[['coefficients']], formula = model[['formula']])
+makeModel.mlogit <- function(model, preprocessing_fn = NULL) {
+  ModelMultinomialLogit$new(params = model[['coefficients']],
+                            formula = model[['formula']],
+                            preprocessing_fn = preprocessing_fn)
 }

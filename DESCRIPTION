@@ -54,7 +54,8 @@ Suggests:
     scales (>= 1.1.0),
     prettydoc,
     ggthemes (>= 4.2.0),
-    visNetwork (>= 2.0.0)
+    visNetwork (>= 2.0.0),
+    dfidx
 Roxygen: list(markdown = TRUE, r6 = FALSE)
 RoxygenNote: 7.1.0
 StagedInstall: no

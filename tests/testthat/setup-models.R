@@ -61,6 +61,7 @@ create_glm_binary_model <- function() {
 }
 
 create_mlogit_model <- function() {
+  data("Fishing", package = "mlogit")
   .data_dfidx <- dfidx::dfidx(Fishing, varying = 2:9, shape = "wide", choice = "mode")
   mod <- mlogit::mlogit(mode ~ price + catch, data = .data_dfidx)
 }

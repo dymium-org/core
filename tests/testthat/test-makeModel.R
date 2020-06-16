@@ -8,6 +8,6 @@ test_that("makeModel", {
   # mlogit model
   mlogit_model <- create_mlogit_model()
   Mod <- makeModel(mlogit_model)
-  checkmate::expect_r6(Mod, classes = "ModelMultinamialLogit")
+  checkmate::expect_r6(Mod, classes = "ModelMultinomialLogit")
 
 })

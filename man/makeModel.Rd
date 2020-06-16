@@ -13,12 +13,14 @@ makeModel(model, ...)
 
 \method{makeModel}{WrappedModel}(model)
 
-\method{makeModel}{mlogit}(model)
+\method{makeModel}{mlogit}(model, preprocessing_fn = NULL)
 }
 \arguments{
 \item{model}{a model object. See \code{SupportedTransitionModels()}.}
 
 \item{...}{dots.}
+
+\item{preprocessing_fn}{a preprocessing function.}
 }
 \value{
 a \code{Model} object.
