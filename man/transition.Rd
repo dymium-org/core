@@ -74,7 +74,7 @@ will be removed. This is to make it convenient when naming variables during
 the model estimation step.
 
 To create a pre-processing function you can use \code{dplyr} or \code{data.table}. You can
-even combine multiple functions with \link[magrittr:\%>\%]{magrittr::\%>\%}. As an example, if you only
+even combine multiple functions with \verb{magrittr::\%>\%}. As an example, if you only
 want to filter just the male population then you can choose one of the
 following options to create your preprocessing function.\preformatted{# as a function using base R
 filter_male <- function(.data) \{

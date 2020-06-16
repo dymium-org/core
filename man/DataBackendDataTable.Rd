@@ -49,7 +49,7 @@ Remove the rows in \code{rows} and the columns in \code{cols} in the data.
 (\code{integer(1)}, \code{character()}, \code{logical(1)}) -> \code{data.frame()}\cr
 Get data. If copy is \code{TRUE}, the returned data.table is a copy of the actual data.table
 object used to create this backend object. Otherwise, the reference to the
-data.table is returned which allows it to be modified with \link[data.table:set]{data.table::set} and
+data.table is returned which allows it to be modified with \code{\link[data.table:set]{data.table::set()}} and
 \verb{:=}. Note that, \code{rows} should be indexes of the data.table and \code{cols} are
 a character vector that contains column names to be returned.
 \item \code{view(interactive = FALSE)}\cr

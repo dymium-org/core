@@ -109,6 +109,7 @@ Collate:
     'usethis.R'
     'utils-class.R'
     'utils-event.R'
+    'utils-pipe.R'
     'utils-pipeline.R'
     'utils.R'
     'validate.R'
