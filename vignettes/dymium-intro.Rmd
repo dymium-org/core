@@ -144,7 +144,7 @@ First we create a world object for testing using the `create_toy_world()` functi
 
 ```{r}
 # create a toy world named `world` in the global environment
-create_toy_world()
+create_toy_world(add_toy_zones = FALSE) # omitting `toy_zones`
 ```
 
 To create a shorthand access to the `Individual` object inside `world` we use the `$get()` method. 
@@ -336,7 +336,7 @@ There are many powerful stuffs you can do with `lgr` and to learn more about it 
 All classes that inherit `Generic`, namely `Entity` and `Container`, have the `log()` method available to them. The main purpose of this function is to give the user a convinient way to log simulation outputs. `get_log()` can be used on objects that have the `$log()` method to gather all logs.
 
 ```{r}
-create_toy_world()
+create_toy_world(add_toy_zones = FALSE)
 total_no_individuals <- world$entities$Individual$n()
 world$entities$Individual$log(desc = "total_no_individuals", value = total_no_individuals)
 get_log(world)
@@ -347,7 +347,7 @@ get_log(world)
 `add_history()` has a more specific used and only applicable to `Entity`, it is meant to be used for logging of past events that occur to each entity. This is particularly useful when past actions of entities can influence their current and future actions. There are helper functions to get and combine histories such as `get_history()` and `combine_histories()`.
 
 ```{r}
-create_toy_world()
+create_toy_world(add_toy_zones = FALSE)
 add_history(entity = world$entities$Individual, ids = 1:3, event = "marriage")
 get_history(x = world$entities$Individual)
 # alternatively you can use insepct to view the attribute data of the individuals
@@ -384,7 +384,7 @@ quaterly_events <-
                  event_1(.) %>%
                  event_2(.))
 
-create_toy_world()
+create_toy_world(add_toy_zones = FALSE)
 
 # create a microsimulation pipeline that runs for 2 cycles or 2 years.
 for (i in 1:2) {
