@@ -7,7 +7,7 @@
 create_toy_world(add_toy_zones = TRUE)
 }
 \arguments{
-\item{add_zone}{add \code{toy_zones} to world (default TRUE).}
+\item{add_toy_zones}{add \code{toy_zones} to world (default TRUE).}
 }
 \description{
 Create a toy world (assigned to the global environment as \code{world}) for running tests
