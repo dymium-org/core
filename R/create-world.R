@@ -21,7 +21,7 @@ create_pop_sample <- function(){
 #' @title create toy world
 #' @description
 #' Create a toy world (assigned to the global environment as `world`) for running tests
-#' @param add_zone add `toy_zones` to world (default TRUE).
+#' @param add_toy_zones add `toy_zones` to world (default TRUE).
 #' @export
 create_toy_world <- function(add_toy_zones = TRUE) {
   world <<- World$new()
