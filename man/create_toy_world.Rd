@@ -4,7 +4,10 @@
 \alias{create_toy_world}
 \title{create toy world}
 \usage{
-create_toy_world()
+create_toy_world(add_toy_zones = TRUE)
+}
+\arguments{
+\item{add_zone}{add \code{toy_zones} to world (default TRUE).}
 }
 \description{
 Create a toy world (assigned to the global environment as \code{world}) for running tests
