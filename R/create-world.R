@@ -21,8 +21,9 @@ create_pop_sample <- function(){
 #' @title create toy world
 #' @description
 #' Create a toy world (assigned to the global environment as `world`) for running tests
+#' @param add_zone add `toy_zones` to world (default TRUE).
 #' @export
-create_toy_world <- function() {
+create_toy_world <- function(add_toy_zones = TRUE) {
   world <<- World$new()
   world$add(
     Population$new(
@@ -34,6 +35,8 @@ create_toy_world <- function() {
     )
   world$add(BuildingResidential$new(toy_dwellings, "did"))
   world$get(BuildingResidential)$set_owner_object(world$get(Household))
-  world$add(Zone$new(toy_zones, "zid"))
+  if (add_toy_zones) {
+    world$add(Zone$new(toy_zones, "zid"))
+  }
   invisible(world)
 }
