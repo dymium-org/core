@@ -111,7 +111,7 @@ test_that("dsample", {
 
 })
 
-test_that("unnest_dt and unnestv_dt works", {
+test_that("unnest_dt", {
   dt <- data.table::data.table(
     id = 1:3,
     list_col_a = list(c("a","b","c"), c("a","b","c"), c("a","b","c")))
