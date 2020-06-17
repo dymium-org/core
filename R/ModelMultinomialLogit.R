@@ -25,7 +25,7 @@ ModelMultinomialLogit <- R6::R6Class(
     #' Initialisation function
     #'
     #' @param params a named numeric vector.
-    #' @param formula a `formula` object of class [mlogit::mFormula], [Formula::Formula], or `formula`.
+    #' @param formula a `formula` object of class `mlogit::mFormula`, [Formula::Formula], or `formula`.
     #' @param preprocessing_fn a pre-processing function that gets applied to the
     #'  data given to the `predict` method before making the prediction.
     #'
