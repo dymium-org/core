@@ -83,7 +83,10 @@ jobs:
 
       - name: "[Stage] [Linux] spatial libraries"
         if: runner.os == 'Linux'
-        run: sudo apt -y update && apt install -y libudunits2-dev libgdal-dev libgeos-dev libproj-dev
+        run: |
+          sudo add-apt-repository ppa:ubuntugis/ppa
+          sudo apt -y update
+          sudo apt install -y libudunits2-dev libgdal-dev libgeos-dev libproj-dev
 
       - name: "[Stage] [Linux] Install curl"
         if: runner.os == 'Linux'
