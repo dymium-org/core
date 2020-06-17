@@ -110,3 +110,34 @@ test_that("dsample", {
   expect_equal(dsample(10, size = 10, replace = T, prob = 1), rep(10, 10))
 
 })
+
+test_that("unnest_dt", {
+  dt <- data.table::data.table(
+    id = 1:3,
+    list_col_a = list(c("a","b","c"), c("a","b","c"), c("a","b","c")))
+  res <- unnest_dt(dt, "list_col_a")
+  checkmate::expect_data_table(res, any.missing = FALSE)
+  expect_equal(res[["id"]],c(rep(1,3), rep(2,3), rep(3,3)))
+  expect_equal(res[["list_col_a"]], rep(c("a", "b", "c"), 3))
+  dt <- data.table::data.table(
+    id = 1:3,
+    list_col_a = list(c("a","b","c"), c("a","b","c"), c("a","b","c")),
+    list_col_b = list(c("a","b","c"), c("a","b","c"), c("a","b","c")))
+  expect_error(unnest_dt(dt, "list_col_a"),
+               "This unnest function only works if all list columns are to be unnested")
+})
+
+
+test_that("which_max_n and which_min_x work", {
+
+  x = 1:4
+  n = 2
+
+  expect_equal(which_max_n(x, n), 3:4)
+  expect_equal(which_min_n(x, n), 1:2)
+
+  expect_error(which_max_n(x, length(x) + 1), "outside bounds")
+  expect_error(which_min_n(x, length(x) + 1), "outside bounds")
+
+})
+

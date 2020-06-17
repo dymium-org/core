@@ -2,15 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{unnest_datatable}
 \alias{unnest_datatable}
-\title{unnest_datatable}
+\title{unnest data.table by reference column(s).}
 \usage{
 unnest_datatable(dt, by_col)
 }
 \arguments{
-\item{dt}{data.table object}
+\item{dt}{\code{\link[data.table:data.table]{data.table::data.table()}}\cr
+a data.table object.}
 
-\item{by_col}{reference column}
+\item{by_col}{(\code{character(1)})\cr
+A reference column.}
 }
 \description{
-unnest data.table object
+for internal use only. This will be replaced with a more native approach once
+https://github.com/Rdatatable/data.table/pull/4156 is officially included in
+data.table.
 }

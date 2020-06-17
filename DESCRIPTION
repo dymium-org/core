@@ -1,5 +1,5 @@
 Package: dymiumCore
-Version: 0.1.8.9000
+Version: 0.1.9
 Title: A Toolkit for Building a Dynamic Microsimulation Model for Integrated Urban Modelling
 Description: A modular microsimulation modelling framework for integrated urban modelling.
 Authors@R: c(
@@ -35,6 +35,7 @@ Suggests:
     furrr (>= 0.1.0),
     testthat (>= 2.1.0),
     fastmatch (>= 1.1.0),
+    mlogit (>= 1.1.0),
     caret (>= 6.0.0),
     mlr (>= 2.17.0),
     nnet (>= 7.3.0),
@@ -53,7 +54,8 @@ Suggests:
     scales (>= 1.1.0),
     prettydoc,
     ggthemes (>= 4.2.0),
-    visNetwork (>= 2.0.0)
+    visNetwork (>= 2.0.0),
+    dfidx
 Roxygen: list(markdown = TRUE, r6 = FALSE)
 RoxygenNote: 7.1.0
 StagedInstall: no
@@ -82,6 +84,10 @@ Collate:
     'MatchingMarketOptimal.R'
     'MatchingMarketStochastic.R'
     'Model.R'
+    'ModelBinaryChoice.R'
+    'ModelCustom.R'
+    'ModelLinear.R'
+    'ModelMultinomialLogit.R'
     'Network.R'
     'Population.R'
     'Pipeline.R'
@@ -99,6 +105,7 @@ Collate:
     'create-world.R'
     'data.R'
     'dymiumCore-package.R'
+    'makeModel.R'
     'module.R'
     'mutate-entity.R'
     'population-register.R'

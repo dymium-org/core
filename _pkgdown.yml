@@ -58,6 +58,7 @@ reference:
     - Agent
     - Individual
     - Household
+    - Firm
     - Asset
     - starts_with("Building")
     - Environment
@@ -68,10 +69,10 @@ reference:
     - Container
     - World
     - Population
-    - Model
+    - matches("^Model.")
     - pop_register
-    - household_formation
-- title: Simulation tools & Alignment
+    - starts_with("makeModel")
+- title: Simulation tools
   contents:
     - matches("^Trans.")
     - transition
@@ -85,6 +86,7 @@ reference:
     - Pipeline
     - register
     - starts_with("Match")
+    - starts_with("simulate_choice")
 - title: Logging and inspection
   contents:
     - add_log
@@ -113,7 +115,6 @@ reference:
   desc: creates an event script and handy functions to use within event functions.
   contents:
     - use_event
-    - assign_reference
     - get_models
     - pick_models
     - is_scheduled
@@ -146,10 +147,12 @@ reference:
     - lookup_and_replace2
     - condense_rows
     - element_wise_expand_lists
-    - unnest_datatable
+    - unnest_dt
     - dt_group_and_sort
     - validate_linkages
     - is_dymium_class
+    - sim
+    - dsample
 
 - title: Base classes
   contents:

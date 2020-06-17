@@ -267,6 +267,10 @@ lookup_and_replace2 <- function(x, cols, mapping) {
 
 #' .lookup_and_replace_list_cols
 #'
+#' @description
+#'
+#' This unnest function keeps
+#'
 #' @param data data.table
 #' @param lookup_table lookup_table
 #' @param id_col NA
@@ -293,9 +297,8 @@ lookup_and_replace2 <- function(x, cols, mapping) {
   if (!is.data.table(lookup_table))
     lookup_table <- as.data.table(lookup_table)
 
-
   .data <-
-    unnest_datatable(.data, by_col = id_col) %>%
+    unnest_datatable(.data, id_col) %>%
     .[lookup_table,
       on = paste0(list_cols, "==.key"),
       eval((list_cols)) := value] %>%
@@ -322,27 +325,6 @@ lookup_and_replace2 <- function(x, cols, mapping) {
     data[lookup_table, on = paste0(col, "==.key"), (col) := value]
   }
   return(data)
-}
-
-#' unnest_datatable
-#'
-#' unnest data.table object
-#'
-#' @param dt data.table object
-#' @param by_col reference column
-#'
-#' @export
-unnest_datatable = function(dt, by_col) {
-  stopifnot(is.data.table(dt))
-  stopifnot(all(by_col %in% names(dt)))
-
-  # unnest the list column
-  # https://stackoverflow.com/questions/34692260/how-to-ungroup-list-columns-in-data-table
-  dt <- dt[,
-    lapply(.SD, unlist),
-    by = eval((by_col))]
-
-  return(dt)
 }
 
 #' Group a column into a list column and sort by the group-by column
@@ -426,4 +408,87 @@ get_current_git_branch <- function() {
     grep("\\*", branches, value = T) %>%
     gsub("\\*|\\ ", "", .)
   return(current_branch)
+}
+
+#' Unnest data.table by list columns
+#'
+#' !! Note that this is only working when all list columns in the given
+#' data.frame are to be unnested. See https://github.com/dymium-org/dymiumCore/issues/79.
+#'
+#' @param dt :: (`data.frame()`)\cr
+#'  a data.frame object.
+#' @param cols :: (`character()`)\cr
+#'  a character vector denoting columns to be unnested.
+#'
+#' @return a data.table
+#' @export
+unnest_dt <- function(dt, cols) {
+
+  if (!is.data.frame(dt)) {
+    stop("`dt` must be a data.frame or a data.table.")
+  }
+
+  if (sum(sapply(dt, is.list)) != length(cols)) {
+    stop("This unnest function only works if all list columns are to be unnested.")
+  }
+
+  if (!is.data.table(dt)) {
+    dt <- as.data.table(dt)
+  }
+
+  clnms <- setdiff(colnames(dt), cols)
+
+  dt <- eval(
+    rlang::expr(dt[, lapply(.SD, unlist), by = c(clnms), .SDcols = cols])
+  )
+
+  colnames(dt) <- c(as.character(clnms), as.character(cols))
+
+  dt
+}
+
+#' unnest data.table by reference column(s).
+#'
+#' for internal use only. This will be replaced with a more native approach once
+#' https://github.com/Rdatatable/data.table/pull/4156 is officially included in
+#' data.table.
+#'
+#' @param dt [data.table::data.table()]\cr
+#'  a data.table object.
+#' @param by_col (`character(1)`)\cr
+#'  A reference column.
+unnest_datatable = function(dt, by_col) {
+  stopifnot(is.data.table(dt))
+  stopifnot(all(by_col %in% names(dt)))
+
+  # unnest the list column
+  # https://stackoverflow.com/questions/34692260/how-to-ungroup-list-columns-in-data-table
+  dt[, lapply(.SD, unlist), by = c(by_col)]
+}
+
+
+#' Return the indices of n maximum or minimum values
+#'
+#' @param x :: (`numeric()`)\cr
+#'  an numeric vector
+#' @param n :: (`integer(1)`)\cr
+#'  number of values to return.
+#'
+#' @return an `integer()` vector.
+#' @export
+#'
+#' @examples
+#'
+#' which_max_n(1:4, 2)
+#' which_min_n(1:4, 2)
+#'
+which_max_n <- function(x, n = 1) {
+  which(x >= -sort(-x, partial = n)[n])
+}
+
+
+#' @rdname which_max_n
+#' @export
+which_min_n <- function(x, n = 1) {
+  which(x < -sort(-x, partial = n)[n])
 }

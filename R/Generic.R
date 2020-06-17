@@ -127,6 +127,14 @@ Generic <- R6Class(
   ),
 
   private = list(
+    .abstract = function(msg) {
+      # this is a method for abstract methods
+      if (!missing(msg))  {
+        lg$fatal(msg)
+      }
+      stop("This is an abstract method which is to be implemented.")
+    },
+
     abstract = function(msg) {
       # this is a method for abstract methods
       if (!missing(msg))  {
