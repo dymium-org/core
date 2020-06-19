@@ -123,7 +123,7 @@
 
       
 
-      </header><script src="residential-mobility_files/htmlwidgets-1.5.1/htmlwidgets.js"></script><script src="residential-mobility_files/jquery-1.12.4/jquery.min.js"></script><link href="residential-mobility_files/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+      </header><script src="residential-mobility_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="residential-mobility_files/htmlwidgets-1.5.1/htmlwidgets.js"></script><script src="residential-mobility_files/jquery-1.12.4/jquery.min.js"></script><link href="residential-mobility_files/leaflet-1.3.1/leaflet.css" rel="stylesheet">
 <script src="residential-mobility_files/leaflet-1.3.1/leaflet.js"></script><link href="residential-mobility_files/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
 <script src="residential-mobility_files/Proj4Leaflet-1.0.1/proj4-compressed.js"></script><script src="residential-mobility_files/Proj4Leaflet-1.0.1/proj4leaflet.js"></script><link href="residential-mobility_files/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
 <script src="residential-mobility_files/leaflet-binding-2.0.3/leaflet.js"></script><div class="row">
@@ -142,11 +142,11 @@
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dymiumCore</span>)
 <span class="co">#&gt; ── * dymium's options * ──────────────────────────────────────────────────────</span>
 <span class="co">#&gt; ● dymium.input_dir:</span>
-<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpDSxcjr/scenario/inputs</span>
+<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpSClBXO/scenario/inputs</span>
 <span class="co">#&gt; ● dymium.output_dir:</span>
-<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpDSxcjr/scenario/outputs</span>
+<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpSClBXO/scenario/outputs</span>
 <span class="co">#&gt; ● dymium.scenario_dir:</span>
-<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpDSxcjr/scenario</span>
+<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpSClBXO/scenario</span>
 <span class="co">#&gt; ● dymium.simulation_clock: 0</span>
 <span class="co">#&gt; ● dymium.simulation_scale: 1</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">data.table</span>)
@@ -246,7 +246,7 @@ Melbourne CBD, Australia
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># create a emptied World object to store agents and models</span>
 <span class="no">world</span> <span class="kw">&lt;-</span> <span class="no">World</span>$<span class="fu">new</span>()
 <span class="no">world</span>$<span class="fu">add</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">Household</span>$<span class="fu">new</span>(<span class="no">new_toy_households</span>, <span class="kw">id_col</span> <span class="kw">=</span> <span class="st">"hid"</span>), <span class="kw">name</span> <span class="kw">=</span> <span class="st">"Household"</span>)
-<span class="co">#&gt; [04:13:35] WARN  dymiumCore world$add: The given `name` will be ignored since the object in x is of an Entity object or a Container object. The classname of the object will be used as its name.</span></pre></body></html></div>
+<span class="co">#&gt; [04:13:44] WARN  dymiumCore world$add: The given `name` will be ignored since the object in x is of an Entity object or a Container object. The classname of the object will be used as its name.</span></pre></body></html></div>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># calling the `world` object</span>
 <span class="no">world</span>
 <span class="co">#&gt; There are 1 items in self$Cont.</span>
