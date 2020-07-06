@@ -286,7 +286,7 @@ Returns ids of the agents that have their response equal to <code>response_filte
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># load toy data</span>
-<span class='fu'><a href='create_toy_population.html'>create_toy_population</a></span>()</div><div class='output co'>#&gt; [04:19:46] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</div><div class='input'><span class='no'>Ind</span> <span class='kw'>&lt;-</span> <span class='no'>pop</span>$<span class='fu'><a href='https://rdrr.io/r/base/get.html'>get</a></span>(<span class='st'>"Individual"</span>)
+<span class='fu'><a href='create_toy_population.html'>create_toy_population</a></span>()</div><div class='output co'>#&gt; [04:19:06] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</div><div class='input'><span class='no'>Ind</span> <span class='kw'>&lt;-</span> <span class='no'>pop</span>$<span class='fu'><a href='https://rdrr.io/r/base/get.html'>get</a></span>(<span class='st'>"Individual"</span>)
 
 <span class='co'># fit a OLS regression model</span>
 <span class='no'>model_lm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span>(<span class='no'>age</span> ~ <span class='no'>sex</span> + <span class='no'>marital_status</span>,
