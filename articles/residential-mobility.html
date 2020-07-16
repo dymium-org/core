@@ -142,11 +142,11 @@
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dymiumCore</span>)
 <span class="co">#&gt; ── * dymium's options * ──────────────────────────────────────────────────────</span>
 <span class="co">#&gt; ● dymium.input_dir:</span>
-<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpEfCLLW/scenario/inputs</span>
+<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpcOoSQf/scenario/inputs</span>
 <span class="co">#&gt; ● dymium.output_dir:</span>
-<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpEfCLLW/scenario/outputs</span>
+<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpcOoSQf/scenario/outputs</span>
 <span class="co">#&gt; ● dymium.scenario_dir:</span>
-<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpEfCLLW/scenario</span>
+<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpcOoSQf/scenario</span>
 <span class="co">#&gt; ● dymium.simulation_clock: 0</span>
 <span class="co">#&gt; ● dymium.simulation_scale: 1</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">data.table</span>)
@@ -246,7 +246,7 @@ Melbourne CBD, Australia
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># create a emptied World object to store agents and models</span>
 <span class="no">world</span> <span class="kw">&lt;-</span> <span class="no">World</span>$<span class="fu">new</span>()
 <span class="no">world</span>$<span class="fu">add</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">Household</span>$<span class="fu">new</span>(<span class="no">new_toy_households</span>, <span class="kw">id_col</span> <span class="kw">=</span> <span class="st">"hid"</span>), <span class="kw">name</span> <span class="kw">=</span> <span class="st">"Household"</span>)
-<span class="co">#&gt; [04:17:34] WARN  dymiumCore world$add: The given `name` will be ignored since the object in x is of an Entity object or a Container object. The classname of the object will be used as its name.</span></pre></body></html></div>
+<span class="co">#&gt; [04:22:00] WARN  dymiumCore world$add: The given `name` will be ignored since the object in x is of an Entity object or a Container object. The classname of the object will be used as its name.</span></pre></body></html></div>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># calling the `world` object</span>
 <span class="no">world</span>
 <span class="co">#&gt; There are 1 items in self$Cont.</span>

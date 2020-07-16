@@ -130,7 +130,7 @@
       <h1 data-toc-skip>Introduction to dymiumCore</h1>
                         <h4 class="author">Amarin Siripanich</h4>
             
-            <h4 class="date">2020-07-15</h4>
+            <h4 class="date">2020-07-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dymium-org/dymiumCore/blob/master/vignettes/dymium-intro.Rmd"><code>vignettes/dymium-intro.Rmd</code></a></small>
       <div class="hidden name"><code>dymium-intro.Rmd</code></div>
@@ -176,15 +176,15 @@
                       <span class="kw">hh_data</span> <span class="kw">=</span> <span class="no">toy_households</span>,
                       <span class="kw">pid_col</span> <span class="kw">=</span> <span class="st">"pid"</span>,
                       <span class="kw">hid_col</span> <span class="kw">=</span> <span class="st">"hid"</span>)
-<span class="co">#&gt; [04:17:00] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</span></pre></body></html></div>
+<span class="co">#&gt; [04:21:21] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</span></pre></body></html></div>
 <p>You can use <code>$plot_relatioship</code> method to visualise the relationship network within a household. Note that, the nodes are labelled by their id and age (id:age).</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">Pop</span>$<span class="fu">plot_relatioship</span>(<span class="kw">hid</span> <span class="kw">=</span> <span class="fl">4</span>)
 <span class="co">#&gt; ℹ Attribute data of Household</span>
 <span class="co">#&gt;    hid did hhsize</span>
 <span class="co">#&gt; 1:   4   4      5</span></pre></body></html></div>
 <div class="figure">
-<div id="htmlwidget-f2ac2e16a8e919ec4a40" style="width:672px;height:672px;" class="visNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f2ac2e16a8e919ec4a40">{"x":{"nodes":{"id":[7,8,9,10,11],"label":["7:53","8:52","9:14","10:7","11:22"],"group":["male","female","female","female","male"],"title":["<p>pid:<b>7<\/b><br>Age:<b>53<\/b><br>MS:<b>married<\/b><\/p>","<p>pid:<b>8<\/b><br>Age:<b>52<\/b><br>MS:<b>married<\/b><\/p>","<p>pid:<b>9<\/b><br>Age:<b>14<\/b><br>MS:<b>not applicable<\/b><\/p>","<p>pid:<b>10<\/b><br>Age:<b>7<\/b><br>MS:<b>not applicable<\/b><\/p>","<p>pid:<b>11<\/b><br>Age:<b>22<\/b><br>MS:<b>never married<\/b><\/p>"]},"edges":{"from":[7,8,9,10,11,7,8,9,10,11,7,8,9,10,11],"to":[null,null,7,7,null,null,null,8,8,null,8,7,null,null,null],"label":["father","father","father","father","father","mother","mother","mother","mother","mother","partner","partner","partner","partner","partner"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"edges":{"arrows":{"to":{"enabled":true,"scaleFactor":1}},"color":{"color":"lightblue","highlight":"red"},"shadow":true,"smooth":false},"groups":{"female":{"color":"salmon","shape":"circle","shadow":{"enabled":true}},"useDefaultGroups":true,"male":{"color":"#97C2FC","shape":"circle","shadow":{"enabled":true}}},"interaction":{"navigationButtons":true}},"groups":["male","female"],"width":null,"height":null,"idselection":{"enabled":false},"byselection":{"enabled":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","legend":{"width":0.2,"useGroups":true,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"main":{"text":"Group","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:14px;text-align:center;"}},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);"},"evals":[],"jsHooks":[]}</script><p class="caption">
+<div id="htmlwidget-29c9c1f7f363b2bac895" style="width:672px;height:672px;" class="visNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-29c9c1f7f363b2bac895">{"x":{"nodes":{"id":[7,8,9,10,11],"label":["7:53","8:52","9:14","10:7","11:22"],"group":["male","female","female","female","male"],"title":["<p>pid:<b>7<\/b><br>Age:<b>53<\/b><br>MS:<b>married<\/b><\/p>","<p>pid:<b>8<\/b><br>Age:<b>52<\/b><br>MS:<b>married<\/b><\/p>","<p>pid:<b>9<\/b><br>Age:<b>14<\/b><br>MS:<b>not applicable<\/b><\/p>","<p>pid:<b>10<\/b><br>Age:<b>7<\/b><br>MS:<b>not applicable<\/b><\/p>","<p>pid:<b>11<\/b><br>Age:<b>22<\/b><br>MS:<b>never married<\/b><\/p>"]},"edges":{"from":[7,8,9,10,11,7,8,9,10,11,7,8,9,10,11],"to":[null,null,7,7,null,null,null,8,8,null,8,7,null,null,null],"label":["father","father","father","father","father","mother","mother","mother","mother","mother","partner","partner","partner","partner","partner"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"edges":{"arrows":{"to":{"enabled":true,"scaleFactor":1}},"color":{"color":"lightblue","highlight":"red"},"shadow":true,"smooth":false},"groups":{"female":{"color":"salmon","shape":"circle","shadow":{"enabled":true}},"useDefaultGroups":true,"male":{"color":"#97C2FC","shape":"circle","shadow":{"enabled":true}}},"interaction":{"navigationButtons":true}},"groups":["male","female"],"width":null,"height":null,"idselection":{"enabled":false},"byselection":{"enabled":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","legend":{"width":0.2,"useGroups":true,"position":"right","ncol":1,"stepX":100,"stepY":100,"zoom":true,"main":{"text":"Group","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:14px;text-align:center;"}},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);"},"evals":[],"jsHooks":[]}</script><p class="caption">
 Click on the nodes to see their attributes
 </p>
 </div>
@@ -399,7 +399,7 @@ else:
 <p>First we create a world object for testing using the <code><a href="../reference/create_toy_world.html">create_toy_world()</a></code> function. This function creates a world object named <code>world</code> in the global environment.</p>
 <div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="co"># create a toy world named `world` in the global environment</span>
 <span class="fu"><a href="../reference/create_toy_world.html">create_toy_world</a></span>(<span class="kw">add_toy_zones</span> <span class="kw">=</span> <span class="fl">FALSE</span>) <span class="co"># omitting `toy_zones`</span>
-<span class="co">#&gt; [04:17:01] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</span></pre></body></html></div>
+<span class="co">#&gt; [04:21:22] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</span></pre></body></html></div>
 <p>To create a shorthand access to the <code>Individual</code> object inside <code>world</code> we use the <code>$get()</code> method.</p>
 <div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co"># get the reference of Individual</span>
 <span class="no">Ind</span> <span class="kw">&lt;-</span> <span class="no">world</span>$<span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span>(<span class="st">"Individual"</span>)</pre></body></html></div>
@@ -433,18 +433,18 @@ else:
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">TransMaritalStatus</span> <span class="kw">&lt;-</span> <span class="no">TransitionClassification</span>$<span class="fu">new</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">Ind</span>, <span class="kw">model</span> <span class="kw">=</span> <span class="no">marital_status_model</span>)</pre></body></html></div>
 <p>Creating a <code>Transition</code> object will trigger a series of processes under the hood, including stochastically simulating decisions using the given model. Which in this case, TransitionClassification stochastically simulate marital status of the individual agents using the multinomial model.</p>
 <div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">TransMaritalStatus</span>
-<span class="co">#&gt; There are 373 Individual agents with 6 unique responses of type character {divorced: 21 | married: 167 | never married: 116 | not applicable: 53 | separated: 6 | widowed: 10}</span></pre></body></html></div>
+<span class="co">#&gt; There are 373 Individual agents with 6 unique responses of type character {divorced: 27 | married: 170 | never married: 101 | not applicable: 53 | separated: 5 | widowed: 17}</span></pre></body></html></div>
 <p>To see the simulation result use the <code>$get_result()</code> method.</p>
 <div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="co"># get the result in a data.table</span>
 <span class="no">TransMaritalStatus</span>$<span class="fu">get_result</span>()
 <span class="co">#&gt;       id      response</span>
-<span class="co">#&gt;   1:   1       married</span>
-<span class="co">#&gt;   2:   2       married</span>
-<span class="co">#&gt;   3:   3       married</span>
-<span class="co">#&gt;   4:   4       married</span>
-<span class="co">#&gt;   5:   5 never married</span>
+<span class="co">#&gt;   1:   1       widowed</span>
+<span class="co">#&gt;   2:   2      divorced</span>
+<span class="co">#&gt;   3:   3 never married</span>
+<span class="co">#&gt;   4:   4 never married</span>
+<span class="co">#&gt;   5:   5       married</span>
 <span class="co">#&gt;  ---                  </span>
-<span class="co">#&gt; 369: 369       married</span>
+<span class="co">#&gt; 369: 369      divorced</span>
 <span class="co">#&gt; 370: 370       married</span>
 <span class="co">#&gt; 371: 371       married</span>
 <span class="co">#&gt; 372: 372 never married</span>
@@ -472,9 +472,9 @@ else:
 <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span>(<span class="no">Ind</span>$<span class="fu">get_attr</span>(<span class="st">"marital_status"</span>))
 <span class="co">#&gt; </span>
 <span class="co">#&gt;       divorced        married  never married not applicable      separated </span>
-<span class="co">#&gt;             21            167            116             53              6 </span>
+<span class="co">#&gt;             27            170            101             53              5 </span>
 <span class="co">#&gt;        widowed </span>
-<span class="co">#&gt;             10</span></pre></body></html></div>
+<span class="co">#&gt;             17</span></pre></body></html></div>
 </div>
 <div id="using-transition-probabilities" class="section level3">
 <h3 class="hasAnchor">
@@ -577,7 +577,7 @@ else:
 </h3>
 <p>All classes that inherit <code>Generic</code>, namely <code>Entity</code> and <code>Container</code>, have the <code><a href="https://rdrr.io/r/base/Log.html">log()</a></code> method available to them. The main purpose of this function is to give the user a convinient way to log simulation outputs. <code><a href="../reference/add_log.html">get_log()</a></code> can be used on objects that have the <code>$log()</code> method to gather all logs.</p>
 <div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="fu"><a href="../reference/create_toy_world.html">create_toy_world</a></span>(<span class="kw">add_toy_zones</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="co">#&gt; [04:17:03] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</span>
+<span class="co">#&gt; [04:21:25] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</span>
 <span class="no">total_no_individuals</span> <span class="kw">&lt;-</span> <span class="no">world</span>$<span class="no">entities</span>$<span class="no">Individual</span>$<span class="fu">n</span>()
 <span class="no">world</span>$<span class="no">entities</span>$<span class="no">Individual</span>$<span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span>(<span class="kw">desc</span> <span class="kw">=</span> <span class="st">"total_no_individuals"</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="no">total_no_individuals</span>)
 <span class="fu"><a href="../reference/add_log.html">get_log</a></span>(<span class="no">world</span>)</pre></body></html></div>
@@ -588,13 +588,13 @@ else:
 </h3>
 <p><code><a href="../reference/add_history.html">add_history()</a></code> has a more specific used and only applicable to <code>Entity</code>, it is meant to be used for logging of past events that occur to each entity. This is particularly useful when past actions of entities can influence their current and future actions. There are helper functions to get and combine histories such as <code><a href="../reference/get_history.html">get_history()</a></code> and <code><a href="../reference/combine_histories.html">combine_histories()</a></code>.</p>
 <div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="fu"><a href="../reference/create_toy_world.html">create_toy_world</a></span>(<span class="kw">add_toy_zones</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="co">#&gt; [04:17:03] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</span>
+<span class="co">#&gt; [04:21:25] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</span>
 <span class="fu"><a href="../reference/add_history.html">add_history</a></span>(<span class="kw">entity</span> <span class="kw">=</span> <span class="no">world</span>$<span class="no">entities</span>$<span class="no">Individual</span>, <span class="kw">ids</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fl">3</span>, <span class="kw">event</span> <span class="kw">=</span> <span class="st">"marriage"</span>)
 <span class="fu"><a href="../reference/get_history.html">get_history</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">world</span>$<span class="no">entities</span>$<span class="no">Individual</span>)
 <span class="co">#&gt;    time created_timestamp    event pid</span>
-<span class="co">#&gt; 1:    0        1594786623 marriage   1</span>
-<span class="co">#&gt; 2:    0        1594786623 marriage   2</span>
-<span class="co">#&gt; 3:    0        1594786623 marriage   3</span>
+<span class="co">#&gt; 1:    0        1594873285 marriage   1</span>
+<span class="co">#&gt; 2:    0        1594873285 marriage   2</span>
+<span class="co">#&gt; 3:    0        1594873285 marriage   3</span>
 <span class="co"># alternatively you can use insepct to view the attribute data of the individuals</span>
 <span class="co"># and their history data at the same time</span>
 <span class="fu"><a href="../reference/inspect.html">inspect</a></span>(<span class="kw">entity</span> <span class="kw">=</span> <span class="no">world</span>$<span class="no">entities</span>$<span class="no">Individual</span>, <span class="kw">ids</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fl">3</span>)
@@ -605,9 +605,9 @@ else:
 <span class="co">#&gt; 3:   3   2  29 female  never married         NA        NA        NA</span>
 <span class="co">#&gt; ℹ History data of Individual</span>
 <span class="co">#&gt;    time created_timestamp    event pid</span>
-<span class="co">#&gt; 1:    0        1594786623 marriage   1</span>
-<span class="co">#&gt; 2:    0        1594786623 marriage   2</span>
-<span class="co">#&gt; 3:    0        1594786623 marriage   3</span></pre></body></html></div>
+<span class="co">#&gt; 1:    0        1594873285 marriage   1</span>
+<span class="co">#&gt; 2:    0        1594873285 marriage   2</span>
+<span class="co">#&gt; 3:    0        1594873285 marriage   3</span></pre></body></html></div>
 </div>
 </div>
 </div>
@@ -642,7 +642,7 @@ else:
 <span class="co">#&gt; 2. event_2(.)</span>
 
 <span class="fu"><a href="../reference/create_toy_world.html">create_toy_world</a></span>(<span class="kw">add_toy_zones</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="co">#&gt; [04:17:03] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</span>
+<span class="co">#&gt; [04:21:25] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</span>
 
 <span class="co"># create a microsimulation pipeline that runs for 2 cycles or 2 years.</span>
 <span class="kw">for</span> (<span class="no">i</span> <span class="kw">in</span> <span class="fl">1</span>:<span class="fl">2</span>) {
