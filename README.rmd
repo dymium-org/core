@@ -227,3 +227,18 @@ dd <- deepdep::deepdep("dymiumCore", local = T, depth = 3)
 deepdep::plot_dependencies(dd)
 ```
 
+## Citation
+
+If you use 'dymium' in your work please consider citing it as below:
+
+```
+@article{siripanich2020dymium,
+  title={Dymium: A modular microsimulation modelling framework for integrated urban modelling},
+  author={Siripanich, Amarin and Rashidi, Taha Hossein},
+  journal={SoftwareX},
+  volume={12},
+  pages={100555},
+  year={2020},
+  publisher={Elsevier}
+}
+```

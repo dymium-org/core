@@ -219,7 +219,6 @@ the simulation.
 
 ``` r
 library(ggplot2)
-#> Warning: package 'ggplot2' was built under R version 3.6.2
 ggplot(data = log_data, aes(x = time, y = value)) +
   geom_col(aes(fill = value)) +
   geom_label(aes(label = value)) +
@@ -269,7 +268,7 @@ please email us at amarin at dymium.org.
       - [x] **Version 0.1.7 & 0.1.8** : Introduce simpler APIs
         (`mutate_entity()`, `add_entity()`, `add_log()`, `transition()`)
         for creating simple microsimulation pipelines.
-      - [ ] **Version 0.1.9**: Support regression model creation from
+      - [x] **Version 0.1.9**: Support regression model creation from
         parameters.
       - [ ] **Version 0.1.10**: Support `mlr3` and `mlogit` model
         objects in the Transition classes.
@@ -329,3 +328,17 @@ deepdep::plot_dependencies(dd)
 ```
 
 <img src="man/figures/README-deepdep-fig-1.png" width="100%" />
+
+## Citation
+
+If you use ‘dymium’ in your work please consider citing it as below:
+
+    @article{siripanich2020dymium,
+      title={Dymium: A modular microsimulation modelling framework for integrated urban modelling},
+      author={Siripanich, Amarin and Rashidi, Taha Hossein},
+      journal={SoftwareX},
+      volume={12},
+      pages={100555},
+      year={2020},
+      publisher={Elsevier}
+    }
