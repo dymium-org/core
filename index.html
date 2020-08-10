@@ -269,7 +269,6 @@
 <span class="co">#&gt; 10:   10        1592366410 World &lt;NA&gt; count:Individual   247</span></pre></div>
 <p>Let’s visualise how many individual agents are still alive at the end of the simulation.</p>
 <div class="sourceCode" id="cb6"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
-<span class="co">#&gt; Warning: package 'ggplot2' was built under R version 3.6.2</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">log_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">time</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>)) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">fill</span> <span class="kw">=</span> <span class="no">value</span>)) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_label</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">label</span> <span class="kw">=</span> <span class="no">value</span>)) +
@@ -311,7 +310,7 @@
 <li>
 <input type="checkbox" disabled checked><strong>Version 0.1.7 &amp; 0.1.8</strong> : Introduce simpler APIs (<code><a href="reference/mutate_entity.html">mutate_entity()</a></code>, <code><a href="reference/add_entity.html">add_entity()</a></code>, <code><a href="reference/add_log.html">add_log()</a></code>, <code><a href="reference/transition.html">transition()</a></code>) for creating simple microsimulation pipelines.</li>
 <li>
-<input type="checkbox" disabled><strong>Version 0.1.9</strong>: Support regression model creation from parameters.</li>
+<input type="checkbox" disabled checked><strong>Version 0.1.9</strong>: Support regression model creation from parameters.</li>
 <li>
 <input type="checkbox" disabled><strong>Version 0.1.10</strong>: Support <code>mlr3</code> and <code>mlogit</code> model objects in the Transition classes.</li>
 <li>
@@ -367,6 +366,20 @@
 <span class="no">dd</span> <span class="kw">&lt;-</span> <span class="kw pkg">deepdep</span><span class="kw ns">::</span><span class="fu">deepdep</span>(<span class="st">"dymiumCore"</span>, <span class="kw">local</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">depth</span> <span class="kw">=</span> <span class="fl">3</span>)
 <span class="kw pkg">deepdep</span><span class="kw ns">::</span><span class="fu">plot_dependencies</span>(<span class="no">dd</span>)</pre></div>
 <p><img src="reference/figures/README-deepdep-fig-1.png" width="100%"></p>
+</div>
+<div id="citation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#citation" class="anchor"></a>Citation</h2>
+<p>If you use ‘dymium’ in your work please consider citing it as below:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="op">@</span>article{siripanich2020dymium,</span>
+<span id="cb8-2"><a href="#cb8-2"></a>  title={Dymium<span class="op">:</span><span class="st"> </span>A modular microsimulation modelling framework <span class="cf">for</span> integrated urban modelling},</span>
+<span id="cb8-3"><a href="#cb8-3"></a>  author={Siripanich, Amarin and Rashidi, Taha Hossein},</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  journal={SoftwareX},</span>
+<span id="cb8-5"><a href="#cb8-5"></a>  volume={<span class="dv">12</span>},</span>
+<span id="cb8-6"><a href="#cb8-6"></a>  pages={<span class="dv">100555</span>},</span>
+<span id="cb8-7"><a href="#cb8-7"></a>  year={<span class="dv">2020</span>},</span>
+<span id="cb8-8"><a href="#cb8-8"></a>  publisher={Elsevier}</span>
+<span id="cb8-9"><a href="#cb8-9"></a>}</span></code></pre></div>
 </div>
 </div>
 
