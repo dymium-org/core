@@ -61,8 +61,6 @@ Ind$get_data() %>%
   ggplot(data = ., aes(x = age, fill = sex)) +
     geom_density() +
     facet_grid(group ~ sex) +
-    ggthemes::scale_fill_few() +
-    ggthemes::theme_few(base_size = 12) +
     labs(title = "Distribution of age by gender and group.")
 ```
 
