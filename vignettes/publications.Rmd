@@ -1,0 +1,21 @@
+---
+title: "Publications"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Publications}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+Title | URL
+------|-----
+Dymium: A modular microsimulation modelling framework for integrated urban modelling | https://www.sciencedirect.com/science/article/pii/S235271102030008X
+A demographic microsimulation model with an integrated household alignment method | https://arxiv.org/pdf/2006.09474.pdf

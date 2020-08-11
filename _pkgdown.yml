@@ -31,12 +31,14 @@ navbar:
       menu:
         - text: "Why another microsimulation package?"
           href: articles/why-another-microsim.html
+        - text: Publications
+          href: articles/publications.html
         - text: 'Manual'
-        - text: 'For developers'
+        - text: 'For developers (Work in progress)'
           href: articles/for-developers.html
         - text: 'For modellers'
           href: articles/for-modellers.html
-        - text: 'For end users'
+        - text: 'For end users (Work in progress)'
           href: articles/for-endusers.html
         - text: 'Use cases'
         - text: 'Residential mobility'
