@@ -1,5 +1,7 @@
 # dymiumCore (development version)
 
+- closed #57
+
 # dymiumCore 0.1.9
 
 - introduced `ModelCustom` a model class that let users specify its parameters and `predict` function. We also add `ModelMultinomialLogit`, `ModelBinaryChoice` and `ModelLinear` which are implementations of `ModelCustom`.
