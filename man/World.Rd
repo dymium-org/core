@@ -51,8 +51,8 @@ this cannot be 0.
 
 \itemize{
 \item \code{add(x, name)}\cr
-(\link[dymiumCore:Entity]{dymiumCore::Entity} and inheritances | \link[dymiumCore:Container]{dymiumCore::Container} | an object of the classes in
-\link[dymiumCore:SupportedTransitionModels]{dymiumCore::SupportedTransitionModels})\cr
+(\link{Entity} and inheritances | \link{Container} | an object of the classes in
+\link{SupportedTransitionModels})\cr
 Add an object the allowed types to \code{self$Cont}, \code{self$entities}, \code{self$containers},
 \code{self$models}. Only one instance of each class are allowed to be stored.
 The stored instances can be access via \verb{self$<object-type>} or \code{self$get(x)}

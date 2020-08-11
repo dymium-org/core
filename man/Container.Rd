@@ -5,7 +5,7 @@
 \alias{Containers}
 \title{Container}
 \format{
-\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:ContainerGeneric]{dymiumCore::ContainerGeneric}
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{ContainerGeneric}
 }
 \description{
 Container is the base class for \link{World} and \link{Population}. It has the basic
@@ -32,8 +32,8 @@ A named list that contains references of other \link[R6:R6Class]{R6::R6Class} ob
 \itemize{
 \item \code{add(x, name)}\cr
 (\link[R6:R6Class]{R6::R6Class}|Supported Transition Models)\cr
-Add an \link[R6:R6Class]{R6::R6Class} object or a object of the classes in \link[dymiumCore:SupportedTransitionModels]{dymiumCore::SupportedTransitionModels} to self$Cont.
-Name must be given when \code{x} is an object of the classes in \link[dymiumCore:SupportedTransitionModels]{dymiumCore::SupportedTransitionModels}.
+Add an \link[R6:R6Class]{R6::R6Class} object or a object of the classes in \link{SupportedTransitionModels} to self$Cont.
+Name must be given when \code{x} is an object of the classes in \link{SupportedTransitionModels}.
 \item \code{check_pos(x)}\cr
 (\code{integer(1)}) -> (\code{logical(1)})\cr
 Check if the position in \code{x} exists in \code{self$Cont}.
@@ -52,7 +52,7 @@ Returns the names of the references in \code{self$Cont}.
 Remove the reference of x from self$Cont by the class of the given \link[R6:R6Class]{R6::R6Class}
 generator or string or integer.
 \item \code{unpack(target)}\cr
-(\link[dymiumCore:Container]{dymiumCore::Container})\cr
+(\link{Container})\cr
 Add all the references inside self$Cont to the \code{target} container. This is
 useful when you have containers within a container so that all references can
 be access via the top container. eg: A World container that contains a Population

@@ -4,7 +4,7 @@
 \alias{Pipeline}
 \title{Pipeline}
 \format{
-\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Generic]{dymiumCore::Generic}.
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Generic}.
 }
 \description{
 Pipeline acts as a wraper for event functions. It can shuffle the order in which

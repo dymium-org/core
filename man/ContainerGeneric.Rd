@@ -4,7 +4,7 @@
 \alias{ContainerGeneric}
 \title{ContainerGeneric}
 \format{
-\link[R6:R6Class]{R6::R6Class} object inheriting from \link[dymiumCore:Generic]{dymiumCore::Generic}
+\link[R6:R6Class]{R6::R6Class} object inheriting from \link{Generic}
 }
 \description{
 ContainerGeneric is the base class for the \link{Container} classes. \link{ContainerGeneric}
@@ -46,7 +46,7 @@ Returns the length of \code{self$Cont}.
 (\code{integer(1)})\cr
 Remove the object at the \code{x} element of \code{self$Cont}.
 \item \code{unpack(target)}\cr
-(\link[dymiumCore:Container]{dymiumCore::Container})\cr
+(\link{Container})\cr
 Add all the objects in \code{self$Cont} to another \code{target} Container.
 \item \code{summary()}\cr
 Abstract method.
