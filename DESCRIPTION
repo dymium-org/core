@@ -21,7 +21,6 @@ Imports:
     matchingR (>= 1.3.0),
     magrittr,
     purrr (>= 0.3.0),
-    lest (>= 1.0.0),
     lgr (>= 0.3.3),
     glue (>= 1.3.0),
     here (>= 0.1.0),
