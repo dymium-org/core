@@ -290,11 +290,11 @@ Population <- R6Class(
           with_children = purrr::map2_lgl(members, parents, ~ {any(.y %in% .x)})
         )] %>%
         # household type classification
-        .[, household_type := lest::case_when(
-          couple_hh & !with_children ~ "couple_hh",
-          couple_hh & with_children ~ "couple_hh_with_children",
-          !couple_hh & with_children ~ "lone_parent_hh",
-          TRUE ~ "non_family_hh"
+        .[, household_type := fcase(
+          couple_hh & !with_children, "couple_hh",
+          couple_hh & with_children, "couple_hh_with_children",
+          !couple_hh & with_children, "lone_parent_hh",
+          default = "non_family_hh"
         )] %>%
         # merge to sort in the original order of `hid`
         merge(
