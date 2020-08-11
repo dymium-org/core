@@ -1,5 +1,5 @@
 Package: dymiumCore
-Version: 0.1.9
+Version: 0.1.9.9000
 Title: A Toolkit for Building a Dynamic Microsimulation Model for Integrated Urban Modelling
 Description: A modular microsimulation modelling framework for integrated urban modelling.
 Authors@R: c(
