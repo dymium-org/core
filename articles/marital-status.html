@@ -148,11 +148,11 @@
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dymiumCore</span>)
 <span class="co">#&gt; ── * dymium's options * ──────────────────────────────────────────────────────</span>
 <span class="co">#&gt; ● dymium.input_dir:</span>
-<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpmVkVUJ/scenario/inputs</span>
+<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmpw4CWxS/scenario/inputs</span>
 <span class="co">#&gt; ● dymium.output_dir:</span>
-<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpmVkVUJ/scenario/outputs</span>
+<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmpw4CWxS/scenario/outputs</span>
 <span class="co">#&gt; ● dymium.scenario_dir:</span>
-<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpmVkVUJ/scenario</span>
+<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmpw4CWxS/scenario</span>
 <span class="co">#&gt; ● dymium.simulation_clock: 0</span>
 <span class="co">#&gt; ● dymium.simulation_scale: 1</span>
 <span class="no">world</span> <span class="kw">&lt;-</span> <span class="no">World</span>$<span class="fu">new</span>()</pre></body></html></div>
@@ -283,7 +283,7 @@
 <p>By calling <code>Ind</code> it returns some useful information about the object such as the number of entities of class Individual and the inheritance structure.</p>
 <p>Now let’s add <code>Ind</code> into <code>world</code> using <code>world</code>’s <code>add</code> method.</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">world</span>$<span class="fu">add</span>(<span class="no">Ind</span>, <span class="kw">name</span> <span class="kw">=</span> <span class="st">"Individual"</span>)
-<span class="co">#&gt; [11:15:52] WARN  dymiumCore world$add: The given `name` will be ignored since the object in x is of an Entity object or a Container object. The classname of the object will be used as its name.</span></pre></body></html></div>
+<span class="co">#&gt; [11:52:16] WARN  dymiumCore world$add: The given `name` will be ignored since the object in x is of an Entity object or a Container object. The classname of the object will be used as its name.</span></pre></body></html></div>
 <p>You can see from the warning message above that <code>name</code> is not needed when adding an Entity class to <code>world</code> since it will use the name of the class as the name of the added object. However, when you add a model object the <code>name</code> argument must be specified. Currently, only one instance of each Entity class can be added to <code>world</code> since there is no obvious benefit to adding multiple instances of the same class to <code>world</code> since it is probably easier and clearer just to combine them as one instance.</p>
 <p>Now that your <code>world</code> contains Individual agents we may want to introduce some rules so that we can start to microsimulate something!</p>
 <p>Let’s microsimulate changes in marital status of the Individual agents.</p>

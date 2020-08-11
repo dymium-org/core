@@ -194,7 +194,7 @@ functionalities to store and access references of other <a href='https://rdrr.io
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p><a href='https://rdrr.io/pkg/R6/man/R6Class.html'>R6::R6Class</a> object inheriting from <a href='ContainerGeneric.html'>dymiumCore::ContainerGeneric</a></p>
+    <p><a href='https://rdrr.io/pkg/R6/man/R6Class.html'>R6::R6Class</a> object inheriting from <a href='ContainerGeneric.html'>ContainerGeneric</a></p>
     <h2 class="hasAnchor" id="construction"><a class="anchor" href="#construction"></a>Construction</h2>
 
     
@@ -219,8 +219,8 @@ A named list that contains references of other <a href='https://rdrr.io/pkg/R6/m
 <ul>
 <li><p><code>add(x, name)</code><br />
 (<a href='https://rdrr.io/pkg/R6/man/R6Class.html'>R6::R6Class</a>|Supported Transition Models)<br />
-Add an <a href='https://rdrr.io/pkg/R6/man/R6Class.html'>R6::R6Class</a> object or a object of the classes in <a href='SupportedTransitionModels.html'>dymiumCore::SupportedTransitionModels</a> to self$Cont.
-Name must be given when <code>x</code> is an object of the classes in <a href='SupportedTransitionModels.html'>dymiumCore::SupportedTransitionModels</a>.</p></li>
+Add an <a href='https://rdrr.io/pkg/R6/man/R6Class.html'>R6::R6Class</a> object or a object of the classes in <a href='SupportedTransitionModels.html'>SupportedTransitionModels</a> to self$Cont.
+Name must be given when <code>x</code> is an object of the classes in <a href='SupportedTransitionModels.html'>SupportedTransitionModels</a>.</p></li>
 <li><p><code>check_pos(x)</code><br />
 (<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>) -&gt; (<code><a href='https://rdrr.io/r/base/logical.html'>logical(1)</a></code>)<br />
 Check if the position in <code>x</code> exists in <code>self$Cont</code>.</p></li>
@@ -239,7 +239,7 @@ Returns the names of the references in <code>self$Cont</code>.</p></li>
 Remove the reference of x from self$Cont by the class of the given <a href='https://rdrr.io/pkg/R6/man/R6Class.html'>R6::R6Class</a>
 generator or string or integer.</p></li>
 <li><p><code>unpack(target)</code><br />
-(dymiumCore::Container)<br />
+(Container)<br />
 Add all the references inside self$Cont to the <code>target</code> container. This is
 useful when you have containers within a container so that all references can
 be access via the top container. eg: A World container that contains a Population

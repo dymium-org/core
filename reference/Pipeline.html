@@ -220,7 +220,7 @@ run of a buy relocation event.<div class="r"></p><pre><span class='no'>pipeline<
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p><a href='https://rdrr.io/pkg/R6/man/R6Class.html'>R6::R6Class</a> object inheriting from <a href='Generic.html'>dymiumCore::Generic</a>.</p>
+    <p><a href='https://rdrr.io/pkg/R6/man/R6Class.html'>R6::R6Class</a> object inheriting from <a href='Generic.html'>Generic</a>.</p>
     <h2 class="hasAnchor" id="construction"><a class="anchor" href="#construction"></a>Construction</h2>
 
     
@@ -254,7 +254,7 @@ the same order or randomised orders each time, depending on the value in <code>s
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># create Population</span>
-<span class='no'>Pop</span> <span class='kw'>&lt;-</span> <span class='no'>Population</span>$<span class='fu'>new</span>(<span class='no'>toy_individuals</span>, <span class='no'>toy_households</span>, <span class='kw'>pid_col</span> <span class='kw'>=</span> <span class='st'>"pid"</span>, <span class='kw'>hid_col</span> <span class='kw'>=</span> <span class='st'>"hid"</span>)</div><div class='output co'>#&gt; [11:15:19] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</div><div class='input'>
+<span class='no'>Pop</span> <span class='kw'>&lt;-</span> <span class='no'>Population</span>$<span class='fu'>new</span>(<span class='no'>toy_individuals</span>, <span class='no'>toy_households</span>, <span class='kw'>pid_col</span> <span class='kw'>=</span> <span class='st'>"pid"</span>, <span class='kw'>hid_col</span> <span class='kw'>=</span> <span class='st'>"hid"</span>)</div><div class='output co'>#&gt; [11:51:42] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</div><div class='input'>
 <span class='co'># create 3 dummy events</span>
 <span class='no'>event1</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>object</span>) {
   <span class='co'># do something</span>
