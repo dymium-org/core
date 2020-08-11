@@ -45,9 +45,8 @@ creates an object of that class. So the line above creates a `World` object and 
 it as `world` to your global environment. Now, your newly created world is still emptied.
 So we are going to add individuals into it using the `toy_individuals` dataset from `dymiumCore`. 
 
-```{r}
-library(reactable)
-reactable::reactable(toy_individuals, filterable = TRUE, minRows = 10)
+```{r, echo=FALSE}
+knitr::kable(head(toy_individuals, n = 10), caption = "First 10 rows of the `toy_individuals` data")
 ```
 
 To add individuals into world and you must first create an Individual object. 

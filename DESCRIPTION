@@ -49,7 +49,6 @@ Suggests:
     rmarkdown,
     ggplot2 (>= 3.0.0),
     DiagrammeR (>= 1.0.0),
-    reactable,
     patchwork (>= 1.0.0),
     scales (>= 1.1.0),
     prettydoc,
