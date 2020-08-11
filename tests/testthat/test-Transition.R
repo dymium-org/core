@@ -166,10 +166,16 @@ test_that("Transition works on a Model with a preprocessing function that doesn'
       .[age %between% c(999, 1000) &
           sex == "female"]
   }
+
   res <-
     TransitionClassification$new(world$entities$Individual, model = m)$get_result()
+
   ind_data <-
-    world$entities$Individual$get_data(ids = res[["id"]])
+    expect_warning(
+      object = world$entities$Individual$get_data(ids = res[["id"]]),
+      regexp = "no non-missing arguments to max; returning -Inf"
+    )
+
 
   checkmate::expect_data_table(res, nrows = 0)
   checkmate::expect_names(names(res), identical.to = c("id", "response"))
