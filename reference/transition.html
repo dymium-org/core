@@ -100,7 +100,7 @@ microsimulation pipeline, as it always returns the input World object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">dymiumCore</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9.9000</span>
       </span>
     </div>
 
@@ -128,15 +128,18 @@ microsimulation pipeline, as it always returns the input World object." />
     <li>
       <a href="../articles/why-another-microsim.html">Why another microsimulation package?</a>
     </li>
+    <li>
+      <a href="../articles/publications.html">Publications</a>
+    </li>
     <li class="dropdown-header">Manual</li>
     <li>
-      <a href="../articles/for-developers.html">For developers</a>
+      <a href="../articles/for-developers.html">For developers (Work in progress)</a>
     </li>
     <li>
       <a href="../articles/for-modellers.html">For modellers</a>
     </li>
     <li>
-      <a href="../articles/for-endusers.html">For end users</a>
+      <a href="../articles/for-endusers.html">For end users (Work in progress)</a>
     </li>
     <li class="dropdown-header">Use cases</li>
     <li>
@@ -348,7 +351,7 @@ These variables only appear temporary within the context of the transition.</p>
 <span class='no'>death_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>yes</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>no</span> <span class='kw'>=</span> <span class='fl'>0.9</span>)
 
 <span class='co'># create a toy world</span>
-<span class='fu'><a href='create_toy_world.html'>create_toy_world</a></span>()</div><div class='output co'>#&gt; [10:20:05] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</div><div class='input'>
+<span class='fu'><a href='create_toy_world.html'>create_toy_world</a></span>()</div><div class='output co'>#&gt; [11:15:34] WARN  dymiumCore .subset2(public_bind_env, "initialize"): Creating a `hhsize` column in `hh_data` as it is not provided.</div><div class='input'>
 <span class='co'># simulate marital status transition and update the attribute.</span>
 <span class='fu'>transition</span>(<span class='no'>world</span>,
            <span class='kw'>entity</span> <span class='kw'>=</span> <span class='st'>"Individual"</span>,

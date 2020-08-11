@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>dymiumCore for developers • dymiumCore</title>
+<title>Publications • dymiumCore</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -19,7 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><!-- docsearch --><script src="../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../docsearch.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="dymiumCore for developers">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Publications">
 <meta property="og:description" content="dymiumCore">
 <meta property="og:image" content="https://core.dymium.org/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -126,57 +126,44 @@
 
       
 
-      </header><script src="for-developers_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="publications_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>dymiumCore for developers</h1>
+      <h1 data-toc-skip>Publications</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dymium-org/dymiumCore/blob/master/vignettes/for-developers.Rmd"><code>vignettes/for-developers.Rmd</code></a></small>
-      <div class="hidden name"><code>for-developers.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/dymium-org/dymiumCore/blob/master/vignettes/publications.Rmd"><code>vignettes/publications.Rmd</code></a></small>
+      <div class="hidden name"><code>publications.Rmd</code></div>
 
     </div>
 
     
     
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dymiumCore</span>)
-<span class="co">#&gt; ── * dymium's options * ──────────────────────────────────────────────────────</span>
-<span class="co">#&gt; ● dymium.input_dir:</span>
-<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpmVkVUJ/scenario/inputs</span>
-<span class="co">#&gt; ● dymium.output_dir:</span>
-<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpmVkVUJ/scenario/outputs</span>
-<span class="co">#&gt; ● dymium.scenario_dir:</span>
-<span class="co">#&gt;   /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpmVkVUJ/scenario</span>
-<span class="co">#&gt; ● dymium.simulation_clock: 0</span>
-<span class="co">#&gt; ● dymium.simulation_scale: 1</span></pre></body></html></div>
-<div id="main-requirements" class="section level1">
-<h1 class="hasAnchor">
-<a href="#main-requirements" class="anchor"></a>Main requirements</h1>
-<p>dymiumCore relies on a number of R packages under the hood such as <a href="https://r6.r-lib.org">R6</a> and <a href="http://r-datatable.com">data.table</a>. Hence, if you are looking to extend dymiumCore or develop new modules that are compatible a good understanding of those mentioned packages is the one of main requirements.</p>
+<table class="table">
+<colgroup>
+<col width="54%">
+<col width="45%">
+</colgroup>
+<thead><tr class="header">
+<th>Title</th>
+<th>URL</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Dymium: A modular microsimulation modelling framework for integrated urban modelling</td>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S235271102030008X" class="uri">https://www.sciencedirect.com/science/article/pii/S235271102030008X</a></td>
+</tr>
+<tr class="even">
+<td>A demographic microsimulation model with an integrated household alignment method</td>
+<td><a href="https://arxiv.org/pdf/2006.09474.pdf" class="uri">https://arxiv.org/pdf/2006.09474.pdf</a></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="classes" class="section level1">
-<h1 class="hasAnchor">
-<a href="#classes" class="anchor"></a>Classes</h1>
-</div>
-<div id="event-functions" class="section level1">
-<h1 class="hasAnchor">
-<a href="#event-functions" class="anchor"></a>Event functions</h1>
-</div>
-<div id="transition" class="section level1">
-<h1 class="hasAnchor">
-<a href="#transition" class="anchor"></a>Transition</h1>
-</div>
-<div id="logging" class="section level1">
-<h1 class="hasAnchor">
-<a href="#logging" class="anchor"></a>Logging</h1>
-</div>
-  </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 

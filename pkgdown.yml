@@ -8,9 +8,10 @@ articles:
   for-modellers: for-modellers.html
   marital-status: marital-status.html
   mate-matching: mate-matching.html
+  publications: publications.html
   residential-mobility: residential-mobility.html
   why-another-microsim: why-another-microsim.html
-last_built: 2020-08-11T10:18Z
+last_built: 2020-08-11T11:15Z
 urls:
   reference: https://core.dymium.org/reference
   article: https://core.dymium.org/articles
