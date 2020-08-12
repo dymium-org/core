@@ -90,10 +90,21 @@ compute_linear_combination <- function(params, formula, newdata) {
   as.numeric(params %*% t(mm))
 }
 
+#' @param object a [ModelCustom] object
+#' @param newdata a data.frame/data.table
+#'
+#' @rdname ModelCustom
+#' @return prediction
+#' @export
 predict.ModelCustom <- function(object, newdata) {
   object$predict(newdata)
 }
 
+#' @param x a [ModelCustom] object
+#'
+#' @rdname ModelCustom
+#' @return summary
+#' @export
 summary.ModelCustom <- function(x) {
   x$summary()
 }

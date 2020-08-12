@@ -1,6 +1,7 @@
 # dymiumCore (development version)
 
 - closed #57
+- exported the S3 `predict` and `summary` methods of `ModelMultinomialLogit` and `ModelBinaryChoice`. Note that `ModelMultinomialLogit` requires `newdata` to be in the same format that is required by `mlogit`.
 
 # dymiumCore 0.1.9
 

@@ -2,8 +2,21 @@
 % Please edit documentation in R/ModelCustom.R
 \name{ModelCustom}
 \alias{ModelCustom}
+\alias{predict.ModelCustom}
+\alias{summary.ModelCustom}
 \title{ModelCustom}
+\usage{
+\method{predict}{ModelCustom}(object, newdata)
+
+\method{summary}{ModelCustom}(x)
+}
 \arguments{
+\item{object}{a \link{ModelCustom} object}
+
+\item{newdata}{a data.frame/data.table}
+
+\item{x}{a \link{ModelCustom} object}
+
 \item{params}{a named \code{numeric()}.}
 
 \item{formula}{a model \code{formula()}.}
@@ -15,6 +28,10 @@ data given to the \code{predict} method before making the prediction.}
 }
 \value{
 \code{NULL}
+
+prediction
+
+summary
 }
 \description{
 A ModelCustom class.
