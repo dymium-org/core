@@ -24,19 +24,26 @@ By doing so, you can assess those models from \link{World} as it is flowing down
 microsimulation pipeline just like \link{Entities}.
 }
 \section{Construction}{
-\preformatted{x <- Model$new(x)
+\preformatted{x <- Model$new(x, name = NULL, preprocessing_fn = NULL)
 }
 \itemize{
 \item \code{x} :: (\link[caret:train]{caret::train} | \link[data.table:data.table]{data.table::data.table} | named \code{list})\cr
 A model object that compatible.
+\item \code{name} :: \code{character(1)}\cr
+Name/Alias of the model.
+\item \code{preprocessing_fn} :: \verb{function()}\cr
+A function that will be used to preprocess simulation data. E.g., this can
+be used to filter which agents the model is applicable for.
 }
 }
 
-\section{Active field (read-only)}{
+\section{Active field}{
 
 \itemize{
 \item \code{model}\cr
-The stored model object in its original form.
+(read-only) The stored model object in its original form.
+\item \code{name} :: \code{character(1)}\cr
+Name/Alias of the model.
 }
 }
 

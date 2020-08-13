@@ -15,16 +15,26 @@
 #' @section Construction:
 #'
 #' ```
-#' x <- Model$new(x)
+#' x <- Model$new(x, name = NULL, preprocessing_fn = NULL)
 #' ```
 #'
 #' * `x` :: ([caret::train] | [data.table::data.table] | named `list`)\cr
 #' A model object that compatible.
 #'
-#' @section Active field (read-only):
+#' * `name` :: `character(1)`\cr
+#' Name/Alias of the model.
+#'
+#' * `preprocessing_fn` :: `function()`\cr
+#' A function that will be used to preprocess simulation data. E.g., this can
+#' be used to filter which agents the model is applicable for.
+#'
+#' @section Active field:
 #'
 #' * `model`\cr
-#' The stored model object in its original form.
+#' (read-only) The stored model object in its original form.
+#'
+#' * `name` :: `character(1)`\cr
+#' Name/Alias of the model.
 #'
 #' @section Public fields:
 #'
@@ -86,10 +96,11 @@ Model <-
     classname = "Model",
     inherit = Generic,
     public = list(
-      initialize = function(x, preprocessing_fn = NULL) {
+      initialize = function(x, name = NULL, preprocessing_fn = NULL) {
         checkmate::assert_function(preprocessing_fn, nargs = 1, null.ok = TRUE)
         self$preprocessing_fn <- preprocessing_fn
         self$set(x)
+        self$name <- name
         invisible()
       },
       get = function() {
@@ -110,7 +121,9 @@ Model <-
         class(private$.model)
       },
       print = function() {
-        print(private$.model)
+        cat("Model's name: ", self$name, "\n", sep = "")
+        cat("Model's classes: ", paste(class(self$model), collapse = ", "), "\n", sep = "")
+        print(self$model)
       },
       preprocessing_fn = NULL
     ),
@@ -120,10 +133,19 @@ Model <-
           return(data.table::copy(private$.model))
         }
         get(".model", envir = private)
+      },
+      name = function(value) {
+        if (missing(value)) {
+          private$.name
+        } else {
+          checkmate::assert_string(value, null.ok = T, na.ok = FALSE)
+          private$.name <- value
+        }
       }
     ),
     private = list(
-      .model = NULL
+      .model = NULL,
+      .name = NULL
     )
   )
 

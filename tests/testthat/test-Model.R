@@ -1,3 +1,11 @@
+test_that("Model initialisation", {
+  m <- Model$new(list(x = 1), name = "model")
+  expect_true(m$name == "model")
+
+  m <- Model$new(list(x = 1))
+  expect_null(m$null)
+})
+
 test_that("Model - list", {
   m <- Model$new(list(x = 1))
   expect_is(m$get(), "list")

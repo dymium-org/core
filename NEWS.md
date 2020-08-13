@@ -7,6 +7,7 @@
 ## Changes
 
 - closed #57
+- add a `name` argument to `Model`'s constructor function and expose it as an R6 active field. 
 ## Bug fixes
 
 
