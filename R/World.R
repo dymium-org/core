@@ -45,12 +45,13 @@
 #'
 #' @section Public Methods:
 #'
-#' * `add(x, name)`\cr
+#' * `add(x, name, replace = TRUE)`\cr
 #'  ([dymiumCore::Entity] and inheritances | [dymiumCore::Container] | an object of the classes in
-#'  [dymiumCore::SupportedTransitionModels])\cr
+#'  [dymiumCore::SupportedTransitionModels], `character(1)`, `logical(1)`)\cr
 #'  Add an object the allowed types to `self$Cont`, `self$entities`, `self$containers`,
 #'  `self$models`. Only one instance of each class are allowed to be stored.
-#'  The stored instances can be access via `self$<object-type>` or `self$get(x)`
+#'  The stored instances can be access via `self$<object-type>` or `self$get(x)`.
+#'  If `replace` is true then the object with the same name as `name` will be replaced.
 #'
 #' * `remove(x)`\cr
 #'  (`character(1)` | `integer(1)`)\cr
@@ -123,7 +124,7 @@ World <- R6::R6Class(
       invisible()
     },
 
-    add = function(x, name) {
+    add = function(x, name, replace = TRUE) {
       checkmate::assert(
         checkmate::check_r6(x, classes = c("Entity", "Generic"), null.ok = FALSE),
         checkmate::check_r6(x, classes = c("Container", "Generic"), null.ok = FALSE),
@@ -149,6 +150,10 @@ World <- R6::R6Class(
         name <- class(x)[[1]]
       }
 
+      if (inherits(x, "Model")) {
+        name <- x$name
+      }
+
       # only allows letters and underscores
       checkmate::assert_string(name,
                                pattern = "^[a-zA-Z_]*$",
@@ -168,7 +173,7 @@ World <- R6::R6Class(
 
       if (class(x)[[1]] %in% dymiumCore::SupportedTransitionModels()) {
         lg$info("Adding a Model object '{name}' to the `models` field.")
-        x <- Model$new(x)
+        x <- Model$new(x, name = name)
         .listname <- ".models"
       }
 
@@ -184,9 +189,19 @@ World <- R6::R6Class(
 
       # make sure there is only one of each Entity sub class stored in entities
       .listnames <- names(get(.listname, envir = private))
-      if (name %in% .listnames) {
-        stop(glue::glue("{name} already exists in {.listname}. Only one instance \\
-                         of each class is allowed to be added."))
+      name_object_exists <- name %in% .listnames
+
+      if (name_object_exists) {
+        if (replace) {
+          lg$warn("Replacing the object named `{name}` of class `{.class_old}` \\
+                  with `{.class_new}`.",
+                  .class_old = self$get(x = name)$class()[[1]],
+                  .class_new = class(x)[[1]])
+          self$remove(name)
+        } else {
+          stop(glue::glue("{name} already exists in {.listname}. Only one instance \\
+                       of each class is allowed to be added."))
+        }
       }
 
       # all references are to be stored in self$Cont. To make accessing these

@@ -1,8 +1,3 @@
-test_that("initialise", {
-  w <- World$new()
-})
-
-
 test_that("add", {
   w <- World$new()
 
@@ -11,23 +6,32 @@ test_that("add", {
                        hh_data = toy_households,
                        pid_col = c("pid"),
                        hid_col = "hid"))
-  expect_error(w$add(Population$new(ind_data = toy_individuals,
-                                    hh_data = toy_households,
-                                    pid_col = c("pid"),
-                                    hid_col = "hid")), "Individual already exists in .entities")
+
+  expect_warning(w$add(
+    Population$new(
+      ind_data = toy_individuals,
+      hh_data = toy_households,
+      pid_col = c("pid"),
+      hid_col = "hid"
+    )
+  ), regexp = "^Replacing ")
 
   # add entities
   w$add(Agent$new(toy_individuals, "pid"))
   w$add(Firm$new(toy_individuals, "pid"))
   expect_length(w$entities, 4)
-  expect_error(w$add(Individual$new(toy_individuals, "pid")), "Individual already exists in .entities")
-  expect_error(w$add(Household$new(toy_households, "hid")), "Household already exists in .entities")
+  expect_warning(w$add(Individual$new(toy_individuals, "pid")),
+                 "^Replacing")
+  expect_warning(w$add(Household$new(toy_households, "hid")),
+                 "^Replacing")
 
   # add model
   w$add(list(x = 1), "testModel")
   expect_error(w$add(list(x = 1), "badName1"), "Must comply to pattern")
   w$add(list(x = 1), "testModelTwo")
   expect_length(w$models, 2)
+  w$add(Model$new(list(x = 1), "namedModel"))
+  w$add(list(x = 1), "namedModel")
 
   # add world ?
   expect_error(w$add(w), regexp = "Adding a World object is not permitted.")

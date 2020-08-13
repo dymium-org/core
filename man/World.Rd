@@ -50,12 +50,13 @@ this cannot be 0.
 \section{Public Methods}{
 
 \itemize{
-\item \code{add(x, name)}\cr
+\item \code{add(x, name, replace = TRUE)}\cr
 (\link{Entity} and inheritances | \link{Container} | an object of the classes in
-\link{SupportedTransitionModels})\cr
+\link{SupportedTransitionModels}, \code{character(1)}, \code{logical(1)})\cr
 Add an object the allowed types to \code{self$Cont}, \code{self$entities}, \code{self$containers},
 \code{self$models}. Only one instance of each class are allowed to be stored.
-The stored instances can be access via \verb{self$<object-type>} or \code{self$get(x)}
+The stored instances can be access via \verb{self$<object-type>} or \code{self$get(x)}.
+If \code{replace} is true then the object with the same name as \code{name} will be replaced.
 \item \code{remove(x)}\cr
 (\code{character(1)} | \code{integer(1)})\cr
 Remove an object in element or named \code{x}.
