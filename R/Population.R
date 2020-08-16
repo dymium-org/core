@@ -242,7 +242,9 @@ Population <- R6Class(
     leave_household = function(ind_ids) {
       # check that ids in ind_ids and their household ids exist
       stopifnot(self$get("Individual")$ids_exist(ids = ind_ids))
-      stopifnot(self$get("Household")$ids_exist(ids = self$get("Individual")$get_household_ids(ids = ind_ids)))
+      stopifnot(
+        self$get("Household")$ids_exist(
+          ids = self$get("Individual")$get_household_ids(ids = ind_ids)))
       # leave household
       self$get("Individual")$remove_household_id(ids = ind_ids)
       add_history(entity = self$get("Individual"),

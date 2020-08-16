@@ -180,3 +180,15 @@ test_that("`household_type` of two random hid vectors of the same set be equipva
     all(table(Pop$household_type(hid = sample(1:100))) == table(Pop$household_type(hid = sample(1:100))))
   )
 })
+
+# $leave_household -------------
+test_that("Population$leave_household()", {
+  create_toy_world()
+  Pop <- world$get("Population")
+  Ind <- world$get("Individual")
+  ind_ids <- sample(Ind$get_ids(), 10)
+  Pop$leave_household(ind_ids)
+  # Once individuals left households they cannot be leaving households again
+  expect_error(Pop$leave_household(ind_ids),
+               regexp = "Contains missing values")
+})
