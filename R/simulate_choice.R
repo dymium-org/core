@@ -22,7 +22,7 @@
 simulate_choice.train <- function(model, newdata, target = NULL, ...) {
   checkmate::assert_true(model$modelType == "Classification")
   probs <- predict(model, newdata, type = "prob")
-  simulate_choice(probs, target)
+  simulate_choice(create_choice_table(probs), target)
 }
 
 #' @rdname simulate_choice
@@ -56,7 +56,7 @@ simulate_choice.glm <- function(model, newdata, target = NULL, ...) {
     {data.table::data.table(x1 = .,
                            x2 = 1 - .)} %>%
     data.table::setnames(choices)
-  simulate_choice(probs, target)
+  simulate_choice(create_choice_table(probs), target)
 }
 
 #' @rdname simulate_choice
@@ -96,12 +96,72 @@ simulate_choice.WrappedModel <- function(model, newdata, target = NULL, ...) {
   } else {
     probs <- mlr::getPredictionProbabilities(pred)
   }
-  simulate_choice(probs, target)
+  simulate_choice(create_choice_table(probs), target)
 }
 
 #' @rdname simulate_choice
 #' @export
-simulate_choice.data.frame <- function(model, target = NULL, ...) {
+simulate_choice.data.frame <- function(model, newdata, target = NULL, ...) {
+
+  # convert to data.table
+  if (!is.data.table(model)) {
+    checkmate::assert_data_frame(model, min.rows = 1)
+    model <- as.data.table(model)
+  }
+
+  if (!is.data.table(newdata)) {
+    checkmate::assert_data_frame(newdata, min.rows = 1)
+    newdata <- as.data.table(newdata)
+  }
+
+  if (!xor("prob" %in% names(model), "probs" %in% names(model))) {
+    stop("`model` should contains a numeric probability column named `prob` in a binary",
+         " choice case or `probs` in a multiple choice case.")
+  }
+
+  match_vars <-
+    names(model)[!names(model) %in% c("prob", "probs", "choices")]
+
+  checkmate::assert_names(names(newdata), must.include = match_vars)
+
+  if ("prob" %in% names(model)) {
+    probs <-
+      merge(newdata, model, match_vars, sort = FALSE) %>%
+      .[, .(yes = prob, no = 1 - prob)]
+  }
+
+  if ("probs" %in% names(model)) {
+    if (!"choices" %in% names(model)) {
+      stop("`model` is missing a list column named `choices`.")
+    }
+    stop("`model` with multiple choices has not been developed yet :(.")
+  }
+
+  if (nrow(probs) < nrow(newdata)) {
+    stop("There are less prediction results than `newdata`.")
+  }
+
+  if (nrow(probs) > nrow(newdata)) {
+    stop("There are more prediction results than `newdata`.")
+  }
+
+  # check cases
+  checkmate::assert_data_table(
+    probs,
+    types = 'double',
+    min.cols = 2,
+    any.missing = FALSE,
+    null.ok = FALSE,
+    col.names = 'unique'
+  )
+
+  simulate_choice(create_choice_table(probs), target)
+
+}
+
+#' @rdname simulate_choice
+#' @export
+simulate_choice.dymium.choice_table <- function(model, target = NULL, ...) {
   probs <- model
   checkmate::assert_data_frame(
     probs,
@@ -123,3 +183,12 @@ simulate_choice.data.frame <- function(model, target = NULL, ...) {
   }
 }
 
+#' prepend dymium.choice_table
+#'
+#' @param x any object.
+#'
+#' @return `x`
+create_choice_table = function(x) {
+  class(x) <- c("dymium.choice_table", class(x))
+  x
+}

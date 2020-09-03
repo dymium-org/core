@@ -27,11 +27,29 @@ test_that("simulate_choice.train multilabels works", {
 
 test_that("simulate_choice.data.frame works", {
   n_rows <- 10
+
+  # this used to work in commit:0602258ed2bdffb3827c0ac3870dbdd62b575d56, but now is defunct
   probs <- data.frame(yes = runif(n_rows), no = runif(n_rows), maybe = runif(n_rows))
-  checkmate::expect_character(simulate_choice(probs),
-                              pattern = "yes|no|maybe",
-                              any.missing = FALSE,
-                              len = n_rows)
+  expect_error(simulate_choice(probs))
+
+  model <- data.frame(age = c(0:99, 0:99),
+                      sex = c(rep('male', 100), rep('female', 100)),
+                      prob = 0.05)
+  checkmate::expect_character(
+    simulate_choice(model, newdata = toy_individuals),
+    pattern = "yes|no", len = nrow(toy_individuals)
+  )
+  checkmate::expect_character(
+    simulate_choice(as.data.table(model), newdata = toy_individuals),
+    pattern = "yes|no", len = nrow(toy_individuals)
+  )
+
+  model <- data.frame(age = 1,
+                      sex = "female",
+                      prob = 0.05)
+  expect_error(simulate_choice(model, newdata = toy_individuals),
+               regexp = "There are less prediction results than")
+
 })
 
 test_that("simulate_choice.WrappedModel from mlr works", {

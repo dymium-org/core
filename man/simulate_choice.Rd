@@ -8,6 +8,7 @@
 \alias{simulate_choice.Model}
 \alias{simulate_choice.WrappedModel}
 \alias{simulate_choice.data.frame}
+\alias{simulate_choice.dymium.choice_table}
 \title{Simulate a choice situation}
 \usage{
 simulate_choice(model, ...)
@@ -22,7 +23,9 @@ simulate_choice(model, ...)
 
 \method{simulate_choice}{WrappedModel}(model, newdata, target = NULL, ...)
 
-\method{simulate_choice}{data.frame}(model, target = NULL, ...)
+\method{simulate_choice}{data.frame}(model, newdata, target = NULL, ...)
+
+\method{simulate_choice}{dymium.choice_table}(model, target = NULL, ...)
 }
 \arguments{
 \item{model}{a \link{Model} object or an object in \code{\link[=SupportedTransitionModels]{SupportedTransitionModels()}}.}
