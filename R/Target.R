@@ -13,11 +13,15 @@
 #' @section Construction:
 #'
 #' ```
-#' Target$new(x)
+#' Target$new(x, name)
 #' ```
 #'
 #' * `x` :: any object that passes `check_target()`\cr
 #' A target object or `NULL`.
+#'
+#' * `name` :: `character(1)`\cr
+#' Name/Alias of the Target object. This will be used as the [Target] name when
+#' it gets added to a [World].
 #'
 #' @section Active Field (read-only):
 #'
@@ -61,7 +65,7 @@ Target <- R6::R6Class(
   classname = "Target",
   inherit = dymiumCore::Generic,
   public = list(
-    initialize = function(x) {
+    initialize = function(x, name) {
       assert_target(x, null.ok = TRUE)
       if (is.data.frame(x)) {
         if (!"time" %in% names(x)) {
@@ -80,6 +84,7 @@ Target <- R6::R6Class(
       } else {
         private$.data <- x
       }
+      super$initialize(name = name)
       invisible(self)
     },
 

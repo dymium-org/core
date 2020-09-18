@@ -11,6 +11,7 @@
 - add a `name` argument to `Model`'s constructor function and expose it as an R6 active field. 
 - `World$add()` can now be used to add a named `Model` without providing the `name` argument.
 - `World$add()` gained a `replace` argument with `TRUE` as its default value. 
+- `Generic` now has an active `name` field which will equal to `NULL` if no name is given.
 
 ## Bug fixes
 

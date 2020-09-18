@@ -100,8 +100,8 @@ Model <-
         checkmate::assert_function(preprocessing_fn, nargs = 1, null.ok = TRUE)
         self$preprocessing_fn <- preprocessing_fn
         self$set(x)
-        self$name <- name
-        invisible()
+        super$initialize(name = name)
+        invisible(self)
       },
       get = function() {
         private$.model
@@ -133,19 +133,10 @@ Model <-
           return(data.table::copy(private$.model))
         }
         get(".model", envir = private)
-      },
-      name = function(value) {
-        if (missing(value)) {
-          private$.name
-        } else {
-          checkmate::assert_string(value, null.ok = T, na.ok = FALSE)
-          private$.name <- value
-        }
       }
     ),
     private = list(
-      .model = NULL,
-      .name = NULL
+      .model = NULL
     )
   )
 
