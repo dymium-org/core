@@ -140,7 +140,8 @@ World <- R6::R6Class(
         stop("Adding a World object to another World object is not permitted.")
       }
 
-      if ((inherits(x, "Entity") | inherits(x, "Container")) & !inherits(x, "Model") & !inherits(x, "Target")) {
+      if ((inherits(x, "Entity") | inherits(x, "Container")) &
+          !inherits(x, "Model") & !inherits(x, "Target")) {
         stopifnot(x$is_dymium_class())
         if (!missing(name)) {
           lg$warn("The given `name` will be ignored since the object in x \\
