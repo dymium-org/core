@@ -137,7 +137,7 @@ World <- R6::R6Class(
       )
 
       if (checkmate::test_r6(x, "World")) {
-        stop("Adding a World object is not permitted.")
+        stop("Adding a World object to another World object is not permitted.")
       }
 
       if ((inherits(x, "Entity") | inherits(x, "Container")) & !inherits(x, "Model") & !inherits(x, "Target")) {
