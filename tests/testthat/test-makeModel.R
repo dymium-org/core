@@ -7,6 +7,10 @@ test_that("makeModel", {
   checkmate::expect_numeric(predict(Mod, newdata = toy_individuals), finite = T, any.missing = FALSE)
   checkmate::expect_numeric(summary(Mod), names = "named")
 
+  # binary choice model without the dependent variable in newdata
+  # predict(Mod, newdata = toy_individuals[, -"sex"])
+  # predict(Mod)
+
   # mlogit model
   mlogit_model <- create_mlogit_model()
   Mod <- makeModel(mlogit_model)
