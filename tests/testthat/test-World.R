@@ -1,4 +1,7 @@
 test_that("add", {
+
+  lg$set_threshold("warn")
+
   w <- World$new()
 
   # add container
@@ -7,23 +10,26 @@ test_that("add", {
                        pid_col = c("pid"),
                        hid_col = "hid"))
 
-  expect_warning(w$add(
-    Population$new(
-      ind_data = toy_individuals,
-      hh_data = toy_households,
-      pid_col = c("pid"),
-      hid_col = "hid"
-    )
-  ), regexp = "^Replacing ")
+ expect_output(
+   w$add(
+     Population$new(
+       ind_data = toy_individuals,
+       hh_data = toy_households,
+       pid_col = c("pid"),
+       hid_col = "hid"
+     )
+   ),
+   regexp = "Replacing the object named"
+ )
 
   # add entities
   w$add(Agent$new(toy_individuals, "pid"))
   w$add(Firm$new(toy_individuals, "pid"))
   expect_length(w$entities, 4)
-  expect_warning(w$add(Individual$new(toy_individuals, "pid")),
-                 "^Replacing")
-  expect_warning(w$add(Household$new(toy_households, "hid")),
-                 "^Replacing")
+  expect_output(w$add(Individual$new(toy_individuals, "pid")),
+                 "Replacing the object named")
+  expect_output(w$add(Household$new(toy_households, "hid")),
+                 "Replacing the object named")
 
   # add model
   w$add(list(x = 1), "testModel")
@@ -33,8 +39,11 @@ test_that("add", {
   w$add(Model$new(list(x = 1), "namedModel"))
   w$add(list(x = 1), "namedModel")
 
-  # add world ?
-  expect_error(w$add(w), regexp = "Adding a World object is not permitted.")
+  # a world within another world is not permitted
+  expect_error(
+    w$add(w),
+    regexp = "Adding a World object to another World object is not permitted."
+  )
 
 })
 
@@ -119,10 +128,21 @@ test_that("active fields", {
 })
 
 test_that("add target", {
-  t <- Target$new(x = list(yes = 10, no = 20))
   w <- World$new()
+
+  # name using the name arg
+  t <- Target$new(x = list(yes = 10, no = 20))
   w$add(x = t, name = "a_target")
-  expect_error(w$add(x = t, name = "a_target"))
+  expect_target(w$targets[["a_target"]], null.ok = FALSE)
+  expect_output(w$add(x = t, name = "a_target"), regexp = "Replacing the object named")
+
+  # unnamed target
+  expect_error(w$add(x = t), regexp = "Must be of type 'string', not 'NULL'.")
+
+  # named target
+  t <- Target$new(x = list(yes = 10, no = 20), name = "a_target")
+  expect_output(w$add(x = t), regexp = "Replacing the object named")
+  expect_target(w$targets[["a_target"]], null.ok = FALSE)
 })
 
 test_that("set_scale", {
