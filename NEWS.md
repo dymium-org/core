@@ -4,6 +4,7 @@
 
 - `ModelMultinomialLogit` and `ModelBinaryChoice` now have S3 `predict` and `summary` methods. Note that `ModelMultinomialLogit` requires `newdata` to be in the same format that is required by `mlogit`.
 - `Population$household_type()` now returns the number of members in household and remove individuals not belong to any household.
+- When calling `World$add()` and `name` is missing, it will see if the object has a `name` field, if it is a `Target` or a `Model`.
 
 ## Changes
 

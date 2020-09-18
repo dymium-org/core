@@ -150,7 +150,7 @@ World <- R6::R6Class(
         name <- class(x)[[1]]
       }
 
-      if (inherits(x, "Model")) {
+      if (missing(name) & (inherits(x, "Model") | inherits(x, "Target"))) {
         name <- x$name
       }
 
