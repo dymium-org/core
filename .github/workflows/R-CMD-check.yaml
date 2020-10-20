@@ -9,10 +9,12 @@ on:
     branches:
       - main
       - master
+      - fix-gha-ci
   pull_request:
     branches:
       - main
       - master
+      - fix-gha-ci
 
 name: R-CMD-check
 
