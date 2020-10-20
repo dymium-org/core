@@ -13,6 +13,7 @@ coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 <!-- [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/dymiumCore)](https://CRAN.R-project.org/package=dymiumCore) -->
+[![R build
 <!-- badges: end -->
 
 # dymiumCore
