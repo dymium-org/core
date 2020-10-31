@@ -7,23 +7,28 @@ test_that("add", {
                        pid_col = c("pid"),
                        hid_col = "hid"))
 
-  expect_warning(w$add(
+  # change to capture the warning messages
+  lg$set_threshold("warn")
+
+  expect_output(w$add(
     Population$new(
       ind_data = toy_individuals,
       hh_data = toy_households,
       pid_col = c("pid"),
       hid_col = "hid"
     )
-  ), regexp = "^Replacing ")
+  ), regexp = "Replacing ")
 
   # add entities
   w$add(Agent$new(toy_individuals, "pid"))
   w$add(Firm$new(toy_individuals, "pid"))
   expect_length(w$entities, 4)
-  expect_warning(w$add(Individual$new(toy_individuals, "pid")),
-                 "^Replacing")
-  expect_warning(w$add(Household$new(toy_households, "hid")),
-                 "^Replacing")
+  expect_output(w$add(Individual$new(toy_individuals, "pid")),
+                 "Replacing")
+  expect_output(w$add(Household$new(toy_households, "hid")),
+                 "Replacing")
+
+  lg$set_threshold("fatal")
 
   # add model
   w$add(list(x = 1), "testModel")
@@ -122,7 +127,7 @@ test_that("add target", {
   t <- Target$new(x = list(yes = 10, no = 20))
   w <- World$new()
   w$add(x = t, name = "a_target")
-  expect_error(w$add(x = t, name = "a_target"))
+  checkmate::expect_r6(w$targets$a_target, "Target")
 })
 
 test_that("set_scale", {
