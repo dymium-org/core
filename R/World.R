@@ -151,15 +151,20 @@ World <- R6::R6Class(
         name <- class(x)[[1]]
       }
 
-      if (missing(name) & (inherits(x, "Model") | inherits(x, "Target"))) {
+      if (missing(name) && !is.null(x$name) &&
+          (inherits(x, "Model") | inherits(x, "Target"))) {
         name <- x$name
       }
 
-      # only allows letters and underscores
+      # only allows letters and underscores\
       checkmate::assert_string(name,
                                pattern = "^[a-zA-Z_]*$",
                                na.ok = FALSE,
                                null.ok = FALSE)
+
+      if (inherits(x, "Model") && is.null(x$name)) {
+        x$name = name
+      }
 
       if (inherits(x, "Entity")) {
         lg$info("Adding an Entity object '{name}' to the `entities` field.")

@@ -10,26 +10,28 @@ test_that("add", {
                        pid_col = c("pid"),
                        hid_col = "hid"))
 
- expect_output(
-   w$add(
-     Population$new(
-       ind_data = toy_individuals,
-       hh_data = toy_households,
-       pid_col = c("pid"),
-       hid_col = "hid"
-     )
-   ),
-   regexp = "Replacing the object named"
- )
+  # change to capture the warning messages
+  lg$set_threshold("warn")
+
+  expect_output(w$add(
+    Population$new(
+      ind_data = toy_individuals,
+      hh_data = toy_households,
+      pid_col = c("pid"),
+      hid_col = "hid"
+    )
+  ), regexp = "Replacing ")
 
   # add entities
   w$add(Agent$new(toy_individuals, "pid"))
   w$add(Firm$new(toy_individuals, "pid"))
   expect_length(w$entities, 4)
   expect_output(w$add(Individual$new(toy_individuals, "pid")),
-                 "Replacing the object named")
+                 "Replacing")
   expect_output(w$add(Household$new(toy_households, "hid")),
-                 "Replacing the object named")
+                 "Replacing")
+
+  lg$set_threshold("fatal")
 
   # add model
   w$add(list(x = 1), "testModel")
@@ -133,16 +135,18 @@ test_that("add target", {
   # name using the name arg
   t <- Target$new(x = list(yes = 10, no = 20))
   w$add(x = t, name = "a_target")
+
   expect_target(w$targets[["a_target"]], null.ok = FALSE)
   expect_output(w$add(x = t, name = "a_target"), regexp = "Replacing the object named")
 
   # unnamed target
-  expect_error(w$add(x = t), regexp = "Must be of type 'string', not 'NULL'.")
+  expect_error(w$add(x = t), regexp = "argument \"name\" is missing, with no default")
 
   # named target
   t <- Target$new(x = list(yes = 10, no = 20), name = "a_target")
   expect_output(w$add(x = t), regexp = "Replacing the object named")
   expect_target(w$targets[["a_target"]], null.ok = FALSE)
+  checkmate::expect_r6(w$targets$a_target, "Target")
 })
 
 test_that("set_scale", {

@@ -5,38 +5,28 @@
 \alias{predict.ModelCustom}
 \alias{summary.ModelCustom}
 \title{ModelCustom}
+\format{
+an \link[R6:R6Class]{R6::R6Class} class inheriting from \link{Model}.
+}
 \usage{
-\method{predict}{ModelCustom}(object, newdata)
+\method{predict}{ModelCustom}(object, newdata, ...)
 
-\method{summary}{ModelCustom}(x)
+\method{summary}{ModelCustom}(object, ...)
 }
 \arguments{
 \item{object}{a \link{ModelCustom} object}
 
 \item{newdata}{a data.frame/data.table}
 
-\item{x}{a \link{ModelCustom} object}
-
-\item{params}{a named \code{numeric()}.}
-
-\item{formula}{a model \code{formula()}.}
-
-\item{type}{type of the model.}
-
-\item{preprocessing_fn}{a pre-processing function that gets applied to the
-data given to the \code{predict} method before making the prediction.}
+\item{...}{not being used.}
 }
 \value{
-\code{NULL}
-
 prediction
 
 summary
 }
 \description{
 A ModelCustom class.
-
-Constructor function.
 
 print method.
 
@@ -46,20 +36,17 @@ the predicted probabilities calculated using \code{self$params} and \code{newdat
 
 summary method.
 }
-\section{Fields}{
+\section{Public fields}{
 
-\describe{
-\item{\code{params}}{named \code{numeric()}\cr
-a named numerical vector containing parameter values of the model object.}
-
-\item{\code{type}}{\code{character(1)}\cr
-type of the model.}
-
-\item{\code{type}}{\code{formula()}\cr
-model formula.}
-
-\item{\code{type}}{\code{character(1)}\cr
+\itemize{
+\item \code{params} :: named \code{numeric()}\cr
+A named numeric vector containing parameter values of the model object.
+\item \code{type} :: \code{character(1)}\cr
+Type of the model.
+\item \code{formula} :: \code{formula()}\cr
+Model formula.
+\item \code{terms} :: \code{character(1)}\cr
 terms of the model. This gets generated using \code{stats::terms} on \code{formula}
-during initialisation.}
-}}
+}
+}
 
