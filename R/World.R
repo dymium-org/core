@@ -150,8 +150,8 @@ World <- R6::R6Class(
         name <- class(x)[[1]]
       }
 
-      if (inherits(x, "Model")) {
-        name <- x$name
+      if (inherits(x, "Model") && !is.null(x$name)) {
+        name = x$name
       }
 
       # only allows letters and underscores
@@ -159,6 +159,10 @@ World <- R6::R6Class(
                                pattern = "^[a-zA-Z_]*$",
                                na.ok = FALSE,
                                null.ok = FALSE)
+
+      if (inherits(x, "Model") && is.null(x$name)) {
+        x$name = name
+      }
 
       if (inherits(x, "Entity")) {
         lg$info("Adding an Entity object '{name}' to the `entities` field.")
