@@ -5,17 +5,20 @@
 \alias{predict.ModelCustom}
 \alias{summary.ModelCustom}
 \title{ModelCustom}
+\format{
+an \link[R6:R6Class]{R6::R6Class} class inheriting from \link{Model}.
+}
 \usage{
-\method{predict}{ModelCustom}(object, newdata)
+\method{predict}{ModelCustom}(object, newdata, ...)
 
-\method{summary}{ModelCustom}(x)
+\method{summary}{ModelCustom}(object, ...)
 }
 \arguments{
 \item{object}{a \link{ModelCustom} object}
 
 \item{newdata}{a data.frame/data.table}
 
-\item{x}{a \link{ModelCustom} object}
+\item{...}{not being used.}
 
 \item{params}{a named \code{numeric()}.}
 
@@ -55,10 +58,10 @@ a named numerical vector containing parameter values of the model object.}
 \item{\code{type}}{\code{character(1)}\cr
 type of the model.}
 
-\item{\code{type}}{\code{formula()}\cr
+\item{\code{formula}}{\code{formula()}\cr
 model formula.}
 
-\item{\code{type}}{\code{character(1)}\cr
+\item{\code{terms}}{\code{character(1)}\cr
 terms of the model. This gets generated using \code{stats::terms} on \code{formula}
 during initialisation.}
 }}
