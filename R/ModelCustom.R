@@ -7,37 +7,52 @@
 #' @usage NULL
 #' @format an [R6::R6Class] class inheriting from [Model].
 #'
+#' @section Public fields:
+#'
+#' * `params` :: named `numeric()`\cr
+#'  A named numeric vector containing parameter values of the model object.
+#'
+#' * `type` :: `character(1)`\cr
+#'  Type of the model.
+#'
+#' * `formula` :: `formula()`\cr
+#'  Model formula.
+#'
+#' * `terms` :: `character(1)`\cr
+#'  terms of the model. This gets generated using `stats::terms` on `formula`
+#  during initialisation.
+#'
 #' @export
 ModelCustom <- R6::R6Class(
   classname = "ModelCustom",
   inherit = Model,
   public = list(
 
-    #' @field params named `numeric()`\cr
-    #'  a named numerical vector containing parameter values of the model object.
+    # @field params named `numeric()`\cr
+    #  a named numerical vector containing parameter values of the model object.
     params = NULL,
-    #' @field type `character(1)`\cr
-    #'  type of the model.
+    # @field type `character(1)`\cr
+    #  type of the model.
     type = NULL,
-    #' @field formula `formula()`\cr
-    #'  model formula.
+    # @field formula `formula()`\cr
+    #  model formula.
     formula = NULL,
-    #' @field terms `character(1)`\cr
-    #'  terms of the model. This gets generated using `stats::terms` on `formula`
-    #'  during initialisation.
+    # @field terms `character(1)`\cr
+    #  terms of the model. This gets generated using `stats::terms` on `formula`
+    #  during initialisation.
     terms = NULL,
 
-    #' @description
-    #'
-    #' Constructor function.
-    #'
-    #' @param params a named `numeric()`.
-    #' @param formula a model `formula()`.
-    #' @param type type of the model.
-    #' @param preprocessing_fn a pre-processing function that gets applied to the
-    #'  data given to the `predict` method before making the prediction.
-    #'
-    #' @return `NULL`
+    # @description
+    #
+    # Constructor function.
+    #
+    # @param params a named `numeric()`.
+    # @param formula a model `formula()`.
+    # @param type type of the model.
+    # @param preprocessing_fn a pre-processing function that gets applied to the
+    #  data given to the `predict` method before making the prediction.
+    #
+    # @return `NULL`
     initialize = function(params, formula, type = "custom", preprocessing_fn) {
 
       self$params = checkmate::assert_numeric(params,
