@@ -1,8 +1,11 @@
-#' ModelCustom
+#' @title ModelCustom
 #'
 #' @description
 #'
 #' A ModelCustom class.
+#'
+#' @usage NULL
+#' @format an [R6::R6Class] class inheriting from [Model].
 #'
 #' @export
 ModelCustom <- R6::R6Class(
@@ -16,10 +19,10 @@ ModelCustom <- R6::R6Class(
     #' @field type `character(1)`\cr
     #'  type of the model.
     type = NULL,
-    #' @field type `formula()`\cr
+    #' @field formula `formula()`\cr
     #'  model formula.
     formula = NULL,
-    #' @field type `character(1)`\cr
+    #' @field terms `character(1)`\cr
     #'  terms of the model. This gets generated using `stats::terms` on `formula`
     #'  during initialisation.
     terms = NULL,
@@ -91,20 +94,23 @@ compute_linear_combination <- function(params, formula, newdata) {
 }
 
 #' @param object a [ModelCustom] object
+#'
 #' @param newdata a data.frame/data.table
+#' @param ... not being used.
 #'
 #' @rdname ModelCustom
 #' @return prediction
 #' @export
-predict.ModelCustom <- function(object, newdata) {
+predict.ModelCustom <- function(object, newdata, ...) {
   object$predict(newdata)
 }
 
-#' @param x a [ModelCustom] object
+#' @param object a [ModelCustom] object
+#' @param ... not being used.
 #'
 #' @rdname ModelCustom
 #' @return summary
 #' @export
-summary.ModelCustom <- function(x) {
-  x$summary()
+summary.ModelCustom <- function(object, ...) {
+  object$summary()
 }

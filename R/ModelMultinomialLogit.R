@@ -90,13 +90,16 @@ ModelMultinomialLogit <- R6::R6Class(
   )
 )
 
-#' @param x  a [ModelMultinomialLogit] object
+#' @title predict method for ModelMultinomialLogit
+#'
+#' @param object  a [ModelMultinomialLogit] object
 #' @param newdata a data.frame object
 #' @param chooser_id_col a character that indicates the id column of the choosers in `newdata`.
 #' @param choice_id_col a character that indicates the id column of the choices in `newdata`.
+#' @param ... not being used.
 #'
 #' @return a numeric vector
 #' @export
-predict.ModelMultinomialLogit = function(x, newdata, chooser_id_col, choice_id_col) {
-  x$predict(newdata, chooser_id_col, choice_id_col)
+predict.ModelMultinomialLogit = function(object, newdata, chooser_id_col, choice_id_col, ...) {
+  object$predict(newdata, chooser_id_col, choice_id_col)
 }
