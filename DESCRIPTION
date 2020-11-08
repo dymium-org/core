@@ -32,7 +32,7 @@ Imports:
     tryCatchLog (>= 1.1.0)
 Suggests:
     furrr (>= 0.1.0),
-    testthat (>= 2.1.0),
+    testthat (>= 3.0.0),
     fastmatch (>= 1.1.0),
     mlogit (>= 1.1.0),
     caret (>= 6.0.0),
@@ -118,3 +118,5 @@ Collate:
     'utils.R'
     'validate.R'
     'zzz.R'
+Config/testthat/parallel: true
+Config/testthat/edition: 3
