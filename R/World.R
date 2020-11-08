@@ -199,10 +199,14 @@ World <- R6::R6Class(
 
       if (name_object_exists) {
         if (replace) {
-          lg$warn("Replacing the object named `{name}` of class `{.class_old}` \\
+          warn_msg =
+            glue::glue(
+              "Replacing the object named `{name}` of class `{.class_old}` \\
                   with `{.class_new}`.",
-                  .class_old = self$get(x = name)$class()[[1]],
-                  .class_new = class(x)[[1]])
+              .class_old = self$get(x = name)$class()[[1]],
+              .class_new = class(x)[[1]]
+            )
+          warning(warn_msg)
           self$remove(name)
         } else {
           stop(glue::glue("{name} already exists in {.listname}. Only one instance \\
