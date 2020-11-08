@@ -64,7 +64,7 @@ MatchingMarketStochastic <- R6::R6Class(
       parallel_wrapper <- function(...) {
         if (parallel) {
           stopifnot(requireNamespace('furrr'))
-          furrr::future_map_dfr(..., .options = furrr::future_options(globals = "self"))
+          furrr::future_map_dfr(..., .options = furrr::furrr_options(globals = "self"))
         } else {
           purrr::map_dfr(...)
         }
