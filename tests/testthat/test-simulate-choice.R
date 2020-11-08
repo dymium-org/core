@@ -48,7 +48,7 @@ test_that("simulate_choice.data.frame works", {
                       sex = "female",
                       prob = 0.05)
   expect_error(simulate_choice(model, newdata = toy_individuals),
-               regexp = "There are less prediction results than")
+               regexp = "Assertion on 'probs' failed")
 
 })
 

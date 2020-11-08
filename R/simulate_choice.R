@@ -137,49 +137,41 @@ simulate_choice.data.frame <- function(model, newdata, target = NULL, ...) {
     stop("`model` with multiple choices has not been developed yet :(.")
   }
 
-  if (nrow(probs) < nrow(newdata)) {
-    stop("There are less prediction results than `newdata`.")
-  }
-
-  if (nrow(probs) > nrow(newdata)) {
-    stop("There are more prediction results than `newdata`.")
-  }
-
   # check cases
   checkmate::assert_data_table(
     probs,
     types = 'double',
     min.cols = 2,
+    nrows = nrow(newdata),
     any.missing = FALSE,
     null.ok = FALSE,
     col.names = 'unique'
   )
 
   simulate_choice(create_choice_table(probs), target)
-
 }
 
 #' @rdname simulate_choice
+#' @param choice_table a `choice_table` object, created by `create_choice_table()`.
 #' @export
-simulate_choice.dymium.choice_table <- function(model, target = NULL, ...) {
-  probs <- model
+simulate_choice.dymium.choice_table <- function(choice_table, target = NULL, ...) {
   checkmate::assert_data_frame(
-    probs,
+    choice_table,
     types = 'double',
     min.cols = 2,
     any.missing = FALSE,
     null.ok = FALSE,
     col.names = 'unique'
   )
-  if (!is.data.table(probs)) {
-    setDT(probs)
+  if (!is.data.table(choice_table)) {
+    setDT(choice_table)
   }
-  choices <- names(probs)
+  choices <- names(choice_table)
   # random draw choices
   if (!is.null(target)) {
-    alignment(probs, target)
+    alignment(choice_table, target)
   } else {
-    purrr::pmap_chr(probs, ~ sample_choice(choices, 1, prob = (list(...))))
+    purrr::pmap_chr(choice_table, ~ sample_choice(choices, 1, prob = (list(...))))
   }
 }
 
