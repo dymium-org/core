@@ -101,7 +101,6 @@ Collate:
     'makeModel.R'
     'mutate-entity.R'
     'population-register.R'
-    'scenario.R'
     'sim.R'
     'simulate_choice.R'
     'transition-fnc.R'
