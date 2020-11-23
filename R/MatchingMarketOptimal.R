@@ -38,6 +38,12 @@ MatchingMarketOptimal <- R6::R6Class(
                         optimal_A = TRUE,
                         by_group = FALSE,
                         parallel = FALSE) {
+
+      if (!requireNamespace("matchingR", quietly = TRUE)) {
+        stop("Package \"matchingR\" needed for this function to work. Please install it.",
+             call. = FALSE)
+      }
+
       method <- match.arg(method)
       checkmate::assert_flag(one_sided, na.ok = FALSE, null.ok = FALSE)
       checkmate::assert_flag(optimal_A, na.ok = FALSE, null.ok = FALSE)
