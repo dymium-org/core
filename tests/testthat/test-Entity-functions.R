@@ -59,13 +59,11 @@ test_that("combine_histories & plot_history", {
   create_toy_world()
   Ind <- world$get("Individual")
   Hh <- world$get("Household")
-  Bd <- world$get("BuildingResidential")
-  for (t in 1:10) {
+ß  for (t in 1:10) {
     for (e in 1:5) {
       n <- sample(1:20, 1)
       add_history(Ind, ids = sample(Ind$get_ids(), n), event = sample(paste0("event-ind-", 1:5), 1), time = t)
       add_history(Hh, ids = sample(Hh$get_ids(), n), event = sample(paste0("event-hh-", 1:5), 1), time = t)
-      add_history(Bd, ids = sample(Bd$get_ids(), n), event = sample(paste0("event-bd-", 1:5), 1), time = t)
     }
   }
   chist <- combine_histories(world)
