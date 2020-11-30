@@ -165,7 +165,7 @@ test_that("$subset_ids", {
   Ent <-
     Entity$new(
       databackend = DataBackendDataTable,
-      .data = dymiumCore::toy_individuals,
+      .data = toy_individuals,
       id_col = "pid"
     )
 

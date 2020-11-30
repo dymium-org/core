@@ -3,10 +3,10 @@ context("population class")
 test_that("initialize", {
   # missing household by removing
   create_toy_population()
-  toy_households2 <- copy(dymiumCore::toy_households)[-1,]
+  toy_households2 <- copy(toy_households)[-1,]
 
   expect_error(
-    pop$add_population(ind_data = dymiumCore::toy_individuals,
+    pop$add_population(ind_data = toy_individuals,
                        hh_data = toy_households2),
     regexp = "Not all household ids exist in both `ind_data` and `hh_data`."
   )
@@ -14,20 +14,20 @@ test_that("initialize", {
   # missing household by altering ids
   create_toy_population()
   toy_households2 <-
-    copy(dymiumCore::toy_households)[1, hid := 99999]
+    copy(toy_households)[1, hid := 99999]
 
   expect_error(
-    pop$add_population(ind_data = dymiumCore::toy_individuals,
+    pop$add_population(ind_data = toy_individuals,
                        hh_data = toy_households2),
     regexp = "Not all household ids exist in both `ind_data` and `hh_data`."
   )
 
   # missing individual in ind_data by removing
   create_toy_population()
-  toy_individuals2 <- copy(dymiumCore::toy_individuals)[-1, ]
+  toy_individuals2 <- copy(toy_individuals)[-1, ]
   expect_error(
     pop$add_population(ind_data = toy_individuals2,
-                       hh_data = dymiumCore::toy_households),
+                       hh_data = toy_households),
     regexp = "Not all household ids exist in both `ind_data` and `hh_data`."
   )
 
@@ -125,30 +125,30 @@ test_that("check_unique_id_cols", {
 
   expect_error(
     pop$check_unique_id_cols(
-      ind_data = dymiumCore::toy_individuals,
-      hh_data = dymiumCore::toy_households
+      ind_data = toy_individuals,
+      hh_data = toy_households
     )
   )
 
   expect_true(
     pop$check_unique_id_cols(
-      ind_data = copy(dymiumCore::toy_individuals)[, `:=`(pid = 9999, hid = NA_integer_)]
+      ind_data = copy(toy_individuals)[, `:=`(pid = 9999, hid = NA_integer_)]
       )
   )
 
-  pop$check_unique_id_cols(ind_data = copy(dymiumCore::toy_individuals)[, `:=`(pid = 9999, hid = NA_integer_)])
+  pop$check_unique_id_cols(ind_data = copy(toy_individuals)[, `:=`(pid = 9999, hid = NA_integer_)])
 
   expect_error(
     pop$check_unique_id_cols(
-      ind_data = copy(dymiumCore::toy_individuals)[, `:=`(pid = 9999)],
-      hh_data = copy(dymiumCore::toy_households)[, hid := 9999]
+      ind_data = copy(toy_individuals)[, `:=`(pid = 9999)],
+      hh_data = copy(toy_households)[, hid := 9999]
     )
   )
 
   expect_true(
     pop$check_unique_id_cols(
-      ind_data = copy(dymiumCore::toy_individuals)[, `:=`(pid = 9999, hid = 9999)],
-      hh_data = copy(dymiumCore::toy_households)[, hid := 9999]
+      ind_data = copy(toy_individuals)[, `:=`(pid = 9999, hid = 9999)],
+      hh_data = copy(toy_households)[, hid := 9999]
     )
   )
 })

@@ -252,7 +252,7 @@ get_transition <- function(world, entity, model, target = NULL, targeted_ids = N
     e_data <-
       model$preprocessing_fn(e_data)
   }
-  e_data <- dymiumCore::normalise_derived_vars(e_data)
+  e_data <- normalise_derived_vars(e_data)
   # early return if no data
   if (nrow(e_data) == 0) {
     return(data.table(id = integer(), response = character()))

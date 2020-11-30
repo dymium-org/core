@@ -48,7 +48,7 @@ test_that("Model - preprocess", {
 test_that("Model works with mlr model object", {
   if (requireNamespace("mlr") & requireNamespace("nnet")) {
     task_data <-
-      dymiumCore::toy_individuals[, sex := as.factor(sex)][, marital_status := as.factor(marital_status)] %>%
+      toy_individuals[, sex := as.factor(sex)][, marital_status := as.factor(marital_status)] %>%
       .[, .(age, sex, marital_status)] %>%
       as.data.frame()
     task <- mlr::makeClassifTask(id = "toy_multi_classes", data = task_data, target = "marital_status")

@@ -70,7 +70,7 @@ test_that("hatch and add", {
   new_agent_data <- register(MyAgent, toy_individuals)
   new_agent_data$toy_individuals
   MyAgent$add(.data = new_agent_data$toy_individuals, check_existing = FALSE)
-  expect_true(MyAgent$n() == nrow(dymiumCore::toy_individuals) * 2)
+  expect_true(MyAgent$n() == nrow(toy_individuals) * 2)
   pid_cols <- c('pid', 'partner_id', 'father_id', 'mother_id')
   unique_pid <- MyAgent$get_data()[, unlist(.SD), .SDcol = pid_cols] %>%
     unique() %>% na.omit() %>% length()

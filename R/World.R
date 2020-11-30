@@ -46,8 +46,8 @@
 #' @section Public Methods:
 #'
 #' * `add(x, name, replace = TRUE)`\cr
-#'  ([dymiumCore::Entity] and inheritances | [dymiumCore::Container] | an object of the classes in
-#'  [dymiumCore::SupportedTransitionModels], `character(1)`, `logical(1)`)\cr
+#'  ([Entity] and inheritances | [Container] | an object of the classes in
+#'  [SupportedTransitionModels], `character(1)`, `logical(1)`)\cr
 #'  Add an object the allowed types to `self$Cont`, `self$entities`, `self$containers`,
 #'  `self$models`. Only one instance of each class are allowed to be stored.
 #'  The stored instances can be access via `self$<object-type>` or `self$get(x)`.
@@ -106,7 +106,7 @@
 #' @export
 World <- R6::R6Class(
   classname = "World",
-  inherit = dymiumCore::Container,
+  inherit = Container,
 
   public = list(
     info = list(
@@ -130,7 +130,7 @@ World <- R6::R6Class(
         checkmate::check_r6(x, classes = c("Container", "Generic"), null.ok = FALSE),
         checkmate::check_r6(x, classes = c("Model", "Generic"), null.ok = FALSE),
         checkmate::check_subset(class(x)[[1]],
-                                choices = dymiumCore::SupportedTransitionModels(),
+                                choices = SupportedTransitionModels(),
                                 empty.ok = FALSE),
         check_target(x, null.ok = FALSE),
         combine = "or"
@@ -177,7 +177,7 @@ World <- R6::R6Class(
         .listname <- ".containers"
       }
 
-      if (class(x)[[1]] %in% dymiumCore::SupportedTransitionModels()) {
+      if (class(x)[[1]] %in% SupportedTransitionModels()) {
         lg$info("Adding a Model object '{name}' to the `models` field.")
         x <- Model$new(x, name = name)
         .listname <- ".models"

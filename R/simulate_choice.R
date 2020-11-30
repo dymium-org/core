@@ -36,7 +36,7 @@ simulate_choice.list <- function(model, newdata, target = NULL, ...) {
     any.missing = FALSE
   )
   checkmate::assert_data_frame(newdata)
-  dymiumCore::sample_choice(
+  sample_choice(
     x = names(model),
     size = nrow(newdata),
     prob = model,

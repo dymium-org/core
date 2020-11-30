@@ -63,7 +63,7 @@
 #' TrgtDynamic$get(10)
 Target <- R6::R6Class(
   classname = "Target",
-  inherit = dymiumCore::Generic,
+  inherit = Generic,
   public = list(
     initialize = function(x, name) {
       assert_target(x, null.ok = TRUE)

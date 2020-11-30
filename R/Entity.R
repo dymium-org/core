@@ -48,7 +48,7 @@
 #'  must be linkable with the attribute data of the object by the id_col.
 #'
 #'  * `data(name)`\cr
-#'  (`character(1)`) -> (`[dymiumCore::DataBackend]`|`NULL`)\cr
+#'  (`character(1)`) -> ([DataBackend]|`NULL`)\cr
 #'  Returns a [DataBackend] with the name that matches `name`.
 #'  If `name` is not given, the function will try to return the [DataBackend] with name `attrs`.
 #'  If `attrs` is not present or no `DataBackEnd` objects have been loaded it will

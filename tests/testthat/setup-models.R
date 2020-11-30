@@ -1,6 +1,6 @@
 create_mlr_task <- function() {
   task_data <-
-    dymiumCore::toy_individuals[, sex := as.factor(sex)][, marital_status := as.factor(marital_status)] %>%
+    toy_individuals[, sex := as.factor(sex)][, marital_status := as.factor(marital_status)] %>%
     .[, .(age, sex, marital_status)] %>%
     as.data.frame()
 }
