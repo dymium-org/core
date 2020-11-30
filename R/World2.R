@@ -2,6 +2,8 @@
 #'
 #' @include Container.R
 #'
+#' @template param_world
+#'
 #' @description
 #'
 #' The first step to creating a microsimulation model with `Dymium` is to define
@@ -48,7 +50,8 @@ World2 =
           checkmate::check_r6(object, classes = "Entity"),
           checkmate::check_r6(object, classes = "Target"),
           checkmate::check_r6(object, classes = "Model"),
-          checkmate::check_class(object, classes = "list"),
+          checkmate::check_list(object, any.missing = FALSE, min.len = 1, names = "unique"),
+          # checkmate::check_class(object, classes = "list"),
           checkmate::check_class(object, classes = "numeric"),
           checkmate::check_class(object, classes = "integer"),
           combine = "or"
@@ -75,14 +78,13 @@ World2 =
 #' @rdname World2
 #' @export
 set_time = function(world, value) {
-  checkmate::assert_class(world, "World")
-  checkmate::assert_integerish(
-    world$properties$.time,
+  checkmate::assert_class(world, "World2")
+  world$properties$.time = checkmate::assert_integerish(
+    value,
     lower = 0,
     len = 1,
     null.ok = FALSE
   )
-  world$properties$.time = value
   return(world)
 }
 
@@ -91,13 +93,17 @@ set_time = function(world, value) {
 #' @rdname World2
 #' @export
 set_scale = function(world, value) {
-  checkmate::assert_class(world, "World")
-  checkmate::assert_numeric(
-    world$properties$.scale,
-    len = 1,
+  checkmate::assert_class(world, "World2")
+  checkmate::assert_number(
+    value,
     finite = TRUE,
-    null.ok = FALSE
+    null.ok = FALSE,
+    lower = 0
   )
+  if (value == 0) {
+    stop("`value` (scale) cannot be set to 0. If you would like to set your Targets",
+         " to zero, please remove those Targets instead.")
+  }
   world$properties$.scale = value
   return(world)
 }
