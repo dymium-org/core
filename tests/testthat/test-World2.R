@@ -2,8 +2,6 @@ test_that("World2 works", {
 
 
 # constructor -------------------------------------------------------------
-
-
   world = World2$new()
   checkmate::expect_r6(world, "World2")
 

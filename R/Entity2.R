@@ -20,15 +20,6 @@
 #'  Return removed agent data. If `name` is missing, the first data, which should
 #'  contains the main attributes of the agent object, will be returned.
 #'
-#'  * `get_attr(x, ids)`\cr
-#'  (`character(1)`, `integer()`) -> `vector(type::col)`\cr
-#'  Extract the attribute from self$data as vector. If `ids` is given then only
-#'  the corresponding values to `ids` are returned, in the same order as the `ids`.
-#'
-#'  * `has_attr(x)`\cr
-#'  (`character()`) -> `logical()`\cr
-#'
-#'
 #'  * `ids_exist(ids, include_removed_data = FALSE)`\cr
 #'  (`integer()`, `logical(1)`) -> `logical()`\cr
 #'  Check whether `ids` exist or not.  And if `inclide_removed_data` is `TRUE` it
@@ -121,84 +112,55 @@ Entity2 <-
       #'  row order as the order of `ids`. If `copy` is TRUE then data.table's
       #'  reference semantics is returned. If `attrs` is not present or no `DataBackEnd`
       #'  objects have been loaded it will return `NULL`.
+      #' @param name (`character(1)`)\cr
+      #'   Default as 'attrs'.
+      #' @param ids (`integer()`)\cr
+      #'   Subset the returned data by their unique ids.
       #' @param copy (`logical(1)`)\cr
       #'  When this is `FALSE`, it will return the reference to the request data.
       #'  Meaning that the data can be manipulated in place.
-      get_data = function(name, ids, copy = TRUE) {
-
-        if (missing(name)) {
-          name <- "attrs"
-        }
-
-        DataObj <- self$data(name)
-
-        if (is.null(DataObj)) {
-          return(NULL)
-        }
-
-        if (copy == FALSE) {
-          if (!missing(ids)) {
-            stop("It is not possible to return a reference semetic to the specific rows in `ids`.")
-          }
-          return(DataObj$get(copy = FALSE))
-        }
-
-        if (missing(ids)) {
-          return(DataObj$get())
-        } else {
-          checkmate::check_integerish(x = ids, unique = TRUE, lower = 1, min.len = 1, null.ok = FALSE, any.missing = FALSE)
-          if (name == "attrs") {
-            return(DataObj$get(rows = self$get_idx(ids)))
-          } else {
-            lg$warn("The order of the returned data is not garantee to be the same \\
-                    with the input `ids`. Also not all ids are garantee to have \\
-                    valid records.")
-            return(DataObj$get()[get(self$get_id_col()) %in% ids,])
-          }
-
-        }
-
-      },
-
-      #' @description
-      #'  A different implementation of `self$get_data()`.
       #' @return ([data.table::data.table()]|`data.frame()`)
-      get_data2 = function(name = "attrs", ids, copy = TRUE) {
+      get_data = function(name = "attrs", ids, copy = TRUE) {
+
+        checkmate::assert_string(name, na.ok = FALSE, null.ok = FALSE)
+
+        if (!missing(ids)) {
+          checkmate::assert_integerish(
+            x = ids,
+            unique = TRUE,
+            lower = 1,
+            min.len = 1,
+            null.ok = FALSE,
+            any.missing = FALSE,
+            all.missing = FALSE
+          )
+        }
+
+        checkmate::assert_flag(copy, na.ok = FALSE, null.ok = FALSE)
+
+        if (!missing(ids) && !isTRUE(copy)) {
+          stop("It is not possible to return the reference semantics of the rows in `ids`.")
+        }
 
         DataObj <- self$data(name)
 
-        if (is.null(DataObj)) {
-          return(NULL)
+        if (!inherits(DataObj, "DataBackendDataTable") & !isTRUE(copy)) {
+            stop("Cannot return the reference to the requested data, since it ",
+                 "doesn't inherit from `DataBackendDataTable`.")
         }
 
-        if (copy == FALSE) {
-          if (!missing(ids)) {
-            stop("It is not possible to return a reference semetic to the specific rows in `ids`.")
-          }
-          return(DataObj$get(copy = FALSE))
-        }
-
-        if (missing(ids)) {
-          return(DataObj$get())
-        } else {
-          checkmate::check_integerish(x = ids, unique = TRUE, lower = 1, min.len = 1, null.ok = FALSE, any.missing = FALSE)
-          if (name == "attrs") {
-            if (is.null(DataObj$key)) {
-              DataObj$setkey(self$get_id_col())
-            }
-            return(
-              data.table:::na.omit.data.table(
-                DataObj$get(copy = FALSE)[J(ids)],
-                cols = DataObj$colnames[2]
-              )
+        if (!missing(ids)) {
+          if (name != "attrs") {
+            warning(
+              "The order of the returned data is not garantee to be the same ",
+              "with the input `ids`. Also not all ids can be guaranteed to correspond ",
+              "to valid records."
             )
-          } else {
-            lg$warn("The order of the returned data is not garantee to be the same \\
-                    with the input `ids`. Also not all ids are garantee to have \\
-                    valid records.")
-            return(DataObj$get()[get(self$get_id_col()) %in% ids,])
           }
+          return(DataObj$get()[get(self$get_id_col()) %in% ids, ])
         }
+
+        DataObj$get(copy = copy)
       },
 
       #' @description
@@ -286,24 +248,6 @@ Entity2 <-
 
         self$database$attrs$add(.data = .data, fill = TRUE)
         invisible()
-      },
-
-      #' @description
-      #'  Check which of the attribute names given in `x` exist in the attribute data
-      #'  of the object.
-      #' @param x (`character()`)\cr
-      #'  Name of columns to check.
-      #' @return (`logical()`)
-      has_attr = function(x) {
-        x %in% self$database$attrs$colnames
-      },
-
-      get_attr = function(x, ids) {
-        checkmate::assert_string(x, na.ok = FALSE, null.ok = FALSE)
-        if (!missing(ids)) {
-          return(self$get_data(copy = FALSE)[self$get_idx(ids = ids)][[x]])
-        }
-        self$data()$get(col = x)[[1]]
       },
 
       get_removed_data = function(name) {
@@ -455,31 +399,19 @@ Entity2 <-
         )
       },
 
-      print_data = function(n = 5) {
-        if (n > 0) {
-          print(purrr::map(private$.data, ~ .x$head(n)))
-        }
-        data_names = glue::glue_collapse(names(private$.data), ", ", last = " and ")
-
-        lg$info(
-          glue::glue(
-            "{class(self)[[1]]} has {length(private$.data)} datasets{seperator} {.data_names}",
-            .data_names = ifelse(is.character(data_names), data_names, ""),
-            seperator = ifelse(is.character(data_names), "...", "")
-          )
-        )
-        invisible()
-      },
-
       #' @description
       #' Returns the number of entities represented by this object.
+      #'
+      #' @param included_removed (`logical(1)`)\cr
+      #'   Should the number of removed entities be included.
+      #'
       #' @return (`integer(1)`).
-      n = function() {
+      n = function(included_removed = FALSE) {
         if (is.null(self$data())) {
           return(0L)
-        } else {
-          self$data()$nrow()
         }
+
+       self$data()$nrow()
       },
 
       get_last_id = function() {

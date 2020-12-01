@@ -43,27 +43,39 @@ World2 =
       },
 
       #' @description
-      #'
       #' For adding [Entities] and properties (see the `properties` field) to [World].
+      #' @param object ([Entity]|[Target]|[Model]|named `list()`|`numeric()`|`integer()`)\cr
+      #'  A object to be added. `Entity` objects will be added to `self$entities`, whereas
+      #'  other accepted objects will be added to `self$properties`.
+      #' @param name (`character(1)`)\cr
+      #'  Name of the object that is being added.
+      #'
+      #' @return self.
       add = function(object, name) {
         checkmate::assert(
-          checkmate::check_r6(object, classes = "Entity"),
+          checkmate::check_r6(object, classes = "Entity2"),
           checkmate::check_r6(object, classes = "Target"),
           checkmate::check_r6(object, classes = "Model"),
           checkmate::check_list(object, any.missing = FALSE, min.len = 1, names = "unique"),
-          # checkmate::check_class(object, classes = "list"),
-          checkmate::check_class(object, classes = "numeric"),
-          checkmate::check_class(object, classes = "integer"),
+          checkmate::check_numeric(object),
+          checkmate::check_integerish(object),
           combine = "or"
         )
         checkmate::assert_string(name, null.ok = TRUE)
-        .field_name = ifelse(checkmate::test_r6(object, classes = "Entity"),
+        .field_name = ifelse(checkmate::test_r6(object, classes = "Entity2"),
                              "entities",
                              "properties")
-          len = length(self[[.field_name]])
-          self[[.field_name]][[len + 1L]] = object
-          names(self[[.field_name]])[[len + 1L]] = name
-          return(self)
+        len = length(self[[.field_name]])
+        self[[.field_name]][[len + 1L]] = object
+        names(self[[.field_name]])[[len + 1L]] = name
+        return(self)
+      },
+
+      #' @description
+      #'
+      #' Remove the object.
+      remove = function(object) {
+        stop("To be implemented.")
       },
 
       print = function() {
@@ -106,4 +118,11 @@ set_scale = function(world, value) {
   }
   world$properties$.scale = value
   return(world)
+}
+
+next_id = function(world) {
+  checkmate::assert_r6(world, "World2")
+
+  last_id = world$entities$n()
+  return()
 }

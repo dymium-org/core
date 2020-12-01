@@ -93,13 +93,6 @@ ModelCustom <- R6::R6Class(
     summary = function() {
       self$print()
     }
-  ),
-
-  private = list(
-    .compute_linear_combination = function(newdata) {
-      mm <- model.matrix(self$formula, newdata)
-      as.numeric(self$params %*% t(mm))
-    }
   )
 )
 
@@ -121,6 +114,7 @@ compute_linear_combination <- function(formula, ...) {
 #' @rdname compute_linear_combination
 #' @export
 compute_linear_combination.formula <- function(formula, params, newdata) {
+  browser()
   mm <- model.matrix(formula, newdata)
   return(as.numeric(params %*% t(mm)))
 }
