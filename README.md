@@ -1,12 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 <!-- badges: start -->
 
 ![GitHub release (latest by date including
 pre-releases)](https://img.shields.io/github/v/release/dymium-org/dymiumCore?include_prereleases)
-[![R build
-status](https://github.com/dymium-org/dymiumCore/workflows/R-CMD-check/badge.svg)](https://github.com/dymium-org/dymiumCore/actions)
+[![R-CMD-check](https://github.com/dymium-org/core/workflows/R-CMD-check/badge.svg)](https://github.com/dymium-org/core/actions)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Codecov test
@@ -46,14 +44,14 @@ more…](https://core.dymium.org/articles/why-another-microsim.html)
 
 # Why `dymiumCore`?
 
-  - written in R
-  - easy to setup
-  - ready-to-use events see
+-   written in R
+-   easy to setup
+-   ready-to-use events see
     [dymium-org/dymiumModules](https://github.com/dymium-org/dymiumModules)
-  - microsimulation events are modular, sharable and scalable
-  - equipped with the basic building blocks for building a
+-   microsimulation events are modular, sharable and scalable
+-   equipped with the basic building blocks for building a
     microsimulation model that is flexible and extensible.
-  - can use parameters from various model objects (e.g. `stats::lm`,
+-   can use parameters from various model objects (e.g. `stats::lm`,
     `stats::glm`, `caret::train`, `mlr::train`).
 
 ## Installation
@@ -73,7 +71,7 @@ remotes::install_github("dymium-org/dymiumCore")
 
 Note that, `dymiumCore` is not yet on CRAN.
 
-## A Hello World Example\!
+## A Hello World Example!
 
 This is a minimal example of how one can create a discrete-time
 microsimulation model with dymiumCore.
@@ -151,41 +149,30 @@ for (i in 1:10) {
 }
 ```
 
-> Note that, the line `value = .$entities$Individual$get_data()[age !=
-> -1L, .N]` is using the world object’s placeholder which is called `.`
-> for extracting the attribute data of individual agents. This is a
-> feature of `magrittr`, to learn more about various ways that `%>%` can
-> be used see [its documentation page](https://magrittr.tidyverse.org/).
+> Note that, the line
+> `value = .$entities$Individual$get_data()[age != -1L, .N]` is using
+> the world object’s placeholder which is called `.` for extracting the
+> attribute data of individual agents. This is a feature of `magrittr`,
+> to learn more about various ways that `%>%` can be used see [its
+> documentation page](https://magrittr.tidyverse.org/).
 
 To get the attribute data of any `Entity` object use `$get_data()`
 method.
 
 ``` r
 world$entities$Individual$get_data()
-#>      pid hid age    sex marital_status partner_id father_id mother_id
-#>   1:   1   1  81   male  never married         NA        NA        NA
-#>   2:   2   2  41 female  never married         NA        NA        NA
-#>   3:   4   3  48   male        married          5        NA        NA
-#>   4:   6   3  10   male not applicable         NA         4         5
-#>   5:   8   4  62 female        married          7        NA        NA
-#>  ---                                                                 
-#> 243: 400  39   0 female not applicable         NA        96        97
-#> 244: 401  39   0 female not applicable         NA        96        97
-#> 245: 402  39   0 female not applicable         NA        96        97
-#> 246: 403  39   0 female not applicable         NA        96        97
-#> 247: 404   3   0   male not applicable         NA         4         5
-#>      .give_birth
-#>   1:          no
-#>   2:          no
-#>   3:          no
-#>   4:          no
-#>   5:          no
-#>  ---            
-#> 243:          no
-#> 244:          no
-#> 245:          no
-#> 246:          no
-#> 247:          no
+#>      pid hid age    sex marital_status partner_id father_id mother_id .give_birth
+#>   1:   1   1  81   male  never married         NA        NA        NA          no
+#>   2:   2   2  41 female  never married         NA        NA        NA          no
+#>   3:   4   3  48   male        married          5        NA        NA          no
+#>   4:   6   3  10   male not applicable         NA         4         5          no
+#>   5:   8   4  62 female        married          7        NA        NA          no
+#>  ---                                                                             
+#> 243: 400  39   0 female not applicable         NA        96        97          no
+#> 244: 401  39   0 female not applicable         NA        96        97          no
+#> 245: 402  39   0 female not applicable         NA        96        97          no
+#> 246: 403  39   0 female not applicable         NA        96        97          no
+#> 247: 404   3   0   male not applicable         NA         4         5          no
 ```
 
 The `add_log()` function allows any object to be stored in our World
@@ -203,16 +190,16 @@ log_data <-
   .[, value := unlist(value)]
 print(log_data)
 #>     time created_timestamp class  tag             desc value
-#>  1:    1        1604283035 World <NA> count:Individual   361
-#>  2:    2        1604283035 World <NA> count:Individual   344
-#>  3:    3        1604283035 World <NA> count:Individual   327
-#>  4:    4        1604283035 World <NA> count:Individual   312
-#>  5:    5        1604283035 World <NA> count:Individual   304
-#>  6:    6        1604283035 World <NA> count:Individual   294
-#>  7:    7        1604283035 World <NA> count:Individual   282
-#>  8:    8        1604283035 World <NA> count:Individual   273
-#>  9:    9        1604283035 World <NA> count:Individual   260
-#> 10:   10        1604283035 World <NA> count:Individual   247
+#>  1:    1        1625447404 World <NA> count:Individual   361
+#>  2:    2        1625447404 World <NA> count:Individual   344
+#>  3:    3        1625447404 World <NA> count:Individual   327
+#>  4:    4        1625447404 World <NA> count:Individual   312
+#>  5:    5        1625447404 World <NA> count:Individual   304
+#>  6:    6        1625447404 World <NA> count:Individual   294
+#>  7:    7        1625447404 World <NA> count:Individual   282
+#>  8:    8        1625447404 World <NA> count:Individual   273
+#>  9:    9        1625447404 World <NA> count:Individual   260
+#> 10:   10        1625447404 World <NA> count:Individual   247
 ```
 
 Let’s visualise how many individual agents are still alive at the end of
@@ -262,73 +249,63 @@ please email us at amarin at dymium.org.
 
 ## Development plan (as of 3rd April 2020)
 
-  - [x] **Version 0.1.0**: (21 Jan 2020) Release all the basic building
+-   [x] **Version 0.1.0**: (21 Jan 2020) Release all the basic building
     blocks for microsimulation modelling.
-      - [x] **Version 0.1.6**: Support `mlr` in `transision()` and
+    -   [x] **Version 0.1.6**: Support `mlr` in `transision()` and
         `TransitionClassification`.
-      - [x] **Version 0.1.7 & 0.1.8** : Introduce simpler APIs
+    -   [x] **Version 0.1.7 & 0.1.8** : Introduce simpler APIs
         (`mutate_entity()`, `add_entity()`, `add_log()`, `transition()`)
         for creating simple microsimulation pipelines.
-      - [x] **Version 0.1.9**: Support regression model creation from
+    -   [x] **Version 0.1.9**: Support regression model creation from
         parameters.
-      - [ ] **Version 0.1.10**: Support `mlr3` and `mlogit` model
+    -   [ ] **Version 0.1.10**: Support `mlr3` and `mlogit` model
         objects in the Transition classes.
-      - [ ] **Version 0.1.11**: Support multiple choice models
+    -   [ ] **Version 0.1.11**: Support multiple choice models
         (multinomial logit models (MNL) and MNL with varying
         alternatives) with utility functions for sampling and
         simulation. This will be the last milestone for version 0.1.
-  - [ ] **Version 0.2.0**: Implement model-based calibration.
-  - [ ] **Version 0.3.0**: Visualisation functions for life-courses,
+-   [ ] **Version 0.2.0**: Implement model-based calibration.
+-   [ ] **Version 0.3.0**: Visualisation functions for life-courses,
     spatial data, etc.
-  - [ ] **Version 0.4.0**: Integration with dymiumGUI.
+-   [ ] **Version 0.4.0**: Integration with dymiumGUI.
 
 ## Related open-source frameworks and models
 
 **General-purpose microsimulation frameworks**
 
-  - [LIAM2, Python](https://github.com/liam2/liam2)
-  - [JASMINE, Java](http://www.jas-mine.net/)
-  - [MicSim,
+-   [LIAM2, Python](https://github.com/liam2/liam2)
+-   [JASMINE, Java](http://www.jas-mine.net/)
+-   [MicSim,
     R](https://cran.r-project.org/web/packages/MicSim/index.html)
-  - [neworder, Python](https://github.com/virgesmith/neworder)
-  - [simarioV2, R](https://github.com/kcha193/simarioV2)
-  - [JAMSIM, Java](https://github.com/compassresearchcentre/jamsim)
+-   [neworder, Python](https://github.com/virgesmith/neworder)
+-   [simarioV2, R](https://github.com/kcha193/simarioV2)
+-   [JAMSIM, Java](https://github.com/compassresearchcentre/jamsim)
 
 **Multi-agent programmable modeling environment**
 
-  - [NetLogo](https://ccl.northwestern.edu/netlogo/)
+-   [NetLogo](https://ccl.northwestern.edu/netlogo/)
 
 **Urban microsimulation land-use models**
 
-  - [UrbanSim, Python](https://github.com/UDST/urbansim)
-  - [ILUTE, C\#](https://github.com/TravelModellingGroup/ILUTE)
-  - [SILO, Java](https://github.com/msmobility/silo)
+-   [UrbanSim, Python](https://github.com/UDST/urbansim)
+-   [ILUTE, C\#](https://github.com/TravelModellingGroup/ILUTE)
+-   [SILO, Java](https://github.com/msmobility/silo)
 
 ## Recommended scholarly articles
 
 To learn more about dynamic microsimulation modelling and some of its
 use cases please see these articles.
 
-  - O’Donoghue, C. (2001). Dynamic microsimulation: a methodological
+-   O’Donoghue, C. (2001). Dynamic microsimulation: a methodological
     survey. Brazilian Electronic Journal of Economics, 4(2), 77.
-  - Li, J., & O’Donoghue, C. (2013). A survey of dynamic microsimulation
+-   Li, J., & O’Donoghue, C. (2013). A survey of dynamic microsimulation
     models: uses, model structure and methodology. International Journal
     of microsimulation, 6(2), 3-55.
-  - Rutter, C. M., Zaslavsky, A. M., & Feuer, E. J. (2011). Dynamic
+-   Rutter, C. M., Zaslavsky, A. M., & Feuer, E. J. (2011). Dynamic
     microsimulation models for health outcomes: a review. Medical
     Decision Making, 31(1), 10-18.
-  - GouuAs, K. G., & Kitamura, R. (1992). Travel demand forecasting with
+-   GouuAs, K. G., & Kitamura, R. (1992). Travel demand forecasting with
     dynamic microsimulation.
-
-## Dependencies
-
-``` r
-library(deepdep)
-dd <- deepdep::deepdep("dymiumCore", local = T, depth = 3)
-deepdep::plot_dependencies(dd)
-```
-
-<img src="man/figures/README-deepdep-fig-1.png" width="100%" />
 
 ## Citation
 

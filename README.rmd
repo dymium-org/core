@@ -18,7 +18,7 @@ set.seed(728)
 ```
 <!-- badges: start -->
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/dymium-org/dymiumCore?include_prereleases)
-[![R build status](https://github.com/dymium-org/dymiumCore/workflows/R-CMD-check/badge.svg)](https://github.com/dymium-org/dymiumCore/actions)
+[![R-CMD-check](https://github.com/dymium-org/core/workflows/R-CMD-check/badge.svg)](https://github.com/dymium-org/core/actions)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Codecov test coverage](https://codecov.io/gh/dymium-org/dymiumCore/branch/master/graph/badge.svg)](https://codecov.io/gh/dymium-org/dymiumCore?branch=master)
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
@@ -218,14 +218,6 @@ To learn more about dynamic microsimulation modelling and some of its use cases 
 - Li, J., & O'Donoghue, C. (2013). A survey of dynamic microsimulation models: uses, model structure and methodology. International Journal of microsimulation, 6(2), 3-55.
 - Rutter, C. M., Zaslavsky, A. M., & Feuer, E. J. (2011). Dynamic microsimulation models for health outcomes: a review. Medical Decision Making, 31(1), 10-18.
 - GouuAs, K. G., & Kitamura, R. (1992). Travel demand forecasting with dynamic microsimulation.
-
-## Dependencies
-
-```{r deepdep-fig}
-library(deepdep)
-dd <- deepdep::deepdep("dymiumCore", local = T, depth = 3)
-deepdep::plot_dependencies(dd)
-```
 
 ## Citation
 
