@@ -137,10 +137,11 @@ World <- R6::R6Class(
       )
 
       if (checkmate::test_r6(x, "World")) {
-        stop("Adding a World object is not permitted.")
+        stop("Adding a World object to another World object is not permitted.")
       }
 
-      if ((inherits(x, "Entity") | inherits(x, "Container")) & !inherits(x, "Model") & !inherits(x, "Target")) {
+      if ((inherits(x, "Entity") | inherits(x, "Container")) &
+          !inherits(x, "Model") & !inherits(x, "Target")) {
         stopifnot(x$is_dymium_class())
         if (!missing(name)) {
           lg$warn("The given `name` will be ignored since the object in x \\
@@ -150,11 +151,12 @@ World <- R6::R6Class(
         name <- class(x)[[1]]
       }
 
-      if (inherits(x, "Model") && !is.null(x$name)) {
-        name = x$name
+      if (missing(name) && !is.null(x$name) &&
+          (inherits(x, "Model") | inherits(x, "Target"))) {
+        name <- x$name
       }
 
-      # only allows letters and underscores
+      # only allows letters and underscores\
       checkmate::assert_string(name,
                                pattern = "^[a-zA-Z_]*$",
                                na.ok = FALSE,
@@ -197,10 +199,14 @@ World <- R6::R6Class(
 
       if (name_object_exists) {
         if (replace) {
-          lg$warn("Replacing the object named `{name}` of class `{.class_old}` \\
+          warn_msg =
+            glue::glue(
+              "Replacing the object named `{name}` of class `{.class_old}` \\
                   with `{.class_new}`.",
-                  .class_old = self$get(x = name)$class()[[1]],
-                  .class_new = class(x)[[1]])
+              .class_old = self$get(x = name)$class()[[1]],
+              .class_new = class(x)[[1]]
+            )
+          warning(warn_msg)
           self$remove(name)
         } else {
           stop(glue::glue("{name} already exists in {.listname}. Only one instance \\

@@ -3,6 +3,8 @@
 ## New features
 
 - `ModelMultinomialLogit` and `ModelBinaryChoice` now have S3 `predict` and `summary` methods. Note that `ModelMultinomialLogit` requires `newdata` to be in the same format that is required by `mlogit`.
+- `Population$household_type()` now returns the number of members in household and remove individuals not belong to any household.
+- When calling `World$add()` and `name` is missing, it will see if the object has a `name` field, if it is a `Target` or a `Model`.
 
 ## Changes
 
@@ -10,6 +12,7 @@
 - add a `name` argument to `Model`'s constructor function and expose it as an R6 active field. 
 - `World$add()` can now be used to add a named `Model` without providing the `name` argument.
 - `World$add()` gained a `replace` argument with `TRUE` as its default value. 
+- `Generic` now has an active `name` field which will equal to `NULL` if no name is given.
 
 ## Bug fixes
 

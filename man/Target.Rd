@@ -13,11 +13,14 @@ functions. If the target is dynamic then its \code{get} will return its target
 value at the current time or its closest time to the current time.
 }
 \section{Construction}{
-\preformatted{Target$new(x)
+\preformatted{Target$new(x, name)
 }
 \itemize{
 \item \code{x} :: any object that passes \code{check_target()}\cr
 A target object or \code{NULL}.
+\item \code{name} :: \code{character(1)}\cr
+Name/Alias of the Target object. This will be used as the \link{Target} name when
+it gets added to a \link{World}.
 }
 }
 

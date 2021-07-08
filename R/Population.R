@@ -242,7 +242,9 @@ Population <- R6Class(
     leave_household = function(ind_ids) {
       # check that ids in ind_ids and their household ids exist
       stopifnot(self$get("Individual")$ids_exist(ids = ind_ids))
-      stopifnot(self$get("Household")$ids_exist(ids = self$get("Individual")$get_household_ids(ids = ind_ids)))
+      stopifnot(
+        self$get("Household")$ids_exist(
+          ids = self$get("Individual")$get_household_ids(ids = ind_ids)))
       # leave household
       self$get("Individual")$remove_household_id(ids = ind_ids)
       add_history(entity = self$get("Individual"),
@@ -286,6 +288,7 @@ Population <- R6Class(
         ), by = c(Ind$get_hid_col())] %>%
         # identify relationships
         .[, `:=`(
+          n_members = sapply(members, length),
           couple_hh = purrr::map2_lgl(members, partners, ~ {any(.y %in% .x)}),
           with_children = purrr::map2_lgl(members, parents, ~ {any(.y %in% .x)})
         )] %>%
@@ -304,7 +307,12 @@ Population <- R6Class(
           by.y = Ind$get_hid_col(),
           sort = FALSE,
           allow.cartesian = FALSE
-        )
+        ) %>%
+        # if there are individuals that don't belong to any household they would all
+        # be added into id:NA, so i thin
+        .[!is.na(id), ]
+
+
 
       checkmate::assert_character(household_type[["household_type"]], any.missing = FALSE)
 
