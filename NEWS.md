@@ -1,4 +1,7 @@
-# dymiumCore (development version)
+<!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
+
+# dymiumCore 0.1.9.9001
+
 
 ## New features
 
@@ -6,13 +9,13 @@
 
 ## Changes
 
-- closed #57
-- add a `name` argument to `Model`'s constructor function and expose it as an R6 active field. 
+- Move `matchingR` to Suggests.
+- Replace `lest::case_when()` with `data.table::case_when()` (#57).
+- Add a `name` argument to `Model`'s constructor function and expose it as an R6 active field.
 - `World$add()` can now be used to add a named `Model` without providing the `name` argument.
 - `World$add()` gained a `replace` argument with `TRUE` as its default value. 
 
 ## Bug fixes
-
 
 # dymiumCore 0.1.9
 
