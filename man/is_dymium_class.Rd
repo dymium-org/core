@@ -19,13 +19,15 @@ is dymium class
 
 # Not Dymium object
 library(R6)
-x  <- R6Class()
+x <- R6Class()
 is_dymium_class(x)
 
 # Dymium object
-Pop <- Population$new(ind_data = toy_individuals,
-                      hh_data = toy_households,
-                      pid_col = "pid",
-                      hid_col = "hid")
+Pop <- Population$new(
+  ind_data = toy_individuals,
+  hh_data = toy_households,
+  pid_col = "pid",
+  hid_col = "hid"
+)
 is_dymium_class(Pop)
 }

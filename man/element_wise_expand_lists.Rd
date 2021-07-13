@@ -18,11 +18,11 @@ data.frame with two columns, Var1 and Var2.
 expand two lists into a dataframe. l1 and l2 can be a nested list.
 }
 \examples{
- l1 <- list(1,2,3,4)
- l2 <- list(1,2,3,4)
- element_wise_expand_lists(l1,l2)
+l1 <- list(1, 2, 3, 4)
+l2 <- list(1, 2, 3, 4)
+element_wise_expand_lists(l1, l2)
 
- l1 <- list(1,2,3,4)
- l2 <- list(1,2,3,c(1,3))
- element_wise_expand_lists(l1,l2)
+l1 <- list(1, 2, 3, 4)
+l2 <- list(1, 2, 3, c(1, 3))
+element_wise_expand_lists(l1, l2)
 }

@@ -18,8 +18,7 @@ a logical value.
 Check if a module exists in a remote repository
 }
 \examples{
-
 \dontrun{
-  check_module('test')
+check_module("test")
 }
 }

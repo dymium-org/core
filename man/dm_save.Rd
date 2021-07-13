@@ -18,12 +18,11 @@ This is part of the dm_* family of functions to be used inside a microsimulation
 pipeline. This saves an instance of Entity or Container to a directory.
 }
 \examples{
-
 \dontrun{
-  # create a World object and assign it as 'world' to the global environment.
-  create_toy_world()
+# create a World object and assign it as 'world' to the global environment.
+create_toy_world()
 
-  # this saves the 'world' object to the outputs folder of the active scenario folder.
-  dm_save(world)
+# this saves the 'world' object to the outputs folder of the active scenario folder.
+dm_save(world)
 }
 }

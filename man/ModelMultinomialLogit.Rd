@@ -39,7 +39,7 @@ parameters.
 }
 \examples{
 
-if (requireNamespace('mlogit')) {
+if (requireNamespace("mlogit")) {
 
 
 }

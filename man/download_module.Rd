@@ -38,10 +38,9 @@ If you are using an RStudio project then it will be saved in the 'modules' folde
 of your project. If the 'modules' folder does not exist, it will be created.
 }
 \examples{
-
 \dontrun{
-  # download an test module.
-  download_modules('test', version = '0.0.1')
+# download an test module.
+download_modules("test", version = "0.0.1")
 }
 
 }

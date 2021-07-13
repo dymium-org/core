@@ -46,10 +46,9 @@ active scenario directory. If the scenerio folder doesn't have 'inputs' and
 'outputs' directories.
 }
 \examples{
-
 \dontrun{
-  create_scenario(name = "test", active = FALSE)
-  set_active_scenario(name = "test")
-  get_active_scenario()
+create_scenario(name = "test", active = FALSE)
+set_active_scenario(name = "test")
+get_active_scenario()
 }
 }

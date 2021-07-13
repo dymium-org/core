@@ -21,8 +21,7 @@ a logical value
 Check the existence of a module version.
 }
 \examples{
-
 \dontrun{
-  check_module_version('test', version = '0.0.1')
+check_module_version("test", version = "0.0.1")
 }
 }

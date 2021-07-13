@@ -25,13 +25,12 @@ This function creates an event script from the provided event template inside
 a module along with a testtthat test script.
 }
 \examples{
-
 \dontrun{
-  # Note: running this will create a folder called "modules" and a sub-folder
-  #       to your working directory within the folder called "demography"
-  use_module(name = "demography")
+# Note: running this will create a folder called "modules" and a sub-folder
+#       to your working directory within the folder called "demography"
+use_module(name = "demography")
 
-  # create an event called 'birth' inside the 'demography' module.
-  use_event(name = "birth", module = 'demography')
+# create an event called 'birth' inside the 'demography' module.
+use_event(name = "birth", module = "demography")
 }
 }

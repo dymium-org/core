@@ -13,7 +13,6 @@ use_module_readme(name)
 Add a README rmarkdown file to an existing module
 }
 \examples{
-
 \dontrun{
 # this assumes that you have a module named 'demography'
 use_module_readme(name = "demography")

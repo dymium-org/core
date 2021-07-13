@@ -18,9 +18,8 @@ a character vector.
 Get all files from a module
 }
 \examples{
-
 \dontrun{
-  get_module_files("demography")
+get_module_files("demography")
 }
 
 }

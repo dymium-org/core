@@ -18,8 +18,7 @@ a character vector.
 Get all version numbers of a module
 }
 \examples{
-
 \dontrun{
-  get_module_versions("demography")
+get_module_versions("demography")
 }
 }

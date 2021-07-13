@@ -26,5 +26,4 @@ Return the indices of n maximum or minimum values
 
 which_max_n(1:4, 2)
 which_min_n(1:4, 2)
-
 }

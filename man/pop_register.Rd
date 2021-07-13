@@ -32,5 +32,4 @@ create_toy_world()
 pop <- world$get("Population")
 
 new_population_data <- pop_register(pop, toy_individuals, toy_households)
-
 }

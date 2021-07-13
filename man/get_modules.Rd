@@ -16,8 +16,7 @@ a character vector.
 Get the names of available modules from a remote repository
 }
 \examples{
-
 \dontrun{
-  get_modules()
+get_modules()
 }
 }

@@ -139,9 +139,10 @@ filter_not_dead <-
 
 # create a multinomial logit model using `caret`
 mnl <- caret::train(marital_status ~ age + sex,
-                    data = toy_individuals,
-                    method = "multinom",
-                    trace = FALSE)
+  data = toy_individuals,
+  method = "multinom",
+  trace = FALSE
+)
 # this model denotes that there is a 10\% chance that an individual will decease
 death_model <- list(yes = 0.1, no = 0.9)
 
@@ -150,28 +151,34 @@ create_toy_world()
 
 # simulate marital status transition and update the attribute.
 transition(world,
-           entity = "Individual",
-           model = mnl,
-           preprocessing_fn = filter_male,
-           attr = "marital_status")
+  entity = "Individual",
+  model = mnl,
+  preprocessing_fn = filter_male,
+  attr = "marital_status"
+)
 
 # get a transition result
 get_transition(world,
-               entity = "Individual",
-               model = mnl,
-               preprocessing_fn = filter_male)
+  entity = "Individual",
+  model = mnl,
+  preprocessing_fn = filter_male
+)
 
 # lets make a pipeline of transitions
 world \%>\%
-  transition(entity = "Individual",
-             model = mnl,
-             preprocessing_fn = . \%>\% filter_male \%>\% filter_not_dead,
-             attr = "marital_status") \%>\%
-  transition(entity = "Individual",
-             model = death_model,
-             preprocessing_fn = filter_not_dead,
-             attr = "age",
-             values = c(yes = -1L))
+  transition(
+    entity = "Individual",
+    model = mnl,
+    preprocessing_fn = . \%>\% filter_male() \%>\% filter_not_dead(),
+    attr = "marital_status"
+  ) \%>\%
+  transition(
+    entity = "Individual",
+    model = death_model,
+    preprocessing_fn = filter_not_dead,
+    attr = "age",
+    values = c(yes = -1L)
+  )
 # print the attributes of the individual agents
 world$entities$Individual$get_data()
 }

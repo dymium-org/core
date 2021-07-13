@@ -65,31 +65,43 @@ filter_alive <-
 microsimulation_pipeline <-
   . \%>\%
   # ageing
-  mutate_entity(entity = "Individual",
-                age := age + 1L,
-                subset = age != -1L) \%>\%
+  mutate_entity(
+    entity = "Individual",
+    age := age + 1L,
+    subset = age != -1L
+  ) \%>\%
   # simulate birth decision
-  transition(entity = "Individual",
-             model = birth_model,
-             attr = ".give_birth",
-             preprocessing_fn = . \%>\% filter_eligible_females \%>\% filter_alive) \%>\%
+  transition(
+    entity = "Individual",
+    model = birth_model,
+    attr = ".give_birth",
+    preprocessing_fn = . \%>\% filter_eligible_females() \%>\% filter_alive()
+  ) \%>\%
   # add newborns
-  add_entity(entity = "Individual",
-             newdata = toy_individuals[age == 0, ],
-             target = .$entities$Individual$get_data()[.give_birth == "yes", .N]) \%>\%
+  add_entity(
+    entity = "Individual",
+    newdata = toy_individuals[age == 0, ],
+    target = .$entities$Individual$get_data()[.give_birth == "yes", .N]
+  ) \%>\%
   # reset the birth decision variable
-  mutate_entity(entity = "Individual",
-                .give_birth := "no",
-                subset = age != -1L) \%>\%
+  mutate_entity(
+    entity = "Individual",
+    .give_birth := "no",
+    subset = age != -1L
+  ) \%>\%
   # simulate deaths
-  transition(entity = "Individual",
-             model = death_model,
-             attr = "age",
-             values = c(yes = -1L),
-             preprocessing_fn = filter_alive) \%>\%
+  transition(
+    entity = "Individual",
+    model = death_model,
+    attr = "age",
+    values = c(yes = -1L),
+    preprocessing_fn = filter_alive
+  ) \%>\%
   # log the total number of alive individuals at the end of the iteration
-  add_log(desc = "count:Individual",
-          value = .$entities$Individual$get_data()[age != -1L, .N])
+  add_log(
+    desc = "count:Individual",
+    value = .$entities$Individual$get_data()[age != -1L, .N]
+  )
 
 # complie and execute a simulation pipeline
 sim(world = world, pipeline = microsimulation_pipeline, n_iters = 10)

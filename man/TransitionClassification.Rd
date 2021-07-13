@@ -132,9 +132,9 @@ Ind <- Individual$new(.data = toy_individuals, id_col = "pid")
 
 # create a probabilistic model
 driver_status_rate <- data.table::data.table(
-  sex = c('male', 'female'),
-  probs = list(c(0.3,0.7), c(0.4,0.6)),
-  choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
+  sex = c("male", "female"),
+  probs = list(c(0.3, 0.7), c(0.4, 0.6)),
+  choices = list(c("can drive", "cannot drive"), c("can drive", "cannot drive"))
 )
 
 # create a Transition for driver status
@@ -146,9 +146,9 @@ TransitionCandrive <- R6::R6Class(
 TransCanDrive <- TransitionCandrive$new(x = Ind, model = driver_status_rate)
 
 barplot(
-  table(TransCanDrive$get_result()[['response']]),
+  table(TransCanDrive$get_result()[["response"]]),
   main = "Transition result: driver status",
-  col = c('steelblue', 'salmon')
+  col = c("steelblue", "salmon")
 )
 }
 \seealso{

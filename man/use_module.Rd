@@ -27,10 +27,9 @@ install them or not.
 Note that, to add event functions to a module see \link{use_event}.
 }
 \examples{
-
 \dontrun{
-  # Note: running this will create a folder called "modules" and a sub-folder
-  #       to your working directory within the folder called "demography"
-  use_module(name = "demography")
+# Note: running this will create a folder called "modules" and a sub-folder
+#       to your working directory within the folder called "demography"
+use_module(name = "demography")
 }
 }

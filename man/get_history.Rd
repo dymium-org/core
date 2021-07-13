@@ -30,9 +30,10 @@ doesn't have any history data.
 create_toy_world()
 
 add_history(world$get("Individual"),
-            ids = 1:100,
-            event = "test_event1",
-            time = 1)
+  ids = 1:100,
+  event = "test_event1",
+  time = 1
+)
 
 get_history(world)
 get_history(world$get("Individual"))

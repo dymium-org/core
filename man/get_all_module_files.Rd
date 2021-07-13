@@ -16,9 +16,8 @@ a character vector.
 Get all files from all modules in a repository.
 }
 \examples{
-
 \dontrun{
-  get_all_module_files("dymium-org/dymiumModules")
+get_all_module_files("dymium-org/dymiumModules")
 }
 
 }

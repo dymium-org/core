@@ -93,8 +93,9 @@ Ind <- pop$get("Individual")
 
 # fit a OLS regression model
 model_lm <- glm(age ~ sex + marital_status,
-                data = Ind$get_data(),
-                family = "gaussian")
+  data = Ind$get_data(),
+  family = "gaussian"
+)
 summary(model_lm)
 
 TransAge <- TransitionRegression$new(Ind, model = model_lm)
