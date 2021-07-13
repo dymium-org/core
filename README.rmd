@@ -48,14 +48,14 @@ It is true that there is no shortage of open source microsimulation frameworks, 
 
 You can install the released version of dymiumCore from Github with:
 
-```{r eval = FALSE}
+``` r
 remotes::install_github("dymium-org/dymiumCore", 
                          ref = remotes::github_release())
 ```
 
 The current development version on Github can be installed with:
 
-```{r eval = FALSE}
+``` r
 remotes::install_github("dymium-org/dymiumCore")
 ```
 
