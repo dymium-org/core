@@ -129,7 +129,6 @@ Trans <- R6Class(
 
       invisible(self)
     },
-
     get_decision_maker_ids = function(response_filter = NULL) {
       # TODO: how to allow decision_filter for other logical operators
       # (eg: <=, =>, !=)?
@@ -140,11 +139,9 @@ Trans <- R6Class(
         # filter
         .[response %in% response_filter, id]
     },
-
     get_data = function() {
       copy(private$.sim_data)
     },
-
     get_result = function(ids) {
       if (missing(ids)) {
         return(copy(private$.sim_result))
@@ -152,48 +149,43 @@ Trans <- R6Class(
         # return response according to the order of the given `ids`
         checkmate::assert_integerish(ids, any.missing = FALSE, lower = 1, null.ok = FALSE)
         if (!checkmate::test_integerish(ids, unique = TRUE)) {
-          lg$warn('`ids` are not unique! if you are certain that is what you want \\
-                  you may ignore this warning message.')
+          lg$warn("`ids` are not unique! if you are certain that is what you want \\
+                  you may ignore this warning message.")
         }
-        checkmate::assert_subset(ids, choices = private$.sim_result[['id']], fmatch = TRUE, empty.ok = FALSE)
-        return(merge(data.table(id = ids), private$.sim_result, by = 'id', sort = FALSE))
+        checkmate::assert_subset(ids, choices = private$.sim_result[["id"]], fmatch = TRUE, empty.ok = FALSE)
+        return(merge(data.table(id = ids), private$.sim_result, by = "id", sort = FALSE))
       }
     },
-
     get_nrow_result = function() {
       private$.sim_result[, .N]
     },
-
     filter = function(.data) {
       .data
     },
-
     mutate = function(.data) {
       .data
     },
-
     postprocess = function(.sim_result) {
       .sim_result
     },
-
     update_agents = function(attr) {
       private$update(attr)
     },
-
     print = function() {
-
-      if (is.numeric(private$.sim_result[['response']])) {
-        rs <- summary(private$.sim_result[['response']])
+      if (is.numeric(private$.sim_result[["response"]])) {
+        rs <- summary(private$.sim_result[["response"]])
         .value <- paste(names(rs),
-                        round(rs, 2),
-                        collapse = " | ")
+          round(rs, 2),
+          collapse = " | "
+        )
       }
 
-      if (is.character(private$.sim_result[['response']])) {
-        rs <- summary(as.factor(private$.sim_result[['response']]))
+      if (is.character(private$.sim_result[["response"]])) {
+        rs <- summary(as.factor(private$.sim_result[["response"]]))
         .value <- paste0(names(rs), ": ",
-                        round(rs, 2),
-                        collapse = " | ")
+          round(rs, 2),
+          collapse = " | "
+        )
       }
 
       msg <- glue::glue(
@@ -207,7 +199,6 @@ Trans <- R6Class(
       message(msg)
     }
   ),
-
   private = list(
     # Private ----------------------------------------------------------
     .model = NULL, # model object or data.table
@@ -267,12 +258,10 @@ Trans <- R6Class(
 
       invisible(TRUE)
     },
-
     run_postprocessing_steps = function() {
       private$.sim_result <- self$postprocess(private$.sim_result)
       invisible(TRUE)
     },
-
     simulate = function() {
 
       # expect a vector
@@ -283,7 +272,6 @@ Trans <- R6Class(
 
       response
     },
-
     run_simulation = function() {
       if (!is.null(private$.sim_data)) {
         response <- private$simulate()
@@ -297,22 +285,24 @@ Trans <- R6Class(
 
         # construct simulation result
         sim_result <-
-          data.table::data.table(id = private$.sim_data[[private$.AgtObj$get_id_col()]],
-                                 response = response)
+          data.table::data.table(
+            id = private$.sim_data[[private$.AgtObj$get_id_col()]],
+            response = response
+          )
 
         if (is.null(private$.target)) {
           checkmate::assert(
-            checkmate::check_integerish(sim_result[['id']], unique = TRUE),
+            checkmate::check_integerish(sim_result[["id"]], unique = TRUE),
             checkmate::check_data_table(sim_result, any.missing = FALSE, null.ok = FALSE),
             checkmate::check_names(names(sim_result), identical.to = c("id", "response")),
-            combine = 'and'
+            combine = "and"
           )
         } else {
           checkmate::assert(
-            checkmate::check_integerish(sim_result[['id']], any.missing = FALSE, unique = TRUE),
+            checkmate::check_integerish(sim_result[["id"]], any.missing = FALSE, unique = TRUE),
             checkmate::check_data_table(sim_result, any.missing = TRUE, null.ok = FALSE),
             checkmate::check_names(names(sim_result), identical.to = c("id", "response")),
-            combine = 'and'
+            combine = "and"
           )
         }
       } else {
@@ -322,7 +312,6 @@ Trans <- R6Class(
       private$.sim_result <- sim_result
       invisible(TRUE)
     },
-
     update = function(attr) {
 
       # prepare agents' data to update
@@ -342,9 +331,11 @@ Trans <- R6Class(
       # get index of ids
       idx_unordered <- .data[get(id_col) %in% ids, which = TRUE]
       idx_dt <- .data[idx_unordered, ..id_col][, idx := idx_unordered]
-      idx <- merge(x = data.table(id = ids),
-                   y = idx_dt,
-                   by.x = "id", by.y = id_col, sort = FALSE) %>%
+      idx <- merge(
+        x = data.table(id = ids),
+        y = idx_dt,
+        by.x = "id", by.y = id_col, sort = FALSE
+      ) %>%
         .[["idx"]]
 
       # update by reference
@@ -354,7 +345,7 @@ Trans <- R6Class(
 
       invisible()
     }
- )
+  )
 )
 
 # Functions ---------------------------------------------------------------
@@ -368,7 +359,7 @@ Trans <- R6Class(
   }
   current_sim_time <- .get_sim_time()
 
-  index_closest_time <- which.min(abs(target[['time']] - current_sim_time))
+  index_closest_time <- which.min(abs(target[["time"]] - current_sim_time))
 
   return(as.list(target[index_closest_time, -c("time")]))
 }
@@ -409,11 +400,11 @@ get_supported_models <- function() {
 monte_carlo_sim <- function(prediction, target) {
   checkmate::assert_data_frame(
     prediction,
-    types = 'double',
+    types = "double",
     min.cols = 2,
     any.missing = FALSE,
     null.ok = FALSE,
-    col.names = 'unique'
+    col.names = "unique"
   )
 
   if (!is.data.table(prediction)) {
@@ -432,17 +423,19 @@ monte_carlo_sim <- function(prediction, target) {
 
 is_regression <- function(x) {
   if (inherits(x, "train")) {
-    if (x$modelType == "Regression")
+    if (x$modelType == "Regression") {
       return(TRUE)
-    if (x$modelType == "Classification")
+    }
+    if (x$modelType == "Classification") {
       return(FALSE)
+    }
     stop("The model is neither regression or classification.")
   }
   if (inherits(x, "lm")) {
-    if(family(x)$link %in% c("identity", "log")) {
+    if (family(x)$link %in% c("identity", "log")) {
       return(TRUE)
     }
-    if(family(x)$link %in% c("logit", "probit")) {
+    if (family(x)$link %in% c("logit", "probit")) {
       return(FALSE)
     }
     stop("The model is neither regression or classification.")

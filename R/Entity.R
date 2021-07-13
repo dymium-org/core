@@ -132,10 +132,9 @@ Entity <-
     classname = "Entity",
     inherit = Generic,
     public = list(
-
       initialize = function(databackend, .data, id_col) {
         checkmate::assert_character(id_col, null.ok = FALSE, min.len = 1, unique = T, any.missing = FALSE, names = "unnamed")
-        checkmate::assert_names(names(.data), must.include = id_col, type = 'strict')
+        checkmate::assert_names(names(.data), must.include = id_col, type = "strict")
         checkmate::assert_integerish(.data[[id_col[1]]], unique = TRUE, any.missing = FALSE, null.ok = FALSE, min.len = 1)
         private$.data[[1]] <- databackend$new(.data, key = id_col[1])
         checkmate::assert_r6(private$.data[[1]], classes = "DataBackend", .var.name = "databackend")
@@ -144,9 +143,8 @@ Entity <-
         private$.id_col <- id_col
         invisible()
       },
-
       add_data = function(databackend = DataBackendDataTable, .data, name) {
-        checkmate::assert_names(names(.data), must.include = private$.id_col[[1]], type = 'strict')
+        checkmate::assert_names(names(.data), must.include = private$.id_col[[1]], type = "strict")
         checkmate::assert_string(name, null.ok = FALSE, na.ok = FALSE)
         checkmate::assert_names(name, type = "strict")
         checkmate::assert_names(names(private$.data), disjunct.from = name)
@@ -154,11 +152,9 @@ Entity <-
         names(private$.data)[length(private$.data)] <- name
         invisible()
       },
-
       data = function(name) {
-
         if ((missing(name) & length(private$.data) == 0) | is.null(self$get_data_names())) {
-          lg$warn('{class(self)[[1]]} has no data.')
+          lg$warn("{class(self)[[1]]} has no data.")
           return(NULL)
         }
 
@@ -180,9 +176,7 @@ Entity <-
         lg$trace("returning {names(private$.data)[[.data_pos]]}")
         return(private$.data[[.data_pos]])
       },
-
       get_data = function(name, ids, copy = TRUE) {
-
         if (missing(name)) {
           name <- "attrs"
         }
@@ -210,15 +204,11 @@ Entity <-
             lg$warn("The order of the returned data is not garantee to be the same \\
                     with the input `ids`. Also not all ids are garantee to have \\
                     valid records.")
-            return(DataObj$get()[get(self$get_id_col()) %in% ids,])
+            return(DataObj$get()[get(self$get_id_col()) %in% ids, ])
           }
-
         }
-
       },
-
       get_data2 = function(name = "attrs", ids, copy = TRUE) {
-
         DataObj <- self$data(name)
 
         if (is.null(DataObj)) {
@@ -250,11 +240,10 @@ Entity <-
             lg$warn("The order of the returned data is not garantee to be the same \\
                     with the input `ids`. Also not all ids are garantee to have \\
                     valid records.")
-            return(DataObj$get()[get(self$get_id_col()) %in% ids,])
+            return(DataObj$get()[get(self$get_id_col()) %in% ids, ])
           }
         }
       },
-
       get_data_names = function() {
         names(private$.data)
       },
@@ -271,7 +260,6 @@ Entity <-
       #  to the existing individual data then you wouldn't expect that there should
       #  be existing ids
       add = function(.data, check_existing = FALSE) {
-
         checkmate::assert_data_frame(.data)
         checkmate::assert_flag(check_existing, na.ok = FALSE, null.ok = FALSE)
 
@@ -282,10 +270,12 @@ Entity <-
         NewData <- DataBackendDataTable$new(.data, key = self$primary_id)
 
         res <-
-          all.equal(target = omit_derived_vars(self$database$attrs$data[0, ]),
-                    current = omit_derived_vars(NewData$data[0, ]),
-                    check.attributes = FALSE,
-                    ignore.col.order = TRUE)
+          all.equal(
+            target = omit_derived_vars(self$database$attrs$data[0, ]),
+            current = omit_derived_vars(NewData$data[0, ]),
+            check.attributes = FALSE,
+            ignore.col.order = TRUE
+          )
 
         if (!isTRUE(res)) {
           cli::cli_alert_info("New data (.data)")
@@ -333,11 +323,9 @@ Entity <-
         self$database$attrs$add(.data = .data, fill = TRUE)
         invisible()
       },
-
       has_attr = function(x) {
         x %in% self$database$attrs$colnames
       },
-
       get_attr = function(x, ids) {
         checkmate::assert_string(x, na.ok = FALSE, null.ok = FALSE)
         if (!missing(ids)) {
@@ -345,7 +333,6 @@ Entity <-
         }
         self$data()$get(col = x)[[1]]
       },
-
       get_removed_data = function(name) {
         DataObj <- self$data(name)
         if (is.null(DataObj)) {
@@ -354,15 +341,15 @@ Entity <-
           DataObj$get_removed()
         }
       },
-
       get_ids = function(include_removed = FALSE) {
         if (include_removed) {
-          return(c(self$get_attr(self$primary_id),
-                   self$get_removed_data()[[self$primary_id]]))
+          return(c(
+            self$get_attr(self$primary_id),
+            self$get_removed_data()[[self$primary_id]]
+          ))
         }
         self$get_attr(self$primary_id)
       },
-
       get_idx = function(ids, expect_na = FALSE) {
         if (missing(ids)) {
           return(seq_len(self$data()$nrow()))
@@ -379,7 +366,6 @@ Entity <-
         }
         tab[match(ids, id)][["idx"]]
       },
-
       get_id_col = function(all = FALSE) {
         if (all) {
           return(private$.id_col)
@@ -387,7 +373,6 @@ Entity <-
           return(private$.id_col[[1]])
         }
       },
-
       remove = function(ids) {
         checkmate::assert_integerish(ids, any.missing = FALSE, unique = TRUE, lower = 1, min.len = 1)
         if (length(private$.data) == 0) {
@@ -400,7 +385,6 @@ Entity <-
         }
         invisible()
       },
-
       idx_exist = function(idx, by_element = FALSE) {
         checkmate::assert_integerish(x = idx, lower = 0, any.missing = FALSE, null.ok = FALSE)
         if (by_element) {
@@ -409,11 +393,9 @@ Entity <-
           return(self$data()$nrow() >= max(idx))
         }
       },
-
       ids_exist = function(ids, include_removed_data = FALSE) {
         test_entity_ids(self, ids, include_removed_data = include_removed_data)
       },
-
       summary = function(verbose = TRUE) {
         if (length(private$.data) == 0) {
           summary_dt <-
@@ -430,11 +412,13 @@ Entity <-
               .x = private$.data,
               .y = names(private$.data),
               .f = ~ {
-                data.table(dataname = .y,
-                           ncol = .x$ncol(),
-                           nrow = .x$nrow(),
-                           nrow_removed = nrow(.x$get_removed()),
-                           size = format(object.size(.x$get()), units = "Mb", standard = "SI"))
+                data.table(
+                  dataname = .y,
+                  ncol = .x$ncol(),
+                  nrow = .x$nrow(),
+                  nrow_removed = nrow(.x$get_removed()),
+                  size = format(object.size(.x$get()), units = "Mb", standard = "SI")
+                )
               }
             ) %>%
             rbindlist()
@@ -446,12 +430,11 @@ Entity <-
 
         invisible(summary_dt)
       },
-
       print = function() {
         .data_summary <- self$summary(verbose = FALSE) %>%
           .[, description := glue::glue("{dataname}[{nrow}, {ncol}]", .envir = .)]
         .class_inheritance <- glue::glue_collapse(class(self), sep = " <- ")
-        .data_names <- glue::glue_collapse(.data_summary[['description']], sep = ", ", last = ' and ')
+        .data_names <- glue::glue_collapse(.data_summary[["description"]], sep = ", ", last = " and ")
         .n_removed <- ifelse(is.null(self$get_removed_data()), 0, nrow(self$get_removed_data()))
         # if (requireNamespace('pryr', quietly = TRUE)) {
         #   .memory <- paste0(format(pryr::object_size(self) / 10^6, digits = 3), " MB")
@@ -470,12 +453,11 @@ Entity <-
           )
         )
       },
-
       print_data = function(n = 5) {
         if (n > 0) {
           print(purrr::map(private$.data, ~ .x$head(n)))
         }
-        data_names = glue::glue_collapse(names(private$.data), ", ", last = " and ")
+        data_names <- glue::glue_collapse(names(private$.data), ", ", last = " and ")
 
         lg$info(
           glue::glue(
@@ -486,7 +468,6 @@ Entity <-
         )
         invisible()
       },
-
       n = function() {
         if (is.null(self$data())) {
           return(0L)
@@ -494,15 +475,12 @@ Entity <-
           self$data()$nrow()
         }
       },
-
       get_last_id = function() {
         private$.last_id
       },
-
       get_new_ids = function() {
         private$.new_ids
       },
-
       generate_new_ids = function(n) {
         checkmate::assert_integerish(n, lower = 1, len = 1, null.ok = FALSE, any.missing = FALSE)
         # generate new ids
@@ -519,37 +497,34 @@ Entity <-
         # return the latest set of ids
         invisible(new_ids)
       },
-
       subset_ids = function(expr) {
         j_expr <- substitute(expr)
-        subset(x = self$get_data(copy = FALSE),
-               subset = eval(j_expr),
-               select = self$get_id_col())[[1]]
-      }),
-
+        subset(
+          x = self$get_data(copy = FALSE),
+          subset = eval(j_expr),
+          select = self$get_id_col()
+        )[[1]]
+      }
+    ),
     active = list(
       database = function() {
         get(".data", envir = private)
       },
-
       id_col = function() {
         get(".id_col", envir = private)
       },
-
       primary_id = function() {
         get(".id_col", envir = private)[[1]]
       },
-
       data_template = function() {
         return(data.table())
       }
     ),
-
     private = list(
       .data = list(),
       .id_col = NULL,
       .history = NULL,
       .last_id = NA_integer_,
       .new_ids = NA_integer_
-      )
+    )
   )

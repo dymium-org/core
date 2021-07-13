@@ -63,52 +63,41 @@ DataBackend <- R6::R6Class(
       private$.data <- .data
       private$.removed_data <- .data[0, ]
     },
-
     add = function(x) {
       private$abstract()
     },
-
     get = function(rows, cols, copy = FALSE) {
       private$.data
     },
-
     view = function(x) {
       private$abstract()
     },
-
     remove = function() {
       private$abstract()
     },
-
     class = function() {
       class(private$.data)
     },
-
     n = function() {
       private$abstract()
     },
-
     get_removed = function() {
       private$.removed_data
     },
-
     str = function() {
       str(private$.data)
     }
   ),
-
   active = list(
     data = function() {
       return(base::get(".data", envir = private))
     },
-
     removed_data = function() {
       return(base::get(".removed_data", envir = private))
     }
   ),
-
-
   private = list(
     .data = NULL,
     .removed_data = NULL
-))
+  )
+)

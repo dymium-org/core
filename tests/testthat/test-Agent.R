@@ -1,20 +1,21 @@
-context('agent class')
+context("agent class")
 
 test_that("initialise", {
-  expect_error(Agent$new(.data = toy_individuals, id_col = 'non_existed_colname'))
+  expect_error(Agent$new(.data = toy_individuals, id_col = "non_existed_colname"))
 })
 
 test_that("add_data", {
-  MyAgent <- Agent$new(.data = toy_individuals, id_col = 'pid')
+  MyAgent <- Agent$new(.data = toy_individuals, id_col = "pid")
   expect_error(MyAgent$add_data(.data = iris, name = "iris"),
-               regexp = "failed: Must include the elements \\{pid\\}",
-               info = "Agent's id column should be missing.")
+    regexp = "failed: Must include the elements \\{pid\\}",
+    info = "Agent's id column should be missing."
+  )
   MyAgent$add_data(.data = toy_individuals, name = "attrs2")
   expect_true(all(MyAgent$get_data_names() == c("attrs", "attrs2")))
 })
 
 test_that("get_removed_data", {
-  MyAgent <- Agent$new(.data = toy_individuals, id_col = 'pid')
+  MyAgent <- Agent$new(.data = toy_individuals, id_col = "pid")
   MyAgent$add_data(.data = toy_individuals, name = "attrs2")
   expect_equal(
     sapply(MyAgent$get_removed_data(), typeof),
@@ -33,8 +34,10 @@ test_that("using Test data", {
   expect_is(MyAgent, "R6")
   expect_equal(MyAgent$get_data()[, .N], nrow(toy_individuals))
   expect_equal(MyAgent$get_data()[, .N], nrow(toy_individuals))
-  expect_equal(object = MyAgent$get_latest_agent_id(),
-               expected = MyAgent$get_data()[, max(get(MyAgent$get_id_col()))])
+  expect_equal(
+    object = MyAgent$get_latest_agent_id(),
+    expected = MyAgent$get_data()[, max(get(MyAgent$get_id_col()))]
+  )
   expect_is(MyAgent$get_data(), "data.table")
 
   # get_ids() ---------
@@ -56,7 +59,6 @@ test_that("using Test data", {
   ids_manual <- obj_dt[sex == IND$SEX$FEMALE & age < 40, c(pid)]
   ids_from_method <- MyAgent$subset_ids(sex == IND$SEX$FEMALE & age < 40)
   expect_equivalent(ids_manual, ids_from_method)
-
 })
 
 test_that("hatch and add", {
@@ -71,9 +73,11 @@ test_that("hatch and add", {
   new_agent_data$toy_individuals
   MyAgent$add(.data = new_agent_data$toy_individuals, check_existing = FALSE)
   expect_true(MyAgent$n() == nrow(dymiumCore::toy_individuals) * 2)
-  pid_cols <- c('pid', 'partner_id', 'father_id', 'mother_id')
+  pid_cols <- c("pid", "partner_id", "father_id", "mother_id")
   unique_pid <- MyAgent$get_data()[, unlist(.SD), .SDcol = pid_cols] %>%
-    unique() %>% na.omit() %>% length()
+    unique() %>%
+    na.omit() %>%
+    length()
   expect_true(all(unique_pid %in% MyAgent$get_attr(x = MyAgent$get_id_col())))
 })
 
@@ -90,8 +94,10 @@ test_that("Agent$get_attr", {
       list(
         pid = 1:3,
         hid = c(1L, 1L, 1L),
-        age = c(48L, 41L,
-          21L),
+        age = c(
+          48L, 41L,
+          21L
+        ),
         sex = structure(
           c(2L, 1L, 2L),
           .Label = c("FEMALE", "MALE"),
@@ -111,8 +117,10 @@ test_that("Agent$get_attr", {
         partner_id = c(2L, 1L, NA),
         father_id = c(NA, NA, 1L),
         mother_id = c(NA, NA, 2L),
-        children_ids = list(3:5,
-          3:5, integer(0))
+        children_ids = list(
+          3:5,
+          3:5, integer(0)
+        )
       ),
       row.names = c(NA, -3L),
       class = c("data.table", "data.frame")
@@ -154,33 +162,36 @@ test_that("Agent add, get, remove and show data methods", {
   # doesn't contain id_col
   expect_error(MyAgent$add_data(.data = data.table(1), name = "new"), regexp = "Must include the elements \\{pid\\}")
 
-  expect_true(all(MyAgent$get_data(name = "attrs", ids = c(2,1))[['pid']] == c(2,1)))
+  expect_true(all(MyAgent$get_data(name = "attrs", ids = c(2, 1))[["pid"]] == c(2, 1)))
 
   # error: id col doesn't exist
   expect_error(MyAgent$add_data(data.table(a = 1), id_col = NULL, name = "data_missing_id_col"))
   # no double adding
-  MyAgent$add_data(.data = data.table(pid = 1), name = 'data_one')
-  expect_error(MyAgent$add_data(.data = data.table(pid = 1), name = 'data_one'),
-               regexp = "failed: Must be disjunct from")
+  MyAgent$add_data(.data = data.table(pid = 1), name = "data_one")
+  expect_error(MyAgent$add_data(.data = data.table(pid = 1), name = "data_one"),
+    regexp = "failed: Must be disjunct from"
+  )
   # bad names
-  expect_error(MyAgent$add_data(.data = data.table(pid = 1), name = 'bad names'),
-               regexp = "Must have names according to R's variable naming conventions")
+  expect_error(MyAgent$add_data(.data = data.table(pid = 1), name = "bad names"),
+    regexp = "Must have names according to R's variable naming conventions"
+  )
 
-  expect_error(MyAgent$add_data(.data = data.table(pid = 1), name = 'bad names1'),
-               regexp = "Must have names according to R's variable naming conventions")
+  expect_error(MyAgent$add_data(.data = data.table(pid = 1), name = "bad names1"),
+    regexp = "Must have names according to R's variable naming conventions"
+  )
   # good names
-  expect_null(MyAgent$add_data(.data = data.table(pid = 1), name = 'goodnames'))
-  expect_null(MyAgent$add_data(.data = data.table(pid = 1), name = 'good_names'))
+  expect_null(MyAgent$add_data(.data = data.table(pid = 1), name = "goodnames"))
+  expect_null(MyAgent$add_data(.data = data.table(pid = 1), name = "good_names"))
 
   # many-to-one data: many rows belong to each agent --------------
   many2one <- data.table(pid = 1:10) %>%
     .[rep(pid, sample(4, .N, replace = TRUE))] %>%
     .[, trip_id := 1:.N, by = pid]
-  MyAgent$add_data(.data = many2one, name = 'trips')
+  MyAgent$add_data(.data = many2one, name = "trips")
   MyAgent$get_data(name = "trips", ids = c(3, 1:2))
-  expect_is(MyAgent$get_data(name = "trips", ids = c(3, 1:2)), class = 'data.table')
+  expect_is(MyAgent$get_data(name = "trips", ids = c(3, 1:2)), class = "data.table")
   expect_true(nrow(MyAgent$get_data(name = "trips", ids = c(3, 1:2))) != 0)
-  expect_is(MyAgent$get_data(name = "trips"),  class = 'data.table')
+  expect_is(MyAgent$get_data(name = "trips"), class = "data.table")
 
   # remove agents -------------------
   MyAgent$remove(ids = c(1:3))
@@ -196,4 +207,3 @@ test_that("hatch", {
   expect_gt(count_after, count_before)
   expect_error(pop$ind$hatch(9999999), "These ids don't exist in Individual: 9999999")
 })
-

@@ -1,6 +1,6 @@
 test_that("condense_rows()", {
-  x <- c(1,2,3,4,4)
-  y <- c(3,7,4,2,6)
+  x <- c(1, 2, 3, 4, 4)
+  y <- c(3, 7, 4, 2, 6)
   z <- condense_rows(x, y)
   expect_that(nrow(z), equals(length(unique(x))))
   expect_true(all(y %in% z[, unlist(target)]))
@@ -16,13 +16,17 @@ test_that("lookup_and_replace", {
     # house_ids = list(integer(), integer(), integer(), integer(), c(4L, 3L), c(3L, 4L))
   )
 
-  lookup_table <- data.frame(key = c(1:6),
-    value = c(7:12))
+  lookup_table <- data.frame(
+    key = c(1:6),
+    value = c(7:12)
+  )
 
-  res <- lookup_and_replace(data = dt,
+  res <- lookup_and_replace(
+    data = dt,
     lookup_table = lookup_table,
     cols = c("pid", "partner_id", "children_ids"),
-    id_col = "pid")
+    id_col = "pid"
+  )
 
   expected_res <- data.table(
     pid = c(7:12),
@@ -50,10 +54,11 @@ test_that("normalise_derived_vars", {
 
 test_that("sample_choice", {
   expect_setequal(sample_choice(10, 1, replace, replace = T), sample_choice(10, 1))
-  expect_setequal(sample_choice(1, 10, replace = T), rep(1,10))
+  expect_setequal(sample_choice(1, 10, replace = T), rep(1, 10))
   expect_setequal(sample_choice(1, 1, replace = T), 1)
   expect_error(sample_choice(1, 10),
-               regexp = "cannot take a sample larger than the population when 'replace = FALSE'")
+    regexp = "cannot take a sample larger than the population when 'replace = FALSE'"
+  )
 })
 
 test_that("lookup_and_replace2", {
@@ -63,12 +68,16 @@ test_that("lookup_and_replace2", {
     partner_id = c(2L, 1L, NA, NA, 6L, 5L)
   )
 
-  lookup_table <- data.frame(.key = c(1:6),
-                             .value = c(7:12))
+  lookup_table <- data.frame(
+    .key = c(1:6),
+    .value = c(7:12)
+  )
 
-  res <- lookup_and_replace2(x = dt,
-                             cols = c("pid", "partner_id"),
-                             mapping = lookup_table)
+  res <- lookup_and_replace2(
+    x = dt,
+    cols = c("pid", "partner_id"),
+    mapping = lookup_table
+  )
 
   expected_res <- data.table(
     pid = c(7:12),
@@ -87,12 +96,16 @@ test_that("lookup_and_replace2 - as character", {
   ) %>%
     .[, lapply(.SD, as.character)]
 
-  lookup_table <- data.frame(.key = as.character(c(1:6)),
-                             .value = c(7:12))
+  lookup_table <- data.frame(
+    .key = as.character(c(1:6)),
+    .value = c(7:12)
+  )
 
-  res <- lookup_and_replace2(x = dt,
-                             cols = c("pid", "partner_id"),
-                             mapping = lookup_table)
+  res <- lookup_and_replace2(
+    x = dt,
+    cols = c("pid", "partner_id"),
+    mapping = lookup_table
+  )
 
   str(res)
 
@@ -105,39 +118,38 @@ test_that("lookup_and_replace2 - as character", {
 })
 
 test_that("dsample", {
-
   expect_equal(dsample(10, size = 10, replace = T), rep(10, 10))
   expect_equal(dsample(10, size = 10, replace = T, prob = 1), rep(10, 10))
-
 })
 
 test_that("unnest_dt", {
   dt <- data.table::data.table(
     id = 1:3,
-    list_col_a = list(c("a","b","c"), c("a","b","c"), c("a","b","c")))
+    list_col_a = list(c("a", "b", "c"), c("a", "b", "c"), c("a", "b", "c"))
+  )
   res <- unnest_dt(dt, "list_col_a")
   checkmate::expect_data_table(res, any.missing = FALSE)
-  expect_equal(res[["id"]],c(rep(1,3), rep(2,3), rep(3,3)))
+  expect_equal(res[["id"]], c(rep(1, 3), rep(2, 3), rep(3, 3)))
   expect_equal(res[["list_col_a"]], rep(c("a", "b", "c"), 3))
   dt <- data.table::data.table(
     id = 1:3,
-    list_col_a = list(c("a","b","c"), c("a","b","c"), c("a","b","c")),
-    list_col_b = list(c("a","b","c"), c("a","b","c"), c("a","b","c")))
-  expect_error(unnest_dt(dt, "list_col_a"),
-               "This unnest function only works if all list columns are to be unnested")
+    list_col_a = list(c("a", "b", "c"), c("a", "b", "c"), c("a", "b", "c")),
+    list_col_b = list(c("a", "b", "c"), c("a", "b", "c"), c("a", "b", "c"))
+  )
+  expect_error(
+    unnest_dt(dt, "list_col_a"),
+    "This unnest function only works if all list columns are to be unnested"
+  )
 })
 
 
 test_that("which_max_n and which_min_x work", {
-
-  x = 1:4
-  n = 2
+  x <- 1:4
+  n <- 2
 
   expect_equal(which_max_n(x, n), 3:4)
   expect_equal(which_min_n(x, n), 1:2)
 
   expect_error(which_max_n(x, length(x) + 1), "outside bounds")
   expect_error(which_min_n(x, length(x) + 1), "outside bounds")
-
 })
-

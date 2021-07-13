@@ -13,13 +13,12 @@
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
-#'   # create a World object and assign it as 'world' to the global environment.
-#'   create_toy_world()
+#' # create a World object and assign it as 'world' to the global environment.
+#' create_toy_world()
 #'
-#'   # this saves the 'world' object to the outputs folder of the active scenario folder.
-#'   dm_save(world)
+#' # this saves the 'world' object to the outputs folder of the active scenario folder.
+#' dm_save(world)
 #' }
 dm_save <- function(x, dir = getOption("dymium.output_dir")) {
   checkmate::assert(
@@ -89,4 +88,3 @@ extract_data.DataBackendDataFrame <- function(x) {
   )
   return(x_lst)
 }
-

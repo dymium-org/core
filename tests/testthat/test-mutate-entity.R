@@ -33,10 +33,12 @@ test_that("mutate_entity only works if either subset, ids or preprocessing_fn is
 
   # error cases
   expect_error(mutate_entity(world, entity = "Individual", age := age + 1L, ids = 1:3, subset = age > 30),
-               regexp = "Only one or none of the filter parameters")
+    regexp = "Only one or none of the filter parameters"
+  )
   expect_error(mutate_entity(world, entity = "Individual", age := age + 1L, ids = 1:3, preprocessing_fn = 1),
-               regexp = "Only one or none of the filter parameters")
+    regexp = "Only one or none of the filter parameters"
+  )
   expect_error(mutate_entity(world, entity = "Individual", age := age + 1L, ids = 1:3, subset = age > 30, preprocessing_fn = 1),
-               regexp = "Only one or none of the filter parameters")
-
+    regexp = "Only one or none of the filter parameters"
+  )
 })

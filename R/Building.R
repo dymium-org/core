@@ -39,15 +39,11 @@ Building <- R6Class(
   classname = "Building",
   inherit = Asset,
   public = list(
-
     is_vacant = function(ids) {
       !super$is_owned(ids)
     },
-
     vacate = function(ids) {
       super$remove_owner(ids)
     }
   )
 )
-
-

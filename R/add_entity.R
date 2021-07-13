@@ -48,59 +48,63 @@ add_entity <-
            replace = TRUE,
            check_relationship_id_cols = FALSE,
            condition = TRUE) {
-  checkmate::assert_r6(world, classes = "World")
-  checkmate::assert_string(entity)
-  checkmate::assert_data_frame(newdata, col.names = "strict", min.rows = 1)
-  checkmate::assert(
-    checkmate::check_count(target, null.ok = T),
-    check_target(target, null.ok = TRUE)
-  )
-  checkmate::assert_flag(check_relationship_id_cols, na.ok = FALSE, null.ok = FALSE)
-  e <- world$get_entity(entity)
-  main_cols <- omit_derived_varnames(e$database$attrs$data)
-  checkmate::assert_names(x = names(newdata)[!names(newdata) %in% weight_col],
-                          must.include = main_cols)
-  if (!checkmate::test_true(condition)) {
-    lg$info("Added 0 new records to {e$class()}, since `condition` was FALSE.")
-    return(invisible(world))
-  }
-  if (!data.table::is.data.table(newdata)) {
-    newdata <- as.data.table(newdata)
-  }
-
-  # unpack target
-  if (!is.null(target)) {
-    if (is(target, "Target")) {
-      target_val <- target$get()
-    } else {
-      target_val <- target
-    }
-    if (target_val > 0) {
-      if (is.null(weight_col)) {
-        weights <- NULL
-      } else {
-        checkmate::test_string(weight_col, na.ok = FALSE, null.ok = FALSE)
-        checkmate::test_names(names(newdata), must.include = weight_col)
-        weights <- newdata[[weight_col]]
-      }
-      selected_ids <- sample_choice(x = newdata[[e$id_col[[1]]]],
-                                    size = target_val,
-                                    replace = replace,
-                                    prob = weights)
-      data.table::setkeyv(newdata, e$id_col[[1]])
-      newdata <-
-        newdata[.(selected_ids)] %>%
-        .[, .SD, .SDcols = names(.)[!names(.) %in% weight_col]] %>%
-        .[, c(e$id_col[[1]]) := 1:.N]
-    } else {
-      lg$info("Added 0 new records to {e$class()}, since `target` was 0.")
+    checkmate::assert_r6(world, classes = "World")
+    checkmate::assert_string(entity)
+    checkmate::assert_data_frame(newdata, col.names = "strict", min.rows = 1)
+    checkmate::assert(
+      checkmate::check_count(target, null.ok = T),
+      check_target(target, null.ok = TRUE)
+    )
+    checkmate::assert_flag(check_relationship_id_cols, na.ok = FALSE, null.ok = FALSE)
+    e <- world$get_entity(entity)
+    main_cols <- omit_derived_varnames(e$database$attrs$data)
+    checkmate::assert_names(
+      x = names(newdata)[!names(newdata) %in% weight_col],
+      must.include = main_cols
+    )
+    if (!checkmate::test_true(condition)) {
+      lg$info("Added 0 new records to {e$class()}, since `condition` was FALSE.")
       return(invisible(world))
     }
+    if (!data.table::is.data.table(newdata)) {
+      newdata <- as.data.table(newdata)
+    }
+
+    # unpack target
+    if (!is.null(target)) {
+      if (is(target, "Target")) {
+        target_val <- target$get()
+      } else {
+        target_val <- target
+      }
+      if (target_val > 0) {
+        if (is.null(weight_col)) {
+          weights <- NULL
+        } else {
+          checkmate::test_string(weight_col, na.ok = FALSE, null.ok = FALSE)
+          checkmate::test_names(names(newdata), must.include = weight_col)
+          weights <- newdata[[weight_col]]
+        }
+        selected_ids <- sample_choice(
+          x = newdata[[e$id_col[[1]]]],
+          size = target_val,
+          replace = replace,
+          prob = weights
+        )
+        data.table::setkeyv(newdata, e$id_col[[1]])
+        newdata <-
+          newdata[.(selected_ids)] %>%
+          .[, .SD, .SDcols = names(.)[!names(.) %in% weight_col]] %>%
+          .[, c(e$id_col[[1]]) := 1:.N]
+      } else {
+        lg$info("Added 0 new records to {e$class()}, since `target` was 0.")
+        return(invisible(world))
+      }
+    }
+    lg$info("Added {nrow(newdata)} new records to {e$class()}.")
+    e$add(.data = newdata, check_existing = check_relationship_id_cols)
+    invisible(world)
   }
-  lg$info("Added {nrow(newdata)} new records to {e$class()}.")
-  e$add(.data = newdata, check_existing = check_relationship_id_cols)
-  invisible(world)
-}
 
 
 #' Remove entity
@@ -118,13 +122,13 @@ add_entity <-
 #' @return the input [World] object invincibly
 #' @export
 remove_entity <- function(world, entity, subset) {
-  checkmate::assert_r6(world, classes =  "World")
+  checkmate::assert_r6(world, classes = "World")
 
   e <- world$get(entity)
   e_data <- e$get_data()
 
-  subset_expr = substitute(subset)
-  row_flags = eval(subset_expr, e_data, parent.frame())
+  subset_expr <- substitute(subset)
+  row_flags <- eval(subset_expr, e_data, parent.frame())
 
   ids <- e_data[row_flags, ][[e$primary_id]]
 

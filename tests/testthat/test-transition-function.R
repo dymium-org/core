@@ -4,7 +4,7 @@ test_that("transition function works", {
   # create a preprocessing filter function
   filter_male <-
     . %>%
-    .[sex == "male",]
+    .[sex == "male", ]
 
   transition(
     world,
@@ -37,9 +37,10 @@ test_that("transition function works", {
   )
 
   transition_result <- get_transition(world,
-                                      entity = "Individual",
-                                      model = mnl,
-                                      preprocessing_fn = filter_male)
+    entity = "Individual",
+    model = mnl,
+    preprocessing_fn = filter_male
+  )
   checkmate::expect_data_table(
     x = transition_result,
     ncols = 2,
@@ -48,18 +49,19 @@ test_that("transition function works", {
   )
 
   checkmate::expect_names(names(transition_result),
-                          permutation.of = c("id", "response"))
+    permutation.of = c("id", "response")
+  )
   checkmate::expect_integerish(
-    transition_result[['id']],
+    transition_result[["id"]],
     lower = 1,
     any.missing = FALSE,
     unique = TRUE,
     null.ok = FALSE
   )
-  checkmate::expect_character(transition_result[['response']],
-                              any.missing = FALSE,
-                              null.ok = FALSE)
-
+  checkmate::expect_character(transition_result[["response"]],
+    any.missing = FALSE,
+    null.ok = FALSE
+  )
 })
 
 
@@ -70,14 +72,14 @@ test_that("transition works with mlr models", {
     res <-
       get_transition(world, entity = "Individual", model = my_model)
     checkmate::expect_character(res[["response"]],
-                                any.missing = FALSE,
-                                null.ok = FALSE)
+      any.missing = FALSE,
+      null.ok = FALSE
+    )
   }
 })
 
 
 test_that("transition's values param works", {
-
   birth_model <- list(yes = 0.1, no = 0.9)
   death_model <- list(yes = 0.5, no = 0.5)
 
@@ -89,13 +91,17 @@ test_that("transition's values param works", {
   world$add(x = Individual$new(.data = ind_data, id_col = "pid"))
 
   world %>%
-    transition(entity = "Individual",
-               model = birth_model,
-               attr = "give_birth") %>%
-    transition(entity = "Individual",
-               model = death_model,
-               attr = "age",
-               values = c(yes = -1L))
+    transition(
+      entity = "Individual",
+      model = birth_model,
+      attr = "give_birth"
+    ) %>%
+    transition(
+      entity = "Individual",
+      model = death_model,
+      attr = "age",
+      values = c(yes = -1L)
+    )
 
   checkmate::expect_data_table(
     x = world$entities$Individual$get_data(),
@@ -103,18 +109,23 @@ test_that("transition's values param works", {
     col.names = "strict"
   )
   checkmate::expect_names(names(world$entities$Individual$get_data()),
-                          permutation.of = names(ind_data))
+    permutation.of = names(ind_data)
+  )
   checkmate::expect_integerish(world$entities$Individual$get_data()[, age],
-                               lower = -1,
-                               any.missing = FALSE)
+    lower = -1,
+    any.missing = FALSE
+  )
   checkmate::expect_character(world$entities$Individual$get_data()[, give_birth],
-                              pattern = "yes|no")
+    pattern = "yes|no"
+  )
 })
 
 test_that("transition's works with Model object", {
   create_toy_world()
-  my_model <- Model$new(x = create_mlr_multinomial_model(),
-                        preprocessing_fn = . %>% .[sex == "male"])
+  my_model <- Model$new(
+    x = create_mlr_multinomial_model(),
+    preprocessing_fn = . %>% .[sex == "male"]
+  )
   res <- get_transition(world, entity = "Individual", model = my_model)
   expect_true(all(world$entities$Individual$get_attr("sex", ids = res[["id"]]) == "male"))
   checkmate::expect_character(res[["response"]], any.missing = FALSE, null.ok = FALSE)
@@ -126,8 +137,10 @@ test_that("remove dot prefix of derived variables", {
     .[, .married_male := fifelse(marital_status == "married" & sex == "male", T, F)]
   fit_data <- normalise_derived_vars(world$entities$Individual$get_data())
   logit_model <- glm(factor(sex) ~ married_male, data = fit_data, family = "binomial")
-  my_model <- Model$new(x = logit_model,
-                        preprocessing_fn = . %>% .[sex == "male"])
+  my_model <- Model$new(
+    x = logit_model,
+    preprocessing_fn = . %>% .[sex == "male"]
+  )
   res <- get_transition(world, entity = "Individual", model = my_model)
   expect_true(all(world$entities$Individual$get_attr("sex", ids = res[["id"]]) == "male"))
   checkmate::expect_character(res[["response"]], any.missing = FALSE, null.ok = FALSE)

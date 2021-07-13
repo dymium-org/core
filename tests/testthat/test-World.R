@@ -2,10 +2,12 @@ test_that("add", {
   w <- World$new()
 
   # add container
-  w$add(Population$new(ind_data = toy_individuals,
-                       hh_data = toy_households,
-                       pid_col = c("pid"),
-                       hid_col = "hid"))
+  w$add(Population$new(
+    ind_data = toy_individuals,
+    hh_data = toy_households,
+    pid_col = c("pid"),
+    hid_col = "hid"
+  ))
 
   # change to capture the warning messages
   lg$set_threshold("warn")
@@ -23,10 +25,14 @@ test_that("add", {
   w$add(Agent$new(toy_individuals, "pid"))
   w$add(Firm$new(toy_individuals, "pid"))
   expect_length(w$entities, 4)
-  expect_output(w$add(Individual$new(toy_individuals, "pid")),
-                 "Replacing")
-  expect_output(w$add(Household$new(toy_households, "hid")),
-                 "Replacing")
+  expect_output(
+    w$add(Individual$new(toy_individuals, "pid")),
+    "Replacing"
+  )
+  expect_output(
+    w$add(Household$new(toy_households, "hid")),
+    "Replacing"
+  )
 
   lg$set_threshold("fatal")
 
@@ -40,15 +46,16 @@ test_that("add", {
 
   # add world ?
   expect_error(w$add(w), regexp = "Adding a World object is not permitted.")
-
 })
 
 test_that("get", {
   w <- World$new()
-  w$add(Population$new(ind_data = toy_individuals,
-                       hh_data = toy_households,
-                       pid_col = c("pid"),
-                       hid_col = "hid"))
+  w$add(Population$new(
+    ind_data = toy_individuals,
+    hh_data = toy_households,
+    pid_col = c("pid"),
+    hid_col = "hid"
+  ))
   checkmate::expect_r6(w$get("Individual"), classes = "Individual")
 })
 
@@ -82,10 +89,12 @@ test_that("get_model", {
 
 test_that("get_container", {
   w <- World$new()
-  w$add(Population$new(ind_data = toy_individuals,
-                       hh_data = toy_households,
-                       pid_col = c("pid"),
-                       hid_col = "hid"))
+  w$add(Population$new(
+    ind_data = toy_individuals,
+    hh_data = toy_households,
+    pid_col = c("pid"),
+    hid_col = "hid"
+  ))
   checkmate::expect_class(w$get_container("Population"), classes = "Population", null.ok = FALSE)
   expect_error(w$get_container("missingContainer"), "Must be element of set")
 })
@@ -93,24 +102,32 @@ test_that("get_container", {
 
 test_that("remove", {
   w <- World$new()
-  w$add(Population$new(ind_data = toy_individuals,
-                       hh_data = toy_households,
-                       pid_col = c("pid"),
-                       hid_col = "hid"))
+  w$add(Population$new(
+    ind_data = toy_individuals,
+    hh_data = toy_households,
+    pid_col = c("pid"),
+    hid_col = "hid"
+  ))
   w$remove("Individual")
-  expect_error(w$get("Individual"),
-               "Must be element of set \\{'Household','Population'\\}")
-  expect_error(w$get("Population")$get("Individual"),
-               "Must be element of set \\{'Household'\\}")
+  expect_error(
+    w$get("Individual"),
+    "Must be element of set \\{'Household','Population'\\}"
+  )
+  expect_error(
+    w$get("Population")$get("Individual"),
+    "Must be element of set \\{'Household'\\}"
+  )
   w$add(list(hi = 1), "model")
   w$remove("model")
   checkmate::expect_list(w$models, len = 0)
 
   w <- World$new()
-  w$add(Population$new(ind_data = toy_individuals,
-                       hh_data = toy_households,
-                       pid_col = c("pid"),
-                       hid_col = "hid"))
+  w$add(Population$new(
+    ind_data = toy_individuals,
+    hh_data = toy_households,
+    pid_col = c("pid"),
+    hid_col = "hid"
+  ))
   .first_object_name <- w$names()[1]
   w$remove(1)
   expect_error(w$get(.first_object_name), regexp = "Must be element of set")

@@ -23,7 +23,7 @@
 #'
 #' @examples
 #' toy_individuals
-'toy_individuals'
+"toy_individuals"
 
 #' @title Toy household microdata
 #'
@@ -42,7 +42,7 @@
 #' }
 #' @examples
 #' toy_households
-'toy_households'
+"toy_households"
 
 #' @title Toy dwelling microdata
 #'
@@ -63,7 +63,7 @@
 #' }
 #' @examples
 #' toy_dwellings
-'toy_dwellings'
+"toy_dwellings"
 
 #' @title Toy zone data
 #'
@@ -93,7 +93,7 @@
 #' }
 #' @examples
 #' toy_zones
-'toy_zones'
+"toy_zones"
 
 #' @title Toy transport network data
 #'
@@ -121,4 +121,4 @@
 #' @seealso toy_zones
 #' @examples
 #' toy_transport_network
-'toy_transport_network'
+"toy_transport_network"

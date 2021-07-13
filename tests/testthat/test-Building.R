@@ -1,4 +1,4 @@
-.generate_building_data <- function(n_rows){
+.generate_building_data <- function(n_rows) {
   data.table(
     bid = 1:n_rows,
     hid = sample(c(1:8, NA, NA), n_rows),
@@ -19,13 +19,13 @@ test_that("initialising a building object", {
   data <- .generate_building_data(n_rows = n_rows)
   # alter data type to invoke error
   data[, zid := as.character(zid)]
-  id_col = "hid"
+  id_col <- "hid"
   expect_error(Bld$initialise_data(data, id_col))
 })
 
 test_that("is_occupied and is_vacant", {
   n_rows <- 10L
-  id_col = "bid"
+  id_col <- "bid"
 
   building_data <- .generate_building_data(n_rows)
   owner_data <- building_data[!is.na(hid), .(hid, bid)]

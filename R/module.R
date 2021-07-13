@@ -23,15 +23,14 @@ dymiumModulesRepo <- "dymium-org/dymiumModules"
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
-#'   # download an test module.
-#'   download_modules('test', version = '0.0.1')
+#' # download an test module.
+#' download_modules("test", version = "0.0.1")
 #' }
 #'
 download_module <- function(name, repo = dymiumModulesRepo, version, force = FALSE, remove_download = FALSE, .basedir = here::here()) {
   modules_path <- fs::path(.basedir, "modules")
-  usethis::use_directory('modules')
+  usethis::use_directory("modules")
   all_module_files <- get_all_module_files()
   all_versions <- extract_module_versions(name = name, filenames = all_module_files)
   if (missing(version)) {
@@ -73,9 +72,8 @@ download_module <- function(name, repo = dymiumModulesRepo, version, force = FAL
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
-#'   check_module('test')
+#' check_module("test")
 #' }
 check_module <- function(name, repo = dymiumModulesRepo) {
   checkmate::assert_character(name, any.missing = FALSE, len = 1, null.ok = FALSE)
@@ -94,9 +92,8 @@ check_module <- function(name, repo = dymiumModulesRepo) {
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
-#'   check_module_version('test', version = '0.0.1')
+#' check_module_version("test", version = "0.0.1")
 #' }
 check_module_version <- function(name, repo = dymiumModulesRepo, version) {
   all_versions <- get_module_versions(name = name, repo = repo)
@@ -134,9 +131,8 @@ extract_module_versions <- function(name, filenames) {
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
-#'   get_module_versions("demography")
+#' get_module_versions("demography")
 #' }
 get_module_versions <- function(name, repo = dymiumModulesRepo) {
   module_files <- get_module_files(name = name, repo = repo)
@@ -149,7 +145,7 @@ get_module_versions <- function(name, repo = dymiumModulesRepo) {
 
 .filter_zip_versions <- function(x, name) {
   x %>%
-    gsub(pattern = paste0("modules/", name, "/"), replacement =  "", x = .) %>%
+    gsub(pattern = paste0("modules/", name, "/"), replacement = "", x = .) %>%
     grep(paste0("^", name, ".+.zip"), x = ., value = TRUE) %>%
     gsub(pattern = paste0(name, "_"), replacement = "", x = .) %>%
     gsub(pattern = "\\.zip", replacement = "", x = .) %>%
@@ -164,15 +160,14 @@ get_module_versions <- function(name, repo = dymiumModulesRepo) {
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
-#'   get_modules()
+#' get_modules()
 #' }
 get_modules <- function(repo = dymiumModulesRepo) {
   all_files <- get_all_module_files(repo = repo)
   available_modules <- grep(paste0("^modules/"), all_files, value = TRUE) %>%
     # replace everything after the second back slash with -1
-    gsub("^([^/]*/[^/]*/).*$","-1", .) %>%
+    gsub("^([^/]*/[^/]*/).*$", "-1", .) %>%
     gsub("modules/", "", .) %>%
     grep(pattern = "-1", x = ., value = TRUE, invert = TRUE)
   return(available_modules)
@@ -187,9 +182,8 @@ get_modules <- function(repo = dymiumModulesRepo) {
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
-#'   get_module_files("demography")
+#' get_module_files("demography")
 #' }
 #'
 get_module_files <- function(name, repo = dymiumModulesRepo) {
@@ -210,9 +204,8 @@ get_module_files <- function(name, repo = dymiumModulesRepo) {
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
-#'   get_all_module_files("dymium-org/dymiumModules")
+#' get_all_module_files("dymium-org/dymiumModules")
 #' }
 #'
 get_all_module_files <- function(repo = dymiumModulesRepo) {

@@ -1,23 +1,25 @@
 test_that("multiplication works", {
-
   MarriageMarketOptimal <- R6::R6Class(
     classname = "MarriageMarketOptimal",
     inherit = MatchingMarketOptimal,
     public = list(
       matching_score_A = function(matching_problem, idx_A, idx_B) {
-        outer(X = matching_problem$agentset_B[["age"]][idx_B], # reviewers, rows
-              Y = matching_problem$agentset_A[["age"]][idx_A], # proposers, columns
-              function(x, y) {
-                1 / (1 + abs(x - y))
-              })
+        outer(
+          X = matching_problem$agentset_B[["age"]][idx_B], # reviewers, rows
+          Y = matching_problem$agentset_A[["age"]][idx_A], # proposers, columns
+          function(x, y) {
+            1 / (1 + abs(x - y))
+          }
+        )
       },
-
       matching_score_B = function(matching_problem, idx_B, idx_A) {
-        outer(X = matching_problem$agentset_A[["age"]][idx_A], # reviewers, rows
-              Y = matching_problem$agentset_B[["age"]][idx_B], # proposers, columns
-              function(x, y) {
-                1 / (1 + abs(x - y))
-              })
+        outer(
+          X = matching_problem$agentset_A[["age"]][idx_A], # reviewers, rows
+          Y = matching_problem$agentset_B[["age"]][idx_B], # proposers, columns
+          function(x, y) {
+            1 / (1 + abs(x - y))
+          }
+        )
       }
     )
   )
@@ -26,7 +28,7 @@ test_that("multiplication works", {
   Ind <- pop$get("Individual")
   Hh <- pop$get("Household")
 
-  context('matching market optimal: one-to-one')
+  context("matching market optimal: one-to-one")
   MarriageMarket <-
     MarriageMarketOptimal$new(
       agentset_A = Ind$get_data()[sex == IND$SEX$MALE],
@@ -39,14 +41,16 @@ test_that("multiplication works", {
   optimal_matches_one_to_one <-
     MarriageMarket$simulate(one_sided = FALSE)
   checkmate::expect_data_table(optimal_matches_one_to_one,
-                               null.ok = FALSE,
-                               ncols = 2,
-                               min.rows = ifelse(nrow(Ind$get_data()[sex == IND$SEX$MALE]) <= nrow(Ind$get_data()[sex == IND$SEX$FEMALE]),
-                                                 nrow(Ind$get_data()[sex == IND$SEX$FEMALE]),
-                                                 nrow(Ind$get_data()[sex == IND$SEX$MALE])))
+    null.ok = FALSE,
+    ncols = 2,
+    min.rows = ifelse(nrow(Ind$get_data()[sex == IND$SEX$MALE]) <= nrow(Ind$get_data()[sex == IND$SEX$FEMALE]),
+      nrow(Ind$get_data()[sex == IND$SEX$FEMALE]),
+      nrow(Ind$get_data()[sex == IND$SEX$MALE])
+    )
+  )
 
-  context('matching market optimal: many-to-one')
-  n_B = 20
+  context("matching market optimal: many-to-one")
+  n_B <- 20
   MarriageMarket <-
     MarriageMarketOptimal$new(
       agentset_A = Ind$get_data()[sex == IND$SEX$MALE],

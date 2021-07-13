@@ -70,7 +70,8 @@
 #' simple_prob_model <- Model$new(x = list(yes = 0.95, no = 0.05))
 #'
 #' simple_glm_model <- Model$new(x = stats::glm(factor(sex) ~ age,
-#'                               data = toy_individuals, family = "binomial"))
+#'   data = toy_individuals, family = "binomial"
+#' ))
 #'
 #' # return the original model object
 #' simple_prob_model$model
@@ -89,7 +90,6 @@
 #' # through the named list of stored Model objects inside [World].
 #' world$get_model("simple_prob_model")
 #' world$get_model("simple_glm_model")
-#'
 #' @export
 Model <-
   R6::R6Class(

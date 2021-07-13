@@ -60,4 +60,3 @@ mutate_entity <- function(world, entity, ..., ids = NULL, subset, preprocessing_
   }
   invisible(world)
 }
-

@@ -1,5 +1,4 @@
 .checkNames <- function(x, allow_numbers = FALSE, allow_underscores = FALSE) {
-
   stopifnot(!missing(x))
 
   .pattern <- fcase(
@@ -14,7 +13,7 @@
   }
 
   # error message
-  msg = fcase(
+  msg <- fcase(
     isTRUE(allow_numbers) &
       isTRUE(allow_underscores), "Name should only contain letters, numbers and underscores.",
     isTRUE(allow_numbers) &
@@ -27,4 +26,3 @@
 
   msg
 }
-

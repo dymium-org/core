@@ -63,27 +63,27 @@ MatchingMarketStochastic <- R6::R6Class(
 
       parallel_wrapper <- function(...) {
         if (parallel) {
-          stopifnot(requireNamespace('furrr'))
+          stopifnot(requireNamespace("furrr"))
           furrr::future_map_dfr(..., .options = furrr::future_options(globals = "self"))
         } else {
           purrr::map_dfr(...)
         }
       }
 
-      parallel_wrapper(.x = markets,
-                       .f = ~ {
-                         private$.stochastic_matching(
-                           matching_problem = .x,
-                           n_choices = n_choices,
-                           method = method
-                         )
-                       })
+      parallel_wrapper(
+        .x = markets,
+        .f = ~ {
+          private$.stochastic_matching(
+            matching_problem = .x,
+            n_choices = n_choices,
+            method = method
+          )
+        }
+      )
     }
   ),
   private = list(
-
     .check_matching_score_fn = function() {
-
       scores <-
         self$matching_score_A(
           matching_problem = self$matching_problem,
@@ -98,9 +98,7 @@ MatchingMarketStochastic <- R6::R6Class(
         null.ok = FALSE,
         len = 2
       )
-
     },
-
     .stochastic_matching =
       function(matching_problem,
                n_choices = 10,
@@ -148,9 +146,11 @@ MatchingMarketStochastic <- R6::R6Class(
         # SELECT PICKING STRATEGY
         if (method == "pweighted") {
           picking_strategy <- function(choices, weights) {
-            sample_choice(x = choices,
-                          size = 1,
-                          prob = weights)
+            sample_choice(
+              x = choices,
+              size = 1,
+              prob = weights
+            )
           }
         }
         if (method == "ranking") {
@@ -172,18 +172,23 @@ MatchingMarketStochastic <- R6::R6Class(
             n_choices <- n_available_candidates
           }
           idx_of_potential_partner_idx <-
-            sample_choice(x = available_candidates,
-                          size = n_choices,
-                          replace = FALSE)
+            sample_choice(
+              x = available_candidates,
+              size = n_choices,
+              replace = FALSE
+            )
           # A calculate matching scores towards chosen candidates from B pool ---
           scores <-
-            self$matching_score_A(matching_problem = matching_problem,
-                                  idx_A = chooser,
-                                  idx_B = idx_of_potential_partner_idx)
+            self$matching_score_A(
+              matching_problem = matching_problem,
+              idx_A = chooser,
+              idx_B = idx_of_potential_partner_idx
+            )
           # weighted random draw ---
-          matched_candidate_pool[i] <- partner_idx <-
-            picking_strategy(choices = idx_of_potential_partner_idx,
-                             weights = scores)
+          matched_candidate_pool[i] <- partner_idx <- picking_strategy(
+            choices = idx_of_potential_partner_idx,
+            weights = scores
+          )
           # remove selected candidate from the pool ---
           candidate_pool[which(candidate_pool == partner_idx)] <-
             NA
@@ -200,9 +205,12 @@ MatchingMarketStochastic <- R6::R6Class(
         unmatched_candidates <-
           candidate_pool[!is.na(candidate_pool)]
         matches <- data.table(
-          id_A = c(matching_problem$agentset_A[[self$matching_problem$id_col_A]][chooser_pool],
-                   rep(NA, length(unmatched_candidates))),
-          id_B = matching_problem$agentset_B[[self$matching_problem$id_col_B]][c(matched_candidate_pool, unmatched_candidates)])
+          id_A = c(
+            matching_problem$agentset_A[[self$matching_problem$id_col_A]][chooser_pool],
+            rep(NA, length(unmatched_candidates))
+          ),
+          id_B = matching_problem$agentset_B[[self$matching_problem$id_col_B]][c(matched_candidate_pool, unmatched_candidates)]
+        )
       }
   )
 )

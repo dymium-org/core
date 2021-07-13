@@ -16,11 +16,11 @@ test_that("get_result", {
   model <- list(yes = 1)
   expect_error(Trans$new(1, NULL), "Must inherit from class 'Agent', but has class 'numeric'")
   Trans <- checkmate::expect_class(Trans$new(Ind, model), "Trans")
-  expect_error(Trans$get_result(ids = c(1:10, 10, 9999)), regexp = 'Must be a subset of')
-  checkmate::expect_data_table(Trans$get_result(ids = 1:10), any.missing = FALSE, nrows = 10, ncols = 2, col.names = 'strict', null.ok = FALSE)
-  checkmate::expect_data_table(Trans$get_result(ids = c(1:10, 10)), any.missing = FALSE, nrows = 11, ncols = 2, col.names = 'strict', null.ok = FALSE)
-  checkmate::expect_subset(Trans$get_result(ids = 1:10)[['id']], choices = c(1:10))
-  checkmate::expect_set_equal(x = Trans$get_result(ids = c(1:8,10,9))[['id']], y = c(1:8,10,9), ordered = T)
+  expect_error(Trans$get_result(ids = c(1:10, 10, 9999)), regexp = "Must be a subset of")
+  checkmate::expect_data_table(Trans$get_result(ids = 1:10), any.missing = FALSE, nrows = 10, ncols = 2, col.names = "strict", null.ok = FALSE)
+  checkmate::expect_data_table(Trans$get_result(ids = c(1:10, 10)), any.missing = FALSE, nrows = 11, ncols = 2, col.names = "strict", null.ok = FALSE)
+  checkmate::expect_subset(Trans$get_result(ids = 1:10)[["id"]], choices = c(1:10))
+  checkmate::expect_set_equal(x = Trans$get_result(ids = c(1:8, 10, 9))[["id"]], y = c(1:8, 10, 9), ordered = T)
   checkmate::expect_class(Trans, "Trans")
   checkmate::expect_class(Trans$get_result(), "data.table")
 })
@@ -136,7 +136,6 @@ test_that("transition 0 agents", {
   checkmate::expect_names(names(TestMutateFirstTranEmptiedTargetedAgents$get_result()), identical.to = c("id", "response"))
   checkmate::expect_data_table(x = TestMutateFirstTranEmptiedTargetedAgents$get_result(), ncols = 2, nrows = 0)
   expect_null(TestMutateFirstTranEmptiedTargetedAgents$get_data())
-
 })
 
 test_that("Transition works with a Model with a preprocessing function", {
@@ -145,7 +144,7 @@ test_that("Transition works with a Model with a preprocessing function", {
   m$preprocessing_fn <- function(.data) {
     .data %>%
       .[age %between% c(18, 40) &
-          sex == "female"]
+        sex == "female"]
   }
 
   create_toy_world()
@@ -164,7 +163,7 @@ test_that("Transition works on a Model with a preprocessing function that doesn'
   m$preprocessing_fn <- function(.data) {
     .data %>%
       .[age %between% c(999, 1000) &
-          sex == "female"]
+        sex == "female"]
   }
 
   res <-
@@ -180,7 +179,6 @@ test_that("Transition works on a Model with a preprocessing function that doesn'
   checkmate::expect_data_table(res, nrows = 0)
   checkmate::expect_names(names(res), identical.to = c("id", "response"))
   checkmate::expect_data_table(ind_data, nrows = 0)
-
 })
 
 test_that("Transition is fair", {

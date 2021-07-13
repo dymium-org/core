@@ -111,9 +111,10 @@
 #'
 #' # create a multinomial logit model using `caret`
 #' mnl <- caret::train(marital_status ~ age + sex,
-#'                     data = toy_individuals,
-#'                     method = "multinom",
-#'                     trace = FALSE)
+#'   data = toy_individuals,
+#'   method = "multinom",
+#'   trace = FALSE
+#' )
 #' # this model denotes that there is a 10% chance that an individual will decease
 #' death_model <- list(yes = 0.1, no = 0.9)
 #'
@@ -122,28 +123,34 @@
 #'
 #' # simulate marital status transition and update the attribute.
 #' transition(world,
-#'            entity = "Individual",
-#'            model = mnl,
-#'            preprocessing_fn = filter_male,
-#'            attr = "marital_status")
+#'   entity = "Individual",
+#'   model = mnl,
+#'   preprocessing_fn = filter_male,
+#'   attr = "marital_status"
+#' )
 #'
 #' # get a transition result
 #' get_transition(world,
-#'                entity = "Individual",
-#'                model = mnl,
-#'                preprocessing_fn = filter_male)
+#'   entity = "Individual",
+#'   model = mnl,
+#'   preprocessing_fn = filter_male
+#' )
 #'
 #' # lets make a pipeline of transitions
 #' world %>%
-#'   transition(entity = "Individual",
-#'              model = mnl,
-#'              preprocessing_fn = . %>% filter_male %>% filter_not_dead,
-#'              attr = "marital_status") %>%
-#'   transition(entity = "Individual",
-#'              model = death_model,
-#'              preprocessing_fn = filter_not_dead,
-#'              attr = "age",
-#'              values = c(yes = -1L))
+#'   transition(
+#'     entity = "Individual",
+#'     model = mnl,
+#'     preprocessing_fn = . %>% filter_male() %>% filter_not_dead(),
+#'     attr = "marital_status"
+#'   ) %>%
+#'   transition(
+#'     entity = "Individual",
+#'     model = death_model,
+#'     preprocessing_fn = filter_not_dead,
+#'     attr = "age",
+#'     values = c(yes = -1L)
+#'   )
 #' # print the attributes of the individual agents
 #' world$entities$Individual$get_data()
 transition <-
@@ -156,77 +163,85 @@ transition <-
            attr = NULL,
            values = NULL,
            verbose = FALSE) {
+    result <- get_transition(world, entity, model, target, targeted_ids, preprocessing_fn)
+    e <- world$get(entity)
+    if (verbose) {
+      if (nrow(result) == 0) {
+        lg$warn("No {entity} records were selected for transition.")
+      } else {
+        if (is.numeric(result[["response"]])) {
+          rs <- summary(result[["response"]])
+          .value <- paste(names(rs),
+            round(rs, 2),
+            collapse = " | "
+          )
+        }
 
-  result <- get_transition(world, entity, model, target, targeted_ids, preprocessing_fn)
-  e <- world$get(entity)
-  if (verbose) {
-    if (nrow(result) == 0) {
-      lg$warn("No {entity} records were selected for transition.")
-    } else {
+        if (is.character(result[["response"]])) {
+          rs <- summary(as.factor(result[["response"]]))
+          .value <- paste0(names(rs), ": ",
+            round(rs, 2),
+            collapse = " | "
+          )
+        }
 
-      if (is.numeric(result[['response']])) {
-        rs <- summary(result[['response']])
-        .value <- paste(names(rs),
-                        round(rs, 2),
-                        collapse = " | ")
-      }
-
-      if (is.character(result[['response']])) {
-        rs <- summary(as.factor(result[['response']]))
-        .value <- paste0(names(rs), ": ",
-                         round(rs, 2),
-                         collapse = " | ")
-      }
-
-      msg <- glue::glue(
-        "In this transition, there are {result[, uniqueN(id)]} {class(e)[[1]]} \\
+        msg <- glue::glue(
+          "In this transition, there are {result[, uniqueN(id)]} {class(e)[[1]]} \\
         agents with {result[, uniqueN(response)]} unique responses \\
-        of type {result[, typeof(response)]} {{{.value}}}")
+        of type {result[, typeof(response)]} {{{.value}}}"
+        )
 
-      message(msg)
-    }
-  }
-  # update attr using the result
-  if (!is.null(attr) & nrow(result) != 0) {
-    checkmate::assert_names(x = attr, subset.of = e$database$attrs$colnames)
-    if (!is.null(values)) {
-      checkmate::assert_atomic(x = values,
-                               names =  "strict",
-                               any.missing = FALSE,
-                               max.len = uniqueN(result[['response']]))
-      relabelled_responses <- values[match(result[['response']], names(values))]
-      valid_responses <- relabelled_responses[!is.na(relabelled_responses)]
-      idx <- e$get_idx(ids = result[!is.na(relabelled_responses), id])
-      if (class(valid_responses) != e$get_data(copy = FALSE)[, class(get(attr))]) {
-        stop("`values` must have the same type as the variable in `attr`. ",
-             class(valid_responses), "!=", e$get_data(copy = FALSE)[, class(get(attr))])
+        message(msg)
       }
-      data.table::set(x = e$get_data(copy = FALSE),
-                      i = idx,
-                      j = attr,
-                      value = valid_responses)
-    } else {
-      idx <- e$get_idx(result[['id']])
-      data.table::set(e$get_data(copy = FALSE),
-                      i = idx,
-                      j = attr,
-                      value = result[['response']])
     }
+    # update attr using the result
+    if (!is.null(attr) & nrow(result) != 0) {
+      checkmate::assert_names(x = attr, subset.of = e$database$attrs$colnames)
+      if (!is.null(values)) {
+        checkmate::assert_atomic(
+          x = values,
+          names = "strict",
+          any.missing = FALSE,
+          max.len = uniqueN(result[["response"]])
+        )
+        relabelled_responses <- values[match(result[["response"]], names(values))]
+        valid_responses <- relabelled_responses[!is.na(relabelled_responses)]
+        idx <- e$get_idx(ids = result[!is.na(relabelled_responses), id])
+        if (class(valid_responses) != e$get_data(copy = FALSE)[, class(get(attr))]) {
+          stop(
+            "`values` must have the same type as the variable in `attr`. ",
+            class(valid_responses), "!=", e$get_data(copy = FALSE)[, class(get(attr))]
+          )
+        }
+        data.table::set(
+          x = e$get_data(copy = FALSE),
+          i = idx,
+          j = attr,
+          value = valid_responses
+        )
+      } else {
+        idx <- e$get_idx(result[["id"]])
+        data.table::set(e$get_data(copy = FALSE),
+          i = idx,
+          j = attr,
+          value = result[["response"]]
+        )
+      }
+    }
+    # return world to make this function pipable.
+    invisible(world)
   }
-  # return world to make this function pipable.
-  invisible(world)
-}
 
 #' @rdname transition
 #' @export
 get_transition <- function(world, entity, model, target = NULL, targeted_ids = NULL, preprocessing_fn = NULL) {
-
-
   checkmate::assert_r6(world, classes = "World")
 
-  if(!checkmate::test_string(entity, na.ok = FALSE)) {
-    stop("`entity` has to be a string indicating the name of an entity object ",
-         "to undergo the transition.")
+  if (!checkmate::test_string(entity, na.ok = FALSE)) {
+    stop(
+      "`entity` has to be a string indicating the name of an entity object ",
+      "to undergo the transition."
+    )
   }
 
   if (!checkmate::test_choice(entity, names(world$entities))) {
@@ -258,10 +273,14 @@ get_transition <- function(world, entity, model, target = NULL, targeted_ids = N
     return(data.table(id = integer(), response = character()))
   }
   result <-
-    simulate_choice(model = model,
-                    newdata = e_data,
-                    target = target) %>%
-    data.table::data.table(id = e_data[[e$get_id_col()]],
-                           response = .)
+    simulate_choice(
+      model = model,
+      newdata = e_data,
+      target = target
+    ) %>%
+    data.table::data.table(
+      id = e_data[[e$get_id_col()]],
+      response = .
+    )
   result
 }

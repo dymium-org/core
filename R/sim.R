@@ -49,36 +49,47 @@
 #' microsimulation_pipeline <-
 #'   . %>%
 #'   # ageing
-#'   mutate_entity(entity = "Individual",
-#'                 age := age + 1L,
-#'                 subset = age != -1L) %>%
+#'   mutate_entity(
+#'     entity = "Individual",
+#'     age := age + 1L,
+#'     subset = age != -1L
+#'   ) %>%
 #'   # simulate birth decision
-#'   transition(entity = "Individual",
-#'              model = birth_model,
-#'              attr = ".give_birth",
-#'              preprocessing_fn = . %>% filter_eligible_females %>% filter_alive) %>%
+#'   transition(
+#'     entity = "Individual",
+#'     model = birth_model,
+#'     attr = ".give_birth",
+#'     preprocessing_fn = . %>% filter_eligible_females() %>% filter_alive()
+#'   ) %>%
 #'   # add newborns
-#'   add_entity(entity = "Individual",
-#'              newdata = toy_individuals[age == 0, ],
-#'              target = .$entities$Individual$get_data()[.give_birth == "yes", .N]) %>%
+#'   add_entity(
+#'     entity = "Individual",
+#'     newdata = toy_individuals[age == 0, ],
+#'     target = .$entities$Individual$get_data()[.give_birth == "yes", .N]
+#'   ) %>%
 #'   # reset the birth decision variable
-#'   mutate_entity(entity = "Individual",
-#'                 .give_birth := "no",
-#'                 subset = age != -1L) %>%
+#'   mutate_entity(
+#'     entity = "Individual",
+#'     .give_birth := "no",
+#'     subset = age != -1L
+#'   ) %>%
 #'   # simulate deaths
-#'   transition(entity = "Individual",
-#'              model = death_model,
-#'              attr = "age",
-#'              values = c(yes = -1L),
-#'              preprocessing_fn = filter_alive) %>%
+#'   transition(
+#'     entity = "Individual",
+#'     model = death_model,
+#'     attr = "age",
+#'     values = c(yes = -1L),
+#'     preprocessing_fn = filter_alive
+#'   ) %>%
 #'   # log the total number of alive individuals at the end of the iteration
-#'   add_log(desc = "count:Individual",
-#'           value = .$entities$Individual$get_data()[age != -1L, .N])
+#'   add_log(
+#'     desc = "count:Individual",
+#'     value = .$entities$Individual$get_data()[age != -1L, .N]
+#'   )
 #'
 #' # complie and execute a simulation pipeline
 #' sim(world = world, pipeline = microsimulation_pipeline, n_iters = 10)
 sim <- function(world, pipeline, n_iters, write.error.dump.file = FALSE, write.error.dump.folder) {
-
   checkmate::assert_r6(world, classes = "World")
   checkmate::assert_function(pipeline, nargs = 1)
   checkmate::assert_count(n_iters, positive = TRUE)
@@ -91,18 +102,16 @@ sim <- function(world, pipeline, n_iters, write.error.dump.file = FALSE, write.e
     }
   }
 
-  tryCatchLog::tryCatchLog({
-    for (i in 1:n_iters) {
-      world$start_iter(time_step = world$get_time() + 1L) %>%
-        pipeline(.)
-    }},
+  tryCatchLog::tryCatchLog(
+    {
+      for (i in 1:n_iters) {
+        world$start_iter(time_step = world$get_time() + 1L) %>%
+          pipeline(.)
+      }
+    },
     write.error.dump.file = write.error.dump.file,
     write.error.dump.folder = write.error.dump.folder
   )
 
   invisible()
 }
-
-
-
-

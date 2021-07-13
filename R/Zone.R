@@ -10,6 +10,5 @@
 Zone <- R6::R6Class(
   classname = "Zone",
   inherit = Environment,
-  public = list(
-  )
+  public = list()
 )

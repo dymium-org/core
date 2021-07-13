@@ -66,9 +66,11 @@ Target <- R6::R6Class(
       if (is.data.frame(x)) {
         if (!"time" %in% names(x)) {
           stop(
-            paste("A column named `time` is missing in `x`. Note that,",
-                  "data.frame should be used when creating a dynamic target",
-                  "only. If you want to create a static target use `list` instead.")
+            paste(
+              "A column named `time` is missing in `x`. Note that,",
+              "data.frame should be used when creating a dynamic target",
+              "only. If you want to create a static target use `list` instead."
+            )
           )
         }
         private$.dynamic <- TRUE
@@ -82,29 +84,30 @@ Target <- R6::R6Class(
       }
       invisible(self)
     },
-
     get = function(time = .get_sim_time()) {
       if (private$.dynamic) {
-        closest_time_index <- which.min(abs(private$.data[['time']] - time))
+        closest_time_index <- which.min(abs(private$.data[["time"]] - time))
         return(lapply(private$.data[closest_time_index, -c("time")], function(x) round(x * getOption("dymium.simulation_scale"))))
       }
       if (is(object = private$.data, class2 = "list")) {
         return(lapply(private$.data, function(x) round(x * getOption("dymium.simulation_scale"))))
       }
     },
-
     print = function() {
       msg <- glue::glue("dynamic: {private$.dynamic}")
       if (private$.dynamic) {
-        period <- c(min(private$.data[["time"]]),
-                    max(private$.data[["time"]]))
+        period <- c(
+          min(private$.data[["time"]]),
+          max(private$.data[["time"]])
+        )
         msg <- glue::glue(msg,
-                          "period: {period[1]} to {period[2]}", .sep = "\n- ")
+          "period: {period[1]} to {period[2]}",
+          .sep = "\n- "
+        )
       }
       super$print(msg)
     }
   ),
-
   active = list(
     data = function() {
       if (is.data.table(private$.data)) {
@@ -116,10 +119,8 @@ Target <- R6::R6Class(
       base::get(".dynamic", envir = private)
     }
   ),
-
   private = list(
     .data = NULL,
     .dynamic = FALSE
   )
-
 )

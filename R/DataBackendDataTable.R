@@ -89,11 +89,10 @@ DataBackendDataTable <- R6::R6Class(
           lg$trace("Setting `.data`'s key as '{key}' column.")
           data.table::setkeyv(x = .data, key)
         }
-        private$.key = key
+        private$.key <- key
       }
       super$initialize(.data)
     },
-
     add = function(.data, fill = FALSE) {
       checkmate::assert_data_table(.data, min.rows = 1, null.ok = FALSE, col.names = "strict")
       # check that all existing column names in the newdata (.data) have the same
@@ -102,7 +101,7 @@ DataBackendDataTable <- R6::R6Class(
       typeof_new <- sapply(.data, typeof)[common_names]
       typeof_existing <- sapply(self$get(), typeof)[common_names]
       check_equality <- all.equal(typeof_existing, typeof_new, check.attributes = FALSE)
-      if (!isTRUE(check_equality)){
+      if (!isTRUE(check_equality)) {
         cli::cli_alert_danger("Type mismatches found")
         cli::cli_alert_danger("Types of existing data:")
         print(typeof_existing)
@@ -116,7 +115,6 @@ DataBackendDataTable <- R6::R6Class(
       }
       invisible()
     },
-
     remove = function(rows, cols) {
       if (!missing(cols)) {
         checkmate::assert_names(names(private$.data), must.include = cols)
@@ -131,14 +129,14 @@ DataBackendDataTable <- R6::R6Class(
         if (nrow(private$.data) < max(rows)) {
           .missing_rows <- rows[rows > nrow(private$.data)]
           lg$warn("These rows do not exist {.missing_rows_char}",
-                  .missing_rows_char = glue::glue_collapse(.missing_rows, width = 20, sep = ", ", last = " and "))
+            .missing_rows_char = glue::glue_collapse(.missing_rows, width = 20, sep = ", ", last = " and ")
+          )
           return(invisible())
         }
         private$.removed_data <- rbind(private$.removed_data, private$.data[rows], fill = TRUE)
         private$.data <- private$.data[-rows]
       }
     },
-
     get = function(rows, cols, copy = TRUE) {
       if (!copy) {
         return(private$.data)
@@ -154,32 +152,26 @@ DataBackendDataTable <- R6::R6Class(
       }
       data.table::copy(private$.data)[rows, .SD, .SDcols = cols]
     },
-
     setkey = function(key = private$.key) {
       data.table::setkeyv(x = private$.data, cols = key)
       private$.key <- key
       invisible(self)
     },
-
-    get_removed_data  = function() {
+    get_removed_data = function() {
       self$removed_data
     }
   ),
-
   active = list(
     key = function() {
       return(base::get(".key", envir = private))
     },
-
     data = function() {
       return(data.table::copy(base::get(".data", envir = private)))
     },
-
     removed_data = function() {
       return(data.table::copy(base::get(".removed_data", envir = private)))
     }
   ),
-
   private = list(
     .key = NULL
   )

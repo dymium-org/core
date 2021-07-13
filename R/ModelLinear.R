@@ -17,13 +17,14 @@ ModelLinear <- R6::R6Class(
     #'
     #' @return NULL
     initialize = function(params, formula, preprocessing_fn = NULL) {
-      super$initialize(params = params,
-                       formula = formula,
-                       type = "linear",
-                       preprocessing_fn = preprocessing_fn)
+      super$initialize(
+        params = params,
+        formula = formula,
+        type = "linear",
+        preprocessing_fn = preprocessing_fn
+      )
       invisible(NULL)
     },
-
     predict = function(newdata) {
       private$.compute_linear_combination(newdata)
     }

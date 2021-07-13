@@ -13,12 +13,11 @@
 #' of `prediction`,
 #' @export
 alignment <- function(prediction, target) {
-
   checkmate::assert_list(
     target,
-    types = 'integerish',
+    types = "integerish",
     min.len = 1,
-    names = 'strict',
+    names = "strict",
     null.ok = FALSE
   )
 
@@ -50,7 +49,7 @@ alignment <- function(prediction, target) {
     # ac: indices of remaining undecided agents
     # sc: indices of agents who selected choice 't'
     t <- target[i]
-    ac <- p[is.na(.choice),  which = TRUE]
+    ac <- p[is.na(.choice), which = TRUE]
     sc <- sample_choice(
       x = ac,
       size = as.numeric(t),
@@ -60,5 +59,5 @@ alignment <- function(prediction, target) {
     p[sc, .choice := names(t)]
   }
 
-  p[['.choice']]
+  p[[".choice"]]
 }

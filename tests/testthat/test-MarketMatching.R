@@ -1,5 +1,4 @@
 test_that("Initialise", {
-
   create_toy_population()
   Ind <- pop$get("Individual")
   Hh <- pop$get("Household")

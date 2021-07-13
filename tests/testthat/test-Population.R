@@ -3,11 +3,13 @@ context("population class")
 test_that("initialize", {
   # missing household by removing
   create_toy_population()
-  toy_households2 <- copy(dymiumCore::toy_households)[-1,]
+  toy_households2 <- copy(dymiumCore::toy_households)[-1, ]
 
   expect_error(
-    pop$add_population(ind_data = dymiumCore::toy_individuals,
-                       hh_data = toy_households2),
+    pop$add_population(
+      ind_data = dymiumCore::toy_individuals,
+      hh_data = toy_households2
+    ),
     regexp = "Not all household ids exist in both `ind_data` and `hh_data`."
   )
 
@@ -17,8 +19,10 @@ test_that("initialize", {
     copy(dymiumCore::toy_households)[1, hid := 99999]
 
   expect_error(
-    pop$add_population(ind_data = dymiumCore::toy_individuals,
-                       hh_data = toy_households2),
+    pop$add_population(
+      ind_data = dymiumCore::toy_individuals,
+      hh_data = toy_households2
+    ),
     regexp = "Not all household ids exist in both `ind_data` and `hh_data`."
   )
 
@@ -26,11 +30,12 @@ test_that("initialize", {
   create_toy_population()
   toy_individuals2 <- copy(dymiumCore::toy_individuals)[-1, ]
   expect_error(
-    pop$add_population(ind_data = toy_individuals2,
-                       hh_data = dymiumCore::toy_households),
+    pop$add_population(
+      ind_data = toy_individuals2,
+      hh_data = dymiumCore::toy_households
+    ),
     regexp = "Not all household ids exist in both `ind_data` and `hh_data`."
   )
-
 })
 
 # add_population -----------------------------------------------------------
@@ -54,20 +59,26 @@ test_that("add_population", {
   # add new individuals with no hh_data
   newborns <-
     data.table::copy(toy_individuals) %>%
-    .[, `:=`(pid = sample(10000:20000, .N, replace = FALSE),
-             age = 0)]
+    .[, `:=`(
+      pid = sample(10000:20000, .N, replace = FALSE),
+      age = 0
+    )]
 
   Ind$add(newborns, check_existing = TRUE)
 
   # add new individuals with non-existed household id
   newborns <-
     data.table::copy(toy_individuals) %>%
-    .[, `:=`(pid = sample(30000:40000, .N, replace = FALSE),
-             age = 0)] %>%
+    .[, `:=`(
+      pid = sample(30000:40000, .N, replace = FALSE),
+      age = 0
+    )] %>%
     .[1, hid := 999999999]
 
-  expect_error(Ind$add(newborns, check_existing = TRUE),
-               "These element in `x` don't exist in : 999999999")
+  expect_error(
+    Ind$add(newborns, check_existing = TRUE),
+    "These element in `x` don't exist in : 999999999"
+  )
 })
 
 # remove_population -------------------------------------------------------
@@ -78,20 +89,20 @@ test_that("remove_population", {
   # remove households
   hid_to_be_removed <- c(1L, 2L)
   pid_to_be_removed <-
-    pop$get('Individual')$get_ids_in_hids(hids = hid_to_be_removed)
+    pop$get("Individual")$get_ids_in_hids(hids = hid_to_be_removed)
   pop$remove_population(hid = hid_to_be_removed)
   expect_true(all(
-    !pid_to_be_removed %in% pop$get('Individual')$get_attr(x = pop$get('Individual')$get_id_col())
+    !pid_to_be_removed %in% pop$get("Individual")$get_attr(x = pop$get("Individual")$get_id_col())
   ))
   expect_true(all(
-    !hid_to_be_removed %in% pop$get('Household')$get_attr(x = pop$get('Household')$get_id_col())
+    !hid_to_be_removed %in% pop$get("Household")$get_attr(x = pop$get("Household")$get_id_col())
   ))
 
   # remove individuals
   pid_to_be_removed <- c(13, 14, 15)
   pop$remove_population(pid = pid_to_be_removed)
-  expect_true(all(!pid_to_be_removed %in% pop$get('Individual')$get_data()[, pid]))
-  expect_true(all(pid_to_be_removed %in% pop$get('Individual')$get_removed_data()[, pid]))
+  expect_true(all(!pid_to_be_removed %in% pop$get("Individual")$get_data()[, pid]))
+  expect_true(all(pid_to_be_removed %in% pop$get("Individual")$get_removed_data()[, pid]))
 })
 
 # $get_hhsize ----------
@@ -133,7 +144,7 @@ test_that("check_unique_id_cols", {
   expect_true(
     pop$check_unique_id_cols(
       ind_data = copy(dymiumCore::toy_individuals)[, `:=`(pid = 9999, hid = NA_integer_)]
-      )
+    )
   )
 
   pop$check_unique_id_cols(ind_data = copy(dymiumCore::toy_individuals)[, `:=`(pid = 9999, hid = NA_integer_)])

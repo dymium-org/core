@@ -1,6 +1,5 @@
 test_that("ModelMultinomialLogit", {
-  if (requireNamespace('mlogit')) {
-
+  if (requireNamespace("mlogit")) {
     data("Fishing", package = "mlogit")
 
     # fitting
@@ -24,8 +23,9 @@ test_that("ModelMultinomialLogit", {
       data.table::dcast(chooser_id ~ choice_id, value.var = "prob") %>%
       .[, -"chooser_id"]
     prediction_from_Mod_formula <- Mod_formula$predict(.data,
-                                                       chooser_id_col = "id1",
-                                                       choice_id_col = "id2") %>%
+      chooser_id_col = "id1",
+      choice_id_col = "id2"
+    ) %>%
       data.table::dcast(chooser_id ~ choice_id, value.var = "prob") %>%
       .[, -"chooser_id"]
     prediction_from_Mod_using_dfidx <-
@@ -36,16 +36,15 @@ test_that("ModelMultinomialLogit", {
     expect_true(all.equal(prediction_from_mlogit, prediction_from_Mod))
     expect_true(all.equal(prediction_from_mlogit, prediction_from_Mod_formula))
     expect_true(all.equal(prediction_from_mlogit, prediction_from_Mod_using_dfidx))
-
   }
 })
 
 test_that("ModelMultinomialLogit - different alternatives", {
   num_rows <- 100
-  num_choices = 30
+  num_choices <- 30
 
   my_formula <- chosen ~ x1 + x2 + I(x1^2) + x1:x2 + 0
-  params = c(x1 = 2.5, x2 = 3, `I(x1^2)` = 0.5 , `x1:x2` = 1)
+  params <- c(x1 = 2.5, x2 = 3, `I(x1^2)` = 0.5, `x1:x2` = 1)
 
   test_chooser_data <- data.table(
     id = 1:num_rows,
@@ -73,5 +72,4 @@ test_that("ModelMultinomialLogit - different alternatives", {
   m <- ModelMultinomialLogit$new(params = params, formula = my_formula)
   prediction <- m$predict(multinomial_test_data, chooser_id_col = "id", choice_id_col = "choice_id")
   checkmate::expect_data_table(prediction, any.missing = FALSE, col.names = "strict", ncols = 4)
-
 })

@@ -73,8 +73,10 @@ get_models <- function(x, model_names, as_r6model = FALSE) {
 #' # in `model`.
 #' final_model
 pick_models <- function(model, world, required_models, as_r6model = FALSE) {
-  checkmate::assert_list(model, types = c("Model", SupportedTransitionModels()),
-                         any.missing = FALSE, null.ok = TRUE, names = "strict")
+  checkmate::assert_list(model,
+    types = c("Model", SupportedTransitionModels()),
+    any.missing = FALSE, null.ok = TRUE, names = "strict"
+  )
   checkmate::assert_r6(world, classes = "World", public = c("get", "models"))
   checkmate::assert_character(required_models, unique = TRUE, null.ok = TRUE)
 
@@ -87,8 +89,9 @@ pick_models <- function(model, world, required_models, as_r6model = FALSE) {
 
   # find the rest of the models in world
   assert_required_models(world$models,
-                         names = models_not_found,
-                         check_supported_model = FALSE)
+    names = models_not_found,
+    check_supported_model = FALSE
+  )
   models_from_world <-
     get_models(world, model_names = models_not_found, as_r6model = as_r6model)
 
@@ -111,15 +114,18 @@ dm_get_model <- function(x, model_names) {
 #' @return a logical value
 #' @export
 is_scheduled <- function(time_steps) {
-  if (!is.null(time_steps))
+  if (!is.null(time_steps)) {
     stopifnot(all(is.numeric(time_steps)))
-  if (is.null(time_steps))
+  }
+  if (is.null(time_steps)) {
     # time_steps is not specified
     return(TRUE)
-  if (.get_sim_time() %in% time_steps)
+  }
+  if (.get_sim_time() %in% time_steps) {
     # the current time step matches a time in time_steps
     return(TRUE)
-  else
+  } else {
     # doesn't match the current time step
     return(FALSE)
+  }
 }

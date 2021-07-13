@@ -14,7 +14,7 @@ create_toy_population <- function() {
   invisible(pop)
 }
 
-create_pop_sample <- function(){
+create_pop_sample <- function() {
   create_toy_population()
 }
 
@@ -31,8 +31,8 @@ create_toy_world <- function(add_toy_zones = TRUE) {
       hh_data = toy_households,
       pid_col = c("pid", "partner_id", "mother_id", "father_id"),
       hid_col = c("hid")
-      )
     )
+  )
   world$add(BuildingResidential$new(toy_dwellings, "did"))
   world$get(BuildingResidential)$set_owner_object(world$get(Household))
   if (add_toy_zones) {

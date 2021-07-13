@@ -19,10 +19,7 @@
 BuildingCommercial <- R6Class(
   classname = "BuildingCommercial",
   inherit = Building,
-  public = list(
-
-  ),
-
+  public = list(),
   active = list(
     # minimum required data structure
     data_template = function() {
@@ -37,6 +34,5 @@ BuildingCommercial <- R6Class(
       )
     }
   ),
-
   private = list()
 )

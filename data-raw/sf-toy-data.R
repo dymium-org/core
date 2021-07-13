@@ -29,8 +29,10 @@ toy_transport_network <-
   sf::read_sf("data-raw/melbourne-network/sections.shp") %>%
   sf::st_transform(x = ., crs = st_crs(union_toy_zones)) %>%
   sf::st_intersection(., union_toy_zones) %>%
-  dplyr::mutate(length = as.numeric(sf::st_length(geometry)),
-                rd_type = as.factor(rd_type)) %>%
+  dplyr::mutate(
+    length = as.numeric(sf::st_length(geometry)),
+    rd_type = as.factor(rd_type)
+  ) %>%
   dplyr::filter(!rd_type %in% c("8", "1")) %>%
   janitor::clean_names(.)
 
@@ -45,12 +47,13 @@ toy_transport_network_dodgr_graph <-
 
 # only keep lines that can reach node 79150, it's a node in the CBD
 dr <- dodgr::dodgr_dists(toy_transport_network_dodgr_graph, to = "79150", parallel = T)
-dr_dt <- as.data.table(as.table(dr)) %>%
-  {setnames(., names(.), c("from", "to", "shortest_dist"))}
+dr_dt <- as.data.table(as.table(dr)) %>% {
+  setnames(., names(.), c("from", "to", "shortest_dist"))
+}
 ids_of_connected_toy_transport_network <-
   toy_transport_network_dodgr_graph %>%
   dplyr::filter(!from %in% dr_dt[is.na(shortest_dist), from] &
-                  !to %in% dr_dt[is.na(shortest_dist), to]) %>%
+    !to %in% dr_dt[is.na(shortest_dist), to]) %>%
   .$id
 
 # you can see that there are some line features that are not connected to the main
@@ -70,4 +73,3 @@ toy_transport_network <-
 
 pryr::object_size(toy_transport_network)
 usethis::use_data(toy_transport_network, overwrite = TRUE)
-

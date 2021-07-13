@@ -47,31 +47,31 @@
 Generic <- R6Class(
   classname = "Generic",
   public = list(
-
     initialize = function(...) {
 
     },
-
     debug = function() {
-      pos = 1
+      pos <- 1
       assign("self", self, envir = as.environment(pos))
       assign("private", private, envir = as.environment(pos))
       lg$warn("[self] and [private] assigned to global environment")
       # return self for piping
       return(invisible(self))
     },
-
     log = function(desc, value, tag = NA_character_, time = .get_sim_time(), .lg = parent.frame()[["lg"]]) {
       checkmate::assert_string(desc, null.ok = FALSE, na.ok = FALSE)
       checkmate::assert_vector(value, any.missing = FALSE, null.ok = FALSE)
       checkmate::assert_string(tag, null.ok = FALSE, na.ok = TRUE)
       checkmate::assert_integerish(time, lower = 0, len = 1, null.ok = FALSE)
-      .caller = lgr::get_caller(-2)
-      if (is.null(.lg))
+      .caller <- lgr::get_caller(-2)
+      if (is.null(.lg)) {
         .lg <- lg
+      }
       if (length(value) != 1) {
-        .lg$info("{desc}: {.value}", caller = .caller,
-                .value = glue::glue_collapse(value, sep = ", ", width = 100))
+        .lg$info("{desc}: {.value}",
+          caller = .caller,
+          .value = glue::glue_collapse(value, sep = ", ", width = 100)
+        )
       } else {
         .lg$info("{desc}: {value}", caller = .caller)
       }
@@ -90,17 +90,13 @@ Generic <- R6Class(
       private$.log <- rbind(private$.log, .log)
 
       invisible()
-
     },
-
     is_dymium_class = function() {
       TRUE
     },
-
     class = function() {
       class(self)[[1]]
     },
-
     print = function(...) {
       dots <- list(...)
       .class_inheritance <- glue::glue_collapse(class(self), sep = " <- ")
@@ -125,24 +121,21 @@ Generic <- R6Class(
       }
     }
   ),
-
   private = list(
     .abstract = function(msg) {
       # this is a method for abstract methods
-      if (!missing(msg))  {
+      if (!missing(msg)) {
         lg$fatal(msg)
       }
       stop("This is an abstract method which is to be implemented.")
     },
-
     abstract = function(msg) {
       # this is a method for abstract methods
-      if (!missing(msg))  {
+      if (!missing(msg)) {
         lg$fatal(msg)
       }
       stop("This is an abstract method which is to be implemented.")
     },
-
     .log = data.table(
       time = integer(),
       created_timestamp = integer(),
@@ -151,6 +144,5 @@ Generic <- R6Class(
       desc = character(),
       value = list()
     )
-
   )
 )

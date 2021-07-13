@@ -32,14 +32,16 @@ add_history <- function(entity, ids, event, time = .get_sim_time(), id_col_as_li
   checkmate::assert_count(time)
   if (id_col_as_list) {
     history_data <- .create_history_data(entity$get_id_col(),
-                                         id = ids,
-                                         time = time,
-                                         event = event)
+      id = ids,
+      time = time,
+      event = event
+    )
   } else {
     history_data <- .create_history_data2(entity$get_id_col(),
-                                          id = ids,
-                                          time = time,
-                                          event = event)
+      id = ids,
+      time = time,
+      event = event
+    )
   }
   if (!"history" %in% entity$get_data_names()) {
     entity$add_data(.data = history_data, name = "history")
@@ -51,18 +53,22 @@ add_history <- function(entity, ids, event, time = .get_sim_time(), id_col_as_li
 
 # this shouldn't be used anywhere that is not inside `add_history()` function
 .create_history_data <- function(id_col, time, event, id) {
-  data.table(time = time,
-             created_timestamp = Sys.time(),
-             event = event,
-             id = list(id)) %>%
+  data.table(
+    time = time,
+    created_timestamp = Sys.time(),
+    event = event,
+    id = list(id)
+  ) %>%
     data.table::setnames(., old = "id", new = id_col)
 }
 
 .create_history_data2 <- function(id_col, time, event, id) {
-  data.table(time = as.integer(time),
-             created_timestamp = as.integer(Sys.time()),
-             event = as.factor(event),
-             id = id) %>%
+  data.table(
+    time = as.integer(time),
+    created_timestamp = as.integer(Sys.time()),
+    event = as.factor(event),
+    id = id
+  ) %>%
     data.table::setnames(., old = "id", new = id_col)
 }
 
@@ -86,9 +92,10 @@ add_history <- function(entity, ids, event, time = .get_sim_time(), id_col_as_li
 #' create_toy_world()
 #'
 #' add_history(world$get("Individual"),
-#'             ids = 1:100,
-#'             event = "test_event1",
-#'             time = 1)
+#'   ids = 1:100,
+#'   event = "test_event1",
+#'   time = 1
+#' )
 #'
 #' get_history(world)
 #' get_history(world$get("Individual"))
@@ -110,10 +117,11 @@ get_history.Container <- function(x, ...) {
 #' @rdname get_history
 #' @export
 get_history.Entity <- function(x, ...) {
-  if (!is.null(x$database[["history"]]))
+  if (!is.null(x$database[["history"]])) {
     return(x$get_data("history"))
-  else
+  } else {
     return(NULL)
+  }
 }
 
 
@@ -140,11 +148,14 @@ combine_histories <- function(x) {
   checkmate::expect_r6(x, classes = "Container")
   get_history(x) %>%
     purrr::keep(., ~ !is.null(.x)) %>%
-    purrr::map2(.x = ., .y = names(.),
-                 .f = ~ {
-                   .x %>%
-                     data.table::setnames(., old = 4, new = "id") %>%
-                     data.table::set(., j = "entity", value = .y)}) %>%
+    purrr::map2(
+      .x = ., .y = names(.),
+      .f = ~ {
+        .x %>%
+          data.table::setnames(., old = 4, new = "id") %>%
+          data.table::set(., j = "entity", value = .y)
+      }
+    ) %>%
     rbindlist(.)
 }
 
@@ -190,17 +201,17 @@ inspect <- function(entity, ids, related_entity = NULL, verbose = TRUE) {
 
   if (!is.null(related_entity)) {
     if (!entity$get_id_col() %in% related_entity$database$attrs$colnames &
-        !related_entity$get_id_col() %in% entity$database$attrs$colnames) {
+      !related_entity$get_id_col() %in% entity$database$attrs$colnames) {
       stop(glue::glue("'entity' cannot be linked with 'related_entity' \\
                       through their primary id variables."))
     }
-    if (verbose)  {
+    if (verbose) {
       cli::cli_alert_info("Attribute data of {related_entity$class()}")
     }
 
     # entities are 'members' to related entities
     if (related_entity$get_id_col() %in% entity$database$attrs$colnames) {
-      if (verbose)  {
+      if (verbose) {
         cli::cli_alert_info("Note that, entities are 'members' to related entities.")
       }
       related_entity_ids <-
@@ -210,7 +221,7 @@ inspect <- function(entity, ids, related_entity = NULL, verbose = TRUE) {
     }
     # entities are 'groups' of related entities
     if (entity$get_id_col() %in% related_entity$database$attrs$colnames) {
-      if (verbose)  {
+      if (verbose) {
         cli::cli_alert_info("Note that, entities are 'groups' of related entities.")
       }
       related_entity_data <-
@@ -225,7 +236,7 @@ inspect <- function(entity, ids, related_entity = NULL, verbose = TRUE) {
   }
 
   if (!is.null(entity$database[["history"]])) {
-    entity_history <- entity$get_data("history", copy = FALSE)[get(entity$get_id_col()) %in% ids,]
+    entity_history <- entity$get_data("history", copy = FALSE)[get(entity$get_id_col()) %in% ids, ]
     if (verbose) {
       cli::cli_alert_info("History data of {entity$class()}")
       print(entity_history)
@@ -234,9 +245,11 @@ inspect <- function(entity, ids, related_entity = NULL, verbose = TRUE) {
     entity_history <- NULL
   }
 
-  invisible(list(entity = entity_data,
-                 related_entity = related_entity_data,
-                 entity_history = entity_history))
+  invisible(list(
+    entity = entity_data,
+    related_entity = related_entity_data,
+    entity_history = entity_history
+  ))
 }
 
 #' Plot history data
@@ -263,8 +276,11 @@ plot_history <- function(x, by_entity = TRUE) {
 
   checkmate::assert_data_table(x)
   checkmate::assert_names(names(x),
-                          permutation.of = c("time", "created_timestamp", "event",
-                                             "id", "entity"))
+    permutation.of = c(
+      "time", "created_timestamp", "event",
+      "id", "entity"
+    )
+  )
   if (by_entity) {
     p <-
       (purrr::map(
@@ -276,10 +292,14 @@ plot_history <- function(x, by_entity = TRUE) {
             ggplot2::scale_x_continuous(breaks = scales::pretty_breaks()) +
             ggplot2::labs(title = .x)
         }
-      ) %>% {Reduce(`/`, .)}) +
-      patchwork::plot_layout(guides = 'collect') &
-      patchwork::plot_annotation(title = "An aggregate plot of all Entities' historical events",
-                      theme = ggplot2::theme(plot.title = ggplot2::element_text(size = 14, face = "bold")))
+      ) %>% {
+        Reduce(`/`, .)
+      }) +
+        patchwork::plot_layout(guides = "collect") &
+        patchwork::plot_annotation(
+          title = "An aggregate plot of all Entities' historical events",
+          theme = ggplot2::theme(plot.title = ggplot2::element_text(size = 14, face = "bold"))
+        )
   } else {
     p <-
       ggplot2::ggplot(data = x, ggplot2::aes(time, fill = event)) +

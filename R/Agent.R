@@ -57,34 +57,31 @@ Agent <- R6Class(
   public = list(
     # public ------------------------------------------------------------------
     initialize = function(.data, id_col) {
-      super$initialize(databackend = DataBackendDataTable,
-                       .data = .data,
-                       id_col = id_col)
+      super$initialize(
+        databackend = DataBackendDataTable,
+        .data = .data,
+        id_col = id_col
+      )
     },
-
     hatch = function(parent_ids) {
       assert_entity_ids(self, parent_ids)
       idx_of_parent_ids <- self$get_idx(ids = parent_ids)
-      newdata <- self$get_data(copy = TRUE)[idx_of_parent_ids,]
+      newdata <- self$get_data(copy = TRUE)[idx_of_parent_ids, ]
       new_ids <- self$generate_new_ids(n = nrow(newdata))
       newdata[, c(self$get_id_col()) := new_ids]
       self$data()$add(.data = newdata)
       return(invisible(self))
     },
-
     subset_ids = function(expr) {
       j_expr <- substitute(expr)
       subset(x = self$get_data(copy = FALSE), subset = eval(j_expr))[[self$get_id_col()]]
     },
-
     get_latest_agent_id = function() {
       self$get_last_id()
     },
-
     get_new_agent_ids = function() {
       self$get_new_ids()
     },
-
     is_alive = function(ids) {
       checkmate::assert_integerish(ids, any.missing = FALSE, lower = 1)
       return(ids %in% self$get_ids())

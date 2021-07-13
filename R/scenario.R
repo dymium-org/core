@@ -33,11 +33,10 @@
 #' @return `create_` and `set_` invisibly returns the scenario path and `get_` returns a named list.
 #'
 #' @examples
-#'
 #' \dontrun{
-#'   create_scenario(name = "test", active = FALSE)
-#'   set_active_scenario(name = "test")
-#'   get_active_scenario()
+#' create_scenario(name = "test", active = FALSE)
+#' set_active_scenario(name = "test")
+#' get_active_scenario()
 #' }
 create_scenario <- function(name, active = TRUE, .basedir = here::here()) {
   .check_file_name(name)
@@ -58,13 +57,14 @@ create_scenario <- function(name, active = TRUE, .basedir = here::here()) {
 #' @export
 set_active_scenario <- function(name, .basedir = here::here()) {
   checkmate::assert_string(name,
-                           pattern = "^[.]*[a-zA-Z]+[a-zA-Z0-9._.-]*$",
-                           na.ok = FALSE,
-                           null.ok = FALSE)
+    pattern = "^[.]*[a-zA-Z]+[a-zA-Z0-9._.-]*$",
+    na.ok = FALSE,
+    null.ok = FALSE
+  )
 
   scenario_path <- fs::path(.basedir, "scenarios", name)
   input_path <- fs::path(scenario_path, "inputs")
-  output_path <- fs::path(scenario_path,  "outputs")
+  output_path <- fs::path(scenario_path, "outputs")
 
   if (!checkmate::test_directory_exists(scenario_path, access = "rw")) {
     stop(glue::glue(

@@ -68,7 +68,6 @@ Container <- R6Class(
   classname = "Container",
   inherit = dymiumCore::ContainerGeneric,
   public = list(
-
     add = function(x, name) {
       if (!missing(name)) {
         checkmate::assert_names(name, disjunct.from = self$names())
@@ -78,7 +77,6 @@ Container <- R6Class(
       names(self$Cont)[.pos] <- name
       invisible()
     },
-
     get = function(x) {
       if (inherits(x, "R6ClassGenerator")) {
         x <- x$classname
@@ -90,13 +88,11 @@ Container <- R6Class(
       }
       self$Cont[[x]]
     },
-
     names = function() {
       names(self$Cont)
       # .names <- names(self$Cont)
       # .names[!is.na(.names)]
     },
-
     remove = function(x) {
       if (checkmate::test_integerish(x)) {
         self$check_pos(x)

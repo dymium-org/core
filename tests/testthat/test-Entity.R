@@ -1,6 +1,7 @@
 test_that("initialise", {
   expect_error(Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "random_name"),
-               regexp = "failed: Must include the elements \\{random_name\\}")
+    regexp = "failed: Must include the elements \\{random_name\\}"
+  )
 })
 
 test_that("data", {
@@ -18,12 +19,11 @@ test_that("get_data", {
   expect_true(nrow(MyObj$get_data("attrs")) == nrow(toy_individuals))
   rand_ids <- sample(toy_individuals$pid, 10)
   expect_equal(MyObj$get_data(ids = rand_ids, copy = TRUE)[[MyObj$get_id_col()]], rand_ids)
-  checkmate::expect_data_frame(MyObj$get_data(ids = c(1,1)), nrows = 2, null.ok = FALSE)
+  checkmate::expect_data_frame(MyObj$get_data(ids = c(1, 1)), nrows = 2, null.ok = FALSE)
 
   # test modify
   MyObj$get_data()[, sex := "none"]
   checkmate::assert_subset(MyObj$get_data()[, sex], choices = c("male", "female"))
-
 })
 
 # add_data -----------
@@ -31,7 +31,8 @@ test_that("add_data", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
 
   expect_error(MyObj$add_data(databackend = DataBackendDataTable, .data = toy_individuals, name = "attrs"),
-               regexp = "failed: Must be disjunct from \\(attrs\\)")
+    regexp = "failed: Must be disjunct from \\(attrs\\)"
+  )
 
   MyObj$add_data(databackend = DataBackendDataTable, .data = toy_individuals, name = "attrs2")
   expect_true(all.equal(MyObj$get_data(name = "attrs2"), toy_individuals))
@@ -82,7 +83,7 @@ test_that("remove", {
   ids_to_be_removed <- sample(MyObj$get_data()[[MyObj$get_id_col()]], 10)
   MyObj$remove(ids = ids_to_be_removed)
   expect_true(all(MyObj$summary(verbose = FALSE)[, nrow_removed] == c(10L, 10L)))
-  MyObj$remove(ids = c(1,100000))
+  MyObj$remove(ids = c(1, 100000))
 })
 
 test_that("get_ids", {
@@ -99,17 +100,19 @@ test_that("get_ids", {
 
   e$remove(ids = 1)
   expect_true(
-    all.equal(sort(e$get_ids(include_removed = T)),
-              sort(toy_individuals[[e$primary_id]]))
+    all.equal(
+      sort(e$get_ids(include_removed = T)),
+      sort(toy_individuals[[e$primary_id]])
+    )
   )
 })
 
 test_that("get_idx", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
-  expect_length(MyObj$get_idx(c(2,1,4,2)), 4)
-  expect_equal(MyObj$get_idx(c(2,1,4,2)), c(2,1,4,2))
-  expect_error(MyObj$get_idx(c(2,1,4,2,NA)), "Contains missing values \\(element 5\\).")
-  expect_error(MyObj$get_idx(c(2,1,4,2,1000)), "These ids don't exist in Entity: 1000")
+  expect_length(MyObj$get_idx(c(2, 1, 4, 2)), 4)
+  expect_equal(MyObj$get_idx(c(2, 1, 4, 2)), c(2, 1, 4, 2))
+  expect_error(MyObj$get_idx(c(2, 1, 4, 2, NA)), "Contains missing values \\(element 5\\).")
+  expect_error(MyObj$get_idx(c(2, 1, 4, 2, 1000)), "These ids don't exist in Entity: 1000")
 })
 
 test_that("ids_exist", {
@@ -123,10 +126,10 @@ test_that("ids_exist", {
 test_that("idx_exist", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   rand_ids <- sample(MyObj$get_data()[[MyObj$get_id_col()]], 3)
-  expect_true(MyObj$idx_exist(c(1,2,3,4)))
-  expect_equal(MyObj$idx_exist(c(1,2,3,4), by_element = TRUE), rep(TRUE, 4))
-  expect_equal(MyObj$idx_exist(c(1,2,3,9999999)), FALSE)
-  expect_equal(MyObj$idx_exist(c(1,2,3,9999999), by_element = TRUE), c(rep(TRUE,3), FALSE))
+  expect_true(MyObj$idx_exist(c(1, 2, 3, 4)))
+  expect_equal(MyObj$idx_exist(c(1, 2, 3, 4), by_element = TRUE), rep(TRUE, 4))
+  expect_equal(MyObj$idx_exist(c(1, 2, 3, 9999999)), FALSE)
+  expect_equal(MyObj$idx_exist(c(1, 2, 3, 9999999), by_element = TRUE), c(rep(TRUE, 3), FALSE))
 })
 
 test_that("print_data", {
@@ -138,7 +141,7 @@ test_that("has_attr", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   expect_true(MyObj$has_attr(MyObj$get_id_col()))
   expect_true(MyObj$has_attr("abcd") == FALSE)
-  expect_equal(MyObj$has_attr(c(MyObj$get_id_col(), "abcd")), c(T,F))
+  expect_equal(MyObj$has_attr(c(MyObj$get_id_col(), "abcd")), c(T, F))
 })
 
 
@@ -146,8 +149,8 @@ test_that("get_attr", {
   MyObj <- Entity$new(databackend = DataBackendDataTable, .data = toy_individuals, id_col = "pid")
   checkmate::expect_integerish(MyObj$get_attr(MyObj$get_id_col()), any.missing = FALSE, min.len = 1, null.ok = FALSE, unique = TRUE)
   expect_error(MyObj$get_attr("abcd"), "Must be a subset of set")
-  expect_error(MyObj$get_attr('age', ids = c(99999999)), regexp = "These ids don't exist in Entity: 99999999")
-  checkmate::expect_integerish(MyObj$get_attr('age', ids = c(1,2,3)), lower = 0, any.missing = FALSE, len = 3, null.ok = FALSE)
+  expect_error(MyObj$get_attr("age", ids = c(99999999)), regexp = "These ids don't exist in Entity: 99999999")
+  checkmate::expect_integerish(MyObj$get_attr("age", ids = c(1, 2, 3)), lower = 0, any.missing = FALSE, len = 3, null.ok = FALSE)
 })
 
 test_that("generate_new_ids", {
@@ -173,7 +176,8 @@ test_that("$subset_ids", {
 
   # filter non-existed column
   expect_error(Ent$subset_ids(sexp == "FEMALE"),
-               regexp = "object 'sexp' not found")
+    regexp = "object 'sexp' not found"
+  )
 
   # return a vector of ids
   checkmate::expect_integerish(
@@ -182,5 +186,4 @@ test_that("$subset_ids", {
     any.missing = FALSE,
     unique = TRUE
   )
-
 })

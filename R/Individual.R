@@ -127,7 +127,6 @@ Individual <- R6::R6Class(
   "Individual",
   inherit = Agent,
   public = list(
-
     initialize = function(.data, id_col = "pid", hid_col = NULL) {
       super$initialize(.data = .data, id_col = id_col)
       if (!is.null(hid_col)) {
@@ -137,14 +136,12 @@ Individual <- R6::R6Class(
       }
       return(invisible(self))
     },
-
     get_household_ids = function(ids) {
       if (missing(ids)) {
         return(self$get_attr(x = private$.hid_col))
       }
       self$get_attr(x = private$.hid_col, ids = ids)
     },
-
     get_ids_in_hids = function(hids) {
       checkmate::assert_integerish(hids, any.missing = FALSE, lower = 1, null.ok = FALSE)
       if (is.null(self$get_hid_col())) {
@@ -160,14 +157,12 @@ Individual <- R6::R6Class(
       }
       res[[.id_col]]
     },
-
     get_hid_col = function() {
       if (length(private$.hid_col) != 0) {
         return(private$.hid_col)
       }
       return(NULL)
     },
-
     get_ids_from_id_cols = function(id_cols = NULL, na.rm = TRUE) {
       if (is.null(id_cols)) {
         id_cols <- c(self$get_id_col(), IND$ID_COLS)
@@ -182,7 +177,6 @@ Individual <- R6::R6Class(
       }
       res
     },
-
     add = function(.data, check_existing = FALSE, ...) {
       dots <- list(...)
       if (!is.null(self$get_hid_col()) & is.null(dots$add_population)) {
@@ -191,9 +185,7 @@ Individual <- R6::R6Class(
       }
       super$add(.data, check_existing)
     },
-
-    add_relationship = function(ids, target_ids, type = c('father', 'mother', 'partner')) {
-
+    add_relationship = function(ids, target_ids, type = c("father", "mother", "partner")) {
       type <- match.arg(type)
 
       # checks
@@ -210,7 +202,7 @@ Individual <- R6::R6Class(
       self_idx <- self$get_idx(ids = unique(ids))
 
       # ADD RELATIONSHIP
-      if (type == 'father') {
+      if (type == "father") {
         # expect that if emptied == integer(0)
         if (!all(self$get_data(copy = FALSE)[self_idx, is.na(father_id)])) {
           stop(paste0(type, " id should only have one agent id at birth."))
@@ -218,7 +210,7 @@ Individual <- R6::R6Class(
         self$get_data(copy = FALSE)[self_idx, father_id := target_ids]
       }
 
-      if (type == 'mother') {
+      if (type == "mother") {
         # expect that if emptied == integer(0)
         if (!all(self$get_data(copy = FALSE)[self_idx, is.na(mother_id)])) {
           stop(paste0(type, " id should only have one agent id at birth."))
@@ -226,10 +218,10 @@ Individual <- R6::R6Class(
         self$get_data(copy = FALSE)[self_idx, mother_id := target_ids]
       }
 
-      if (type == 'partner') {
+      if (type == "partner") {
         # expect that if emptied == integer(0)
         if (!all(self$get_data(copy = FALSE)[self_idx, is.na(partner_id)])) {
-          print(self$get_data(copy = FALSE)[self_idx,])
+          print(self$get_data(copy = FALSE)[self_idx, ])
           stop(paste0(type, " id cannot be overwrite but can be removed."))
         }
         target_idx <- self$get_idx(ids = target_ids)
@@ -241,65 +233,61 @@ Individual <- R6::R6Class(
 
       invisible()
     },
-
     remove_relationship = function(ids, type = c("partner")) {
-
       type <- match.arg(type)
       stopifnot(self$ids_exist(ids))
 
       switch(type,
-             "partner" = {
-               self_idx <- self$get_idx(ids)
-               self_data <- self$get_data(copy = FALSE) # create a sematic reference
+        "partner" = {
+          self_idx <- self$get_idx(ids)
+          self_data <- self$get_data(copy = FALSE) # create a sematic reference
 
-               partner_ids <-
-                 self_data[self_idx, unlist(partner_id)] %>%
-                 .[!is.na(.)] # remove NAs
-               partner_idx <- self$get_idx(partner_ids)
+          partner_ids <-
+            self_data[self_idx, unlist(partner_id)] %>%
+            .[!is.na(.)] # remove NAs
+          partner_idx <- self$get_idx(partner_ids)
 
-               checkmate::assert_integerish(
-                 x = partner_ids,
-                 any.missing = FALSE,
-                 unique = TRUE,
-                 null.ok = FALSE,
-                 lower = 1
-               )
+          checkmate::assert_integerish(
+            x = partner_ids,
+            any.missing = FALSE,
+            unique = TRUE,
+            null.ok = FALSE,
+            lower = 1
+          )
 
-               # add partner to .past_partner_id
-               self_data[c(self_idx, partner_idx), .past_partner_id := partner_id]
+          # add partner to .past_partner_id
+          self_data[c(self_idx, partner_idx), .past_partner_id := partner_id]
 
-               # self remove partner
-               self_data[self_idx, partner_id := NA_integer_]
+          # self remove partner
+          self_data[self_idx, partner_id := NA_integer_]
 
-               # partner removes self
-               self_data[partner_idx, partner_id := NA_integer_]
-             })
+          # partner removes self
+          self_data[partner_idx, partner_id := NA_integer_]
+        }
+      )
 
       invisible()
     },
-
     get_father = function(ids) {
       private$get_relationship(ids, type = "father")
     },
-
     get_mother = function(ids) {
       private$get_relationship(ids, type = "mother")
     },
-
     get_partner = function(ids) {
       private$get_relationship(ids, type = "partner")
     },
-
     get_children = function(ids) {
       pid_col <- self$get_id_col()
       result <-
         private$get_relationship(ids, type = "children") %>%
         dt_group_and_sort(x = ., groupby_col = pid_col, group_col = "child_id", sort_order = ids)
-      checkmate::expect_set_equal(ids, result[['sort_col']], ordered = T,
-                                  info = "`ids` and the result are not equal.")
+      checkmate::expect_set_equal(ids, result[["sort_col"]],
+        ordered = T,
+        info = "`ids` and the result are not equal."
+      )
       result[["group_col"]]
     },
-
     get_resident_children = function(ids) {
       pid_col <- self$get_id_col()
       result <-
@@ -307,23 +295,23 @@ Individual <- R6::R6Class(
         .[, living_together := self$living_together(self_ids = get(pid_col), target_ids = child_id)] %>%
         .[living_together == TRUE] %>%
         dt_group_and_sort(x = ., groupby_col = pid_col, group_col = "child_id", sort_order = ids)
-      checkmate::expect_set_equal(ids, result[['sort_col']], ordered = T,
-                                  info = "`ids` and the result are not equal.")
+      checkmate::expect_set_equal(ids, result[["sort_col"]],
+        ordered = T,
+        info = "`ids` and the result are not equal."
+      )
       result[["group_col"]]
     },
-
     have_relationship = function(ids, type = private$relationship_types) {
-
       type <- match.arg(type)
 
-      if (!missing(ids))
+      if (!missing(ids)) {
         stopifnot(self$ids_exist(ids = ids))
+      }
 
       idx <- self$get_idx(ids = ids)
 
       result <-
-        switch(
-          type,
+        switch(type,
           "partner" = {
             self$get_data(copy = FALSE)[idx, !is.na(partner_id)]
           },
@@ -343,19 +331,20 @@ Individual <- R6::R6Class(
 
       result
     },
-
     remove_household_id = function(ids) {
       stopifnot(self$ids_exist(ids))
       # remove household id
-      self$get_data(copy = FALSE)[get(self$get_id_col()) %in% ids,
-                                (self$get_hid_col()) := NA_integer_]
+      self$get_data(copy = FALSE)[
+        get(self$get_id_col()) %in% ids,
+        (self$get_hid_col()) := NA_integer_
+      ]
       return(invisible())
     },
-
     add_household_id = function(ids, hh_ids) {
       stopifnot(self$ids_exist(ids))
-      stopifnot(all(sapply(hh_ids, function(x)
-        length(x) == 1)))
+      stopifnot(all(sapply(hh_ids, function(x) {
+        length(x) == 1
+      })))
       stopifnot(length(ids) == length(hh_ids))
       stopifnot(is.vector(hh_ids))
       stopifnot(is.numeric(hh_ids))
@@ -372,9 +361,7 @@ Individual <- R6::R6Class(
 
       return(invisible())
     },
-
     get_parent_hid = function(ids = NULL) {
-
       ind_data <- self$get_data(copy = FALSE)
 
       father_hid <-
@@ -390,7 +377,6 @@ Individual <- R6::R6Class(
       } else {
         parent_hids
       }
-
     },
 
     # @description
@@ -465,14 +451,11 @@ Individual <- R6::R6Class(
     # have_resident_child = function(ids) {
     #   stop("Has not been implemented yet.")
     # }
-
   ),
-
   active = list(
     hid_col = function() {
       base::get(".hid_col", envir = private)
     },
-
     data_template = function() {
       data.table(
         age = integer(),
@@ -484,7 +467,6 @@ Individual <- R6::R6Class(
       )
     }
   ),
-
   private = list(
     # private -----------------------------------------------------------------
     .hid_col = character(),
@@ -495,7 +477,7 @@ Individual <- R6::R6Class(
     #    return a list of ids those match the relationship type of the input
     # ***********************************************************
     get_relationship = function(ids, type = private$relationship_types) {
-      type = match.arg(type)
+      type <- match.arg(type)
       if (missing(ids)) {
         idx <- TRUE # this returns the entire data.table
       } else {
@@ -522,9 +504,19 @@ Individual <- R6::R6Class(
       }
 
       switch(type,
-             "father" = {return(self$get_data(copy = FALSE)[idx, father_id])},
-             "mother" = {return(self$get_data(copy = FALSE)[idx, mother_id])},
-             "partner" = {return(self$get_data(copy = FALSE)[idx, partner_id])},
-             "children" = {return(.get_children(ids))})
-    })
+        "father" = {
+          return(self$get_data(copy = FALSE)[idx, father_id])
+        },
+        "mother" = {
+          return(self$get_data(copy = FALSE)[idx, mother_id])
+        },
+        "partner" = {
+          return(self$get_data(copy = FALSE)[idx, partner_id])
+        },
+        "children" = {
+          return(.get_children(ids))
+        }
+      )
+    }
   )
+)

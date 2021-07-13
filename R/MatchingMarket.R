@@ -74,11 +74,9 @@
 #' @export
 MatchingMarket <- R6::R6Class(
 
-# Public ------------------------------------------------------------------
-
+  # Public ------------------------------------------------------------------
   classname = "MatchingMarket",
   inherit = Generic,
-
   public = list(
     max_market_size = numeric(),
     matching_problem = list(
@@ -86,18 +84,16 @@ MatchingMarket <- R6::R6Class(
       agentset_B = data.table(),
       slots_B = integer(),
       id_col_A = character(),
-      id_col_B  = character(),
+      id_col_B = character(),
       grouping_vars = character()
     ),
-
-
     initialize = function(agentset_A,
                           agentset_B,
                           id_col_A,
                           id_col_B,
                           slots_B = NULL,
                           grouping_vars = NULL,
-                          max_market_size = 5000 ^ 2) {
+                          max_market_size = 5000^2) {
       # CHECK INPUTS
       checkmate::expect_data_table(agentset_A)
       checkmate::expect_data_table(agentset_B)
@@ -134,7 +130,7 @@ MatchingMarket <- R6::R6Class(
 
       checkmate::assert_count(max_market_size, positive = T, na.ok = FALSE, null.ok = FALSE)
 
-      if (max_market_size > 5000 ^ 2) {
+      if (max_market_size > 5000^2) {
         stop(
           glue::glue(
             "The maximum allowable market size is 5000^2. Anything more than this \\
@@ -161,15 +157,12 @@ MatchingMarket <- R6::R6Class(
 
       return(invisible())
     },
-
     simulate = function() {
       private$abstract("Must be implemented based on one's use case.")
     },
-
     matching_score_A = function(matching_problem = self$matching_problem, idx_A, idx_B) {
       private$abstract("Must be implemented based on one's use case.")
     },
-
     matching_score_B = function(matching_problem = self$matching_problem, idx_B, idx_A) {
       private$abstract("Must be implemented based on one's use case.")
     },
@@ -177,10 +170,12 @@ MatchingMarket <- R6::R6Class(
     # create sub markets
     split_market = function(matching_problem = self$matching_problem, flatten = FALSE) {
       markets_by_group <- self$split_by_group()
-      sub_markets <- purrr::map(.x = markets_by_group,
-                                .f = ~ {
-                                  self$split_by_n(matching_problem = .x)
-                                })
+      sub_markets <- purrr::map(
+        .x = markets_by_group,
+        .f = ~ {
+          self$split_by_n(matching_problem = .x)
+        }
+      )
       lg$info("The matching problem is splited into {length(markets_by_group)} groups (markets) \\
           with the total of {sum(sapply(sub_markets, length))} sub-markets")
       if (flatten) {
@@ -210,12 +205,16 @@ MatchingMarket <- R6::R6Class(
       stopifnot(length(agentset_B_by_group) == length(agentset_A_by_group))
       stopifnot(all(names(agentset_A_by_group) == names(agentset_B_by_group)))
       matching_problem_by_group <-
-        map2(.x = agentset_A_by_group,
-             .y = agentset_B_by_group,
-             .f = ~ {
-               list(agentset_A = .x,
-                    agentset_B = .y)
-             })
+        map2(
+          .x = agentset_A_by_group,
+          .y = agentset_B_by_group,
+          .f = ~ {
+            list(
+              agentset_A = .x,
+              agentset_B = .y
+            )
+          }
+        )
       # RETURN
       return(matching_problem_by_group)
     },
@@ -262,7 +261,8 @@ MatchingMarket <- R6::R6Class(
                 agentset_A = .x,
                 agentset_B = .y
               )
-          })
+            }
+          )
         return(sub_matching_problem)
       }
 
@@ -288,11 +288,9 @@ MatchingMarket <- R6::R6Class(
       stop("something is wrong", browser())
     }
   ),
-
   private = list(
 
-# Private -----------------------------------------------------------------
-
+    # Private -----------------------------------------------------------------
     .check_matching_score_fn = function() {
       if (!is(self, "MatchingMarket")) {
         lg$fatal("Must be implemented based on one's use case.")
@@ -308,7 +306,6 @@ MatchingMarket <- R6::R6Class(
       # # if many-to-one/slots_B is not null, then both columns id should not have
       # duplicates id but id_B may have duplicates.
     },
-
     .early_return = function(matching_problem) {
       n_A <- nrow(matching_problem$agentset_A)
       n_B <- nrow(matching_problem$agentset_B)
@@ -316,12 +313,16 @@ MatchingMarket <- R6::R6Class(
         return(data.table(id_A = NA, id_B = NA))
       }
       if (n_A != 0 & n_B == 0) {
-        return(data.table(id_A = matching_problem$agentset_A[[self$matching_problem$id_col_A]],
-                          id_B = rep(NA, n_A)))
+        return(data.table(
+          id_A = matching_problem$agentset_A[[self$matching_problem$id_col_A]],
+          id_B = rep(NA, n_A)
+        ))
       }
       if (n_A == 0 & n_B != 0) {
-        return(data.table(id_A = rep(NA, n_B),
-                          id_B = matching_problem$agentset_B[[self$matching_problem$id_col_B]]))
+        return(data.table(
+          id_A = rep(NA, n_B),
+          id_B = matching_problem$agentset_B[[self$matching_problem$id_col_B]]
+        ))
       }
       stop("Early return conditions were not matched! something was wrong!")
     }

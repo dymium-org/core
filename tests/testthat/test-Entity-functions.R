@@ -15,7 +15,7 @@ test_that("add_history", {
 test_that("inspect entities", {
   create_toy_world()
   # test 1
-  ids <- c(1,2,3)
+  ids <- c(1, 2, 3)
   inspect_res <- inspect(world$get("Individual"), ids)
   expect_null(inspect_res$entity_history)
   expect_null(inspect_res$related_entity)

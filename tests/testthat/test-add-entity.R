@@ -6,8 +6,10 @@ test_that("add_entity works", {
   for (i_ in 1:10) {
     add_entity(world, entity = "Individual", newdata = ind_data)
   }
-  expect_equal(nrow(world$entities$Individual$get_data()),
-               nrow(ind_data) * 11)
+  expect_equal(
+    nrow(world$entities$Individual$get_data()),
+    nrow(ind_data) * 11
+  )
 })
 
 test_that("add_entity works with weights and targets", {
@@ -31,8 +33,10 @@ test_that("add_entity works with weights and targets", {
     weight_col = "weight"
   )
 
-  expect_equal(nrow(world$entities$Individual$get_data()),
-               target_not_zero + nrow(ind_data))
+  expect_equal(
+    nrow(world$entities$Individual$get_data()),
+    target_not_zero + nrow(ind_data)
+  )
 
   add_entity(
     world,
@@ -41,9 +45,10 @@ test_that("add_entity works with weights and targets", {
     target = 0
   )
 
-  expect_equal(nrow(world$entities$Individual$get_data()),
-               target_not_zero + nrow(ind_data))
-
+  expect_equal(
+    nrow(world$entities$Individual$get_data()),
+    target_not_zero + nrow(ind_data)
+  )
 })
 
 test_that("add_entity works with condition", {
@@ -79,8 +84,10 @@ test_that("add_entity works with condition", {
     weight_col = "weight",
     condition = make_true()
   )
-  expect_equal(nrow(world$entities$Individual$get_data()),
-               target + nrow(ind_data))
+  expect_equal(
+    nrow(world$entities$Individual$get_data()),
+    target + nrow(ind_data)
+  )
 
   add_entity(
     world,
@@ -90,8 +97,10 @@ test_that("add_entity works with condition", {
     weight_col = "weight",
     condition = make_false()
   )
-  expect_equal(nrow(world$entities$Individual$get_data()),
-               target + nrow(ind_data))
+  expect_equal(
+    nrow(world$entities$Individual$get_data()),
+    target + nrow(ind_data)
+  )
 
   add_entity(
     world,
@@ -101,8 +110,8 @@ test_that("add_entity works with condition", {
     weight_col = "weight",
     condition = make_bad_condition()
   )
-  expect_equal(nrow(world$entities$Individual$get_data()),
-               target + nrow(ind_data))
-
+  expect_equal(
+    nrow(world$entities$Individual$get_data()),
+    target + nrow(ind_data)
+  )
 })
-

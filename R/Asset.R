@@ -73,23 +73,25 @@ Asset <- R6::R6Class(
   classname = "Asset",
   inherit = Entity,
   public = list(
-
     initialize = function(.data, id_col, owner = NULL) {
       checkmate::assert_r6(owner, classes = c("Agent", "Entity"), null.ok = TRUE)
-      super$initialize(databackend = DataBackendDataTable,
-                       .data = .data,
-                       id_col = id_col)
+      super$initialize(
+        databackend = DataBackendDataTable,
+        .data = .data,
+        id_col = id_col
+      )
       if (!is.null(owner)) {
         self$set_owner_object(owner)
       }
       return(invisible(self))
     },
-
     set_owner_object = function(x) {
       checkmate::assert_r6(x, classes = c("Agent", "Entity"))
-      checkmate::assert_names(x = x$database$attrs$colnames,
-                              must.include = self$get_id_col(),
-                              .var.name = "Attribute data of owner 'x'")
+      checkmate::assert_names(
+        x = x$database$attrs$colnames,
+        must.include = self$get_id_col(),
+        .var.name = "Attribute data of owner 'x'"
+      )
 
       owner_id_col <- x$get_id_col()
       owner_ids_in_self <- na.omit(self$get_attr(x = owner_id_col))
@@ -114,11 +116,9 @@ Asset <- R6::R6Class(
       private$.owner_id_col <- owner_id_col
       invisible()
     },
-
     get_owner_object = function() {
       private$.Owner
     },
-
     set_owner = function(ids, owner_ids) {
 
       # check that both self and owner are both available.
@@ -155,14 +155,12 @@ Asset <- R6::R6Class(
 
       invisible()
     },
-
     get_owner = function(ids) {
       if (!missing(ids)) {
         return(self$get_attr(x = self$get_owner_id_col(), ids = ids))
       }
       self$get_attr(x = self$get_owner_id_col())
     },
-
     get_owner_id_col = function() {
       if (is.null(private$.owner_id_col)) {
         lg$warn("owner id column is NULL, this is likely that the owner object of \\
@@ -170,11 +168,9 @@ Asset <- R6::R6Class(
       }
       private$.owner_id_col
     },
-
     is_owned = function(ids) {
       !is.na(self$get_owner(ids))
     },
-
     remove_owner = function(ids) {
       owner_ids <- self$get_owner(ids)
       if (anyNA(owner_ids)) {
@@ -201,13 +197,11 @@ Asset <- R6::R6Class(
       )
       invisible()
     },
-
     owner_gets_asset_id = function(owner_ids) {
       owner <- self$get_owner_object()
       owner$get_attr(x = self$get_id_col(), ids = owner_ids)
     }
   ),
-
   private = list(
     .Owner = NULL, # a place holder for the owner object.
     .owner_id_col = NULL

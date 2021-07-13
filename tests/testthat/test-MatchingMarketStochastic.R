@@ -3,14 +3,12 @@ test_that("initialise", {
     classname = "MarriageMarketStochastic",
     inherit = MatchingMarketStochastic,
     public = list(
-
       matching_score_A = function(matching_problem = self$matching_problem, idx_A, idx_B) {
         scores <- 1 / (1 + abs(
           matching_problem$agentset_A[["age"]][idx_A] -
             matching_problem$agentset_B[["age"]][idx_B]
         ))
       },
-
       matching_score_B = function(matching_problem = self$matching_problem, idx_B, idx_A) {
         scores <- 1 / (1 + abs(
           matching_problem$agentset_B[["age"]][idx_B] -
@@ -57,6 +55,4 @@ test_that("initialise", {
       .[, age_diff := age - i.age] %>%
       .[, hist(age_diff, breaks = 20)]
   }
-
-
 })

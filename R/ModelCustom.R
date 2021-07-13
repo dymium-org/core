@@ -54,18 +54,19 @@ ModelCustom <- R6::R6Class(
     #
     # @return `NULL`
     initialize = function(params, formula, type = "custom", preprocessing_fn) {
-
-      self$params = checkmate::assert_numeric(params,
-                                              finite = T,
-                                              any.missing = FALSE,
-                                              names = "unique")
-      self$formula = checkmate::assert_formula(formula, null.ok = FALSE)
-      self$type = checkmate::assert_string(type, na.ok = FALSE)
-      self$preprocessing_fn = checkmate::assert_function(preprocessing_fn,
-                                                         nargs = 1,
-                                                         null.ok = TRUE)
-      self$terms = terms(formula)
-      private$.model = self
+      self$params <- checkmate::assert_numeric(params,
+        finite = T,
+        any.missing = FALSE,
+        names = "unique"
+      )
+      self$formula <- checkmate::assert_formula(formula, null.ok = FALSE)
+      self$type <- checkmate::assert_string(type, na.ok = FALSE)
+      self$preprocessing_fn <- checkmate::assert_function(preprocessing_fn,
+        nargs = 1,
+        null.ok = TRUE
+      )
+      self$terms <- terms(formula)
+      private$.model <- self
 
       invisible(NULL)
     },
@@ -74,7 +75,7 @@ ModelCustom <- R6::R6Class(
     #'
     #' print method.
     print = function() {
-      cat('Model type: ', self$type, "\n")
+      cat("Model type: ", self$type, "\n")
       print(self$params)
     },
 
@@ -94,7 +95,6 @@ ModelCustom <- R6::R6Class(
       self$print()
     }
   ),
-
   private = list(
     .compute_linear_combination = function(newdata) {
       mm <- model.matrix(self$formula, newdata)

@@ -1,36 +1,33 @@
 test_that("train", {
-
   create_toy_population()
   Ind <- pop$get("Individual")
   Hh <- pop$get("Household")
 
   # create model
-  fitting_data <- Ind$get_data()[, male := ifelse(sex == 'male', 'yes', 'no')]
-  model <- caret::train(male ~ age + marital_status, data = fitting_data, method = 'glm', family = binomial('logit'))
+  fitting_data <- Ind$get_data()[, male := ifelse(sex == "male", "yes", "no")]
+  model <- caret::train(male ~ age + marital_status, data = fitting_data, method = "glm", family = binomial("logit"))
 
   # create transition
   a_transition <- TransitionClassification$new(Ind, model)
 
   # validate the result
   checkmate::expect_data_table(a_transition$get_result(), any.missing = FALSE, min.cols = 1, ncols = 2, null.ok = FALSE)
-  checkmate::expect_names(names(a_transition$get_result()), permutation.of = c('id', 'response'))
-
+  checkmate::expect_names(names(a_transition$get_result()), permutation.of = c("id", "response"))
 })
 
 test_that("datatable - binary", {
-
   create_toy_population()
   Ind <- pop$get("Individual")
 
   # create an enumerated binary model - age, sex, prob
-  model <- data.table(CJ(sex = c('male', 'female'), age = 0:100))[, prob := runif(.N)]
+  model <- data.table(CJ(sex = c("male", "female"), age = 0:100))[, prob := runif(.N)]
 
   # create transition
   a_transition <- TransitionClassification$new(Ind, model)
 
   # validate the result
   checkmate::expect_data_table(a_transition$get_result(), any.missing = FALSE, min.cols = 1, ncols = 2, null.ok = FALSE)
-  checkmate::expect_names(names(a_transition$get_result()), permutation.of = c('id', 'response'))
+  checkmate::expect_names(names(a_transition$get_result()), permutation.of = c("id", "response"))
 })
 
 
@@ -39,16 +36,16 @@ test_that("datatable - dynamic rate", {
   Ind <- pop$get("Individual")
 
   # create an enumerated dynamic rate model - age, sex, t_*
-  model <- data.table(CJ(sex = c('male', 'female'), age = 0:100)) %>%
+  model <- data.table(CJ(sex = c("male", "female"), age = 0:100)) %>%
     .[, paste0("t_", c(0:10)) := runif(.N)]
 
-  model_bad1 <- data.table(CJ(sex = c('male', 'female'), age = 0:100)) %>%
+  model_bad1 <- data.table(CJ(sex = c("male", "female"), age = 0:100)) %>%
     .[, paste0("t_", LETTERS) := runif(.N)]
 
-  model_bad2 <- data.table(CJ(sex = c('male', 'female'), age = 0:100)) %>%
+  model_bad2 <- data.table(CJ(sex = c("male", "female"), age = 0:100)) %>%
     .[, paste0("t_", LETTERS, seq_along(LETTERS)) := runif(.N)]
 
-  model_bad3 <- data.table(CJ(sex = c('male', 'female'), age = 0:100)) %>%
+  model_bad3 <- data.table(CJ(sex = c("male", "female"), age = 0:100)) %>%
     .[, paste0("t_", c(0:10), LETTERS[1:10]) := runif(.N)]
 
   # test models
@@ -60,67 +57,71 @@ test_that("datatable - dynamic rate", {
   a_transition <- TransitionClassification$new(Ind, model)
   checkmate::expect_r6(a_transition, "TransitionClassification")
   checkmate::expect_data_table(a_transition$get_result(), ncols = 2)
-  checkmate::expect_subset(a_transition$get_result()[['response']], c("yes", "no"))
-  checkmate::expect_integerish(a_transition$get_result()[['id']], lower = 1, unique = T, null.ok = FALSE, any.missing = FALSE)
+  checkmate::expect_subset(a_transition$get_result()[["response"]], c("yes", "no"))
+  checkmate::expect_integerish(a_transition$get_result()[["id"]], lower = 1, unique = T, null.ok = FALSE, any.missing = FALSE)
 })
 
 
 test_that("datatable - choices", {
-
   create_toy_population()
 
   Ind <- pop$get("Individual")
 
   good_choice <- data.table(
-    sex = c('male', 'female'),
-    probs = list(c(0.1,0.9), c(0.9,0.1)),
-    choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
+    sex = c("male", "female"),
+    probs = list(c(0.1, 0.9), c(0.9, 0.1)),
+    choices = list(c("can drive", "cannot drive"), c("can drive", "cannot drive"))
   )
 
   good_choice2 <- data.table(
-    sex = c('male', 'female'),
-    probs = list(c(0.1,0.9), c(0.8,0.1,0.1)),
-    choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive', 'not applicable'))
+    sex = c("male", "female"),
+    probs = list(c(0.1, 0.9), c(0.8, 0.1, 0.1)),
+    choices = list(c("can drive", "cannot drive"), c("can drive", "cannot drive", "not applicable"))
   )
 
   # some prob doesn't sum up to 1
   bad_choice3 <- data.table(
-    sex = c('male', 'female'),
-    probs = list(c(0.1,0.8), c(0.9,0.1)),
-    choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
+    sex = c("male", "female"),
+    probs = list(c(0.1, 0.8), c(0.9, 0.1)),
+    choices = list(c("can drive", "cannot drive"), c("can drive", "cannot drive"))
   )
 
   # duplicated choice
   bad_choice <- data.table(
-    sex = c('male', 'female', 'male'),
-    probs = list(c(0.1,0.9), c(0.9,0.1), c(0.9,0.1)),
-    choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
+    sex = c("male", "female", "male"),
+    probs = list(c(0.1, 0.9), c(0.9, 0.1), c(0.9, 0.1)),
+    choices = list(c("can drive", "cannot drive"), c("can drive", "cannot drive"), c("can drive", "cannot drive"))
   )
 
   # contain an extra column
   bad_choice3 <- data.table(
-    sex = c('male', 'female'),
-    dummy = c('a', 'b'),
-    probs = list(c(0.1,0.9), c(0.9,0.1)),
-    choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
+    sex = c("male", "female"),
+    dummy = c("a", "b"),
+    probs = list(c(0.1, 0.9), c(0.9, 0.1)),
+    choices = list(c("can drive", "cannot drive"), c("can drive", "cannot drive"))
   )
 
-  TransitionCandrive <- R6::R6Class(classname = "TransitionCandrive",
-                                    inherit = TransitionClassification)
+  TransitionCandrive <- R6::R6Class(
+    classname = "TransitionCandrive",
+    inherit = TransitionClassification
+  )
 
   checkmate::expect_data_table(TransitionCandrive$new(Ind, good_choice2)$get_result())
   expect_message(print(TransitionCandrive$new(Ind, good_choice)),
-                 regexp = "agents with 2 unique responses of type character")
+    regexp = "agents with 2 unique responses of type character"
+  )
   expect_message(print(TransitionCandrive$new(Ind, good_choice2)),
-                 regexp = "unique responses of type character")
+    regexp = "unique responses of type character"
+  )
   expect_error(TransitionCandrive$new(Ind, bad_choice),
-               regexp = "`model` contains duplicated rows")
+    regexp = "`model` contains duplicated rows"
+  )
   expect_error(TransitionCandrive$new(Ind, bad_choice3),
-               regexp = "failed: Must be a subset of set \\{pid")
+    regexp = "failed: Must be a subset of set \\{pid"
+  )
 })
 
 test_that("list and numeric", {
-
   create_toy_population()
   Ind <- pop$get("Individual")
 
@@ -134,16 +135,14 @@ test_that("list and numeric", {
 
   # validate the result
   checkmate::expect_data_table(a_vector_transition$get_result(), any.missing = FALSE, min.cols = 1, ncols = 2, null.ok = FALSE)
-  checkmate::expect_names(names(a_vector_transition$get_result()), permutation.of = c('id', 'response'))
+  checkmate::expect_names(names(a_vector_transition$get_result()), permutation.of = c("id", "response"))
 
   checkmate::expect_data_table(a_list_transition$get_result(), any.missing = FALSE, min.cols = 1, ncols = 2, null.ok = FALSE)
-  checkmate::expect_names(names(a_list_transition$get_result()), permutation.of = c('id', 'response'))
-
+  checkmate::expect_names(names(a_list_transition$get_result()), permutation.of = c("id", "response"))
 })
 
 
-test_that('targeted_agent works', {
-
+test_that("targeted_agent works", {
   create_toy_population()
   Ind <- pop$get("Individual")
 
@@ -159,16 +158,16 @@ test_that('targeted_agent works', {
 
   # validate the result
   checkmate::assert_integerish(
-    x = a_transition$get_result()[['id']],
-    lower = 1, len = n_targeted_agents, null.ok = FALSE, any.missing = FALSE, unique = TRUE)
+    x = a_transition$get_result()[["id"]],
+    lower = 1, len = n_targeted_agents, null.ok = FALSE, any.missing = FALSE, unique = TRUE
+  )
   checkmate::expect_data_table(
     x = a_transition$get_result(),
-    any.missing = FALSE, min.cols = 1, ncols = 2, null.ok = FALSE)
-
+    any.missing = FALSE, min.cols = 1, ncols = 2, null.ok = FALSE
+  )
 })
 
-test_that('target works', {
-
+test_that("target works", {
   create_toy_population()
   Ind <- pop$get("Individual")
 
@@ -177,21 +176,25 @@ test_that('target works', {
   train_model <- create_caret_binary_model()
 
   # create targets
-  good_target1 = list(choice_a = 10, choice_b = 20)
-  good_target2 = list(choice_a = 10) # only choice a is controled
-  bad_target1 = list(choice_a = 10, choice_b = 99999)
-  bad_target2 = list(choice_a = 10, choice_b = -99999)
-  bad_target3 = list(choice_a = 10, choice_c = 1) # no choice_c!
+  good_target1 <- list(choice_a = 10, choice_b = 20)
+  good_target2 <- list(choice_a = 10) # only choice a is controled
+  bad_target1 <- list(choice_a = 10, choice_b = 99999)
+  bad_target2 <- list(choice_a = 10, choice_b = -99999)
+  bad_target3 <- list(choice_a = 10, choice_c = 1) # no choice_c!
 
   # create transition
   a_good_transition_1 <-
     TransitionClassification$new(Ind, model = list_model, target = good_target1)
-  expect_equal(as.numeric(table(a_good_transition_1$get_result()[['response']])),
-               c(10, 20))
+  expect_equal(
+    as.numeric(table(a_good_transition_1$get_result()[["response"]])),
+    c(10, 20)
+  )
   a_good_transition_2 <-
     TransitionClassification$new(Ind, model = list_model, target = good_target2)
-  expect_equal(as.numeric(table(a_good_transition_2$get_result()[['response']])),
-               c(10))
+  expect_equal(
+    as.numeric(table(a_good_transition_2$get_result()[["response"]])),
+    c(10)
+  )
   expect_equal(nrow(a_good_transition_2$get_result()), nrow(Ind$get_data()))
   expect_error(
     TransitionClassification$new(Ind, model = list_model, target = bad_target1),
@@ -208,7 +211,6 @@ test_that('target works', {
 
   a_good_train_transition_1 <-
     TransitionClassification$new(Ind, model = list(yes = 0.05, no = 0.95), target = list(yes = 1))
-
 })
 
 
@@ -221,7 +223,7 @@ test_that("model by targeted_agents", {
 
   my_model <- data.table(
     pid = c(1:3),
-    probs = list(c(0.5,0.2,0.3), c(0.5,0.2,0.3), c(0.5,0.2,0.3)),
+    probs = list(c(0.5, 0.2, 0.3), c(0.5, 0.2, 0.3), c(0.5, 0.2, 0.3)),
     choices = list(sample(letters, 3, replace = T), sample(letters, 3, replace = T), sample(letters, 3, replace = T))
   )
 
@@ -247,7 +249,6 @@ test_that("update", {
 
 
 test_that("dynamic target", {
-
   create_toy_world()
   world$set_scale(1)
 
@@ -269,7 +270,6 @@ test_that("dynamic target", {
     Target$new(.)
 
   event_dynamic_target <- function(world, model, target) {
-
     Ind <- world$get("Individual")
 
     DynamicTrans <- TransitionClassification$new(Ind, model, target)
@@ -306,12 +306,13 @@ test_that("dynamic target", {
     )
 
   expect_error(TransitionClassification$new(world$entities$Individual, model, Target$new(dynamic_target)),
-               regexp = "Must be a subset of set \\{yes,no\\}.")
+    regexp = "Must be a subset of set \\{yes,no\\}."
+  )
 })
 
 test_that("TransitionClassifcation works with mlr model", {
   if (requireNamespace("mlr") &
-      requireNamespace("nnet")) {
+    requireNamespace("nnet")) {
     create_toy_world()
     mlr_model <- create_mlr_multinomial_model()
     my_trans <-
@@ -331,18 +332,25 @@ test_that("The scale of World only affect Target object", {
   WORLD_SCALE <- 0.1
   world$set_scale(WORLD_SCALE)
   a_target <- list(yes = 10)
-  a_transition <- TransitionClassification$new(x = world$entities$Individual,
-                                               model = list(yes = 0.1, no = 0.9),
-                                               target = a_target)
+  a_transition <- TransitionClassification$new(
+    x = world$entities$Individual,
+    model = list(yes = 0.1, no = 0.9),
+    target = a_target
+  )
   expect_equal(a_transition$.__enclos_env__$private$.target, a_target)
 
   # however when a Target object is used then the transition outcome should be
   # scaled down according to the set scale.
-  a_transition <- TransitionClassification$new(x = world$entities$Individual,
-                                               model = list(yes = 0.1, no = 0.9),
-                                               target = Target$new(a_target))
+  a_transition <- TransitionClassification$new(
+    x = world$entities$Individual,
+    model = list(yes = 0.1, no = 0.9),
+    target = Target$new(a_target)
+  )
   expect_equal(a_transition$.__enclos_env__$private$.target %>% as.numeric(.) %>% sum(.),
-               expected = as.numeric(a_target) %>% sum(.) %>% {. * WORLD_SCALE})
+    expected = as.numeric(a_target) %>% sum(.) %>% {
+      . * WORLD_SCALE
+    }
+  )
 
   # set scale back to 1, this scale value propagates to other tests as well since
   # it is a global variable of the package env

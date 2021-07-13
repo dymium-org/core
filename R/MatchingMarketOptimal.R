@@ -32,7 +32,6 @@ MatchingMarketOptimal <- R6::R6Class(
   classname = "MatchingMarketOptimal",
   inherit = MatchingMarket,
   public = list(
-
     simulate = function(method = c("one-to-one", "many-to-one"),
                         one_sided = FALSE,
                         optimal_A = TRUE,
@@ -51,7 +50,7 @@ MatchingMarketOptimal <- R6::R6Class(
 
       parallel_wrapper <- function(...) {
         if (parallel) {
-          stopifnot(requireNamespace('furrr'))
+          stopifnot(requireNamespace("furrr"))
           furrr::future_map_dfr(..., .options = furrr::future_options(globals = "self"))
         } else {
           purrr::map_dfr(...)
@@ -66,23 +65,29 @@ MatchingMarketOptimal <- R6::R6Class(
 
       if (!one_sided) {
         if (method == "one-to-one") {
-          return(parallel_wrapper(.x = markets,
-                                  .f = ~ {
-                                    private$.one_to_one_matching(matching_problem = .x)}))
+          return(parallel_wrapper(
+            .x = markets,
+            .f = ~ {
+              private$.one_to_one_matching(matching_problem = .x)
+            }
+          ))
         }
         if (method == "many-to-one") {
           checkmate::assert_names(names(self$matching_problem$agentset_B), must.include = "slots")
-          return(parallel_wrapper(.x = markets,
-                                  .f = ~ {
-                                    private$.many_to_one_matching(matching_problem = .x,
-                                                                  optimal_A = optimal_A)}))
+          return(parallel_wrapper(
+            .x = markets,
+            .f = ~ {
+              private$.many_to_one_matching(
+                matching_problem = .x,
+                optimal_A = optimal_A
+              )
+            }
+          ))
         }
       }
     }
   ),
-
   private = list(
-
     .check_matching_score_fn = function() {
       scores <-
         self$matching_score_A(
@@ -92,7 +97,6 @@ MatchingMarketOptimal <- R6::R6Class(
         )
       checkmate::assert_matrix(scores, null.ok = FALSE, all.missing = FALSE, ncols = 1, nrows = 2)
     },
-
     .one_to_one_matching = function(matching_problem) {
       stopifnot(all(sapply(matching_problem, is.data.table)))
 
@@ -129,16 +133,17 @@ MatchingMarketOptimal <- R6::R6Class(
       if (n_agentset_A >= n_agentset_B) {
         match_result_dt <- data.table(
           id_A = matching_problem$agentset_A[[self$matching_problem$id_col_A]],
-          id_B = matching_problem$agentset_B[[self$matching_problem$id_col_B]][as.vector(match_result$proposals)])
+          id_B = matching_problem$agentset_B[[self$matching_problem$id_col_B]][as.vector(match_result$proposals)]
+        )
       } else {
         match_result_dt <- data.table(
           id_A = matching_problem$agentset_A[[self$matching_problem$id_col_A]][as.vector(match_result$engagements)],
-          id_B = matching_problem$agentset_B[[self$matching_problem$id_col_B]])
+          id_B = matching_problem$agentset_B[[self$matching_problem$id_col_B]]
+        )
       }
 
       return(match_result_dt)
     },
-
     .many_to_one_matching = function(matching_problem, optimal_A = TRUE) {
       stopifnot(all(sapply(matching_problem, is.data.table)))
       checkmate::assert_flag(optimal_A, na.ok = FALSE, null.ok = FALSE)

@@ -17,7 +17,7 @@ test_that("register", {
   # register2(list(world$entities$Household,
   #               world$entities$Individual),
   #          list(toy_households, toy_individuals))
-    # {register(x = world$entities$Individual, .)}
+  # {register(x = world$entities$Individual, .)}
   # world$entities$Individual$add(.data = new_ind_data)
 })
 

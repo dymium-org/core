@@ -13,8 +13,10 @@ test_that("check_required_models", {
   REQUIRED_MODELS <- c("model_two")
   expect_true(check_required_models(my_model, REQUIRED_MODELS))
   REQUIRED_MODELS <- c("model_one", "model_two")
-  expect_error(assert_required_models(my_model, REQUIRED_MODELS),
-               "These required models are not present: model_one.")
+  expect_error(
+    assert_required_models(my_model, REQUIRED_MODELS),
+    "These required models are not present: model_one."
+  )
 })
 
 test_that("pick_models - 1", {
@@ -37,15 +39,19 @@ test_that("pick_models - 2", {
   my_model <- list(model_two = list(yes = 0.1, no = 0.9))
   world$add(x = list(yes = 0.5, no = 0.5), "model_two")
   REQUIRED_MODELS <- c("model_one", "model_two")
-  expect_error(pick_models(my_model, world, REQUIRED_MODELS),
-               "These required models are not present: model_one")
+  expect_error(
+    pick_models(my_model, world, REQUIRED_MODELS),
+    "These required models are not present: model_one"
+  )
 })
 
 test_that("pick_models - 3", {
   # find both models
   create_toy_world()
-  my_model <- list(model_one = list(yes = 0.1, no = 0.9),
-                   model_two = list(yes = 0.1, no = 0.9))
+  my_model <- list(
+    model_one = list(yes = 0.1, no = 0.9),
+    model_two = list(yes = 0.1, no = 0.9)
+  )
   world$add(x = list(yes = 0.5, no = 0.5), "model_one")
   world$add(x = list(yes = 0.5, no = 0.5), "model_two")
   REQUIRED_MODELS <- c("model_one", "model_two")
@@ -56,8 +62,10 @@ test_that("pick_models - 3", {
 
 test_that("pick_models - 4", {
   # find both models
-  my_model <- list(model_one = list(yes = 0.1, no = 0.9),
-                   model_two = list(yes = 0.1, no = 0.9))
+  my_model <- list(
+    model_one = list(yes = 0.1, no = 0.9),
+    model_two = list(yes = 0.1, no = 0.9)
+  )
   REQUIRED_MODELS <- c("model_one", "model_two")
   pick_models(my_model, world, REQUIRED_MODELS)
 })
@@ -67,8 +75,10 @@ test_that("pick_models - default behavior", {
   create_toy_world()
   my_model <- NULL
   REQUIRED_MODELS <- c("model_one", "model_two")
-  expect_error(pick_models(my_model, world, REQUIRED_MODELS),
-               "These required models are not present: model_one, model_two")
+  expect_error(
+    pick_models(my_model, world, REQUIRED_MODELS),
+    "These required models are not present: model_one, model_two"
+  )
 })
 
 test_that("pick_models - default behavior 2", {
@@ -77,8 +87,10 @@ test_that("pick_models - default behavior 2", {
   my_model <- NULL
   world$add(x = list(yes = 0.5, no = 0.5), "model_one")
   REQUIRED_MODELS <- c("model_one", "model_two")
-  expect_error(pick_models(my_model, world, REQUIRED_MODELS),
-               "These required models are not present: model_two")
+  expect_error(
+    pick_models(my_model, world, REQUIRED_MODELS),
+    "These required models are not present: model_two"
+  )
 })
 
 test_that("pick_models - default behavior 3", {
@@ -94,8 +106,10 @@ test_that("pick_models - default behavior 3", {
 test_that("pick_models - provide an Model object", {
   # event function set model to NULL as default
   create_toy_world()
-  my_model <- list(model_one = Model$new(list(yes = 0.5, no = 0.5)),
-                   model_two = Model$new(list(yes = 0.5, no = 0.5)))
+  my_model <- list(
+    model_one = Model$new(list(yes = 0.5, no = 0.5)),
+    model_two = Model$new(list(yes = 0.5, no = 0.5))
+  )
   REQUIRED_MODELS <- c("model_one")
   picked_models <- pick_models(my_model, world, REQUIRED_MODELS)
   checkmate::expect_list(picked_models, names = "strict", len = 1)

@@ -8,14 +8,16 @@
 #'
 #' # Not Dymium object
 #' library(R6)
-#' x  <- R6Class()
+#' x <- R6Class()
 #' is_dymium_class(x)
 #'
 #' # Dymium object
-#' Pop <- Population$new(ind_data = toy_individuals,
-#'                       hh_data = toy_households,
-#'                       pid_col = "pid",
-#'                       hid_col = "hid")
+#' Pop <- Population$new(
+#'   ind_data = toy_individuals,
+#'   hh_data = toy_households,
+#'   pid_col = "pid",
+#'   hid_col = "hid"
+#' )
 #' is_dymium_class(Pop)
 is_dymium_class <- function(x) {
   tryCatch(
@@ -184,7 +186,7 @@ get_log.Container <- function(x) {
 #' create_toy_world()
 #' add_log(world, entity = "Individual", desc = "count:individuals", value = world$entities$Individual$n())
 #' get_log(world)
-add_log <-  function(x, ...) {
+add_log <- function(x, ...) {
   UseMethod("add_log")
 }
 
@@ -273,8 +275,8 @@ register <- function(x, ..., only_primary_id_col = FALSE) {
     })
 
   x_primary_id_col <- x$id_col[[1]]
-  keys = unique(.data_lst[[1]][[x_primary_id_col]])
-  values = x$generate_new_ids(n = length(keys))
+  keys <- unique(.data_lst[[1]][[x_primary_id_col]])
+  values <- x$generate_new_ids(n = length(keys))
   mapping_dt <- data.table(.key = keys, .value = values)
 
   if (only_primary_id_col) {

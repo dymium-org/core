@@ -29,8 +29,7 @@ Household <- R6Class(
   "Household",
   inherit = Agent,
   public = list(
-
-    add = function(.data, n){
+    add = function(.data, n) {
       # generate by n
       if (!xor(missing(.data), missing(n))) {
         stop("either `.data` or `n` should be given. But never both.")

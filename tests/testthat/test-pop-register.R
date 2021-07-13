@@ -32,7 +32,6 @@ test_that("pop_register works", {
   expect_true(
     all(!all_new_hids %in% Hh$get_ids())
   )
-
 })
 
 test_that("pop_register works - individuals only", {
@@ -58,4 +57,3 @@ test_that("pop_register works - individuals only", {
     all(!all_new_pids %in% Ind$get_ids())
   )
 })
-

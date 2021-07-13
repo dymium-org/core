@@ -111,11 +111,9 @@ Population <- R6Class(
   inherit = Container,
   public = list(
     # public ------------------------------------------------------------------
-
     ind = NULL,
     hh = NULL,
-
-    initialize = function(ind_data, hh_data, pid_col = NULL, hid_col = NULL){
+    initialize = function(ind_data, hh_data, pid_col = NULL, hid_col = NULL) {
       checkmate::assert_data_table(ind_data, min.rows = 1)
       checkmate::assert_data_table(hh_data, min.rows = 1)
       checkmate::assert_character(pid_col, any.missing = FALSE, min.len = 1, unique = T)
@@ -140,9 +138,10 @@ Population <- R6Class(
         hh_data <- hh_data[hhsize_dt, , on = c(hid_col)]
       } else {
         checkmate::assert_integerish(hh_data[["hhsize"]],
-                                     lower = 1,
-                                     any.missing = FALSE,
-                                     null.ok = FALSE)
+          lower = 1,
+          any.missing = FALSE,
+          null.ok = FALSE
+        )
       }
 
       if (nrow(ind_data) != hh_data[, sum(hhsize)]) {
@@ -159,9 +158,7 @@ Population <- R6Class(
 
       return(invisible(self))
     },
-
     add_population = function(ind_data, hh_data = NULL) {
-
       Ind <- self$get("Individual")
       Hh <- self$get("Household")
       pid_col <- Ind$id_col
@@ -189,9 +186,10 @@ Population <- R6Class(
           hh_data <- hh_data[hhsize_dt, , on = c(hid_col)]
         } else {
           checkmate::assert_integerish(hh_data[["hhsize"]],
-                                       lower = 1,
-                                       any.missing = FALSE,
-                                       null.ok = FALSE)
+            lower = 1,
+            any.missing = FALSE,
+            null.ok = FALSE
+          )
         }
         # check hhsize
         if (nrow(ind_data) != hh_data[, sum(hhsize)]) {
@@ -219,7 +217,6 @@ Population <- R6Class(
 
       return(invisible(self))
     },
-
     join_household = function(ind_ids, hh_ids) {
       Ind <- self$get(Individual)
       Hh <- self$get(Household)
@@ -238,20 +235,20 @@ Population <- R6Class(
       self$update()
       invisible()
     },
-
     leave_household = function(ind_ids) {
       # check that ids in ind_ids and their household ids exist
       stopifnot(self$get("Individual")$ids_exist(ids = ind_ids))
       stopifnot(self$get("Household")$ids_exist(ids = self$get("Individual")$get_household_ids(ids = ind_ids)))
       # leave household
       self$get("Individual")$remove_household_id(ids = ind_ids)
-      add_history(entity = self$get("Individual"),
-                  ids = ind_ids, event = EVENT$LEFT_HOUSEHOLD)
+      add_history(
+        entity = self$get("Individual"),
+        ids = ind_ids, event = EVENT$LEFT_HOUSEHOLD
+      )
       # households update themselves
       self$update()
       invisible()
     },
-
     remove_emptied_households = function(update_hhsize = TRUE) {
       checkmate::assert_flag(update_hhsize, na.ok = FALSE)
       if (update_hhsize) {
@@ -265,7 +262,6 @@ Population <- R6Class(
       }
       invisible()
     },
-
     household_type = function(hids, .debug = FALSE) {
       Ind <- self$get("Individual")
       Hh <- self$get("Household")
@@ -286,8 +282,12 @@ Population <- R6Class(
         ), by = c(Ind$get_hid_col())] %>%
         # identify relationships
         .[, `:=`(
-          couple_hh = purrr::map2_lgl(members, partners, ~ {any(.y %in% .x)}),
-          with_children = purrr::map2_lgl(members, parents, ~ {any(.y %in% .x)})
+          couple_hh = purrr::map2_lgl(members, partners, ~ {
+            any(.y %in% .x)
+          }),
+          with_children = purrr::map2_lgl(members, parents, ~ {
+            any(.y %in% .x)
+          })
         )] %>%
         # household type classification
         .[, household_type := fcase(
@@ -314,9 +314,7 @@ Population <- R6Class(
         return(household_type[["household_type"]])
       }
     },
-
     remove_population = function(pid, hid) {
-
       if (missing(pid) & missing(hid)) {
         stop("`pid` or `hid` or both must be specified.")
       }
@@ -334,7 +332,6 @@ Population <- R6Class(
       }
       invisible()
     },
-
     check_hhsize = function() {
       n_individuals <- self$get("Individual")$n()
       n_members_in_households <- sum(self$get_hhsize())
@@ -353,7 +350,6 @@ Population <- R6Class(
         n_non_emptied_households = n_non_emptied_households
       )))
     },
-
     check_unique_id_cols = function(ind_data, hh_data) {
       checkmate::assert_data_table(ind_data, null.ok = FALSE)
       # specify id cols to be checked
@@ -369,7 +365,7 @@ Population <- R6Class(
         stop("There are ids that exist in data already.")
       }
       # if no hh_data is given then all household id should be NA
-      if (missing(hh_data))  {
+      if (missing(hh_data)) {
         if (!all(is.na(ind_data[[hid_col]]))) {
           stop(glue::glue("Not all household ids are NAs. When hh_data is not \\
                             given it is expected that individuals in ind_data will \\
@@ -398,7 +394,6 @@ Population <- R6Class(
       }
       return(TRUE)
     },
-
     get_hhsize = function(hids = NULL) {
       hid_col <- self$get("Individual")$get_hid_col()
       if (is.null(hids)) {
@@ -428,30 +423,28 @@ Population <- R6Class(
 
       return(hhsize_dt[["hhsize"]])
     },
-
     update_hhsize = function() {
       hid_col <- self$get("Household")$get_id_col()
       self$get("Household")$get_data(copy = FALSE)[, hhsize := self$get_hhsize()]
       invisible()
     },
-
     update = function() {
       self$update_hhsize()
     },
-
     print = function() {
       super$print()
       for (e in self$Cont) {
         e$print()
       }
     },
-
     plot_relatioship = function(hid) {
       if (!requireNamespace("visNetwork", quietly = TRUE)) {
         .choice <-
-          utils::menu(choices = c("Yes", "No"),
-                      title = glue::glue("plot_relationship needs the `visNetwork` package. \\
-                                Would you like to download the sf package now?"))
+          utils::menu(
+            choices = c("Yes", "No"),
+            title = glue::glue("plot_relationship needs the `visNetwork` package. \\
+                                Would you like to download the sf package now?")
+          )
         if (.choice == 1) {
           install.packages("visNetwork", repos = "https://cloud.r-project.org")
         } else {
@@ -468,14 +461,19 @@ Population <- R6Class(
         id = pid,
         label = paste0(pid, ":", age),
         group = sex,
-        title = paste0("<p>pid:<b>", pid, "</b><br>",
-                       "Age:<b>", age, "</b><br>",
-                       "MS:<b>", marital_status, "</b></p>"))]
+        title = paste0(
+          "<p>pid:<b>", pid, "</b><br>",
+          "Age:<b>", age, "</b><br>",
+          "MS:<b>", marital_status, "</b></p>"
+        )
+      )]
 
       edges <-
-        rbindlist(list(members[, .(from = pid, to = father_id, label = "father")],
-                       members[, .(from = pid, to = mother_id, label = "mother")],
-                       members[, .(from = pid, to = partner_id, label = "partner")]))
+        rbindlist(list(
+          members[, .(from = pid, to = father_id, label = "father")],
+          members[, .(from = pid, to = mother_id, label = "mother")],
+          members[, .(from = pid, to = partner_id, label = "partner")]
+        ))
 
       visNetwork::visNetwork(nodes, edges) %>%
         visNetwork::visEdges(
@@ -497,11 +495,13 @@ Population <- R6Class(
           shape = "circle",
           shadow = list(enabled = TRUE)
         ) %>%
-        visNetwork::visLegend(width = 0.2,
-                  position = "right",
-                  main = "Group") %>%
+        visNetwork::visLegend(
+          width = 0.2,
+          position = "right",
+          main = "Group"
+        ) %>%
         visNetwork::visEdges(smooth = FALSE) %>%
         visNetwork::visInteraction(navigationButtons = TRUE)
-
-    })
+    }
+  )
 )

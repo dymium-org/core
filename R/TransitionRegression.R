@@ -93,8 +93,9 @@
 #'
 #' # fit a OLS regression model
 #' model_lm <- glm(age ~ sex + marital_status,
-#'                 data = Ind$get_data(),
-#'                 family = "gaussian")
+#'   data = Ind$get_data(),
+#'   family = "gaussian"
+#' )
 #' summary(model_lm)
 #'
 #' TransAge <- TransitionRegression$new(Ind, model = model_lm)
@@ -111,7 +112,6 @@ TransitionRegression <- R6Class(
       super$initialize(x, model, target = NULL, targeted_agents = targeted_agents)
     }
   ),
-
   private = list(
     .AgtObj = R6Class(), # use as a reference holder
     .sim_data = data.table(),
@@ -121,7 +121,6 @@ TransitionRegression <- R6Class(
     .targeted_agents = integer(), # a vector containing agent ids
 
     simulate = function() {
-
       model_class <- class(private$.model)[[1]]
 
       response <-
@@ -132,25 +131,25 @@ TransitionRegression <- R6Class(
           "lm" = simulate_regression_glm(self, private)
         )
 
-      if (is.null(response))
+      if (is.null(response)) {
         stop(sprintf("'%s' is not supported by TransitionRegression.", model_class))
+      }
 
       response
     }
- )
+  )
 )
 
 simulate_regression_train <- function(self, private) {
-  lg$trace('simulate_regression_train')
-  checkmate::assert_class(private$.model, classes = 'train')
+  lg$trace("simulate_regression_train")
+  checkmate::assert_class(private$.model, classes = "train")
   checkmate::assert_true(private$.model$modelType == "Regression")
   # make prediction
   predict(object = private$.model, newdata = private$.sim_data, type = "raw")
 }
 
 simulate_regression_glm <- function(self, private) {
-  lg$trace('simulate_regression_glm')
+  lg$trace("simulate_regression_glm")
   # make prediction
   predict(object = private$.model, newdata = private$.sim_data, type = "response")
 }
-

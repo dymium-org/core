@@ -107,7 +107,6 @@
 World <- R6::R6Class(
   classname = "World",
   inherit = dymiumCore::Container,
-
   public = list(
     info = list(
       built.datetime = Sys.time(),
@@ -115,7 +114,6 @@ World <- R6::R6Class(
       sessionInfo = utils::sessionInfo(),
       clock = 0L
     ),
-
     initialize = function() {
       # always reset to 0
       if (self$get_time() != 0) {
@@ -123,15 +121,15 @@ World <- R6::R6Class(
       }
       invisible()
     },
-
     add = function(x, name, replace = TRUE) {
       checkmate::assert(
         checkmate::check_r6(x, classes = c("Entity", "Generic"), null.ok = FALSE),
         checkmate::check_r6(x, classes = c("Container", "Generic"), null.ok = FALSE),
         checkmate::check_r6(x, classes = c("Model", "Generic"), null.ok = FALSE),
         checkmate::check_subset(class(x)[[1]],
-                                choices = dymiumCore::SupportedTransitionModels(),
-                                empty.ok = FALSE),
+          choices = dymiumCore::SupportedTransitionModels(),
+          empty.ok = FALSE
+        ),
         check_target(x, null.ok = FALSE),
         combine = "or"
       )
@@ -151,17 +149,18 @@ World <- R6::R6Class(
       }
 
       if (inherits(x, "Model") && !is.null(x$name)) {
-        name = x$name
+        name <- x$name
       }
 
       # only allows letters and underscores
       checkmate::assert_string(name,
-                               pattern = "^[a-zA-Z_]*$",
-                               na.ok = FALSE,
-                               null.ok = FALSE)
+        pattern = "^[a-zA-Z_]*$",
+        na.ok = FALSE,
+        null.ok = FALSE
+      )
 
       if (inherits(x, "Model") && is.null(x$name)) {
-        x$name = name
+        x$name <- name
       }
 
       if (inherits(x, "Entity")) {
@@ -199,8 +198,9 @@ World <- R6::R6Class(
         if (replace) {
           lg$warn("Replacing the object named `{name}` of class `{.class_old}` \\
                   with `{.class_new}`.",
-                  .class_old = self$get(x = name)$class()[[1]],
-                  .class_new = class(x)[[1]])
+            .class_old = self$get(x = name)$class()[[1]],
+            .class_new = class(x)[[1]]
+          )
           self$remove(name)
         } else {
           stop(glue::glue("{name} already exists in {.listname}. Only one instance \\
@@ -217,27 +217,27 @@ World <- R6::R6Class(
       .pos <- length(get(.listname, envir = private)) + 1L
 
       switch(.listname,
-             ".entities" = {
-                private$.entities[[.pos]] <- self$get(.last_pos)
-                names(private$.entities)[.pos] <- name
-             },
-             ".containers" = {
-               private$.containers[[.pos]] <- self$get(.last_pos)
-               names(private$.containers)[.pos] <- name
-             },
-             ".models" = {
-               private$.models[[.pos]] <- self$get(.last_pos)
-               names(private$.models)[.pos] <- name
-             },
-             ".targets" = {
-               private$.targets[[.pos]] <- self$get(.last_pos)
-               names(private$.targets)[.pos] <- name
-             },
-             stop("Something is not right please report this issue to the maintainer."))
+        ".entities" = {
+          private$.entities[[.pos]] <- self$get(.last_pos)
+          names(private$.entities)[.pos] <- name
+        },
+        ".containers" = {
+          private$.containers[[.pos]] <- self$get(.last_pos)
+          names(private$.containers)[.pos] <- name
+        },
+        ".models" = {
+          private$.models[[.pos]] <- self$get(.last_pos)
+          names(private$.models)[.pos] <- name
+        },
+        ".targets" = {
+          private$.targets[[.pos]] <- self$get(.last_pos)
+          names(private$.targets)[.pos] <- name
+        },
+        stop("Something is not right please report this issue to the maintainer.")
+      )
 
       invisible()
     },
-
     remove = function(x) {
       checkmate::assert(
         checkmate::check_string(x, na.ok = FALSE, null.ok = FALSE),
@@ -275,19 +275,19 @@ World <- R6::R6Class(
 
       invisible()
     },
-
     replace = function(x, name) {
       self$remove(name)
       self$add(x, name)
     },
-
     get_entity = function(x) {
       if (missing(x)) {
         stop(glue::glue("`x` is missing, with no default. These entities are available: {.entities}.",
-                        .entities = glue::glue_collapse(names(self$entities),
-                                                         sep = ", ",
-                                                         last = " and ",
-                                                         width = 200)))
+          .entities = glue::glue_collapse(names(self$entities),
+            sep = ", ",
+            last = " and ",
+            width = 200
+          )
+        ))
       }
       if (inherits(x, "R6ClassGenerator")) {
         x <- x$classname
@@ -300,18 +300,20 @@ World <- R6::R6Class(
           checkmate::assert_choice(x, choices = names(self$entities))
         }
         stop(glue::glue("Did you mean {.possible_names}?",
-                        .possible_names = glue::glue_collapse(possible_names, sep = ", ", last = " or ")))
+          .possible_names = glue::glue_collapse(possible_names, sep = ", ", last = " or ")
+        ))
       }
       return(self$entities[[.pos]])
     },
-
     get_model = function(x) {
       if (missing(x)) {
         stop(glue::glue("`x` is missing, with no default. These models are available: {.models}.",
-                        .models = glue::glue_collapse(names(self$models),
-                                                      sep = ", ",
-                                                      last = " and ",
-                                                      width = 200)))
+          .models = glue::glue_collapse(names(self$models),
+            sep = ", ",
+            last = " and ",
+            width = 200
+          )
+        ))
       }
       checkmate::assert_string(x)
       .pos <- which(names(self$models) == x)
@@ -321,18 +323,20 @@ World <- R6::R6Class(
           checkmate::assert_choice(x, choices = names(self$models))
         }
         stop(glue::glue("Did you mean {.possible_names}?",
-             .possible_names = glue::glue_collapse(possible_names, sep = ", ", last = " or ")))
+          .possible_names = glue::glue_collapse(possible_names, sep = ", ", last = " or ")
+        ))
       }
       return(self$models[[.pos]])
     },
-
     get_container = function(x) {
       if (missing(x)) {
         stop(glue::glue("`x` is missing, with no default. These entities are available: {.entities}.",
-                        .entities = glue::glue_collapse(names(self$containers),
-                                                        sep = ", ",
-                                                        last = " and ",
-                                                        width = 200)))
+          .entities = glue::glue_collapse(names(self$containers),
+            sep = ", ",
+            last = " and ",
+            width = 200
+          )
+        ))
       }
       if (inherits(x, "R6ClassGenerator")) {
         x <- x$classname
@@ -345,15 +349,14 @@ World <- R6::R6Class(
           checkmate::assert_choice(x, choices = names(self$containers))
         }
         stop(glue::glue("Did you mean {.possible_names}?",
-                        .possible_names = glue::glue_collapse(possible_names, sep = ", ", last = " or ")))
+          .possible_names = glue::glue_collapse(possible_names, sep = ", ", last = " or ")
+        ))
       }
       return(self$containers[[.pos]])
     },
-
     get_time = function(x) {
       self$info$clock
     },
-
     get_info = function() {
       self$info
     },
@@ -391,19 +394,16 @@ World <- R6::R6Class(
         e$print()
       }
     },
-
     reset_time = function() {
       self$set_time(0L)
       invisible()
     },
-
     run_checks = function() {
       fs <- list(validate_linkages)
       for (f in fs) {
         f(self)
       }
     },
-
     start_iter = function(time_step, unit = "iteration", run_checks = FALSE) {
       checkmate::assert_count(time_step, positive = T, na.ok = FALSE, null.ok = FALSE)
       self$set_time(x = time_step)
@@ -414,7 +414,6 @@ World <- R6::R6Class(
       invisible(self)
     }
   ),
-
   active = list(
     # @field containers a list of all [Containers] stored in World.
     containers = function() {
@@ -435,7 +434,6 @@ World <- R6::R6Class(
       options("dymium.simulation_scale")[[1]]
     }
   ),
-
   private = list(
     .containers = list(),
     .entities = list(),

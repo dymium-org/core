@@ -71,8 +71,7 @@ dsample <- function(x, size = 1, replace = FALSE, prob = NULL) {
 #' @param names (Default as `NULL`)
 #'
 #' @return a data.table with two columns, `id` and `target`.
-condense_rows <- function(id, target, names = NULL){
-
+condense_rows <- function(id, target, names = NULL) {
   checkmate::assert(
     checkmate::check_integerish(id, any.missing = FALSE, null.ok = FALSE),
     checkmate::check_integerish(target, any.missing = FALSE, null.ok = FALSE),
@@ -111,14 +110,14 @@ condense_rows <- function(id, target, names = NULL){
 #' @export
 #'
 #' @examples
-#'  l1 <- list(1,2,3,4)
-#'  l2 <- list(1,2,3,4)
-#'  element_wise_expand_lists(l1,l2)
+#' l1 <- list(1, 2, 3, 4)
+#' l2 <- list(1, 2, 3, 4)
+#' element_wise_expand_lists(l1, l2)
 #'
-#'  l1 <- list(1,2,3,4)
-#'  l2 <- list(1,2,3,c(1,3))
-#'  element_wise_expand_lists(l1,l2)
-element_wise_expand_lists = function(l1, l2) {
+#' l1 <- list(1, 2, 3, 4)
+#' l2 <- list(1, 2, 3, c(1, 3))
+#' element_wise_expand_lists(l1, l2)
+element_wise_expand_lists <- function(l1, l2) {
   stopifnot(length(l1) == length(l2))
   as.data.table(do.call(rbind, Map(expand.grid, l1, l2)))
 }
@@ -142,7 +141,7 @@ element_wise_expand_lists = function(l1, l2) {
 #' @return data.table with new values
 #'
 #' @export
-lookup_and_replace = function(data, lookup_table, cols, id_col = NULL) {
+lookup_and_replace <- function(data, lookup_table, cols, id_col = NULL) {
   # checks
   checkmate::assert(
     checkmate::check_data_frame(data),
@@ -174,8 +173,9 @@ lookup_and_replace = function(data, lookup_table, cols, id_col = NULL) {
   list_cols <- all_list_cols[all_list_cols %in% cols]
   non_list_cols <- cols[!cols %in% list_cols]
 
-  if (length(list_cols) != 0 & is.null(id_col))
+  if (length(list_cols) != 0 & is.null(id_col)) {
     stop("`id_col` must be provided if `list_col` is not emptied.")
+  }
   if (length(list_cols) == 1) {
     data <-
       .lookup_and_replace_list_cols(data, lookup_table, id_col, list_cols)
@@ -229,26 +229,28 @@ lookup_and_replace2 <- function(x, cols, mapping) {
 
     # merge new values
     x <-
-      merge(x = x,
-            y = mapping,
-            by.x = col,
-            by.y = ".key",
-            all.x = TRUE,
-            sort = FALSE,
-            allow.cartesian = FALSE
+      merge(
+        x = x,
+        y = mapping,
+        by.x = col,
+        by.y = ".key",
+        all.x = TRUE,
+        sort = FALSE,
+        allow.cartesian = FALSE
       )
 
     # check
     if (sum(is.na(x[[col]])) != sum(is.na(x[[".value"]]))) {
-      stop(paste0("Some entries in the '", col, "' column couldn't ",
-                  "find a mapping value in `mapping`."))
+      stop(paste0(
+        "Some entries in the '", col, "' column couldn't ",
+        "find a mapping value in `mapping`."
+      ))
     }
 
     # final cleansing
     x %>%
       .[, c(col) := NULL] %>%
       data.table::setnames(., old = ".value", new = col)
-
   }
 
   # preserve the original column order
@@ -279,45 +281,55 @@ lookup_and_replace2 <- function(x, cols, mapping) {
 #' @return data
 #'
 #' @noRd
-.lookup_and_replace_list_cols = function(data, lookup_table, id_col, list_cols) {
+.lookup_and_replace_list_cols <- function(data, lookup_table, id_col, list_cols) {
   .data <- data
-  if (length(list_cols) > 1)
+  if (length(list_cols) > 1) {
     stop(
       paste(
         ".lookup_and_replace_list_cols can only work with one",
         "list column right now."
       )
     )
-  if (length(names(.data)[sapply(.data, class) == "list"]) == 0)
+  }
+  if (length(names(.data)[sapply(.data, class) == "list"]) == 0) {
     stop("There is no list columns in `data`.")
-  if (length(.data[, get(id_col)]) != length(unique(.data[, get(id_col)])))
+  }
+  if (length(.data[, get(id_col)]) != length(unique(.data[, get(id_col)]))) {
     stop("id_col must be unique!")
-  if (!is.data.table(.data))
+  }
+  if (!is.data.table(.data)) {
     lookup_table <- as.data.table(.data)
-  if (!is.data.table(lookup_table))
+  }
+  if (!is.data.table(lookup_table)) {
     lookup_table <- as.data.table(lookup_table)
+  }
 
   .data <-
     unnest_datatable(.data, id_col) %>%
     .[lookup_table,
       on = paste0(list_cols, "==.key"),
-      eval((list_cols)) := value] %>%
+      eval((list_cols)) := value
+    ] %>%
     # nest the list column back
     .[,
       `:=`(list_col_tmp = .(get(list_cols))),
-      by = eval((id_col))] %>%
+      by = eval((id_col))
+    ] %>%
     .[, eval((list_cols)) := list_col_tmp] %>%
     .[, list_col_tmp := NULL] %>%
     .[, .SD[1], by = eval((id_col))] %>%
-    .[, eval((list_cols)) := purrr::map(.x = get(list_cols),
-      .f = ~ purrr::keep(.x, ~ !is.na(.x)))]
+    .[, eval((list_cols)) := purrr::map(
+      .x = get(list_cols),
+      .f = ~ purrr::keep(.x, ~ !is.na(.x))
+    )]
 
   return(.data)
 }
 
-.lookup_and_replace_non_list_cols = function(data, lookup_table, non_list_cols) {
-  if (!is.data.table(lookup_table))
+.lookup_and_replace_non_list_cols <- function(data, lookup_table, non_list_cols) {
+  if (!is.data.table(lookup_table)) {
     lookup_table <- as.data.table(lookup_table)
+  }
 
   # replace values in normal columns
   for (col in non_list_cols) {
@@ -354,8 +366,10 @@ dt_group_and_sort <- function(x, groupby_col, group_col, sort_order) {
   x_new <-
     x %>%
     .[, .(group_col = list(get(group_col))), by = groupby_col] %>%
-    merge(x = data.table(sort_col = sort_order), y = .,
-          by.x = "sort_col", by.y = groupby_col, all.x = T, sort = FALSE)
+    merge(
+      x = data.table(sort_col = sort_order), y = .,
+      by.x = "sort_col", by.y = groupby_col, all.x = T, sort = FALSE
+    )
 
   #' In short, the if-statement makes sure that all emptied `group_col` will be `NA` not `NULL`
   #'
@@ -370,16 +384,18 @@ dt_group_and_sort <- function(x, groupby_col, group_col, sort_order) {
 }
 
 
-.slug = function(x, ext) {
+.slug <- function(x, ext) {
   x_base <- path_ext_remove(x)
   x_ext <- path_ext(x)
-  ext <- if (identical(tolower(x_ext), tolower(ext)))
+  ext <- if (identical(tolower(x_ext), tolower(ext))) {
     x_ext
-  else ext
+  } else {
+    ext
+  }
   path_ext_set(x_base, ext)
 }
 
-.check_file_name = function(x) {
+.check_file_name <- function(x) {
   if (!checkmate::test_character(x, pattern = "^[a-zA-Z0-9._-]+$", len = 1, any.missing = FALSE, null.ok = FALSE)) {
     stop(glue::glue("'{x}' is not a valid file name. It should contain only \\
                     ASCII letters, numbers, '-', and '_'."))
@@ -396,7 +412,6 @@ check_names <- function(x, names) {
 }
 
 skip_on_not_master <- function(skip_on_not_git = TRUE) {
-
   if (skip_on_not_git && is.null(get_current_git_branch())) {
     skip("Skip on branch not master")
     return(invisible())
@@ -433,7 +448,6 @@ get_current_git_branch <- function() {
 #' @return a data.table
 #' @export
 unnest_dt <- function(dt, cols) {
-
   if (!is.data.frame(dt)) {
     stop("`dt` must be a data.frame or a data.table.")
   }
@@ -467,7 +481,7 @@ unnest_dt <- function(dt, cols) {
 #'  a data.table object.
 #' @param by_col (`character(1)`)\cr
 #'  A reference column.
-unnest_datatable = function(dt, by_col) {
+unnest_datatable <- function(dt, by_col) {
   stopifnot(is.data.table(dt))
   stopifnot(all(by_col %in% names(dt)))
 
@@ -491,7 +505,6 @@ unnest_datatable = function(dt, by_col) {
 #'
 #' which_max_n(1:4, 2)
 #' which_min_n(1:4, 2)
-#'
 which_max_n <- function(x, n = 1) {
   which(x >= -sort(-x, partial = n)[n])
 }

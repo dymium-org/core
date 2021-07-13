@@ -42,7 +42,6 @@ Firm <- R6::R6Class(
 
     # returns ids of firms with available jobs
     has_job_offers = function(ids) {
-
       if (!missing(ids)) {
         return(
           self$data$get(copy = FALSE) %>%
@@ -64,9 +63,7 @@ Firm <- R6::R6Class(
     update_number_of_workers = function() {
       stop()
     }
-
   ),
-
   active = list(
     data_template = function() {
       data.table(

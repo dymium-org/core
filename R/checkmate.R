@@ -23,7 +23,8 @@ check_entity_ids <- function(x, ids, include_removed_data = FALSE, informative =
     missing_ids <- ids[!ids %in% all_ids]
     if (length(missing_ids) != 0) {
       return(glue::glue("These ids don't exist in {class(x)[[1]]}: {.ids}",
-                        .ids = glue::glue_collapse(missing_ids, sep = ", ", width = 200, last = " and ")))
+        .ids = glue::glue_collapse(missing_ids, sep = ", ", width = 200, last = " and ")
+      ))
     }
   }
   return(res)
@@ -74,14 +75,16 @@ expect_entity <- checkmate::makeExpectationFunction(check_entity)
 
 check_subset2 <- function(x, choices, informative = TRUE) {
   res <- checkmate::check_set_equal(class(x), class(choices))
-  if (!isTRUE(res))
+  if (!isTRUE(res)) {
     return(res)
+  }
   res <- checkmate::check_subset(x = x, choices = choices, fmatch = TRUE)
   if (!isTRUE(res) && informative) {
     missing_x <- x[!x %in% choices]
     if (length(missing_x) != 0) {
       return(glue::glue("These values don't exist}: {.missing_x}",
-                        .missing_x = glue::glue_collapse(missing_x, sep = ", ", width = 200, last = " and ")))
+        .missing_x = glue::glue_collapse(missing_x, sep = ", ", width = 200, last = " and ")
+      ))
     }
   }
   return(res)
@@ -188,12 +191,11 @@ expect_required_models <- checkmate::makeExpectationFunction(check_required_mode
 #'
 #' @export
 check_target <- function(x, null.ok = TRUE) {
-
   if (is.null(x)) {
     if (null.ok) {
       return(TRUE)
     } else {
-      msg = "`x` cannot be NULL."
+      msg <- "`x` cannot be NULL."
       return(msg)
     }
   }
@@ -202,8 +204,8 @@ check_target <- function(x, null.ok = TRUE) {
     checkmate::check_list(
       x = x,
       any.missing = FALSE,
-      types = c('integerish'),
-      names = 'strict',
+      types = c("integerish"),
+      names = "strict",
       null.ok = FALSE
     ),
     checkmate::check_data_frame(
@@ -236,7 +238,6 @@ check_target <- function(x, null.ok = TRUE) {
       unique = TRUE,
       .var.name = "`time` column"
     )
-
   }
 
   return(TRUE)
@@ -273,9 +274,11 @@ check_subset2 <- function(x, choices, empty.ok = TRUE, fmatch = FALSE) {
     x_not_in_choices <- x[!x %in% choices]
     if (length(x_not_in_choices) != 0) {
       return(glue::glue("These element in `x` don't exist in : {.x_not_in_choices}",
-                        .x_not_in_choices = glue::glue_collapse(x_not_in_choices,
-                                                 sep = ", ",
-                                                 width = 200)))
+        .x_not_in_choices = glue::glue_collapse(x_not_in_choices,
+          sep = ", ",
+          width = 200
+        )
+      ))
     }
   }
   return(res)

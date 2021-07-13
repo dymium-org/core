@@ -11,7 +11,7 @@
 #'
 #' @examples
 #'
-#' if (requireNamespace('mlogit')) {
+#' if (requireNamespace("mlogit")) {
 #'
 #'
 #' }
@@ -31,7 +31,6 @@ ModelMultinomialLogit <- R6::R6Class(
     #'
     #' @return NULL
     initialize = function(params, formula, preprocessing_fn = NULL) {
-
       required_pkgs <- c("mlogit")
       # required_versions <- c("1.1.0")
 
@@ -41,10 +40,12 @@ ModelMultinomialLogit <- R6::R6Class(
         }
       }
 
-      super$initialize(params = params,
-                       formula = formula,
-                       type = "multinomial",
-                       preprocessing_fn = preprocessing_fn)
+      super$initialize(
+        params = params,
+        formula = formula,
+        type = "multinomial",
+        preprocessing_fn = preprocessing_fn
+      )
 
       invisible(NULL)
     },
@@ -66,18 +67,21 @@ ModelMultinomialLogit <- R6::R6Class(
     #'  that, 'linear_comb' stands for linear combination (i.e. $$B1 * x1 + B2 * x2$$).
     predict = function(newdata, chooser_id_col, choice_id_col) {
       checkmate::expect_data_frame(newdata)
-      data.table(chooser_id = newdata[[chooser_id_col]],
-                 choice_id = newdata[[choice_id_col]],
-                 linear_comb = private$.compute_linear_combination(newdata, chooser_id_col, choice_id_col)) %>%
-        .[, prob := exp(linear_comb)/sum(exp(linear_comb)), by = chooser_id]
+      data.table(
+        chooser_id = newdata[[chooser_id_col]],
+        choice_id = newdata[[choice_id_col]],
+        linear_comb = private$.compute_linear_combination(newdata, chooser_id_col, choice_id_col)
+      ) %>%
+        .[, prob := exp(linear_comb) / sum(exp(linear_comb)), by = chooser_id]
     }
   ),
-
   private = list(
     .compute_linear_combination = function(newdata, chooser_id_col, choice_id_col) {
       if (inherits(newdata, "dfidx")) {
-        checkmate::expect_names(x = names(newdata$idx),
-                                identical.to = c(chooser_id_col, choice_id_col))
+        checkmate::expect_names(
+          x = names(newdata$idx),
+          identical.to = c(chooser_id_col, choice_id_col)
+        )
       } else {
         newdata <-
           dfidx::dfidx(newdata, idx = c(chooser_id_col, choice_id_col))
@@ -100,6 +104,6 @@ ModelMultinomialLogit <- R6::R6Class(
 #'
 #' @return a numeric vector
 #' @export
-predict.ModelMultinomialLogit = function(object, newdata, chooser_id_col, choice_id_col, ...) {
+predict.ModelMultinomialLogit <- function(object, newdata, chooser_id_col, choice_id_col, ...) {
   object$predict(newdata, chooser_id_col, choice_id_col)
 }

@@ -30,10 +30,12 @@ Environment <-
     classname = "Environment",
     inherit = Entity,
     public = list(
-
       initialize = function(.data, id_col) {
-        super$initialize(databackend = DataBackendSpatialFeature,
-                         .data = .data,
-                         id_col = id_col)
+        super$initialize(
+          databackend = DataBackendSpatialFeature,
+          .data = .data,
+          id_col = id_col
+        )
       }
-  ))
+    )
+  )

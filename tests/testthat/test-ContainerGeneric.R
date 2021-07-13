@@ -39,5 +39,4 @@ test_that("remove", {
   expect_error(MyCont$remove(pos = 4), regexp = "pos is greater than the number of available objecst in the container")
   MyCont$remove(2)
   expect_length(MyCont$Cont, 2)
-
 })

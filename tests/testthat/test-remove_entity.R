@@ -1,5 +1,4 @@
 test_that("remove_entity", {
-
   create_toy_world()
   ind <- world$get("Individual")
   remove_entity(world, "Individual", age < 10)
@@ -14,5 +13,4 @@ test_that("remove_entity", {
   remove_entity(world, "Individual", age < age_max)
   expect_true(nrow(ind$get_data()[age < age_max, ]) == 0)
   expect_true(nrow(ind$get_removed_data()[age < age_max, ]) != 0)
-
 })

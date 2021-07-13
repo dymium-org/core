@@ -19,14 +19,13 @@
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
-#'   # Note: running this will create a folder called "modules" and a sub-folder
-#'   #       to your working directory within the folder called "demography"
-#'   use_module(name = "demography")
+#' # Note: running this will create a folder called "modules" and a sub-folder
+#' #       to your working directory within the folder called "demography"
+#' use_module(name = "demography")
 #'
-#'   # create an event called 'birth' inside the 'demography' module.
-#'   use_event(name = "birth", module = 'demography')
+#' # create an event called 'birth' inside the 'demography' module.
+#' use_event(name = "birth", module = "demography")
 #' }
 use_event <- function(name, module, with_comments) {
   .check_file_name(name)
@@ -41,20 +40,26 @@ use_event <- function(name, module, with_comments) {
   module_path <- fs::path("modules", module)
 
   if (missing(with_comments)) {
-    with_comments <- c(FALSE, TRUE)[utils::menu(choices = c("No", "Yes"),
-                                         title = "Do you want to have authors' comments in the event script?")]
+    with_comments <- c(FALSE, TRUE)[utils::menu(
+      choices = c("No", "Yes"),
+      title = "Do you want to have authors' comments in the event script?"
+    )]
   } else {
     checkmate::assert_logical(with_comments, len = 1, null.ok = FALSE)
   }
 
   template <- ifelse(with_comments, "event.R", "event-no-comments.R")
 
-  usethis::use_template(template = template,
-                        save_as = event_path,
-                        data = list(module_path = module_path,
-                                    event = name,
-                                    module = module),
-                        package = "dymiumCore")
+  usethis::use_template(
+    template = template,
+    save_as = event_path,
+    data = list(
+      module_path = module_path,
+      event = name,
+      module = module
+    ),
+    package = "dymiumCore"
+  )
 
   invisible(event_path)
 }
@@ -82,11 +87,10 @@ use_event <- function(name, module, with_comments) {
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
-#'   # Note: running this will create a folder called "modules" and a sub-folder
-#'   #       to your working directory within the folder called "demography"
-#'   use_module(name = "demography")
+#' # Note: running this will create a folder called "modules" and a sub-folder
+#' #       to your working directory within the folder called "demography"
+#' use_module(name = "demography")
 #' }
 use_module <- function(name) {
   .check_file_name(name)
@@ -106,29 +110,37 @@ use_module <- function(name) {
   usethis::use_template(
     template = "module-README.rmd",
     save_as = fs::path(module_path, "README.rmd"),
-    data = list(module_path = module_path,
-                module = name),
+    data = list(
+      module_path = module_path,
+      module = name
+    ),
     package = "dymiumCore"
   )
   usethis::use_template(
     template = "logger.R",
     save_as = fs::path(module_path, "logger.R"),
-    data = list(module_path = module_path,
-                module = name),
+    data = list(
+      module_path = module_path,
+      module = name
+    ),
     package = "dymiumCore"
   )
   usethis::use_template(
     template = "constants.R",
     save_as = fs::path(module_path, "constants.R"),
-    data = list(module_path = module_path,
-                module = name),
+    data = list(
+      module_path = module_path,
+      module = name
+    ),
     package = "dymiumCore"
   )
   usethis::use_template(
     template = "helpers.R",
     save_as = fs::path(module_path, "helpers.R"),
-    data = list(module_path = module_path,
-                module = name),
+    data = list(
+      module_path = module_path,
+      module = name
+    ),
     package = "dymiumCore"
   )
 
@@ -143,7 +155,6 @@ use_module <- function(name) {
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
 #' # this assumes that you have a module named 'demography'
 #' use_module_readme(name = "demography")
@@ -156,15 +167,17 @@ use_module_readme <- function(name) {
   usethis::use_template(
     template = "module-README.rmd",
     save_as = fs::path(module_path, "README.rmd"),
-    data = list(module_path = module_path,
-                module = name),
+    data = list(
+      module_path = module_path,
+      module = name
+    ),
     package = "dymiumCore"
   )
 }
 
 check_pkg_installed <- function(pkg) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
-   stop(glue("Package '{pkg}' required. Please install before re-trying."))
+    stop(glue("Package '{pkg}' required. Please install before re-trying."))
   }
 }
 

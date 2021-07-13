@@ -10,5 +10,4 @@ test_that("checks", {
   Ind$remove(ids_to_remove)
   expect_error(assert_entity_ids(Ind, ids_to_remove), "These ids don't exist in Individual: 1, 2")
   checkmate::expect_r6(assert_entity_ids(Ind, ids_to_remove, include_removed_data = T), classes = "Individual")
-
 })

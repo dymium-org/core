@@ -55,13 +55,10 @@ DataBackendSpatialFeature <- R6::R6Class(
       private$.sf_attrs <- .data[0, ]
       super$initialize(as.data.table(.data), key)
     },
-
     get_sf = function() {
       private$.get_sf_data()
     },
-
     view = function(interactive = FALSE) {
-
       checkmate::assert_logical(interactive, any.missing = FALSE, len = 1, null.ok = FALSE)
 
       if (interactive && requireNamespace("mapview", quietly = TRUE)) {
@@ -78,14 +75,13 @@ DataBackendSpatialFeature <- R6::R6Class(
         graphics::plot(
           x = private$.get_sf_data(),
           col = "grey",
-          border = 'black',
+          border = "black",
           axes = TRUE,
           main = glue::glue("{nrow(private$.data)} zones")
         )
       )
     }
   ),
-
   private = list(
     .sf_data = NULL,
     .sf_attrs = NULL,

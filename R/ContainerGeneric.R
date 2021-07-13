@@ -56,30 +56,23 @@ ContainerGeneric <- R6Class(
   classname = "ContainerGeneric",
   inherit = dymiumCore::Generic,
   public = list(
-
     Cont = list(),
-
     initialize = function() {
 
     },
-
     print = function() {
       cat("There are", self$n(), "items in self$Cont.\n")
     },
-
     summary = function() {
       private$abstract()
     },
-
     add = function(x) {
       self$Cont[[length(self$Cont) + 1L]] <- x
     },
-
     get = function(pos) {
       self$check_pos(pos)
       self$Cont[[pos]]
     },
-
     unpack = function(target) {
       checkmate::assert_r6(target, classes = c("Container", "Generic"), public = "unpack")
       for (Obj in self$Cont) {
@@ -87,18 +80,15 @@ ContainerGeneric <- R6Class(
         target$add(Obj)
       }
     },
-
     n = function() {
       length(self$Cont)
     },
-
     remove = function(pos) {
       self$check_pos(pos)
       self$Cont[[pos]] <- NULL
       self$Cont <- self$Cont[!is.null(self$Cont)]
       invisible(self)
     },
-
     check_pos = function(pos) {
       checkmate::assert_number(pos, na.ok = FALSE, finite = TRUE, null.ok = FALSE)
 

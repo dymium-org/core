@@ -22,10 +22,8 @@
 #' pop <- world$get("Population")
 #'
 #' new_population_data <- pop_register(pop, toy_individuals, toy_households)
-#'
 #' @export
 pop_register <- function(x, ind_data, hh_data = NULL) {
-
   checkmate::assert_r6(x, "Population", null.ok = FALSE)
   checkmate::assert_data_table(ind_data)
   checkmate::assert_data_table(hh_data, null.ok = TRUE)

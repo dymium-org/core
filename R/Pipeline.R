@@ -88,29 +88,24 @@ Pipeline <- R6::R6Class(
   classname = "Pipeline",
   inherit = Generic,
   public = list(
-
     initialize = function(x) {
       if (!missing(x)) {
         self$set(x)
       }
     },
-
     set = function(x) {
       private$.events <- x
       self$print()
     },
-
     print = function() {
       flist <- magrittr::functions(private$.events)
       flistnames <- sapply(seq_along(flist), function(i) deparse(body(flist[[i]])))
       cat(glue::glue("There are {length(flist)} functions in the pipeline."), sep = "\n")
       cat(paste(seq_along(flistnames), flistnames, sep = ". "), sep = "\n")
     },
-
     get = function() {
       private$.events
     },
-
     run = function(x, shuffle = FALSE, n_loops = 1) {
       checkmate::assert(
         checkmate::check_r6(x, classes = c("Container", "Generic")),
@@ -131,13 +126,17 @@ Pipeline <- R6::R6Class(
       }
 
       event_flist_name <-
-        sapply(seq_along(magrittr::functions(event_fseq)),
-               function(x) deparse(body(event_fseq[[x]])))
+        sapply(
+          seq_along(magrittr::functions(event_fseq)),
+          function(x) deparse(body(event_fseq[[x]]))
+        )
 
       lg$info(paste(
         "EventManager is executing the events in this order: ",
         paste(paste("\t", seq_along(event_flist_name), ") ",
-                    event_flist_name, sep = ""), collapse = "\n"),
+          event_flist_name,
+          sep = ""
+        ), collapse = "\n"),
         sep = "\n"
       ))
 
@@ -148,7 +147,6 @@ Pipeline <- R6::R6Class(
       invisible(x)
     }
   ),
-
   private = list(
     .events = list()
   )

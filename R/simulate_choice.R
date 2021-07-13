@@ -13,7 +13,7 @@
 #' @return a character vector
 #' @export
 "simulate_choice" <-
-  function(model, ...){
+  function(model, ...) {
     UseMethod("simulate_choice")
   }
 
@@ -53,8 +53,12 @@ simulate_choice.glm <- function(model, newdata, target = NULL, ...) {
   choices <- levels(model$model[[1]])
   probs <-
     predict(model, newdata, type = "response") %>%
-    {data.table::data.table(x1 = .,
-                           x2 = 1 - .)} %>%
+    {
+      data.table::data.table(
+        x1 = .,
+        x2 = 1 - .
+      )
+    } %>%
     data.table::setnames(choices)
   simulate_choice(probs, target)
 }
@@ -105,11 +109,11 @@ simulate_choice.data.frame <- function(model, target = NULL, ...) {
   probs <- model
   checkmate::assert_data_frame(
     probs,
-    types = 'double',
+    types = "double",
     min.cols = 2,
     any.missing = FALSE,
     null.ok = FALSE,
-    col.names = 'unique'
+    col.names = "unique"
   )
   if (!is.data.table(probs)) {
     setDT(probs)
@@ -122,4 +126,3 @@ simulate_choice.data.frame <- function(model, target = NULL, ...) {
     purrr::pmap_chr(probs, ~ sample_choice(choices, 1, prob = (list(...))))
   }
 }
-

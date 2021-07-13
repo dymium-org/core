@@ -25,7 +25,6 @@ test_that("get", {
   expect_error(MyCont$get(-1), "pos can not be less than or equal to 0.")
 
   checkmate::expect_r6(MyCont$get(1), classes = "Agent")
-
 })
 
 
@@ -40,5 +39,4 @@ test_that("remove", {
   expect_error(MyCont$remove(4), regexp = "pos is greater than the number of available objecst in the container")
   MyCont$remove(2)
   expect_length(MyCont$Cont, 2)
-
 })

@@ -54,11 +54,12 @@ Network <- R6::R6Class(
   public = list(
     initialize = function(.data, id_col, from_node, to_node, dist) {
       super$initialize(.data, id_col)
-      self$add_data(.data = private$generate_dodgr_graph(from_node, to_node, dist),
-                    name = "dodgr_graph")
+      self$add_data(
+        .data = private$generate_dodgr_graph(from_node, to_node, dist),
+        name = "dodgr_graph"
+      )
       return(invisible(self))
     },
-
     get_dodgr_graph = function() {
       self$get_data("dodgr_graph")
     }
@@ -67,7 +68,8 @@ Network <- R6::R6Class(
     generate_dodgr_graph = function(from_node, to_node, dist) {
       checkmate::assert_data_table(self$get_data())
       checkmate::assert_names(names(self$get_data()),
-                              must.include = c(from_node, to_node, dist))
+        must.include = c(from_node, to_node, dist)
+      )
       graph <-
         self$get_data()[, .SD, .SDcols = c(self$get_id_col(), from_node, to_node, dist)]
       names(graph) <- c(self$get_id_col(), "from", "to", "dist")

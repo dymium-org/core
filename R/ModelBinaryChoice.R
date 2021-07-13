@@ -21,10 +21,12 @@ ModelBinaryChoice <- R6::R6Class(
     #'
     #' @return NULL
     initialize = function(params, formula, preprocessing_fn = NULL) {
-      super$initialize(params = params,
-                       formula = formula,
-                       type = "binary_choice",
-                       preprocessing_fn = preprocessing_fn)
+      super$initialize(
+        params = params,
+        formula = formula,
+        type = "binary_choice",
+        preprocessing_fn = preprocessing_fn
+      )
       invisible(NULL)
     },
 
@@ -42,7 +44,7 @@ ModelBinaryChoice <- R6::R6Class(
     #' @export
     predict = function(newdata, link_function = c("logit")) {
       link_function <- match.arg(link_function)
-      linear_comb   <- private$.compute_linear_combination(newdata)
+      linear_comb <- private$.compute_linear_combination(newdata)
       1 / (1 + exp(-linear_comb))
     }
   )

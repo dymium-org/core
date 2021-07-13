@@ -119,9 +119,9 @@
 #'
 #' # create a probabilistic model
 #' driver_status_rate <- data.table::data.table(
-#'   sex = c('male', 'female'),
-#'   probs = list(c(0.3,0.7), c(0.4,0.6)),
-#'   choices = list(c('can drive', 'cannot drive'), c('can drive', 'cannot drive'))
+#'   sex = c("male", "female"),
+#'   probs = list(c(0.3, 0.7), c(0.4, 0.6)),
+#'   choices = list(c("can drive", "cannot drive"), c("can drive", "cannot drive"))
 #' )
 #'
 #' # create a Transition for driver status
@@ -133,19 +133,18 @@
 #' TransCanDrive <- TransitionCandrive$new(x = Ind, model = driver_status_rate)
 #'
 #' barplot(
-#'   table(TransCanDrive$get_result()[['response']]),
+#'   table(TransCanDrive$get_result()[["response"]]),
 #'   main = "Transition result: driver status",
-#'   col = c('steelblue', 'salmon')
+#'   col = c("steelblue", "salmon")
 #' )
 TransitionClassification <- R6Class(
   classname = "TransitionClassification",
   inherit = Trans,
 
-# Public ------------------------------------------------------------------
+  # Public ------------------------------------------------------------------
 
 
   public = list(
-
     model_by_id = NULL,
 
     #' @description
@@ -170,10 +169,8 @@ TransitionClassification <- R6Class(
   ),
   private = list(
 
-# Private -----------------------------------------------------------------
-
-    .allowed_classes = c('train', 'data.table', 'list', "numeric"),
-
+    # Private -----------------------------------------------------------------
+    .allowed_classes = c("train", "data.table", "list", "numeric"),
     simulate = function() {
       # expect a vector
       response <- switch(
@@ -193,7 +190,7 @@ TransitionClassification <- R6Class(
       )
       return(response)
     }
- )
+  )
 )
 
 simulate_classification_mlogit <- function(self, private) {
@@ -205,11 +202,11 @@ simulate_classification_mlogit <- function(self, private) {
   #   checkmate::assert_names(names(chooser_data), must.include = c(chooser_id_col, chosen_col))
   #   checkmate::assert_names(names(alternative_data), must.include = alternative_id_col)
   #
-    # To construct choiceset for mlogit see https://stackoverflow.com/questions/51458223/multinomial-logit-estimation-on-a-subset-of-alternatives-in-r
+  # To construct choiceset for mlogit see https://stackoverflow.com/questions/51458223/multinomial-logit-estimation-on-a-subset-of-alternatives-in-r
 
-    # To manually calculate the probs see https://monashdatafluency.github.io/r-linear/topics/linear_models.html
-    # This maybe requires as mlogit's predict only returns a data.frame with all columns
-    # that correspond to the universal choiceset.
+  # To manually calculate the probs see https://monashdatafluency.github.io/r-linear/topics/linear_models.html
+  # This maybe requires as mlogit's predict only returns a data.frame with all columns
+  # that correspond to the universal choiceset.
 
 
   # }
@@ -217,8 +214,8 @@ simulate_classification_mlogit <- function(self, private) {
 
 # Simulate classification functions ----------------------------------------------------------
 simulate_classification_train <- function(self, private) {
-  lg$trace('simulate_classification_numeric')
-  checkmate::assert_class(private$.model, classes = 'train')
+  lg$trace("simulate_classification_numeric")
+  checkmate::assert_class(private$.model, classes = "train")
   checkmate::assert_true(private$.model$modelType == "Classification")
   # get predicted probabilities
   prediction <- predict(object = private$.model, newdata = private$.sim_data, type = "prob")
@@ -227,7 +224,7 @@ simulate_classification_train <- function(self, private) {
 }
 
 is_dynamic_rate_datatable_model <- function(x, .data) {
-  checkmate::assert_data_table(x, min.rows = 1, col.names = 'strict')
+  checkmate::assert_data_table(x, min.rows = 1, col.names = "strict")
   time_cols <- is_dynamic_rate_col(names(x))
   matching_var_cols <- names(x)[!time_cols][names(x)[!time_cols] %in% names(.data)]
   if (length(matching_var_cols) != 0 & any(time_cols)) {
@@ -245,7 +242,7 @@ simulate_classification_datatable <- function(self, private) {
   model <- private$.model
   sim_data <- private$.sim_data
   id_col <- private$.AgtObj$get_id_col()
-  .reserved_colnames <- c('prob', 'probs', 'choices')
+  .reserved_colnames <- c("prob", "probs", "choices")
   matching_vars <- names(model)[!names(model) %in% .reserved_colnames & !is_dynamic_rate_col(names(model))]
 
   # checks
@@ -254,7 +251,7 @@ simulate_classification_datatable <- function(self, private) {
   dynamic_rate_model_flag <- is_dynamic_rate_datatable_model(model, sim_data)
 
   if (!dynamic_rate_model_flag) {
-    checkmate::assert_data_table(model, any.missing = FALSE, min.rows = 1, col.names = 'strict', null.ok = FALSE)
+    checkmate::assert_data_table(model, any.missing = FALSE, min.rows = 1, col.names = "strict", null.ok = FALSE)
     checkmate::assert_names(names(model), subset.of = c(names(private$.sim_data), .reserved_colnames))
   }
 
@@ -265,14 +262,14 @@ simulate_classification_datatable <- function(self, private) {
   # classify which of the ways is used here
 
   # (1)
-  if (checkmate::test_names(names(model), must.include = 'prob', disjunct.from = c('choices', 'probs'))) {
-
-    checkmate::assert_double(model[['prob']], lower = 0, upper = 1, any.missing = FALSE, null.ok = FALSE)
+  if (checkmate::test_names(names(model), must.include = "prob", disjunct.from = c("choices", "probs"))) {
+    checkmate::assert_double(model[["prob"]], lower = 0, upper = 1, any.missing = FALSE, null.ok = FALSE)
     prediction <-
-      merge(x = private$.sim_data[, .SD, .SDcols = c(id_col, matching_vars)],
-            y = model,
-            by = matching_vars,
-            all.x = T
+      merge(
+        x = private$.sim_data[, .SD, .SDcols = c(id_col, matching_vars)],
+        y = model,
+        by = matching_vars,
+        all.x = T
       ) %>%
       # dropping matching variables
       .[, .SD, .SDcols = names(.)[!names(.) %in% matching_vars]] %>%
@@ -283,11 +280,11 @@ simulate_classification_datatable <- function(self, private) {
   }
 
   # (2)
-  if (checkmate::test_names(names(model), must.include = c('choices', 'probs'), disjunct.from = 'prob') &
-      !exists('prediction')) {
+  if (checkmate::test_names(names(model), must.include = c("choices", "probs"), disjunct.from = "prob") &
+    !exists("prediction")) {
     # checks
-    checkmate::assert_list(model[['probs']], types = c('numeric'), any.missing = FALSE, null.ok = FALSE)
-    checkmate::assert_list(model[['choices']], types = c('numeric', 'character'), any.missing = FALSE, null.ok = FALSE)
+    checkmate::assert_list(model[["probs"]], types = c("numeric"), any.missing = FALSE, null.ok = FALSE)
+    checkmate::assert_list(model[["choices"]], types = c("numeric", "character"), any.missing = FALSE, null.ok = FALSE)
     if (anyDuplicated(private$.model[, ..matching_vars]) != 0) {
       stop(glue::glue("`model` contains duplicated rows. This will \\
                         cause some agents to have more than one choiceset \\
@@ -296,13 +293,14 @@ simulate_classification_datatable <- function(self, private) {
 
     .choices_and_probs_are_valid <-
       all(purrr::map2_lgl(
-        .x = private$.model[['probs']],
-        .y = private$.model[['choices']],
+        .x = private$.model[["probs"]],
+        .y = private$.model[["choices"]],
         .f = ~ {
           (length(.x) == length(.y)) & # same correspoding number of prob to choice
             # (all(.x %between% c(0, 1))) & # probability value
             (all(sum(.x) != 0)) # sum to 1
-        }))
+        }
+      ))
 
     if (.choices_and_probs_are_valid == FALSE) {
       stop(glue::glue("the model's probability and choice columns failed \\
@@ -316,7 +314,8 @@ simulate_classification_datatable <- function(self, private) {
         glue::glue(
           "Currently, `target` cannot be done in TransitionClassification with a \\
           'choice data.table' model."
-      ))
+        )
+      )
     }
 
     if (isTRUE(self$model_by_id)) {
@@ -328,14 +327,18 @@ simulate_classification_datatable <- function(self, private) {
 
     # simulate choice
     response <-
-      merge(x = private$.sim_data[, .SD, .SDcols = sim_data_matching_vars],
-            y = private$.model,
-            by = matching_vars,
-            sort = FALSE) %>%
+      merge(
+        x = private$.sim_data[, .SD, .SDcols = sim_data_matching_vars],
+        y = private$.model,
+        by = matching_vars,
+        sort = FALSE
+      ) %>%
       .[, .SD, .SDcols = names(.)[names(.) %in% c(id_col, .reserved_colnames)]] %>%
       # agent draws a choice from its choiceset (the lengths of the choicesets may vary)
-      .[, response := purrr::map2_chr(probs, choices, ~ {sample_choice(.y, 1, replace = FALSE, prob = .x)})] %>%
-      .[['response']]
+      .[, response := purrr::map2_chr(probs, choices, ~ {
+        sample_choice(.y, 1, replace = FALSE, prob = .x)
+      })] %>%
+      .[["response"]]
 
     return(response)
   }
@@ -353,7 +356,7 @@ simulate_classification_datatable <- function(self, private) {
     # there are rate columns for 10 years and the current simulation time is 11
     # the rate column of year 10 will be used.
     index_closest_time <- which.min(abs(times - current_sim_time))
-    colname_with_closest_time <- grep(paste0("t_",times[index_closest_time],"$"), names(model), value = T)
+    colname_with_closest_time <- grep(paste0("t_", times[index_closest_time], "$"), names(model), value = T)
     matchin_var_flags <- !rate_col_indexes
     # turn the rate colunm with the closest time to the current simulation time as `FALSE`
     rate_col_indexes[which(names(model) == colname_with_closest_time)] <- FALSE
@@ -361,10 +364,11 @@ simulate_classification_datatable <- function(self, private) {
     current_rate_model <- model[, .SD, .SDcols = names(model)[!rate_col_indexes]]
     # create a prediction table
     prediction <-
-      merge(x = private$.sim_data[, .SD, .SDcols = c(id_col, matching_vars)],
-            y = current_rate_model,
-            by = matching_vars,
-            all.x = T
+      merge(
+        x = private$.sim_data[, .SD, .SDcols = c(id_col, matching_vars)],
+        y = current_rate_model,
+        by = matching_vars,
+        all.x = T
       ) %>%
       # dropping matching variables
       .[, .SD, .SDcols = names(.)[!names(.) %in% matching_vars]] %>%
@@ -384,7 +388,7 @@ simulate_classification_numeric <- function(self, private) {
   lg$trace("simulate_classification_numeric")
 
   # checks
-  checkmate::assert_numeric(private$.model, lower = 0, finite = TRUE, any.missing = FALSE, null.ok = FALSE, names = 'strict')
+  checkmate::assert_numeric(private$.model, lower = 0, finite = TRUE, any.missing = FALSE, null.ok = FALSE, names = "strict")
   simulate_classification_list(self, private)
 }
 
@@ -416,7 +420,7 @@ simulate_classification_list <- function(self, private) {
   }
 
   # checks
-  checkmate::assert_list(model, types = 'numeric', any.missing = FALSE, names = 'strict', min.len = 1, null.ok = FALSE)
+  checkmate::assert_list(model, types = "numeric", any.missing = FALSE, names = "strict", min.len = 1, null.ok = FALSE)
   checkmate::assert_numeric(as.numeric(model), lower = 0, finite = TRUE, any.missing = FALSE, null.ok = FALSE)
 
   # make prediction
@@ -426,5 +430,3 @@ simulate_classification_list <- function(self, private) {
   # simulate choices
   monte_carlo_sim(prediction, private$.target)
 }
-
-

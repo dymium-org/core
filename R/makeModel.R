@@ -16,20 +16,21 @@
 #' @rdname makeModel
 #' @export
 makeModel.train <- function(model, preprocessing_fn = NULL, ...) {
-
-  compatible_methods = c("glm")
+  compatible_methods <- c("glm")
 
   if (!checkmate::test_subset(x = model$method, choices = compatible_methods, empty.ok = FALSE)) {
     stop(
-      "ModelCaretTrain only works with: ", paste(compatible_methods,  collapse = ", "),
+      "ModelCaretTrain only works with: ", paste(compatible_methods, collapse = ", "),
       ".", " Consider using `Model` instead if the given model is not currently supported."
     )
   }
 
   if (model$method == "glm") {
-    return(ModelBinaryChoice$new(params = model$finalModel$coefficients,
-                                 formula = model$terms,
-                                 preprocessing_fn = preprocessing_fn))
+    return(ModelBinaryChoice$new(
+      params = model$finalModel$coefficients,
+      formula = model$terms,
+      preprocessing_fn = preprocessing_fn
+    ))
   }
 
   stop("something went wrong.")
@@ -43,7 +44,9 @@ makeModel.WrappedModel <- function(model, preprocessing_fn = NULL, ...) {
 #' @rdname makeModel
 #' @export
 makeModel.mlogit <- function(model, preprocessing_fn = NULL, ...) {
-  ModelMultinomialLogit$new(params = model[['coefficients']],
-                            formula = model[['formula']],
-                            preprocessing_fn = preprocessing_fn)
+  ModelMultinomialLogit$new(
+    params = model[["coefficients"]],
+    formula = model[["formula"]],
+    preprocessing_fn = preprocessing_fn
+  )
 }
