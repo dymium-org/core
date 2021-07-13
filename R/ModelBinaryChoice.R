@@ -42,8 +42,8 @@ ModelBinaryChoice <- R6::R6Class(
     #' @export
     predict = function(newdata, link_function = c("logit")) {
       link_function <- match.arg(link_function)
-      linear_comb   <- private$.compute_linear_combination(newdata)
-      1 / (1 + exp(-linear_comb))
+      linear_comb <- compute_linear_combination(self$formula, self$params, newdata)
+      return(1 / (1 + exp(-linear_comb)))
     }
   )
 )

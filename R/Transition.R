@@ -106,7 +106,7 @@ Trans <- R6Class(
       }
 
       if (!is.null(target)) {
-        dymiumCore::assert_target(target)
+        assert_target(target)
         if (checkmate::test_r6(target, "Target")) {
           private$.target <- target$get()
         } else {

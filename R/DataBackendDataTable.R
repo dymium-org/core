@@ -79,8 +79,12 @@ DataBackendDataTable <- R6::R6Class(
   inherit = DataBackendDataFrame,
   public = list(
     initialize = function(.data, key = NULL) {
-      checkmate::assert_data_table(.data, min.rows = 1, null.ok = FALSE, col.names = "strict")
-      .data <- data.table::copy(.data)
+      checkmate::assert_data_frame(.data, min.rows = 1, null.ok = FALSE, col.names = "strict")
+      if (!data.table::is.data.table(.data)) {
+        .data = as.data.table(.data)
+      } else {
+        .data <- data.table::copy(.data)
+      }
       if (!is.null(key)) {
         if (!key %in% names(.data)) {
           stop(paste0("'", key, "' key column doesn't exist in `.data`."))

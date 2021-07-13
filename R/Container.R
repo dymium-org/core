@@ -5,7 +5,7 @@
 #'
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object inheriting from [dymiumCore::ContainerGeneric]
+#' @format [R6::R6Class] object inheriting from [ContainerGeneric]
 #' @include ContainerGeneric.R
 #'
 #' @section Construction:
@@ -25,8 +25,8 @@
 #'
 #' * `add(x, name)`\cr
 #'  ([R6::R6Class]|Supported Transition Models)\cr
-#'  Add an [R6::R6Class] object or a object of the classes in [dymiumCore::SupportedTransitionModels] to self$Cont.
-#'  Name must be given when `x` is an object of the classes in [dymiumCore::SupportedTransitionModels].
+#'  Add an [R6::R6Class] object or a object of the classes in [SupportedTransitionModels] to self$Cont.
+#'  Name must be given when `x` is an object of the classes in [SupportedTransitionModels].
 #'
 #' * `check_pos(x)`\cr
 #' (`integer(1)`) -> (`logical(1)`)\cr
@@ -52,7 +52,7 @@
 #'  generator or string or integer.
 #'
 #' * `unpack(target)`\cr
-#'  ([dymiumCore::Container])\cr
+#'  ([Container])\cr
 #'  Add all the references inside self$Cont to the `target` container. This is
 #'  useful when you have containers within a container so that all references can
 #'  be access via the top container. eg: A World container that contains a Population
@@ -66,7 +66,7 @@
 #' @export
 Container <- R6Class(
   classname = "Container",
-  inherit = dymiumCore::ContainerGeneric,
+  inherit = ContainerGeneric,
   public = list(
 
     add = function(x, name) {

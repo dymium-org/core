@@ -4,7 +4,7 @@
 #' isn't supposed to be use directly.
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object inheriting from [dymiumCore::Generic]
+#' @format [R6::R6Class] object inheriting from [Generic]
 #' @include ContainerGeneric.R
 #'
 #' @section Construction:
@@ -45,7 +45,7 @@
 #'  Remove the object at the `x` element of `self$Cont`.
 #'
 #' * `unpack(target)`\cr
-#'  ([dymiumCore::Container])\cr
+#'  ([Container])\cr
 #'  Add all the objects in `self$Cont` to another `target` Container.
 #'
 #' * `summary()`\cr
@@ -54,7 +54,7 @@
 #' @export
 ContainerGeneric <- R6Class(
   classname = "ContainerGeneric",
-  inherit = dymiumCore::Generic,
+  inherit = Generic,
   public = list(
 
     Cont = list(),

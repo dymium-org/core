@@ -1,6 +1,5 @@
 #' @title Network class
 #' @usage NULL
-#' @format [R6::R6Class] object inheriting from [Environment]<-[Entity].
 #'
 #' @description  Network class. For creating a road network etc.
 #'
@@ -53,6 +52,12 @@ Network <- R6::R6Class(
   inherit = Environment,
   public = list(
     initialize = function(.data, id_col, from_node, to_node, dist) {
+
+      if (!requireNamespace("dodgr", quietly = TRUE)) {
+        stop("Package \"dodgr\" needed for this function to work. Please install it.",
+             call. = FALSE)
+      }
+
       super$initialize(.data, id_col)
       self$add_data(.data = private$generate_dodgr_graph(from_node, to_node, dist),
                     name = "dodgr_graph")

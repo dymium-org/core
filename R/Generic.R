@@ -48,8 +48,11 @@ Generic <- R6Class(
   classname = "Generic",
   public = list(
 
-    initialize = function(...) {
-
+    initialize = function(name) {
+      if (!missing(name)) {
+        self$name <- name
+      }
+      invisible(self)
     },
 
     debug = function() {
@@ -126,6 +129,17 @@ Generic <- R6Class(
     }
   ),
 
+  active = list(
+    name = function(x) {
+      if (missing(x)) {
+        private$.name
+      } else {
+        checkmate::assert_string(x, null.ok = T, na.ok = FALSE)
+        private$.name <- x
+      }
+    }
+  ),
+
   private = list(
     .abstract = function(msg) {
       # this is a method for abstract methods
@@ -150,7 +164,9 @@ Generic <- R6Class(
       tag = character(),
       desc = character(),
       value = list()
-    )
+    ),
+
+    .name = NULL
 
   )
 )

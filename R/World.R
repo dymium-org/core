@@ -46,8 +46,8 @@
 #' @section Public Methods:
 #'
 #' * `add(x, name, replace = TRUE)`\cr
-#'  ([dymiumCore::Entity] and inheritances | [dymiumCore::Container] | an object of the classes in
-#'  [dymiumCore::SupportedTransitionModels], `character(1)`, `logical(1)`)\cr
+#'  ([Entity] and inheritances | [Container] | an object of the classes in
+#'  [SupportedTransitionModels], `character(1)`, `logical(1)`)\cr
 #'  Add an object the allowed types to `self$Cont`, `self$entities`, `self$containers`,
 #'  `self$models`. Only one instance of each class are allowed to be stored.
 #'  The stored instances can be access via `self$<object-type>` or `self$get(x)`.
@@ -106,7 +106,7 @@
 #' @export
 World <- R6::R6Class(
   classname = "World",
-  inherit = dymiumCore::Container,
+  inherit = Container,
 
   public = list(
     info = list(
@@ -130,17 +130,18 @@ World <- R6::R6Class(
         checkmate::check_r6(x, classes = c("Container", "Generic"), null.ok = FALSE),
         checkmate::check_r6(x, classes = c("Model", "Generic"), null.ok = FALSE),
         checkmate::check_subset(class(x)[[1]],
-                                choices = dymiumCore::SupportedTransitionModels(),
+                                choices = SupportedTransitionModels(),
                                 empty.ok = FALSE),
         check_target(x, null.ok = FALSE),
         combine = "or"
       )
 
       if (checkmate::test_r6(x, "World")) {
-        stop("Adding a World object is not permitted.")
+        stop("Adding a World object to another World object is not permitted.")
       }
 
-      if ((inherits(x, "Entity") | inherits(x, "Container")) & !inherits(x, "Model") & !inherits(x, "Target")) {
+      if ((inherits(x, "Entity") | inherits(x, "Container")) &
+          !inherits(x, "Model") & !inherits(x, "Target")) {
         stopifnot(x$is_dymium_class())
         if (!missing(name)) {
           lg$warn("The given `name` will be ignored since the object in x \\
@@ -150,11 +151,12 @@ World <- R6::R6Class(
         name <- class(x)[[1]]
       }
 
-      if (inherits(x, "Model") && !is.null(x$name)) {
-        name = x$name
+      if (missing(name) && !is.null(x$name) &&
+          (inherits(x, "Model") | inherits(x, "Target"))) {
+        name <- x$name
       }
 
-      # only allows letters and underscores
+      # only allows letters and underscores\
       checkmate::assert_string(name,
                                pattern = "^[a-zA-Z_]*$",
                                na.ok = FALSE,
@@ -175,7 +177,7 @@ World <- R6::R6Class(
         .listname <- ".containers"
       }
 
-      if (class(x)[[1]] %in% dymiumCore::SupportedTransitionModels()) {
+      if (class(x)[[1]] %in% SupportedTransitionModels()) {
         lg$info("Adding a Model object '{name}' to the `models` field.")
         x <- Model$new(x, name = name)
         .listname <- ".models"
@@ -197,10 +199,14 @@ World <- R6::R6Class(
 
       if (name_object_exists) {
         if (replace) {
-          lg$warn("Replacing the object named `{name}` of class `{.class_old}` \\
+          warn_msg =
+            glue::glue(
+              "Replacing the object named `{name}` of class `{.class_old}` \\
                   with `{.class_new}`.",
-                  .class_old = self$get(x = name)$class()[[1]],
-                  .class_new = class(x)[[1]])
+              .class_old = self$get(x = name)$class()[[1]],
+              .class_new = class(x)[[1]]
+            )
+          warning(warn_msg)
           self$remove(name)
         } else {
           stop(glue::glue("{name} already exists in {.listname}. Only one instance \\

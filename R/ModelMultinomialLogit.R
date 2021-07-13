@@ -32,7 +32,7 @@ ModelMultinomialLogit <- R6::R6Class(
     #' @return NULL
     initialize = function(params, formula, preprocessing_fn = NULL) {
 
-      required_pkgs <- c("mlogit")
+      required_pkgs <- c("mlogit", "Formula")
       # required_versions <- c("1.1.0")
 
       for (i in seq_along(required_pkgs)) {
@@ -42,7 +42,7 @@ ModelMultinomialLogit <- R6::R6Class(
       }
 
       super$initialize(params = params,
-                       formula = formula,
+                       formula = Formula::Formula(formula),
                        type = "multinomial",
                        preprocessing_fn = preprocessing_fn)
 
@@ -65,27 +65,23 @@ ModelMultinomialLogit <- R6::R6Class(
     #'  choice_id (`integer()`), linear_comb (`numeric()`), prob (`numeric()`). Note
     #'  that, 'linear_comb' stands for linear combination (i.e. $$B1 * x1 + B2 * x2$$).
     predict = function(newdata, chooser_id_col, choice_id_col) {
-      checkmate::expect_data_frame(newdata)
-      data.table(chooser_id = newdata[[chooser_id_col]],
-                 choice_id = newdata[[choice_id_col]],
-                 linear_comb = private$.compute_linear_combination(newdata, chooser_id_col, choice_id_col)) %>%
-        .[, prob := exp(linear_comb)/sum(exp(linear_comb)), by = chooser_id]
-    }
-  ),
+      checkmate::assert_data_frame(newdata)
+      checkmate::assert_string(chooser_id_col)
+      checkmate::assert_string(choice_id_col)
 
-  private = list(
-    .compute_linear_combination = function(newdata, chooser_id_col, choice_id_col) {
       if (inherits(newdata, "dfidx")) {
-        checkmate::expect_names(x = names(newdata$idx),
+        checkmate::assert_names(x = names(newdata$idx),
                                 identical.to = c(chooser_id_col, choice_id_col))
       } else {
         newdata <-
           dfidx::dfidx(newdata, idx = c(chooser_id_col, choice_id_col))
       }
-      mf <- model.frame(newdata, self$formula)
-      # see https://github.com/dymium-org/dymiumCore/issues/84
-      mm <- mlogit:::model.matrix.dfidx_mlogit(mf)
-      return(as.numeric(self$params %*% t(mm)))
+
+      data.table(chooser_id = newdata[[chooser_id_col]],
+                 choice_id = newdata[[choice_id_col]],
+                 linear_comb = compute_linear_combination(self$formula, self$params, newdata)) %>%
+        data.table::setkey(chooser_id) %>%
+        .[, prob := exp(linear_comb)/sum(exp(linear_comb)), by = chooser_id]
     }
   )
 )
@@ -101,5 +97,5 @@ ModelMultinomialLogit <- R6::R6Class(
 #' @return a numeric vector
 #' @export
 predict.ModelMultinomialLogit = function(object, newdata, chooser_id_col, choice_id_col, ...) {
-  object$predict(newdata, chooser_id_col, choice_id_col)
+  return(object$predict(newdata, chooser_id_col, choice_id_col))
 }

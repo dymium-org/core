@@ -33,10 +33,5 @@ create_toy_world <- function(add_toy_zones = TRUE) {
       hid_col = c("hid")
       )
     )
-  world$add(BuildingResidential$new(toy_dwellings, "did"))
-  world$get(BuildingResidential)$set_owner_object(world$get(Household))
-  if (add_toy_zones) {
-    world$add(Zone$new(toy_zones, "zid"))
-  }
   invisible(world)
 }

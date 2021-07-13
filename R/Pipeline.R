@@ -23,7 +23,7 @@
 #' ```
 #'
 #' @usage NULL
-#' @format [R6::R6Class] object inheriting from [dymiumCore::Generic].
+#' @format [R6::R6Class] object inheriting from [Generic].
 #' @include Generic.R
 #' @include Population.R
 #'
