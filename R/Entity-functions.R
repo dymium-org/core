@@ -137,7 +137,7 @@ impute_history <- function(entity, ids, event = NULL) {
 #' add_history(Ind, ids = sample(Ind$get_ids(), 10), event = "event1", time = 1)
 #' combine_histories(world)
 combine_histories <- function(x) {
-  checkmate::expect_r6(x, classes = "Container")
+  checkmate::assert_r6(x, classes = "Container")
   get_history(x) %>%
     purrr::keep(., ~ !is.null(.x)) %>%
     purrr::map2(.x = ., .y = names(.),

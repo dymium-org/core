@@ -295,7 +295,7 @@ Individual <- R6::R6Class(
       result <-
         private$get_relationship(ids, type = "children") %>%
         dt_group_and_sort(x = ., groupby_col = pid_col, group_col = "child_id", sort_order = ids)
-      checkmate::expect_set_equal(ids, result[['sort_col']], ordered = T,
+      checkmate::assert_set_equal(ids, result[['sort_col']], ordered = T,
                                   info = "`ids` and the result are not equal.")
       result[["group_col"]]
     },
@@ -307,7 +307,7 @@ Individual <- R6::R6Class(
         .[, living_together := self$living_together(self_ids = get(pid_col), target_ids = child_id)] %>%
         .[living_together == TRUE] %>%
         dt_group_and_sort(x = ., groupby_col = pid_col, group_col = "child_id", sort_order = ids)
-      checkmate::expect_set_equal(ids, result[['sort_col']], ordered = T,
+      checkmate::assert_set_equal(ids, result[['sort_col']], ordered = T,
                                   info = "`ids` and the result are not equal.")
       result[["group_col"]]
     },

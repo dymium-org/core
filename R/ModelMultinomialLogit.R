@@ -65,7 +65,7 @@ ModelMultinomialLogit <- R6::R6Class(
     #'  choice_id (`integer()`), linear_comb (`numeric()`), prob (`numeric()`). Note
     #'  that, 'linear_comb' stands for linear combination (i.e. $$B1 * x1 + B2 * x2$$).
     predict = function(newdata, chooser_id_col, choice_id_col) {
-      checkmate::expect_data_frame(newdata)
+      checkmate::assert_data_frame(newdata)
       data.table(chooser_id = newdata[[chooser_id_col]],
                  choice_id = newdata[[choice_id_col]],
                  linear_comb = private$.compute_linear_combination(newdata, chooser_id_col, choice_id_col)) %>%
@@ -76,7 +76,7 @@ ModelMultinomialLogit <- R6::R6Class(
   private = list(
     .compute_linear_combination = function(newdata, chooser_id_col, choice_id_col) {
       if (inherits(newdata, "dfidx")) {
-        checkmate::expect_names(x = names(newdata$idx),
+        checkmate::assert_names(x = names(newdata$idx),
                                 identical.to = c(chooser_id_col, choice_id_col))
       } else {
         newdata <-

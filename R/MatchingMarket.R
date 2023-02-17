@@ -99,8 +99,8 @@ MatchingMarket <- R6::R6Class(
                           grouping_vars = NULL,
                           max_market_size = 5000 ^ 2) {
       # CHECK INPUTS
-      checkmate::expect_data_table(agentset_A)
-      checkmate::expect_data_table(agentset_B)
+      checkmate::assert_data_table(agentset_A)
+      checkmate::assert_data_table(agentset_B)
 
       if (missing(id_col_A)) {
         stopifnot(uniqueN(agentset_A[, 1]) == nrow(agentset_A))
