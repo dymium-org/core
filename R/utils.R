@@ -348,7 +348,7 @@ dt_group_and_sort <- function(x, groupby_col, group_col, sort_order) {
   checkmate::assert_data_table(x)
   stopifnot(groupby_col %in% names(x))
   stopifnot(group_col %in% names(x))
-  checkmate::expect_integerish(sort_order, unique = T, lower = 0, min.len = 1)
+  checkmate::assert_integerish(sort_order, unique = TRUE, lower = 0, min.len = 1)
 
   # group and sort
   x_new <-
